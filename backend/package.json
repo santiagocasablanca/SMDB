@@ -1,0 +1,8 @@
+{
+  "name": "SVDb-backend",
+  "version": "0.0.1",
+  "description": "Sidemen Video Database",
+  "main": "index.js",
+  "author": "casablanca",
+  "license": "MIT"
+}
