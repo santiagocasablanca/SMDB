@@ -1,7 +1,6 @@
 {
-  "name": "SVDb-backend",
-  "version": "0.0.1",
- "author": "casablanca",
+  "name": "crud-app-sequelize",
+  "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
