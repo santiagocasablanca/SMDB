@@ -1,12 +1,13 @@
-import { sequelize, DataTypes } from "./db";
-const VideoModel = sequelize.define("video", {
+module.exports = (sequelize, Sequelize, DataTypes) => {
+
+const Video = sequelize.define("video", {
 
   id: {
     type: DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,
     primaryKey: true,
   },
-  videoId: {
+  video_id: {
     type: DataTypes.STRING(50),
     allowNull: false,
   },
@@ -23,29 +24,41 @@ const VideoModel = sequelize.define("video", {
     type: DataTypes.STRING(20),
     allowNull: false,
   },
-  channelId: {
+  channel_id: {
     type: DataTypes.STRING(50),
     allowNull: false,
   },
-  channelTitle: {
+  channel_title: {
     type: DataTypes.STRING(50),
     allowNull: false,
   },
   views: {
-    type: DataTypes.DECIMAL(10),
+    type: DataTypes.DECIMAL(100),
     allowNull: true,
   },
   likes: {
-    type: DataTypes.DECIMAL(10),
+    type: DataTypes.DECIMAL(100),
+    allowNull: true,
+  },
+  dislikes: {
+    type: DataTypes.DECIMAL(100),
     allowNull: true,
   },
   comments: {
-    type: DataTypes.DECIMAL(10),
+    type: DataTypes.DECIMAL(100),
     allowNull: true,
   },
   url:{
     type: DataTypes.STRING(100),
     allowNull: true,
+  },
+  player: {
+    type: DataTypes.JSONB,
+    allowNull: true
+  },
+  livestream: {
+    type: DataTypes.JSONB,
+    allowNull: true
   },
   tags: {
     type: DataTypes.JSONB,
@@ -59,26 +72,44 @@ const VideoModel = sequelize.define("video", {
     type: DataTypes.JSONB,
     allowNull: true
   },
+  original_blob: {
+    type: DataTypes.JSONB,
+    allowNull: true
+  },
   category: {
     type: DataTypes.STRING(50),
     allowNull: true,
   },
-  publishedAt: {
+  serie: {
+    type: DataTypes.JSONB,
+    allowNull: true
+  },
+  game: {
+    type: DataTypes.JSONB,
+    allowNull: true
+  },
+  published_at: {
     type: DataTypes.DATE,
     allowNull: false,
   },
-  createdAt: {
+  created_at: {
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW,
     allowNull: false,
   },
-  updatedAt: {
+  updated_at: {
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW,
     allowNull: false,
   },
 });
 
-// VideoModel.belongsTo(Foo);
 
-export default VideoModel;
+Video.associate = (models) => {
+  Video.hasOne(models.channel, {
+    foreignKey: 'channel_id'
+  });
+};
+
+return Video;
+}

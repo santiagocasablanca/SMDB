@@ -2,17 +2,15 @@ require("dotenv").config();
 import express, { Request, Response } from "express";
 import morgan from "morgan";
 import cors from "cors";
-import noteRouter from "./routes";
+import noteRouter from "./routes/routes";
 
-import ChannelModel from "./channel";
-import ChannelStatsModel from "./channelStats";
-import VideoStatsModel from "./videoStats";
-import VideoModel from "./video";
 
 const natural = require('natural');
 const tokenizer = new natural.WordTokenizer();
 
-import { connectDB, sequelize } from "./db";
+import { db, sequelize } from "./util/db";
+const Video = db.video;
+const Channel = db.channel;
 
 const app = express();
 
@@ -42,30 +40,53 @@ app.all("*", (req: Request, res: Response) => {
   });
 });
 
-const PORT = 8000;
-app.listen(PORT, async () => {
-  console.log("🚀Server started Successfully");
-  await connectDB();
-  sequelize.sync({ force: false }).then(() => {
-    console.log("✅Synced database successfully...");
-    // extractRelevantTagsFromTitles();
-    // associateTagsToVideos();
-  });
-  channelIds.forEach(item => {
-    // fetchVideos(item);
+const PORT = process.env.PORT;
+// app.listen(PORT, async () => {
+//   console.log("🚀Server started Successfully");
+//   await connectDB();
+//   sequelize.sync({ force: false }).then(() => {
+//     console.log("✅Synced database successfully...");
+//     // extractRelevantTagsFromTitles();
+//     // associateTagsToVideos();
+//   });
+//   channel_ids.forEach(item => {
+//     // fetchVideos(item);
+//   })
+// });
+
+db.sequelize
+  .sync()
+  .then(() => {
+    console.log("Database connected");
+    app.listen(PORT, async () => {
+      console.log("listening at port 8005");
+
+      //extractRelevantTagsFromTitles();
+      associateTagsToVideos();
+
+      channel_ids.forEach(item => {
+        console.log("fetching for channel " +  item);
+        // fetchChannelInfo(item);
+            // fetchVideos(item);
+      })
+    })
   })
-});
+  .catch(err => console.log(err));
 
 
 // Set up the API request parameters
 const apiKey = 'AIzaSyA9IHgl5-gGaQYpN01q2TiYcF5mKw6TQ8A';
 
-const channelIds = [
+const channel_ids = [
   "UCDogdKl7t7NHzQ95aEwkdMw", // Sidemen
   "UCh5mLn90vUaB1PbRRx_AiaA", // MoreSidemen
   "UCjRkTl_HP4zOh3UFaThgRZw", // SidemenReacts
+  "UCWZmCMB7mmKWcXJSIPRhzZw", // https://www.youtube.com/@Miniminter, 
+  "UCjB_adDAIxOL8GA4Y4OCt8g", // https://www.youtube.com/@MM7Games, 
+  "UCFPElAbES8GHfBZrDrGbSLQ", // https://www.youtube.com/@Whatsgoodpodcast, 
+  "UCPwrSW0HPiba4lu1DW_zdjA", // https://www.youtube.com/@RandolphUK, 
+  // wrong "UCFPElAbES8GHfBZrDrGbSLQ" // https://www.youtube.com/@Randolph2
   // "UCD1XaKkzzLbEAzZkhvOuLjg", // Zerkaa
-  // "UC3FimAEgm-qZPoEDJmOn1Jw", // miniminter
   // "UC5PwFB_HLMhGyjKrUj7GMDw", // KSI
   // "UCUKi4zY5ETSqrKAjTBgjM-g", // Behzinga
   // "UCvtRTOMP2TqYqu51xLUIDRg", // Vikkstar123
@@ -73,16 +94,57 @@ const channelIds = [
   // "UCYzPXprvl5Y-Sf0g4vX-m6g", // W2S
   // "UCpXf6KALwsth7owH6_2sV7w" // Calfreezy
 ];
-const sidemenChannelId = 'UCDogdKl7t7NHzQ95aEwkdMw';
 
-async function fetchVideos(_channelId) {
-  console.log('fetchVideos()' + _channelId);
+async function fetchChannelInfo(_channel_id) {
+
+  console.log('fetchChannelInfo()' + _channel_id);
+ 
+
+  const url = `https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&id=${_channel_id}&key=${apiKey}`;
+  let response = await fetch(url);
+    
+  let data = await response.json();
+  console.log('data: ' + JSON.stringify(data));
+
+  // const channelData = JSON.parse(data);
+
+  // Extract relevant attributes from the API response
+  const channelId = data.items[0].id;
+  const channel_title = data.items[0].snippet.title;
+  const channelDescription = data.items[0].snippet.description;
+  const viewCount = data.items[0].statistics.viewCount;
+  const subscriberCount = data.items[0].statistics.subscriberCount;
+  const videoCount = data.items[0].statistics.videoCount;
+  const logo = data.items[0].snippet.thumbnails.medium.url;
+
+  const channel = Channel.findOrCreate({
+    defaults: {
+    'channel_id': _channel_id,
+    'title': channel_title,
+    'description': channelDescription,
+    'views': viewCount,
+    'subs': subscriberCount,
+    'videos': videoCount,
+    'logo_url': logo,
+    'customUrl': data.items[0].snippet.customUrl
+    },
+    where: { channel_id: _channel_id }
+  });
+
+  return;
+}
+
+
+
+async function fetchVideos(_channel_id) {
+  console.log('fetchVideos()' + _channel_id);
+
   let nextPageToken = '';
 
   let allVideos: any[] = [];
 
   do {
-    let url = `https://www.googleapis.com/youtube/v3/search?key=${apiKey}&channelId=${_channelId}&part=snippet,id&order=date&maxResults=50&pageToken=${nextPageToken}`;     
+    let url = `https://www.googleapis.com/youtube/v3/search?key=${apiKey}&channelId=${_channel_id}&part=snippet,id&order=date&maxResults=50&pageToken=${nextPageToken}`;     
     let response = await fetch(url);
     
     let data = await response.json();
@@ -91,45 +153,33 @@ async function fetchVideos(_channelId) {
     // TODO pre save videos here data.items (videoId)
 
     let videoIds = data.items.map(item => item.id.videoId).join(',');
-    let videoUrl = `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics,contentDetails&id=${videoIds}&key=${apiKey}`;
+    let videoUrl = `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics,contentDetails,player,liveStreamingDetails&id=${videoIds}&key=${apiKey}`;
     let videoResponse = await fetch(videoUrl);
     let videoData = await videoResponse.json();
-
-    // allVideos = allVideos.concat(videoData.items.map(item => ({
-    //   channelId: item.snippet.channelId,
-    //   title: item.snippet.title,
-    //   description: item.snippet.description,
-    //   publishedAt: item.snippet.publishedAt,
-    //   // location: item.snippet.location,
-    //   views: item.statistics.viewCount,
-    //   likes: item.statistics.likeCount,
-    //   views_likes_ratio: (item.statistics.viewCount / item.statistics.likeCount),
-    //   comments: item.statistics.commentCount,
-    //   tags: item.snippet.tags,
-    //   // cast: item.snippet.channelTitle
-    // })));
-
     
     videoData.items.forEach((item: any) => {
       // console.log('size ' + JSON.stringify(item))
       // console.log('duration ' + JSON.stringify(item.contentDetails))
         try {
-          const video = VideoModel.findOrCreate({
+          const video = Video.findOrCreate({
             defaults: {
             'videoId': item.id,
             'title': item.snippet.title,
             'description': item.snippet.description,
-            'channelId': item.snippet.channelId,
-            'channelTitle': item.snippet.channelTitle,
-            'cast': item,
+            'channel_id': item.snippet.channelId,
+            'channel_title': item.snippet.channel_title,
             'views': item.statistics.viewCount,
             'likes': item.statistics.likeCount,
+            'dislikes': item.statistics.dislikeCount,
             'comments': item.statistics.commentCount,
             'duration': item.contentDetails.duration,
-            'url': item.snippet.thumbnails.standard.url,
-            'publishedAt': item.snippet.publishedAt
+            'url': item.snippet.thumbnails.high.url,
+            'player': item.player,
+            'published_at': item.snippet.publishedAt,
+            'livestream': item.liveStreamingDetails,
+            'original_blob': item
           },
-          where: { videoId: item.id }
+          where: { video_id: item.id }
         });
       
         console.log('ok');
@@ -143,6 +193,8 @@ async function fetchVideos(_channelId) {
     nextPageToken = data.nextPageToken;
 
   } while (nextPageToken);
+
+  
 
   return allVideos;
 };
@@ -271,16 +323,16 @@ function containsPhrase(tokens, phraseTokens) {
 async function associateTagsToVideos() {
   try {
     // Retrieve all videos from the database
-    const videos = await VideoModel.findAll();
+    const videos = await Video.findAll();
 
     // Process each video and associate a tag
     for (const video of videos) {
       const associatedTag = determineTags(video.title);
       let seriesTag = "";
 
-      if (video.channelTitle == 'SidemenReacts') {
+      if (video.channel_title == 'SidemenReacts') {
         associatedTag.push('React');
-      } else if (video.channelTitle == 'Sidemen') {
+      } else if (video.channel_title == 'Sidemen') {
         seriesCategories.forEach((category) => {
 
           if(associatedTag.includes(category.category)) {
@@ -291,7 +343,7 @@ async function associateTagsToVideos() {
 
       console.log(seriesTag);
       // Update the video record with the associated tag
-      await video.update({ tags: associatedTag, category: seriesTag });
+      await video.update({ tags: associatedTag, serie: seriesTag });
     }
     console.log('Tags associated successfully!');
   } catch (error) {
@@ -305,7 +357,7 @@ async function associateTagsToVideos() {
 //   try {
 //     const videos = await VideoModel.findAll({
 //       where:{
-//         channelTitle: 'Sidemen'
+//         channel_title: 'Sidemen'
 //       }
 //     });
 
