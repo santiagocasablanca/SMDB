@@ -1,6 +1,6 @@
-import { sequelize, DataTypes } from "./db";
+import { db, DataTypes } from "../util/db";
 
-const NoteModel = sequelize.define("notes", {
+const NoteModel = db.sequelize.define("notes", {
   id: {
     type: DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,
