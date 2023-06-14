@@ -112,8 +112,8 @@ export const findMostLikedSSGroupedBySeries = async (
 ) => {
   try {
 
-    const records = await sequelize.query("select category, count(*) as videos, sum(views) as views, sum(likes) as likes, sum(comments) as comments" +
-      " from videos v where channel_title = 'Sidemen' and category != '' and published_at BETWEEN (:initial) AND (:final) GROUP By v.category order by likes desc ",
+    const records = await sequelize.query("select serie, count(*) as videos, sum(views) as views, sum(likes) as likes, sum(comments) as comments" +
+      " from video v where channel_title = 'Sidemen' and serie is not null and published_at BETWEEN (:initial) AND (:final) GROUP By v.serie order by likes desc ",
       {
         replacements: { initial: '2010-05-23 23:00:00.000 +00:00', final: '2023-06-23 23:00:00.000 +00:00', orderBy: 'likes desc' },
         // bind: { initial: '2010-05-23 23:00:00.000 +00:00', final: '2023-06-23 23:00:00.000 +00:00', orderBy: 'likes desc' },
@@ -142,7 +142,7 @@ export const fetchAllSeries = async (
 ) => {
   try {
 
-    const records = await sequelize.query("select distinct(serie) from videos v",
+    const records = await sequelize.query("select distinct(serie) from video v",
       {
         type: QueryTypes.SELECT,
         logging: console.log,
@@ -168,7 +168,7 @@ export const fetchAllTags = async (
 ) => {
   try {
 
-    const records = await sequelize.query("select distinct tags from videos v",
+    const records = await sequelize.query("select distinct tags from video v",
       {
         type: QueryTypes.SELECT,
         logging: console.log,
@@ -363,7 +363,7 @@ export const findAllVideosController = async (
   res: Response
 ) => {
   try {
-    // console.log('IM HERE SEARCHIN ALL ' + JSON.stringify(req.query));
+    console.log('IM HERE SEARCHIN ALL ' + JSON.stringify(req.query));
     // console.log('FUCK : ' + req.query.sort);
     const page = req.query.page || 1;
     const limit = req.query.limit || 10;

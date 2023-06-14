@@ -1,7 +1,7 @@
 {
   "name": "SVDb-backend",
   "version": "0.0.1",
- "author": "casablanca",
+  "author": "casablanca",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
@@ -21,8 +21,11 @@
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "natural": "^6.3.0",
-    "pg": "^8.8.0",
+    "node-cron": "^3.0.2",
+    "pg": "^8.11.0",
     "pg-hstore": "^2.3.4",
-    "sequelize": "^6.28.0"
+    "sequelize": "^6.28.0",
+    "sequelize-cli": "^6.6.1",
+    "uuid": "^9.0.0"
   }
 }

@@ -1,3 +1,6 @@
+import { db, sequelize } from "../util/db";
+const Channel = db.channel;
+
 module.exports = (sequelize, Sequelize, DataTypes) => {
   const ChannelStats = sequelize.define("channel_stats", {
 
@@ -47,11 +50,11 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
     },
   });
 
-  ChannelStats.associate = (models) => {
-    ChannelStats.hasOne(models.channel, {
-      foreignKey: 'channel_id'
-    });
-  };
+  ChannelStats.belongsTo(Channel, {
+    targetKey: "channel_id",
+    foreignKey: 'channel_id'
+  });
 
-    return ChannelStats;
+
+  return ChannelStats;
 };

@@ -1,3 +1,6 @@
+import { db, sequelize } from "../util/db";
+const Video = db.video;
+
 module.exports = (sequelize, Sequelize, DataTypes) => {
 
   const VideoStats = sequelize.define("video_stats", {
@@ -9,6 +12,7 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
     },
     video_id: {
       type: DataTypes.STRING(50),
+      unique: true,
       allowNull: false,
     },
     views: {
@@ -41,11 +45,11 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
   });
 
 
-  VideoStats.associate = (models) => {
-    VideoStats.hasOne(models.video, {
-      foreignKey: 'video_id'
-    });
-  };
+
+  VideoStats.belongsTo(Video, {
+    targetKey: "video_id",
+    foreignKey: 'video_id'
+  });
 
 
   return VideoStats;

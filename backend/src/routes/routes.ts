@@ -14,12 +14,16 @@ import {
   fetchAllTags
 } from "../controllers/video.controller";
 
-import { findAllChannelsController } from "../controllers/channel.controller"
+import { findAllChannelsController } from "../controllers/channel.controller";
+import { findAllCreatorsController } from "../controllers/creator.controller";
 
 const router = express.Router();
 
 router.route("/channels/")
   .get(findAllChannelsController);
+
+router.route("/creators/")
+  .get(findAllCreatorsController);
 
 router
   .route("/videos/")
