@@ -2,7 +2,10 @@ require("dotenv").config();
 import express, { Request, Response } from "express";
 import morgan from "morgan";
 import cors from "cors";
+const cron = require('node-cron');
 import noteRouter from "./routes/routes";
+const YoutubeService = require('./services/youtubeService');
+
 
 
 const natural = require('natural');
@@ -10,12 +13,21 @@ const tokenizer = new natural.WordTokenizer();
 
 import { db, sequelize } from "./util/db";
 const Video = db.video;
+const VideoStats = db.videoStats;
 const Channel = db.channel;
+const ChannelStats = db.channelStats;
 
 const app = express();
 
 app.use(express.json({ limit: "10kb" }));
 if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
+
+// 11am
+cron.schedule('10 11 * * *', () => { 
+  console.log('schuduled and running');
+  const youtubeService = new YoutubeService();
+  // youtubeService.fetchStatisticsForAllChannels();
+});
 
 app.use(
   cors({
@@ -41,33 +53,21 @@ app.all("*", (req: Request, res: Response) => {
 });
 
 const PORT = process.env.PORT;
-// app.listen(PORT, async () => {
-//   console.log("🚀Server started Successfully");
-//   await connectDB();
-//   sequelize.sync({ force: false }).then(() => {
-//     console.log("✅Synced database successfully...");
-//     // extractRelevantTagsFromTitles();
-//     // associateTagsToVideos();
-//   });
-//   channel_ids.forEach(item => {
-//     // fetchVideos(item);
-//   })
-// });
 
 db.sequelize
-  .sync()
+  .sync() //{force: true}  {alter: true}
   .then(() => {
     console.log("Database connected");
     app.listen(PORT, async () => {
       console.log("listening at port 8005");
 
       //extractRelevantTagsFromTitles();
-      associateTagsToVideos();
+      // associateTagsToVideos();
 
       channel_ids.forEach(item => {
-        console.log("fetching for channel " +  item);
+        console.log("fetching for channel " + item);
         // fetchChannelInfo(item);
-            // fetchVideos(item);
+        // fetchVideos(item);
       })
     })
   })
@@ -75,63 +75,99 @@ db.sequelize
 
 
 // Set up the API request parameters
-const apiKey = 'AIzaSyA9IHgl5-gGaQYpN01q2TiYcF5mKw6TQ8A';
+const apiKey = 'AIzaSyDB5XiiHdTnBGm0qGEBevS65AdZIIjT3KM'; // 'AIzaSyA9IHgl5-gGaQYpN01q2TiYcF5mKw6TQ8A';
 
 const channel_ids = [
-  "UCDogdKl7t7NHzQ95aEwkdMw", // Sidemen
-  "UCh5mLn90vUaB1PbRRx_AiaA", // MoreSidemen
-  "UCjRkTl_HP4zOh3UFaThgRZw", // SidemenReacts
-  "UCWZmCMB7mmKWcXJSIPRhzZw", // https://www.youtube.com/@Miniminter, 
-  "UCjB_adDAIxOL8GA4Y4OCt8g", // https://www.youtube.com/@MM7Games, 
-  "UCFPElAbES8GHfBZrDrGbSLQ", // https://www.youtube.com/@Whatsgoodpodcast, 
-  "UCPwrSW0HPiba4lu1DW_zdjA", // https://www.youtube.com/@RandolphUK, 
-  // wrong "UCFPElAbES8GHfBZrDrGbSLQ" // https://www.youtube.com/@Randolph2
-  // "UCD1XaKkzzLbEAzZkhvOuLjg", // Zerkaa
-  // "UC5PwFB_HLMhGyjKrUj7GMDw", // KSI
-  // "UCUKi4zY5ETSqrKAjTBgjM-g", // Behzinga
-  // "UCvtRTOMP2TqYqu51xLUIDRg", // Vikkstar123
-  // "UCDf19MozdSZdDO6UOz6FY9Q", // TBJZL
-  // "UCYzPXprvl5Y-Sf0g4vX-m6g", // W2S
-  // "UCpXf6KALwsth7owH6_2sV7w" // Calfreezy
+  // "UCDogdKl7t7NHzQ95aEwkdMw", // Sidemen
+  // "UCh5mLn90vUaB1PbRRx_AiaA", // MoreSidemen
+  // "UCjRkTl_HP4zOh3UFaThgRZw", // SidemenReacts
+  // "UCWZmCMB7mmKWcXJSIPRhzZw", // https://www.youtube.com/@Miniminter,  https://pbs.twimg.com/profile_images/1640809891399979008/B3V1ylDx_400x400.jpg
+  // "UCjB_adDAIxOL8GA4Y4OCt8g", // https://www.youtube.com/@MM7Games, 
+  // "UCFPElAbES8GHfBZrDrGbSLQ", // https://www.youtube.com/@Whatsgoodpodcast, 
+  // "UCPwrSW0HPiba4lu1DW_zdjA", // https://www.youtube.com/@RandolphUK, 
+  // "UC0P_148sT5v0SQHgfaUXh4w", // https://www.youtube.com/@Randolph2 https://www.youtube.com/channel/
+  "UChntGq8THlUokhc1tT-M2wA", // Zerkaa 
+  "UCst9GLZ-X47MxWBmx9cCrKA", // zerkaaPlays
+  // "UCmVhkn3V5He-ONb4wUNRcwg", // zerkaaclips
+  // "UCk5azh7kjYWMkWQsLrqn_9w", // zerkaaShorts
+  // "UCVtFOytbRpEvzLjvqGG5gxQ", // KSI
+  // "UCGmnsW623G1r-Chmo5RB4Yw", // @jjolatunji
+  // "UCHhfSXoDG6gSgpOvLH4wrRw", // Behzinga 
+  // "UCbzZFTHge5zk2yebSiWRZRg", // bez2inga
+  // "UCoxQK18ZYanKJGjHP5wdrJw", // BehzingaShorts 
+  // "UCvwgF_0NOZe2vN4Q3g1bY-A", // Vikkstar123 
+  // "UCmbnlwXAdGYACzvStDjquaA", // Vikkstar123HD 
+  // "UCBXG9Hl9f94Zfoceh1a8otQ", // VikkstarPlays
+  // "UC0OevbYhRrD3UP1jJlYB7qw", // vikstarrshorts
+  // "UCfNWN9s_s8kRTCadk04WWJA", // TBJZL
+  // "UCVa7nsA_blpxzmfZWTPEsLQ", // TBJZLPlays 
+  // "UCHzt25lbU7zmU4PwMMRf16A", // TBJZLClips 
+  // "UCjtLOfx1yt1NlnFIDyAX3Ug", // W2S
+  // "UC5_IT4-XpinnvNQwM1e15eQ", // W2S+ 
+  // "UC9-3c4LzdzT_HvW3Xuti9wg", // Calfreezy 
+  // "UCQ-YJstgVdAiCT52TiBWDbg"  // Chrismd   https://pbs.twimg.com/profile_images/1519273593917652992/-f0YNS2S_400x400.jpg https://pbs.twimg.com/profile_banners/384932951/1613394511/1500x500
 ];
 
 async function fetchChannelInfo(_channel_id) {
 
   console.log('fetchChannelInfo()' + _channel_id);
- 
 
-  const url = `https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&id=${_channel_id}&key=${apiKey}`;
-  let response = await fetch(url);
-    
-  let data = await response.json();
-  console.log('data: ' + JSON.stringify(data));
+  try {
 
-  // const channelData = JSON.parse(data);
+    const url = `https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics,brandingSettings&id=${_channel_id}&key=${apiKey}`;
+    let response = await fetch(url);
 
-  // Extract relevant attributes from the API response
-  const channelId = data.items[0].id;
-  const channel_title = data.items[0].snippet.title;
-  const channelDescription = data.items[0].snippet.description;
-  const viewCount = data.items[0].statistics.viewCount;
-  const subscriberCount = data.items[0].statistics.subscriberCount;
-  const videoCount = data.items[0].statistics.videoCount;
-  const logo = data.items[0].snippet.thumbnails.medium.url;
+    let data = await response.json();
+    console.log('data: ' + JSON.stringify(data));
 
-  const channel = Channel.findOrCreate({
-    defaults: {
-    'channel_id': _channel_id,
-    'title': channel_title,
-    'description': channelDescription,
-    'views': viewCount,
-    'subs': subscriberCount,
-    'videos': videoCount,
-    'logo_url': logo,
-    'customUrl': data.items[0].snippet.customUrl
-    },
-    where: { channel_id: _channel_id }
-  });
+    // const channelData = JSON.parse(data);
 
-  return;
+    // Extract relevant attributes from the API response
+    const channelId = data.items[0].id;
+    const channel_title = data.items[0].snippet.title;
+    const channelDescription = data.items[0].snippet.description;
+    const viewCount = data.items[0].statistics.viewCount;
+    const subscriberCount = data.items[0].statistics.subscriberCount;
+    const videoCount = data.items[0].statistics.videoCount;
+    const logo = data.items[0].snippet.thumbnails.medium.url;
+    const createdAt = data.items[0].snippet.publishedAt;
+    const banner = data.items[0].brandingSettings.image ? data.items[0].brandingSettings.image.bannerExternalUrl : null;
+
+    const channel = await Channel.findOrCreate({
+      defaults: {
+        'channel_id': _channel_id,
+        'title': channel_title,
+        'description': channelDescription,
+        'views': viewCount,
+        'subs': subscriberCount,
+        'videos': videoCount,
+        'logo_url': logo,
+        'custom_url': data.items[0].snippet.customUrl,
+        'banner_url': banner,
+        'channel_created_at': createdAt
+      },
+      where: { channel_id: _channel_id }
+    });
+
+    const channelStats = await ChannelStats.create({
+      'channel_id': _channel_id,
+      'views': viewCount,
+      'subs': subscriberCount,
+      'videos': videoCount,
+      'fetched_at': new Date()
+    })
+    // subs
+    // videos
+    // views
+    // likes
+    // comments
+    // fetched_at
+    // channel_id
+    return;
+
+  } catch (error: any) {
+    console.log(error);
+  }
 }
 
 
@@ -142,32 +178,38 @@ async function fetchVideos(_channel_id) {
   let nextPageToken = '';
 
   let allVideos: any[] = [];
+  let data: any;
 
   do {
-    let url = `https://www.googleapis.com/youtube/v3/search?key=${apiKey}&channelId=${_channel_id}&part=snippet,id&order=date&maxResults=50&pageToken=${nextPageToken}`;     
-    let response = await fetch(url);
-    
-    let data = await response.json();
-    
-    // console.log('data: ' + JSON.stringify(data));
+    try {
+
+      let url = `https://www.googleapis.com/youtube/v3/search?key=${apiKey}&channelId=${_channel_id}&part=snippet,id&order=date&maxResults=50&pageToken=${nextPageToken}`;
+      let response = await fetch(url);
+
+      data = await response.json();
+    } catch (error: any) {
+      console.error(error);
+    }
+
+    console.log('data: ' + JSON.stringify(data));
     // TODO pre save videos here data.items (videoId)
 
     let videoIds = data.items.map(item => item.id.videoId).join(',');
     let videoUrl = `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics,contentDetails,player,liveStreamingDetails&id=${videoIds}&key=${apiKey}`;
     let videoResponse = await fetch(videoUrl);
     let videoData = await videoResponse.json();
-    
-    videoData.items.forEach((item: any) => {
-      // console.log('size ' + JSON.stringify(item))
+
+    videoData.items.forEach(async (item: any) => {
+      console.log('size ' + JSON.stringify(item))
       // console.log('duration ' + JSON.stringify(item.contentDetails))
-        try {
-          const video = Video.findOrCreate({
-            defaults: {
-            'videoId': item.id,
+      try {
+        const video = await Video.findOrCreate({
+          defaults: {
+            'video_id': item.id,
             'title': item.snippet.title,
             'description': item.snippet.description,
             'channel_id': item.snippet.channelId,
-            'channel_title': item.snippet.channel_title,
+            'channel_title': item.snippet.channelTitle,
             'views': item.statistics.viewCount,
             'likes': item.statistics.likeCount,
             'dislikes': item.statistics.dislikeCount,
@@ -181,11 +223,23 @@ async function fetchVideos(_channel_id) {
           },
           where: { video_id: item.id }
         });
-      
+
+        console.log(video);
+
+        const videoStats = await VideoStats.create({
+          'video_id': item.id,
+          'views': item.statistics.viewCount,
+          'likes': item.statistics.likeCount,
+          'dislikes': item.statistics.dislikeCount,
+          'comments': item.statistics.commentCount,
+          'fetched_at': new Date()
+        })
+        console.log(videoStats);
+
         console.log('ok');
       } catch (error: any) {
-        console.log('error: ' + error.name)
-    
+        console.log('error: ' + error)
+
       }
     });
 
@@ -194,14 +248,14 @@ async function fetchVideos(_channel_id) {
 
   } while (nextPageToken);
 
-  
+
 
   return allVideos;
 };
 
 const seriesCategories = [
   { category: 'Tinder', keywords: ['tinder'] },
-  { category: '20vs1', keywords: ['20 WOMEN VS 1 SIDEMEN' ] },
+  { category: '20vs1', keywords: ['20 WOMEN VS 1 SIDEMEN'] },
   { category: 'Road Trip', keywords: ['road TRIP', 'roadtrip', 'road trip'] },
   { category: 'Holiday', keywords: ['holiday'] },
   { category: 'Calories Challenge', keywords: ['calories', 'calorie'] },
@@ -232,9 +286,9 @@ const seriesCategories = [
 // Define your tag categories and associated keywords
 const tagCategories = [
   { category: 'Music', keywords: ['song', 'music video', 'artist', 'album'] },
-  { category: 'Football', keywords: ['football', 'goal', 'charity', 'match'],  },
+  { category: 'Football', keywords: ['football', 'goal', 'charity', 'match'], },
   { category: 'Tinder', keywords: ['tinder'] },
-  { category: '20vs1', keywords: ['20 WOMEN VS 1 SIDEMEN' ] },
+  { category: '20vs1', keywords: ['20 WOMEN VS 1 SIDEMEN'] },
   { category: 'Road Trip', keywords: ['road TRIP', 'roadtrip', 'road trip'] },
   { category: 'Holiday', keywords: ['holiday'] },
   { category: 'Calories Challenge', keywords: ['calories', 'calorie'] },
@@ -245,7 +299,7 @@ const tagCategories = [
   { category: 'Challenge', keywords: ['challenge'] },
   { category: 'Hide & Seek', keywords: ['hide', 'seek'] },
   { category: 'Among Us', keywords: ['among'] },
-  { category: 'Gaming', keywords: ['game', 'play', 'GTA', 'among', 'minecraft', 'fifa', 'fall guys', 'gartic phone']},
+  { category: 'Gaming', keywords: ['game', 'play', 'GTA', 'among', 'minecraft', 'fifa', 'fall guys', 'gartic phone'] },
   { category: 'In Real Life', keywords: ['in real life'] },
   { category: 'Sidemen Vs', keywords: ['sidemen vs'] },
   { category: 'Christmas Day', keywords: ['christmas day'] },
@@ -273,7 +327,7 @@ const tagCategories = [
   { category: 'Fall Guys', keywords: ['fall guys'] },
   { category: 'FIFA', keywords: ['fifa'] },
   { category: 'Hot vs Cold', keywords: ['hot vs cold'] },
-  
+
   // Add more categories and keywords as needed
 ];
 
@@ -335,9 +389,9 @@ async function associateTagsToVideos() {
       } else if (video.channel_title == 'Sidemen') {
         seriesCategories.forEach((category) => {
 
-          if(associatedTag.includes(category.category)) {
+          if (associatedTag.includes(category.category)) {
             seriesTag = (category.category);
-          } 
+          }
         })
       }
 

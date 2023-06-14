@@ -1,0 +1,10 @@
+{
+    "development": {
+      "username": "admin",
+      "password": "password123",
+      "database": "svdb",
+      "port": "6505",
+      "host": "127.0.0.1",
+      "dialect": "postgresql"
+    }
+}
