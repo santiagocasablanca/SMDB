@@ -1,6 +1,9 @@
 import React, { Component, Suspense } from 'react'
 import { HashRouter, Route, Routes } from 'react-router-dom'
-// import './scss/style.scss'
+import { ConfigProvider, theme } from 'antd';
+import { yellow } from '@ant-design/colors';
+
+import './less/antd.less'
 import 'antd/dist/reset.css';
 
 const loading = (
@@ -20,18 +23,29 @@ const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'))
 
 class App extends Component {
   render() {
+  
+
     return (
-      <HashRouter>
-        <Suspense fallback={loading}>
-          <Routes>
-            {/* <Route exact path="/login" name="Login Page" element={<Login />} />
+      <ConfigProvider
+        theme={{
+          algorithm: theme.darkAlgorithm,
+          token: {
+            colorPrimary: yellow.primary,
+          },
+        }}
+      >
+        <HashRouter>
+          <Suspense fallback={loading}>
+            <Routes>
+              {/* <Route exact path="/login" name="Login Page" element={<Login />} />
             <Route exact path="/register" name="Register Page" element={<Register />} />
             <Route exact path="/404" name="Page 404" element={<Page404 />} />
             <Route exact path="/500" name="Page 500" element={<Page500 />} /> */}
-            <Route path="*" name="Home" element={<DefaultLayout />} />
-          </Routes>
-        </Suspense>
-      </HashRouter>
+              <Route path="*" name="Home" element={<DefaultLayout />} />
+            </Routes>
+          </Suspense>
+        </HashRouter>
+      </ConfigProvider>
     )
   }
 }

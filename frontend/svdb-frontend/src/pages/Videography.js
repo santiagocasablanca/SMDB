@@ -1,15 +1,53 @@
 import { Col, Row, Card, Table, Tag } from 'antd';
+import { green, presetDarkPalettes } from '@ant-design/colors';
+import { yellow } from '@ant-design/colors';
 import { React, useEffect, useState } from "react"
 import { getVideosFn } from "../services/videoApi.ts"
 import VideoFilterPanel from './VideographyFilterPanel'
-import Filter from './Filter'
 import VideographyEditPanel from './VideographyEditPanel'
 import dayjs from "dayjs"
+import insertCss from 'insert-css'
+
+
 
 
 const Videography = () => {
+  // insertCss(`
+  //   .expanded-row {
+  //     background-color: yellow;
+  //     color:black;
+  //   }
+  //   // .table-container {
+  //   //   background-color: #1c1c1c;
+  //   // }
+    
+  //   // .table-container .ant-table {
+  //   //   color: #ffffff;
+  //   // }
+    
+  //   // .table-container .ant-table-thead > tr > th {
+  //   //   background-color: #333333;
+  //   // }
+    
+  //   // .table-container .ant-table-tbody > tr:nth-child(odd) {
+  //   //   background-color: #282828;
+  //   // }
+    
+  //   // .table-container .ant-table-tbody > tr:hover {
+  //   //   background-color: #444444;
+  //   // }
+    
+  //   // .table-container .ant-table-tbody > .expanded-row {
+  //   //   background-color: #555555;
+  //   // }
 
-
+  //   .table-container .ant-table-cell.ant-table-sticky-left {
+  //     background-color: yellow[10];
+  //     z-index: 2;
+  //   }
+    
+    
+  // `);
 
 
   const [activePage, setActivePage] = useState(1)
@@ -45,11 +83,11 @@ const Videography = () => {
       title: "Series",
       render: (serie) => (
         <span>
-         <Tag color='volcano' key={serie}> {serie} </Tag>
+          <Tag color='volcano' key={serie}> {serie} </Tag>
         </span>
       ),
     },
-    { key: 'published_at', title: 'Published At', dataIndex: 'published_at', width: '13%', sorter: true, render: (text) => <p>{dayjs(text).format("DD MMM YYYY HH:MM")}</p> },
+    { key: 'published_at', title: 'Published At', dataIndex: 'published_at', width: '13%', sorter: true, render: (text) => <p>{dayjs(text).format("DD MMM YYYY HH:mm:ss")}</p> },
     { key: 'views', title: 'Views', dataIndex: 'views', width: '8%', align: 'right', sorter: true, render: (text) => <p>{intToStringBigNumber(text)}</p> },
     { key: 'likes', title: 'Likes', dataIndex: 'likes', width: '8%', align: 'right', sorter: true, render: (text) => <p>{intToStringBigNumber(text)}</p> },
     // { key: 'dilikes', title: 'Dislikes', dataIndex: 'dislikes', width: '8%',  align: 'right', sorter: true, render: (text) => <p>{intToStringBigNumber(text)}</p> },
@@ -140,28 +178,7 @@ const Videography = () => {
   }, [activePage, columnFilter, columnSorter, itemsPerPage])
 
 
-  interface DataType {
-    id: React.Key;
-    channel_title: string;
-    title: string;
-    description: string;
-    published_at: Date;
-    url: string;
-    views: Number;
-    likes: Number;
-    comments: Number;
-    location: Array<String>;
-    tags: Array<String>;
-    createdAt: Date;
-    updatedAt: Date;
-  }
-
   const onChange = (pagination, filters, sorter, extra) => {
-    console.log(' onChange? ' + JSON.stringify(myFilters));
-    console.log('params', pagination, filters, sorter, extra);
-    // activePage = pagination;
-    console.log(JSON.stringify(filters));
-
     const offset = pagination.current;//itemsPerPage * activePage - itemsPerPage
     let params = new URLSearchParams()
 
@@ -177,7 +194,6 @@ const Videography = () => {
 
     getVideosFn(offset, pagination.pageSize, params)
       .then((result) => {
-        // console.log(JSON.stringify(result));
         setRecords(result.results)
         result.results ? setVideos(result.videos) : setVideos([])
       })
@@ -220,16 +236,33 @@ const Videography = () => {
     return (num / si[index].v).toFixed(2).replace(/\.0+$|(\.[0-9]*[1-9])0+$/, "$1") + si[index].s;
   };
 
+  const isRowExpanded = (record) => expandedRowKeys.includes(record.video_id);
+
+  const rowClassName = (record, index) => {
+    return isRowExpanded(record) ? 'expanded-row' : '';
+  };
+
+  const [expandedRowKeys, setExpandedRowKeys] = useState([]);
+
+  const handleExpand = (expanded, record) => {
+    console.log(expanded);
+    console.log(record);
+    if (expanded) {
+      setExpandedRowKeys([...expandedRowKeys, record.video_id]);
+    } else {
+      setExpandedRowKeys(expandedRowKeys.filter((key) => key !== record.video_id));
+    }
+    console.log(JSON.stringify(expandedRowKeys))
+  };
 
   // Function to update the filter values
   const handleFilterChange = (newFilters) => {
     if (newFilters.search) {
-      console.log(' handleFilterChange? ' + JSON.stringify(newFilters))
+      // console.log(' handleFilterChange? ' + JSON.stringify(newFilters))
 
       const offset = activePage;//itemsPerPage * activePage - itemsPerPage
       let params = new URLSearchParams()
       Object.keys(columnFilter).forEach((key) => {
-        console.log('here: ' + key + ' - ' + columnFilter[key])
         params.append(key, columnFilter[key])
       });
       columnSorter &&
@@ -256,30 +289,34 @@ const Videography = () => {
   return (
     <Row span="24" gutter={16}>
       <Col span="24" className="gutter-row">
-        {/* <Filter /> */}
         <VideoFilterPanel filters={myFilters} onChange={handleFilterChange} />
       </Col>
       <Col span="24" className="gutter-row">
         {/* <Card> */}
+        <div className="table-container">
           <Table columns={columns} dataSource={videos}
             scroll={{ x: 1500, y: 900 }}
             // header={() => 'Results'}
             onChange={onChange}
-            rowKey={(record) => record.id}
+            rowKey={(record) => record.video_id}
             // rowSelection={rowSelection}
             expandable={{
               expandedRowRender: (record) => <VideographyEditPanel video={record}></VideographyEditPanel>,
               rowExpandable: (record) => record.title !== 'Not Expandable',
+              expandedRowKeys: expandedRowKeys,
+              onExpand: handleExpand
             }}
+            rowClassName={rowClassName}
             size="small"
             pagination={{
               total: records,
               showQuickJumper: true,
               defaultPageSize: 10,
               showSizeChanger: true,
-              pageSizeOptions: ["10", "20", "30"]
+              pageSizeOptions: ["10", "25", "50"]
             }}
           />
+        </div>
         {/* </Card> */}
       </Col>
     </Row>

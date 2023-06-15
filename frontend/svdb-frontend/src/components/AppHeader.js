@@ -17,65 +17,48 @@ import { useSelector, useDispatch } from 'react-redux'
 
 import { AppBreadcrumb } from './index'
 import { AppHeaderDropdown } from './header/index'
+import {
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  UploadOutlined,
+  UserOutlined,
+  VideoCameraOutlined,
+} from '@ant-design/icons';
+import { Button, Layout, Menu, theme } from 'antd';
+import { useState } from 'react';
+import { AppSidebar } from '../components/index'
+
+const { Header, Sider, Content } = Layout;
 // import { logo } from '../assets/images/sidemenpluslogo.png'
 
-const AppHeader = () => {
-  const dispatch = useDispatch()
-  const sidebarShow = useSelector((state) => state.sidebarShow)
+const AppHeader = ({ collapsed, childToParent }) => {
 
+  const {
+    token: { colorBgContainer },
+  } = theme.useToken();
+
+  const handleClick = () => {
+    childToParent(!collapsed);
+  };
+  
   return (
-    <></>
-    // <CHeader position="sticky" className="mb-4">
-    //   <CContainer fluid>
-    //     <CHeaderToggler
-    //       className="ps-1"
-    //       onClick={() => dispatch({ type: 'set', sidebarShow: !sidebarShow })}
-    //     >
-    //       <CIcon icon={cilMenu} size="lg" />
-    //     </CHeaderToggler>
-    //     <CHeaderBrand className="mx-auto d-md-none" to="/">
-    //       <CImage fluid src='../assets/images/sidemenpluslogo.png' height={48} alt="Logo" />
-    //       {/* <CIcon icon={logo} height={48} alt="Logo" /> */}
-    //     </CHeaderBrand>
-    //     <CHeaderNav className="d-none d-md-flex me-auto">
-    //       <CNavItem>
-    //         <CNavLink to="/dashboard" component={NavLink}>
-    //           Dashboard
-    //         </CNavLink>
-    //       </CNavItem>
-    //       {/* <CNavItem>
-    //         <CNavLink href="#">Users</CNavLink>
-    //       </CNavItem>
-    //       <CNavItem>
-    //         <CNavLink href="#">Settings</CNavLink>
-    //       </CNavItem> */}
-    //     </CHeaderNav>
-    //     <CHeaderNav>
-    //       {/* <CNavItem>
-    //         <CNavLink href="#">
-    //           <CIcon icon={cilBell} size="lg" />
-    //         </CNavLink>
-    //       </CNavItem>
-    //       <CNavItem>
-    //         <CNavLink href="#">
-    //           <CIcon icon={cilList} size="lg" />
-    //         </CNavLink>
-    //       </CNavItem>
-    //       <CNavItem>
-    //         <CNavLink href="#">
-    //           <CIcon icon={cilEnvelopeOpen} size="lg" />
-    //         </CNavLink>
-    //       </CNavItem> */}
-    //     </CHeaderNav>
-    //     <CHeaderNav className="ms-3">
-    //       {/* <AppHeaderDropdown /> */}
-    //     </CHeaderNav>
-    //   </CContainer>
-    //   <CHeaderDivider />
-    //   <CContainer fluid>
-    //     <AppBreadcrumb />
-    //   </CContainer>
-    // </CHeader>
+    <Header
+      style={{
+        padding: 0,
+        background: colorBgContainer
+      }}
+    >
+      <Button
+        type="text"
+        icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+        onClick={handleClick}
+        style={{
+          fontSize: '16px',
+          width: 64,
+          height: 64,
+        }}
+      />
+    </Header>
   )
 }
 
