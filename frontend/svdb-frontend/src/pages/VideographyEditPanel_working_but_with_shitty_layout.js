@@ -1,11 +1,10 @@
-import { Row, Col, Typography, List, Avatar, Button, Popconfirm, Space, Card, Image, Descriptions, Form, Input, DatePicker, Select } from 'antd';
+import { Row, Col, List, Avatar, Button, Popconfirm, Space, Card, Image, Descriptions, Form, Input, DatePicker, Select } from 'antd';
 import { LikeOutlined, MessageOutlined, EyeOutlined } from '@ant-design/icons';
 import { React, useEffect, useState } from "react"
 import { getVideosFn } from "../services/videoApi.ts"
 import dayjs from "dayjs"
 var duration = require('dayjs/plugin/duration')
 dayjs.extend(duration)
-const { Text, Link } = Typography;
 
 const VideographyEditPanel = ({ video, onChange }) => {
 
@@ -45,17 +44,17 @@ const VideographyEditPanel = ({ video, onChange }) => {
     {
       key: 'views',
       title: 'Views',
-      icon: <EyeOutlined />
+      icon: <EyeOutlined/>
     },
     {
       key: 'likes',
       title: 'Likes',
-      icon: <LikeOutlined />
+      icon: <LikeOutlined/>
     },
     {
       key: 'comments',
       title: 'Comments',
-      icon: <MessageOutlined />
+      icon: <MessageOutlined/>
     }
   ];
 
@@ -64,35 +63,7 @@ const VideographyEditPanel = ({ video, onChange }) => {
 
   return (
     <>
-      {/* TITLE, PUB_AT AND STATS */}
-      {/* <Row>
-        <Col xs={24} sm={24} md={8} lg={8} xl={8}>
-          <h2>{video.title}</h2><Text type="secondary">({video.channel_title})</Text>
-        </Col>
-        <Col xs={20} sm={20} md={4} lg={6} xl={6}>
-          
-        </Col>
-        <Col xs={4} sm={4} md={4} lg={4} xl={4}>
-          <Text>{parseDate(video.published_at)}</Text>
-        </Col>
-        <Col xs={24} sm={24} md={8} lg={4} xl={4}>
-          <Text>{parseDuration(video.duration)}</Text>
-        </Col>
-
-
-      </Row> */}
-      {/* <Row justify="center" align="top">
-        <Col className="gutter-row" span={20}> */}
-          <div dangerouslySetInnerHTML={{ __html: video.player.embedHtml }} />
-        {/* </Col>
-      </Row> */}
-
-
-    </>
-  )
-
-
-  {/* <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }} style={{ marginBottom: 25 + 'px' }}>
+      <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }} style={{ marginBottom: 25 + 'px' }}>
         <Col className="gutter-row" span={16}>
           <div dangerouslySetInnerHTML={{ __html: video.player.embedHtml }} />
         </Col>
@@ -111,25 +82,25 @@ const VideographyEditPanel = ({ video, onChange }) => {
             )}
           />
           {/* <Descriptions title="Video stats" layout="vertical"> */}
-  {/* <Descriptions.Item label="Views">{intToStringBigNumber(video.views)}</Descriptions.Item>
+          {/* <Descriptions.Item label="Views">{intToStringBigNumber(video.views)}</Descriptions.Item>
             <Descriptions.Item label="Likes">{intToStringBigNumber(video.likes)}</Descriptions.Item>
             <Descriptions.Item label="Comments">{intToStringBigNumber(video.comments)}</Descriptions.Item>
           </Descriptions> */}
 
-  //   </Col>
+        </Col>
 
-  // </Row>
-  // <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }} style={{ marginBottom: 25 + 'px' }}>
-  //   <Col className="gutter-row" span={24}>
-  //     <Descriptions title={video.title} layout="vertical">
-  //       <Descriptions.Item label="Channel">{video.channel_title}</Descriptions.Item>
-  //       <Descriptions.Item label="Published At">{parseDate(video.published_at)}</Descriptions.Item>
-  //       <Descriptions.Item label="Duration">{parseDuration(video.duration)}</Descriptions.Item>
-  //     </Descriptions>
-  //   </Col>
-  // </Row> */}
-
-
+      </Row>
+      <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }} style={{ marginBottom: 25 + 'px' }}>
+        <Col className="gutter-row" span={24}>
+          <Descriptions title={video.title} layout="vertical">
+            <Descriptions.Item label="Channel">{video.channel_title}</Descriptions.Item>
+            <Descriptions.Item label="Published At">{parseDate(video.published_at)}</Descriptions.Item>
+            <Descriptions.Item label="Duration">{parseDuration(video.duration)}</Descriptions.Item>
+          </Descriptions>
+        </Col>
+      </Row>
+    </>
+  )
 
   //     <Space size={12}>
   //     {/* {video.player.embedHtml} */}

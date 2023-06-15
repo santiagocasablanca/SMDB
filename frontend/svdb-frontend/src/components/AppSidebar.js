@@ -1,53 +1,62 @@
-import React from 'react'
+import React, { useReducer } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import {
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  UploadOutlined,
+  UserOutlined,
+  VideoCameraOutlined,
+} from '@ant-design/icons';
+import { Button, Layout, Menu, theme } from 'antd';
+import { useState } from 'react';
+const { Header, Sider, Content } = Layout;
 
-// import { CSidebar, CSidebarBrand, CSidebarNav, CSidebarToggler, CImage } from '@coreui/react'
-// import CIcon from '@coreui/icons-react'
+const reducer = (state, action) => {
+  switch (action.type) {
+    case 'INCREMENT':
+      return { count: state.count + 1 };
+    case 'DECREMENT':
+      return { count: state.count - 1 };
+    default:
+      return state;
+  }
+};
 
-import { AppSidebarNav } from './AppSidebarNav'
 
-// import { logoNegative } from 'src/assets/brand/logo-negative'
-// import { sygnet } from 'src/assets/brand/sygnet'
-
-// import SimpleBar from 'simplebar-react'
-// import 'simplebar/dist/simplebar.min.css'
-
-// // sidebar nav config
-// import navigation from '../_nav'
-// import LogoImg from 'src/assets/images/sidemenpluslogo.png'
-
-const AppSidebar = () => {
+const AppSidebar = ({ collapsed }) => {
   const dispatch = useDispatch()
   const unfoldable = useSelector((state) => state.sidebarUnfoldable)
   const sidebarShow = useSelector((state) => state.sidebarShow)
 
   return (
-    <></>
-    // <CSidebar
-    //   position="fixed"
-    //   unfoldable={unfoldable}
-    //   visible={sidebarShow}
-    //   onVisibleChange={(visible) => {
-    //     dispatch({ type: 'set', sidebarShow: visible })
-    //   }}
-    // >
-    //   <CSidebarBrand className="d-none d-md-flex" to="/">
-    //     <CImage className="sidebar-brand-full" src={LogoImg} height={35} alt="Logo" />
-    //     {/* fluid */}
-    //     <CImage className="sidebar-brand-narrow" src={LogoImg}  height={35} alt="Logo" />
-    //     {/* <CIcon className="sidebar-brand-full" icon={logoNegative} height={35} />
-    //     <CIcon className="sidebar-brand-narrow" icon={sygnet} height={35} /> */}
-    //   </CSidebarBrand>
-    //   <CSidebarNav>
-    //     <SimpleBar>
-    //       <AppSidebarNav items={navigation} />
-    //     </SimpleBar>
-    //   </CSidebarNav>
-    //   <CSidebarToggler
-    //     className="d-none d-lg-flex"
-    //     onClick={() => dispatch({ type: 'set', sidebarUnfoldable: !unfoldable })}
-    //   />
-    // </CSidebar>
+
+    <Sider breakpoint="lg"
+      collapsedWidth="0"
+      trigger={null} collapsible collapsed={collapsed}>
+      <div className="demo-logo-vertical" />
+      <Menu
+        theme="dark"
+        mode="inline"
+        defaultSelectedKeys={['1']}
+        items={[
+          {
+            key: '1',
+            icon: <UserOutlined />,
+            label: 'nav 1',
+          },
+          {
+            key: '2',
+            icon: <VideoCameraOutlined />,
+            label: 'nav 2',
+          },
+          {
+            key: '3',
+            icon: <UploadOutlined />,
+            label: 'nav 3',
+          },
+        ]}
+      />
+    </Sider>
   )
 }
 
