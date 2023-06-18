@@ -1,22 +1,6 @@
 import React from 'react'
-import { NavLink } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
-// import {
-//   CContainer,
-//   CHeader,
-//   CHeaderBrand,
-//   CHeaderDivider,
-//   CHeaderNav,
-//   CHeaderToggler,
-//   CNavLink,
-//   CNavItem,
-//   CImage
-// } from '@coreui/react'
-// import CIcon from '@coreui/icons-react'
-// import { cilBell, cilEnvelopeOpen, cilList, cilMenu } from '@coreui/icons'
 
-import { AppBreadcrumb } from './index'
-import { AppHeaderDropdown } from './header/index'
+import { AppLogo } from './index'
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -24,9 +8,7 @@ import {
   UserOutlined,
   VideoCameraOutlined,
 } from '@ant-design/icons';
-import { Button, Layout, Menu, theme } from 'antd';
-import { useState } from 'react';
-import { AppSidebar } from '../components/index'
+import { Button, Layout, Space, theme } from 'antd';
 
 const { Header, Sider, Content } = Layout;
 // import { logo } from '../assets/images/sidemenpluslogo.png'
@@ -40,7 +22,7 @@ const AppHeader = ({ collapsed, childToParent }) => {
   const handleClick = () => {
     childToParent(!collapsed);
   };
-  
+
   return (
     <Header
       style={{
@@ -48,16 +30,19 @@ const AppHeader = ({ collapsed, childToParent }) => {
         background: colorBgContainer
       }}
     >
-      <Button
-        type="text"
-        icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-        onClick={handleClick}
-        style={{
-          fontSize: '16px',
-          width: 64,
-          height: 64,
-        }}
-      />
+      <Space>
+        <AppLogo></AppLogo>
+        <Button
+          type="text"
+          icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+          onClick={handleClick}
+          style={{
+            fontSize: '16px',
+            width: 64,
+            height: 64,
+          }}
+        />
+      </Space>
     </Header>
   )
 }

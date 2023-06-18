@@ -3,8 +3,10 @@ import { HashRouter, Route, Routes } from 'react-router-dom'
 import { ConfigProvider, theme } from 'antd';
 import { yellow } from '@ant-design/colors';
 
-import './less/antd.less'
+import variables from './sass/antd.module.scss'
+
 import 'antd/dist/reset.css';
+
 
 const loading = (
   <div className="pt-3 text-center">
@@ -30,7 +32,8 @@ class App extends Component {
         theme={{
           algorithm: theme.darkAlgorithm,
           token: {
-            colorPrimary: yellow.primary,
+            colorPrimary: "#F5C518",
+            background: variables.bg
           },
         }}
       >

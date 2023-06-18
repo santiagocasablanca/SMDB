@@ -3,7 +3,9 @@ import 'core-js'
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App'
-import './less/antd.less'
+import './index.scss'; // Import the Less file
+
+import './sass/antd.module.scss'
 import reportWebVitals from './reportWebVitals'
 import { Provider } from 'react-redux'
 import store from './store'
