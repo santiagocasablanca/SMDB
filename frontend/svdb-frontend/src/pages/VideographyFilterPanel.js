@@ -3,6 +3,7 @@ import { React, useEffect, useState } from "react"
 import { getChannelsFn } from "../services/channelApi.ts"
 import { fetchAllSeries, fetchAllTags } from "../services/videoApi.ts"
 import ChannelSelector from './ChannelSelector'
+import variables from '../sass/antd.module.scss'
 
 
 import dayjs from "dayjs"
@@ -145,6 +146,7 @@ const VideographyFilterPanel = ({ filters, onChange }) => {
     <Collapse activeKey={isExpanded ? ['filters'] : []}
       onChange={toggleFilters}
       expandIconPosition="end"
+      className="filterPanel"
       size="large"
       // collapsible="header"
       bordered={false}>

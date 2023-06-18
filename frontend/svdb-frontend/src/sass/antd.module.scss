@@ -1,0 +1,44 @@
+@use './variables';
+
+$primaryColor: #feffe6;
+$secondaryColor: #b7eb8f;
+$highlightColor: #fffb8f;
+$coolGray: #595959;
+$coolLighterGray: #f5f5f5;
+$coolDarkerGray: #1f1f1f;
+
+// Pallete
+$themeYellow: #F5C518;
+$onyx: #2E3532;
+$ebony: #545E56;
+$themeBlack: #000000;
+$raisinBlack: #1E1E24;
+$verdigris: #50C5B7; // #48A9A6 //#50C5B7
+$myrtleGreen: #587B7F;
+$fireRed: #DB162F;
+$miniPink: #FFDDE2;
+
+
+
+:export {
+  primaryColor: $primaryColor;
+  secondaryColor: $secondaryColor;
+  coolGray: $coolGray;
+  coolLighterGray: $coolLighterGray;
+  coolDarkerGray: $coolDarkerGray;
+  highlightColor: $highlightColor;
+  primary: $themeYellow;
+  primaryVariant: $highlightColor;
+  secondary: $verdigris;
+  secondaryVariant: $myrtleGreen;
+  bg: $verdigris;
+  surface: $ebony;
+  error: $fireRed;
+  onPrimary: $themeBlack;
+  onSecondary: $themeBlack;
+  onBg: $themeBlack;
+  onSurface: white;
+  onError: white;
+  pink: $miniPink;
+
+}

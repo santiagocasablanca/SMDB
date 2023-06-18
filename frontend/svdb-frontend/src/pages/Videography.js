@@ -7,47 +7,132 @@ import VideoFilterPanel from './VideographyFilterPanel'
 import VideographyEditPanel from './VideographyEditPanel'
 import dayjs from "dayjs"
 import insertCss from 'insert-css'
+import variables from '../sass/antd.module.scss'
 
 
 
+// .ant-input {
+//   color: $coolLighterGray !important;
+// } 
 
 const Videography = () => {
-  // insertCss(`
-  //   .expanded-row {
-  //     background-color: yellow;
-  //     color:black;
-  //   }
-  //   // .table-container {
-  //   //   background-color: #1c1c1c;
-  //   // }
-    
-  //   // .table-container .ant-table {
-  //   //   color: #ffffff;
-  //   // }
-    
-  //   // .table-container .ant-table-thead > tr > th {
-  //   //   background-color: #333333;
-  //   // }
-    
-  //   // .table-container .ant-table-tbody > tr:nth-child(odd) {
-  //   //   background-color: #282828;
-  //   // }
-    
-  //   // .table-container .ant-table-tbody > tr:hover {
-  //   //   background-color: #444444;
-  //   // }
-    
-  //   // .table-container .ant-table-tbody > .expanded-row {
-  //   //   background-color: #555555;
-  //   // }
+  insertCss(`
 
-  //   .table-container .ant-table-cell.ant-table-sticky-left {
-  //     background-color: yellow[10];
-  //     z-index: 2;
-  //   }
+  .filterPanel {
+    background: `+ variables.primary + `;
+    color: `+ variables.onBg + `!important;
+  }
+
+    .expanded-row {
+      background-color: `+ variables.primary + `;
+      color: `+ variables.onBg + `;
+    }
+
+    .ant-table-wrapper .ant-table-cell-fix-left, .ant-table-wrapper .ant-table-cell-fix-right {
+      color: `+ variables.onBg + `;
+      background: `+ variables.primary + `;
+    }
+
+    :where(.css-dev-only-do-not-override-yp4umk).ant-collapse>.ant-collapse-item >.ant-collapse-header {
+      color: `+ variables.onBg + `;
+
+    }
+    .ant-table-wrapper .ant-table-row-expand-icon {
+      border-color: `+ variables.onSurface + `;
+    }
+
+
+    .ant-collapse>.ant-collapse-item >.ant-collapse-header
+      color: `+ variables.onBg + `;
+    } 
+
+    .ant-form-item .ant-form-item-label >label {
+      color: `+ variables.onBg + `;
+
+    }
+    :where(.css-dev-only-do-not-override-yp4umk).ant-form-item .ant-form-item-label >label {
+      color: `+ variables.onBg + `;
+
+    }
+
+    ::-webkit-input-placeholder {
+      color: `+ variables.onSurface + `;
+
+    }
+
+    :where(.css-dev-only-do-not-override-yp4umk).ant-picker {
+      color: `+ variables.onSurface + `;
+
+    }
+    :where(.css-dev-only-do-not-override-yp4umk).ant-picker .ant-picker-suffix {
+      color: `+ variables.onSurface + `;
+
+    }
+
+    :where(.css-dev-only-do-not-override-yp4umk).ant-picker .ant-picker-separator {
+      color: `+ variables.onSurface + `;
+
+    }
+
+    :where(.css-dev-only-do-not-override-yp4umk).ant-select .ant-select-selection-placeholder {
+      color: `+ variables.onSurface + `;
+
+    }
+
+    :where(.css-dev-only-do-not-override-yp4umk).ant-picker .ant-picker-input >input::placeholder {
+      color: `+ variables.onSurface + `;
+
+    }
+
+    :where(.css-dev-only-do-not-override-yp4umk).ant-select .ant-select-arrow {
+      color: `+ variables.onSurface + `;
+
+    }
+
+
+
+    :where(.css-dev-only-do-not-override-yp4umk).ant-input::placeholder {
+      border-color: `+ variables.onSurface + `;
+      color: `+ variables.onSurface + `;
+    }
+
+
+:where(.css-dev-only-do-not-override-1nd75cd).ant-table-wrapper .ant-table-cell-fix-left, :where(.css-dev-only-do-not-override-1nd75cd).ant-table-wrapper .ant-table-cell-fix-right {
+  position: sticky!important;
+  z-index: 2;
+  background-color: `+ variables.secondary + `!important;
+      color: `+ variables.onBg + `!important;
+}
+
+:where(.css-dev-only-do-not-override-1nd75cd).ant-table-wrapper .ant-table-row-expand-icon:focus, :where(.css-dev-only-do-not-override-1nd75cd).ant-table-wrapper .ant-table-row-expand-icon:hover, :where(.css-dev-only-do-not-override-1nd75cd).ant-table-wrapper .ant-table-row-expand-icon:active {
+  color: `+ variables.primaryColor + `;
+}
+
+:where(.css-dev-only-do-not-override-yp4umk).ant-table-wrapper .ant-table-row-expand-icon:focus, :where(.css-dev-only-do-not-override-yp4umk).ant-table-wrapper .ant-table-row-expand-icon:hover, :where(.css-dev-only-do-not-override-yp4umk).ant-table-wrapper .ant-table-row-expand-icon:active {
+  color: `+ variables.primaryColor + `;
+  border-color:  `+ variables.primaryColor + `;
+}
+
+:where(.css-dev-only-do-not-override-yp4umk).ant-table-wrapper .ant-table-row-expand-icon:focus, :where(.css-dev-only-do-not-override-yp4umk).ant-table-wrapper .ant-table-row-expand-icon:hover {
+  color: `+ variables.primaryColor + `;
+  border-color:  `+ variables.primaryColor + `;
+}
+
+
     
+
+.ant-table-tbody .ant-table-cell-row:hover > th, .ant-table-cell-row:hover > td,
+> th.ant-table-cell-row-hover,
+> td.ant-table-cell-row-hover: {
+  background-color: `+ variables.primaryVariant + `;
+}
+
+
+    .mb {
+      margin-bottom: 30px;
+    }
     
-  // `);
+  `);
 
 
   const [activePage, setActivePage] = useState(1)
@@ -288,7 +373,7 @@ const Videography = () => {
 
   return (
     <Row span="24" gutter={16}>
-      <Col span="24" className="gutter-row">
+      <Col span="24" className="gutter-row mb">
         <VideoFilterPanel filters={myFilters} onChange={handleFilterChange} />
       </Col>
       <Col span="24" className="gutter-row">
@@ -308,13 +393,16 @@ const Videography = () => {
             }}
             rowClassName={rowClassName}
             size="small"
+            style={{ 
+              controlItemBgHover: variables.primary
+            }}
             pagination={{
               total: records,
               showQuickJumper: true,
               defaultPageSize: 10,
               showSizeChanger: true,
               pageSizeOptions: ["10", "25", "50"]
-            }}
+            }}  
           />
         </div>
         {/* </Card> */}

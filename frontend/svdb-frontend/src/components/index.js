@@ -4,6 +4,7 @@ import AppFooter from './AppFooter'
 import AppHeader from './AppHeader'
 import AppHeaderDropdown from './header/AppHeaderDropdown'
 import AppSidebar from './AppSidebar'
+import AppLogo from './AppLogo'
 
 
 export {
@@ -12,5 +13,6 @@ export {
   AppFooter,
   AppHeader,
   AppHeaderDropdown,
-  AppSidebar
+  AppSidebar,
+  AppLogo
 }

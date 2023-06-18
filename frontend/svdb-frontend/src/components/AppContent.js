@@ -1,6 +1,8 @@
 import React, { Suspense } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
-import {  Layout, Menu, theme } from 'antd';
+import { Layout, Menu, theme } from 'antd';
+import variables from '../sass/antd.module.scss'
+
 import routes from '../routes'
 
 const { Content } = Layout;
@@ -9,13 +11,21 @@ const { Content } = Layout;
 
 const AppContent = () => {
 
+  // style={{
+  //   // margin: '24px 16px',
+  //   // padding: 24,
+  //   // background: 'white',
+  // }}
   return (
     <Content
+
       style={{
-        // margin: '24px 16px',
-        // padding: 24,
+        padding: '10px 24px',
+        margin: '24px 16px',
+        background: variables.bg,
+        color: variables.onBg,
+        primaryColor: variables.primary,
         minHeight: 280,
-        // background: 'white',
       }}>
       <Suspense>
         <Routes>
