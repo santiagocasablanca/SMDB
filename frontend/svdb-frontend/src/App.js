@@ -26,7 +26,8 @@ const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'))
 class App extends Component {
   render() {
   
-
+    // darkAlgorithm
+    // defaultAlgorithm
     return (
       <ConfigProvider
         theme={{

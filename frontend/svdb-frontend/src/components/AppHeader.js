@@ -9,6 +9,8 @@ import {
   VideoCameraOutlined,
 } from '@ant-design/icons';
 import { Button, Layout, Space, theme } from 'antd';
+import variables from '../sass/antd.module.scss'
+
 
 const { Header, Sider, Content } = Layout;
 // import { logo } from '../assets/images/sidemenpluslogo.png'
@@ -19,17 +21,18 @@ const AppHeader = ({ collapsed, childToParent }) => {
     token: { colorBgContainer },
   } = theme.useToken();
 
+  const headerStyle = {
+    padding: 0,
+    background: variables.sdmnWhite,
+    color: variables.sdmnBlack
+  }; // sdmnDarkBlue
+
   const handleClick = () => {
     childToParent(!collapsed);
   };
 
   return (
-    <Header
-      style={{
-        padding: 0,
-        background: colorBgContainer
-      }}
-    >
+    <Header style={headerStyle}>
       <Space>
         <AppLogo></AppLogo>
         <Button
@@ -38,6 +41,7 @@ const AppHeader = ({ collapsed, childToParent }) => {
           onClick={handleClick}
           style={{
             fontSize: '16px',
+            color: variables.sdmnDarkBlue,
             width: 64,
             height: 64,
           }}

@@ -19,19 +19,26 @@ const Videography = () => {
   insertCss(`
 
   .filterPanel {
-    background: `+ variables.primary + `;
-    color: `+ variables.onBg + `!important;
+    background: `+ variables.sdmnLightBlue + `;
+    color: `+ variables.onBg + `;
+  }
+
+  .editPanel {
+    background: `+ variables.sdmnWhite + `;
+    color: `+ variables.onBg + `;
+  }
+
+  :where(.css-dev-only-do-not-override-yp4umk).ant-table-wrapper .ant-table.ant-table-small .ant-table-expanded-row-fixed {
+    background: `+ variables.sdmnWhite + `;
+    color: `+ variables.onBg + `;
   }
 
     .expanded-row {
-      background-color: `+ variables.primary + `;
+      background-color: `+ variables.sdmnYellow + `;
       color: `+ variables.onBg + `;
     }
 
-    .ant-table-wrapper .ant-table-cell-fix-left, .ant-table-wrapper .ant-table-cell-fix-right {
-      color: `+ variables.onBg + `;
-      background: `+ variables.primary + `;
-    }
+    
 
     :where(.css-dev-only-do-not-override-yp4umk).ant-collapse>.ant-collapse-item >.ant-collapse-header {
       color: `+ variables.onBg + `;
@@ -100,23 +107,10 @@ const Videography = () => {
 :where(.css-dev-only-do-not-override-1nd75cd).ant-table-wrapper .ant-table-cell-fix-left, :where(.css-dev-only-do-not-override-1nd75cd).ant-table-wrapper .ant-table-cell-fix-right {
   position: sticky!important;
   z-index: 2;
-  background-color: `+ variables.secondary + `!important;
-      color: `+ variables.onBg + `!important;
+  background-color: `+ variables.sdmnDarkBlue + `!important;
+      color: `+ variables.onSurface + `!important;
 }
 
-:where(.css-dev-only-do-not-override-1nd75cd).ant-table-wrapper .ant-table-row-expand-icon:focus, :where(.css-dev-only-do-not-override-1nd75cd).ant-table-wrapper .ant-table-row-expand-icon:hover, :where(.css-dev-only-do-not-override-1nd75cd).ant-table-wrapper .ant-table-row-expand-icon:active {
-  color: `+ variables.primaryColor + `;
-}
-
-:where(.css-dev-only-do-not-override-yp4umk).ant-table-wrapper .ant-table-row-expand-icon:focus, :where(.css-dev-only-do-not-override-yp4umk).ant-table-wrapper .ant-table-row-expand-icon:hover, :where(.css-dev-only-do-not-override-yp4umk).ant-table-wrapper .ant-table-row-expand-icon:active {
-  color: `+ variables.primaryColor + `;
-  border-color:  `+ variables.primaryColor + `;
-}
-
-:where(.css-dev-only-do-not-override-yp4umk).ant-table-wrapper .ant-table-row-expand-icon:focus, :where(.css-dev-only-do-not-override-yp4umk).ant-table-wrapper .ant-table-row-expand-icon:hover {
-  color: `+ variables.primaryColor + `;
-  border-color:  `+ variables.primaryColor + `;
-}
 
 
     
@@ -124,13 +118,56 @@ const Videography = () => {
 .ant-table-tbody .ant-table-cell-row:hover > th, .ant-table-cell-row:hover > td,
 > th.ant-table-cell-row-hover,
 > td.ant-table-cell-row-hover: {
-  background-color: `+ variables.primaryVariant + `;
+  background-color: `+ variables.sdmnDarkBlue + `;
 }
 
+.ant-table-wrapper .ant-table-cell-fix-left, .ant-table-wrapper .ant-table-cell-fix-right {
+  color: `+ variables.onBg + `;
+  background: `+ variables.sdmnYellow + `;
+}
+
+:where(.css-dev-only-do-not-override-yp4umk).ant-table-wrapper .ant-table-tbody >tr.ant-table-row:hover>th, :where(.css-dev-only-do-not-override-yp4umk).ant-table-wrapper .ant-table-tbody >tr.ant-table-row:hover>td, :where(.css-dev-only-do-not-override-yp4umk).ant-table-wrapper .ant-table-tbody >tr >th.ant-table-cell-row-hover, :where(.css-dev-only-do-not-override-yp4umk).ant-table-wrapper .ant-table-tbody >tr >td.ant-table-cell-row-hover {
+  color: `+ variables.onBg + `;
+  background: `+ variables.sdmnYellow + `;
+}
+
+.ant-table-cell {
+  background: `+ variables.sdmnLightBlue + `;
+    color: `+ variables.onBg + `;
+}
+
+.ant-table-row-expand-icon-cell {
+  color: `+ variables.sdmnWhite + `!important;
+  // border-color:  `+ variables.sdmnLightBlue + `!important;
+}
 
     .mb {
       margin-bottom: 30px;
     }
+
+
+:where(.css-dev-only-do-not-override-1nd75cd).ant-table-wrapper .ant-table-row-expand-icon:focus, :where(.css-dev-only-do-not-override-1nd75cd).ant-table-wrapper .ant-table-row-expand-icon:hover, :where(.css-dev-only-do-not-override-1nd75cd).ant-table-wrapper .ant-table-row-expand-icon:active {
+  color: `+ variables.sdmnLightBlue + `!important;
+}
+
+.
+
+:where(.css-dev-only-do-not-override-yp4umk).ant-table-wrapper .ant-table-row-expand-icon:focus, :where(.css-dev-only-do-not-override-yp4umk).ant-table-wrapper .ant-table-row-expand-icon:hover, :where(.css-dev-only-do-not-override-yp4umk).ant-table-wrapper .ant-table-row-expand-icon:active {
+  color: `+ variables.sdmnWhite + `;
+  border-color:  `+ variables.sdmnWhite + `;
+}
+
+:where(.css-dev-only-do-not-override-yp4umk).ant-table-wrapper .ant-table-row-expand-icon:focus, :where(.css-dev-only-do-not-override-yp4umk).ant-table-wrapper .ant-table-row-expand-icon:hover {
+  color: `+ variables.sdmnWhite + `;
+  border-color:  `+ variables.sdmnWhite + `;
+}
+
+ant-table-wrapper .ant-table-row-expand-icon:hover {
+  color: `+ variables.sdmnLightBlue + `;
+  border-color:  `+ variables.sdmnLightBlue + `!important;
+
+}
+
     
   `);
 
@@ -147,7 +184,7 @@ const Videography = () => {
       key: 'channel_title',
       dataIndex: 'channel_title',
       title: 'Channel',
-      width: '15%',
+      width: '10%',
       fixed: 'left',
       ellipsis: true,
     },
@@ -155,12 +192,12 @@ const Videography = () => {
       key: 'title',
       dataIndex: 'title',
       title: 'Title',
-      width: '25%',
+      width: '35%',
       sorter: true,
       // sortDirections: ['asc', 'desc'],
       fixed: 'left',
     },
-    { key: 'duration', title: 'Duration', dataIndex: 'duration', width: '10%', align: 'right', sorter: true, render: (text) => <p>{parseDuration(text)}</p> },
+    { key: 'duration', title: 'Duration', dataIndex: 'duration', width: '7%', align: 'right', sorter: true, render: (text) => <p>{parseDuration(text)}</p> },
     {
       key: 'serie',
       dataIndex: 'serie',
@@ -393,7 +430,7 @@ const Videography = () => {
             }}
             rowClassName={rowClassName}
             size="small"
-            style={{ 
+            style={{
               controlItemBgHover: variables.primary
             }}
             pagination={{
@@ -402,7 +439,7 @@ const Videography = () => {
               defaultPageSize: 10,
               showSizeChanger: true,
               pageSizeOptions: ["10", "25", "50"]
-            }}  
+            }}
           />
         </div>
         {/* </Card> */}
