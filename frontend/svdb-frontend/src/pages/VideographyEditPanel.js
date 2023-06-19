@@ -2,6 +2,8 @@ import { Row, Col, Typography, List, Avatar, Button, Popconfirm, Space, Card, Im
 import { LikeOutlined, MessageOutlined, EyeOutlined } from '@ant-design/icons';
 import { React, useEffect, useState } from "react"
 import { getVideosFn } from "../services/videoApi.ts"
+import variables from '../sass/antd.module.scss'
+
 import dayjs from "dayjs"
 var duration = require('dayjs/plugin/duration')
 dayjs.extend(duration)
@@ -63,7 +65,7 @@ const VideographyEditPanel = ({ video, onChange }) => {
 
 
   return (
-    <>
+    <div className="editPanel">
       {/* TITLE, PUB_AT AND STATS */}
       {/* <Row>
         <Col xs={24} sm={24} md={8} lg={8} xl={8}>
@@ -88,7 +90,7 @@ const VideographyEditPanel = ({ video, onChange }) => {
       </Row> */}
 
 
-    </>
+    </div>
   )
 
 

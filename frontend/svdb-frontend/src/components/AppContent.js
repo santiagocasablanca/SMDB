@@ -20,11 +20,11 @@ const AppContent = () => {
     <Content
 
       style={{
-        padding: '10px 24px',
-        margin: '24px 16px',
-        background: variables.bg,
+        padding: '10px 10px',
+        margin: '12px 24px',
+        // background: variables.bg,
         color: variables.onBg,
-        primaryColor: variables.primary,
+        // primaryColor: variables.primary,
         minHeight: 280,
       }}>
       <Suspense>

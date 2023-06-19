@@ -4,7 +4,8 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   UploadOutlined,
-  UserOutlined,
+  HomeOutlined,
+  YoutubeOutlined,
   VideoCameraOutlined,
 } from '@ant-design/icons';
 import { Button, Layout, Menu, theme } from 'antd';
@@ -21,9 +22,9 @@ const AppSidebar = ({ collapsed }) => {
 
 
   const sideStyle = {
-    background: variables.secondary,
-    primaryColor: variables.pink,
-
+    background: variables.sdmnYellow,
+    primaryColor: variables.sdmnPink,
+    colorBgTextHover: variables.sdmnYellow,
     color: variables.onBg
   };
 
@@ -31,12 +32,12 @@ const AppSidebar = ({ collapsed }) => {
 
   :where(.css-dev-only-do-not-override-yp4umk).ant-menu-dark .ant-menu-item-selected, 
   :where(.css-dev-only-do-not-override-yp4umk).ant-menu-dark>.ant-menu .ant-menu-item-selected {
-    background:  `+ variables.pink + `;
-    color:  `+ variables.onBg + `;
+    background:  `+ variables.sdmnDarkBlue + `;
+    color:  `+ variables.onSurface + `;
   }
 
-
   `);
+  // pink
   return (
     
 
@@ -53,18 +54,18 @@ const AppSidebar = ({ collapsed }) => {
         items={[
           {
             key: '1',
-            icon: <UserOutlined />,
-            label: 'nav 1',
+            icon: <HomeOutlined />,
+            label: 'Home',
           },
           {
             key: '2',
             icon: <VideoCameraOutlined />,
-            label: 'nav 2',
+            label: 'Videography',
           },
           {
             key: '3',
-            icon: <UploadOutlined />,
-            label: 'nav 3',
+            icon: <YoutubeOutlined />,
+            label: 'About',
           },
         ]}
       />
