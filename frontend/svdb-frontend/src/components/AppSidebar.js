@@ -12,6 +12,9 @@ import { Button, Layout, Menu, theme } from 'antd';
 import { useState } from 'react';
 import variables from '../sass/antd.module.scss'
 import insertCss from 'insert-css'
+import { Link } from "react-router-dom";
+
+
 
 const { Header, Sider, Content } = Layout;
 
@@ -22,21 +25,27 @@ const AppSidebar = ({ collapsed }) => {
 
 
   const sideStyle = {
-    background: variables.sdmnYellow,
+    background: variables.sdmnDarkBlue,
     primaryColor: variables.sdmnPink,
     colorBgTextHover: variables.sdmnYellow,
-    color: variables.onBg
+    color: variables.onSurface
   };
 
   insertCss(`
 
   :where(.css-dev-only-do-not-override-yp4umk).ant-menu-dark .ant-menu-item-selected, 
   :where(.css-dev-only-do-not-override-yp4umk).ant-menu-dark>.ant-menu .ant-menu-item-selected {
-    background:  `+ variables.sdmnDarkBlue + `;
-    color:  `+ variables.onSurface + `;
+    background:  `+ variables.sdmnYellow + `;
+    color:  `+ variables.onBg + `;
   }
 
   `);
+
+  const onClick = (e) => {
+    console.log('click ', e);
+
+  };
+{/* <Link */}
   // pink
   return (
     
@@ -49,23 +58,26 @@ const AppSidebar = ({ collapsed }) => {
       <Menu
         theme="dark"
         mode="inline"
+        onClick={onClick}
         style={sideStyle}
         defaultSelectedKeys={['1']}
         items={[
           {
-            key: '1',
+            key: '/home',
             icon: <HomeOutlined />,
-            label: 'Home',
+            label: <Link to='/dashboard'>Home</Link>,
+            path: '/dashboard'
           },
           {
-            key: '2',
+            key: '/videography',
             icon: <VideoCameraOutlined />,
-            label: 'Videography',
+            label: <Link to='/videography'>Videography</Link>,
+            path: '/videography'
           },
           {
-            key: '3',
+            key: '/about',
             icon: <YoutubeOutlined />,
-            label: 'About',
+            label: <Link to='/about'>About</Link>,
           },
         ]}
       />

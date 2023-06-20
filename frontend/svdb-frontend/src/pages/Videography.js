@@ -19,18 +19,23 @@ const Videography = () => {
   insertCss(`
 
   .filterPanel {
-    background: `+ variables.sdmnLightBlue + `;
+    background: `+ variables.sdmnPink + `;
     color: `+ variables.onBg + `;
+    border: 1px solid black;
   }
 
   .editPanel {
-    background: `+ variables.sdmnWhite + `;
-    color: `+ variables.onBg + `;
+    background: `+ variables.sdmnBlack + `;
+    color: `+ variables.onSurface + `;
   }
 
   :where(.css-dev-only-do-not-override-yp4umk).ant-table-wrapper .ant-table.ant-table-small .ant-table-expanded-row-fixed {
     background: `+ variables.sdmnWhite + `;
     color: `+ variables.onBg + `;
+  }
+  :where(.css-dev-only-do-not-override-yp4umk).ant-table-wrapper .ant-table-expanded-row-fixed {
+    margin: auto;
+    padding: 0;
   }
 
     .expanded-row {
@@ -132,8 +137,8 @@ const Videography = () => {
 }
 
 .ant-table-cell {
-  background: `+ variables.sdmnLightBlue + `;
-    color: `+ variables.onBg + `;
+  background: `+ variables.sdmnDarkBlue + `;
+    color: `+ variables.onSurface + `;
 }
 
 .ant-table-row-expand-icon-cell {

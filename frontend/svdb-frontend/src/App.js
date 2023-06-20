@@ -1,11 +1,10 @@
 import React, { Component, Suspense } from 'react'
 import { HashRouter, Route, Routes } from 'react-router-dom'
 import { ConfigProvider, theme } from 'antd';
-import { yellow } from '@ant-design/colors';
-
-import variables from './sass/antd.module.scss'
 
 import 'antd/dist/reset.css';
+import variables from './sass/antd.module.scss'
+
 
 
 const loading = (
@@ -16,6 +15,7 @@ const loading = (
 
 // Containers
 const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'))
+
 
 // // Pages
 // const Login = React.lazy(() => import('./views/pages/login/Login'))
@@ -45,7 +45,8 @@ class App extends Component {
             <Route exact path="/register" name="Register Page" element={<Register />} />
             <Route exact path="/404" name="Page 404" element={<Page404 />} />
             <Route exact path="/500" name="Page 500" element={<Page500 />} /> */}
-              <Route path="*" name="Home" element={<DefaultLayout />} />
+              <Route path="/*" name="Home" element={<DefaultLayout />} />
+              {/* <Route exact path="/videography" name="Videography" element={<DefaultLayout />} /> */}
             </Routes>
           </Suspense>
         </HashRouter>

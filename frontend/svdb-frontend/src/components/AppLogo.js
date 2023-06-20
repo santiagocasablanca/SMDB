@@ -9,25 +9,28 @@ import insertCss from 'insert-css'
 const AppLogo = () => {
     // height: 100%;
     // margin-right: 10px;
+    // margin-left: 10px;
+    // height: 40px;
+    // padding-left: 10px;
+    // padding-right: 10px;
     insertCss(`
 
     .logo {
-        margin-left: 30px;
         display: flex;
         align-items: center;
         font-family: 'Amazon Ember';
-        font-weight: 800;
-        font-size: 35px;
+        font-weight: 900;
+        font-size: 25px;
         color: `+ variables.onBg + `;
       
         .rectangle {
             align-items: center;
           width: 100%;
           height: 45px;
-          padding-left: 10px;
-          padding-right: 10px;
+          padding: 10px;
           background-color: `+ variables.primary + `;
           border-radius: 5px;
+          border: 1px solid black;
         }
       
         .letters {
