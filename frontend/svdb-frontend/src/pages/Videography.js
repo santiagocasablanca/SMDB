@@ -8,6 +8,8 @@ import VideographyEditPanel from './VideographyEditPanel'
 import dayjs from "dayjs"
 import insertCss from 'insert-css'
 import variables from '../sass/antd.module.scss'
+import VideographyStatsPanel from "./VideographyStatsPanel";
+
 
 
 
@@ -208,10 +210,12 @@ ant-table-wrapper .ant-table-row-expand-icon:hover {
       dataIndex: 'serie',
       width: '10%',
       title: "Series",
-      render: (serie) => (
-        <span>
-          <Tag color='volcano' key={serie}> {serie} </Tag>
-        </span>
+      render: (series) => (
+        (series != null ?
+          <span>
+            <Tag color={variables.sdmnPink} key={series}> {series} </Tag>
+          </span>
+          : '')
       ),
     },
     { key: 'published_at', title: 'Published At', dataIndex: 'published_at', width: '13%', sorter: true, render: (text) => <p>{dayjs(text).format("DD MMM YYYY HH:mm:ss")}</p> },
@@ -414,42 +418,52 @@ ant-table-wrapper .ant-table-row-expand-icon:hover {
   };
 
   return (
-    <Row span="24" gutter={16}>
-      <Col span="24" className="gutter-row mb">
-        <VideoFilterPanel filters={myFilters} onChange={handleFilterChange} />
-      </Col>
-      <Col span="24" className="gutter-row">
-        {/* <Card> */}
-        <div className="table-container">
-          <Table columns={columns} dataSource={videos}
-            scroll={{ x: 1500, y: 900 }}
-            // header={() => 'Results'}
-            onChange={onChange}
-            rowKey={(record) => record.video_id}
-            // rowSelection={rowSelection}
-            expandable={{
-              expandedRowRender: (record) => <VideographyEditPanel video={record}></VideographyEditPanel>,
-              rowExpandable: (record) => record.title !== 'Not Expandable',
-              expandedRowKeys: expandedRowKeys,
-              onExpand: handleExpand
-            }}
-            rowClassName={rowClassName}
-            size="small"
-            style={{
-              controlItemBgHover: variables.primary
-            }}
-            pagination={{
-              total: records,
-              showQuickJumper: true,
-              defaultPageSize: 10,
-              showSizeChanger: true,
-              pageSizeOptions: ["10", "25", "50"]
-            }}
-          />
-        </div>
-        {/* </Card> */}
-      </Col>
-    </Row>
+    <>
+      <Row span="24" gutter={16}>
+        <Col span="24" className="gutter-row mb">
+          <VideoFilterPanel filters={myFilters} onChange={handleFilterChange} />
+        </Col>
+      </Row>
+      <Row span="24" gutter={16}>
+        <Col span="24" className="gutter-row">
+          <VideographyStatsPanel />
+
+        </Col>
+      </Row>
+      <Row span="24" gutter={16}>
+        <Col span="24" className="gutter-row">
+          {/* <Card> */}
+          <div className="table-container">
+            <Table columns={columns} dataSource={videos}
+              scroll={{ x: 1500, y: 900 }}
+              // header={() => 'Results'}
+              onChange={onChange}
+              rowKey={(record) => record.video_id}
+              // rowSelection={rowSelection}
+              expandable={{
+                expandedRowRender: (record) => <VideographyEditPanel video={record}></VideographyEditPanel>,
+                rowExpandable: (record) => record.title !== 'Not Expandable',
+                expandedRowKeys: expandedRowKeys,
+                onExpand: handleExpand
+              }}
+              rowClassName={rowClassName}
+              size="small"
+              style={{
+                controlItemBgHover: variables.primary
+              }}
+              pagination={{
+                total: records,
+                showQuickJumper: true,
+                defaultPageSize: 10,
+                showSizeChanger: true,
+                pageSizeOptions: ["10", "25", "50"]
+              }}
+            />
+          </div>
+          {/* </Card> */}
+        </Col>
+      </Row>
+    </>
   )
 }
 
