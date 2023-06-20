@@ -27,7 +27,7 @@ const DefaultLayout = () => {
         <AppHeader collapsed={collapsed} childToParent={childToParent} />
         <Layout hasSider style={{
           // padding: '30px', bg sdmnPink sdmnLightBlue
-          background: variables.sdmnPink,
+          background: variables.sdmnLightBlue,
           color: variables.onBg,
           primaryColor: variables.sdmnYellow
         }} >

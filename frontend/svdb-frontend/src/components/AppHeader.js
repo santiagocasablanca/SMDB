@@ -24,6 +24,7 @@ const AppHeader = ({ collapsed, childToParent }) => {
   const headerStyle = {
     padding: 0,
     background: variables.sdmnWhite,
+    borderBottom: "1px solid black",
     color: variables.sdmnBlack
   }; // sdmnDarkBlue
 
@@ -34,18 +35,18 @@ const AppHeader = ({ collapsed, childToParent }) => {
   return (
     <Header style={headerStyle}>
       <Space>
-        <AppLogo></AppLogo>
         <Button
           type="text"
           icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           onClick={handleClick}
           style={{
-            fontSize: '16px',
-            color: variables.sdmnDarkBlue,
-            width: 64,
-            height: 64,
+            fontSize: '20px',
+            color: variables.sdmnBlack,
+            width: 60,
+            height: 60,
           }}
-        />
+          />
+          <AppLogo></AppLogo>
       </Space>
     </Header>
   )
