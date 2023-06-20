@@ -211,7 +211,7 @@ ant-table-wrapper .ant-table-row-expand-icon:hover {
       width: '10%',
       title: "Series",
       render: (series) => (
-        (series != null ?
+        ((series != '' & series != null) ?
           <span>
             <Tag color={variables.sdmnPink} key={series}> {series} </Tag>
           </span>
@@ -228,27 +228,27 @@ ant-table-wrapper .ant-table-row-expand-icon:hover {
       width: '10%',
       title: "Locations",
     },
-    // {
-    //   key: 'tags',
-    //   width: '10%',
-    //   title: "Tags",
-    //   dataIndex: 'tags',
-    //   render: (tags) => (
-    //     <span>
-    //       {tags.map((tag) => {
-    //         let color = tag.length > 5 ? 'geekblue' : 'green';
-    //         // if (tag === 'loser') {
-    //         //   color = 'volcano';
-    //         // }
-    //         return (
-    //           <Tag color={color} key={tag}>
-    //             {tag}
-    //           </Tag>
-    //         );
-    //       })}
-    //     </span>
-    //   ),
-    // },
+    {
+      key: 'tags',
+      width: '10%',
+      title: "Tags",
+      dataIndex: 'tags',
+      render: (tags) => (
+        (
+          Array.isArray(tags) ?
+            <span>
+              {tags.map((tag) => {
+                // let color = tag.length > 5 ? variables.sdmnYellow : 'green';
+                return (
+                  <Tag color={variables.sdmnBlack} key={tag}>
+                    {tag}
+                  </Tag>
+                );
+              })}
+            </span> : ''
+        )
+      ),
+    },
     // {
     //   key: 'cast',
     //   title: "Cast",
