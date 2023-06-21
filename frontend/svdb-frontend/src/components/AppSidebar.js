@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  UploadOutlined,
+  UserOutlined,
   HomeOutlined,
   YoutubeOutlined,
   VideoCameraOutlined,
@@ -12,13 +12,15 @@ import { Button, Layout, Menu, theme } from 'antd';
 import { useState } from 'react';
 import variables from '../sass/antd.module.scss'
 import insertCss from 'insert-css'
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+
 
 
 
 const { Header, Sider, Content } = Layout;
 
 const AppSidebar = ({ collapsed }) => {
+  const location = useLocation();
   const dispatch = useDispatch()
   const unfoldable = useSelector((state) => state.sidebarUnfoldable)
   const sidebarShow = useSelector((state) => state.sidebarShow)
@@ -42,16 +44,12 @@ const AppSidebar = ({ collapsed }) => {
   `);
 
   const onClick = (e) => {
-    console.log('click ', e);
-
+    // console.log('click ', e);
   };
-{/* <Link */}
-  // pink
-  return (
-    
 
+  return (
     <Sider breakpoint="lg"
-      collapsedWidth="0"
+      collapsedWidth="60"
       style={sideStyle}
       trigger={null} collapsible collapsed={collapsed}>
       <div className="demo-logo-vertical" />
@@ -60,13 +58,20 @@ const AppSidebar = ({ collapsed }) => {
         mode="inline"
         onClick={onClick}
         style={sideStyle}
-        defaultSelectedKeys={['1']}
+        // defaultSelectedKeys={['1']}
+        selectedKeys={location.pathname}
         items={[
           {
-            key: '/home',
+            key: '/dashboard',
             icon: <HomeOutlined />,
             label: <Link to='/dashboard'>Home</Link>,
             path: '/dashboard'
+          },
+          {
+            key: '/creator',
+            icon: <UserOutlined />,
+            label: <Link to='/creator'>Creators</Link>,
+            path: '/creator'
           },
           {
             key: '/videography',
