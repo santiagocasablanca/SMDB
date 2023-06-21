@@ -12,7 +12,7 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
     },
     video_id: {
       type: DataTypes.STRING(50),
-      unique: true,
+      unique: false,
       allowNull: false,
     },
     views: {
