@@ -224,11 +224,6 @@ ant-table-wrapper .ant-table-row-expand-icon:hover {
     // { key: 'dilikes', title: 'Dislikes', dataIndex: 'dislikes', width: '8%',  align: 'right', sorter: true, render: (text) => <p>{intToStringBigNumber(text)}</p> },
     { key: 'comments', title: 'Comments', dataIndex: 'comments', width: '8%', align: 'right', sorter: true, render: (text) => <p>{intToStringBigNumber(text)}</p> },
     {
-      key: 'locations',
-      width: '10%',
-      title: "Locations",
-    },
-    {
       key: 'tags',
       width: '10%',
       title: "Tags",
@@ -248,6 +243,11 @@ ant-table-wrapper .ant-table-row-expand-icon:hover {
             </span> : ''
         )
       ),
+    },
+    {
+      key: 'locations',
+      width: '10%',
+      title: "Locations",
     },
     // {
     //   key: 'cast',
@@ -275,19 +275,16 @@ ant-table-wrapper .ant-table-row-expand-icon:hover {
     return dayjs.duration(duration).format('HH:mm:ss')
   }
 
+
   const getVideos = useEffect(() => {
-    console.log(' getVideos? ');
     const offset = activePage;//itemsPerPage * activePage - itemsPerPage
     let params = new URLSearchParams()
     Object.keys(columnFilter).forEach((key) => {
-      console.log('here: ' + key + ' - ' + columnFilter[key])
       params.append(key, columnFilter[key])
     });
     columnSorter &&
       columnSorter.column !== undefined &&
       params.append('sort', `${columnSorter.column}%${columnSorter.state}`);
-    console.log('getVideos filters');
-    console.log(myFilters);
 
     // filters && filters.forEach(item => {
     //   console.log('keyvalue: ' + JSON.stringify(item));
@@ -295,14 +292,12 @@ ant-table-wrapper .ant-table-row-expand-icon:hover {
     // });
 
     for (const property in myFilters) {
-      // console.log(`${property}: ${filters[property]}`);
       if (myFilters[property] && myFilters[property] != '' && myFilters[property].length > 1)
         params.append(property, myFilters[property]);
     }
 
     getVideosFn(offset, itemsPerPage, params)
       .then((result) => {
-        // console.log(JSON.stringify(result));
         setRecords(result.results)
         result.results ? setVideos(result.videos) : setVideos([])
       })
@@ -376,21 +371,16 @@ ant-table-wrapper .ant-table-row-expand-icon:hover {
   const [expandedRowKeys, setExpandedRowKeys] = useState([]);
 
   const handleExpand = (expanded, record) => {
-    console.log(expanded);
-    console.log(record);
     if (expanded) {
       setExpandedRowKeys([...expandedRowKeys, record.video_id]);
     } else {
       setExpandedRowKeys(expandedRowKeys.filter((key) => key !== record.video_id));
     }
-    console.log(JSON.stringify(expandedRowKeys))
   };
 
   // Function to update the filter values
   const handleFilterChange = (newFilters) => {
     if (newFilters.search) {
-      // console.log(' handleFilterChange? ' + JSON.stringify(newFilters))
-
       const offset = activePage;//itemsPerPage * activePage - itemsPerPage
       let params = new URLSearchParams()
       Object.keys(columnFilter).forEach((key) => {
@@ -407,7 +397,6 @@ ant-table-wrapper .ant-table-row-expand-icon:hover {
 
       getVideosFn(offset, itemsPerPage, params)
         .then((result) => {
-          // console.log(JSON.stringify(result));
           setRecords(result.results)
           result.results ? setVideos(result.videos) : setVideos([])
         })

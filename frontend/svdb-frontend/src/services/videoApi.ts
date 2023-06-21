@@ -18,7 +18,6 @@ export const getSingleVideoFn = async (videoId: string) => {
 export const getTreeMapPlotForTagsFn = async (params) => {
   // findMostLikedSSGroupedBySeries
   const req = `findMostLikedSSGroupedBySeries?${params}`;
-  console.log(req);
   const response = await videoApi.get<IVideosResponse>(
     req
   );
@@ -29,7 +28,6 @@ export const getTreeMapPlotForTagsFn = async (params) => {
  export const fetchVideoFrequencyFn = async (params) => {
   // fetchVideoFrequency
   const req = `fetchVideoFrequency?${params}`;
-  console.log(req);
   const response = await videoApi.get<IVideosResponse>(
     req
   );
@@ -40,7 +38,6 @@ export const getTreeMapPlotForTagsFn = async (params) => {
 export const fetchVideosChannelStatsFn = async (params) => {
   // fetchVideoFrequency
   const req = `fetchVideosChannelStats?${params}`;
-  console.log(req);
   const response = await videoApi.get<IVideosResponse>(
     req
   );
@@ -50,7 +47,6 @@ export const fetchVideosChannelStatsFn = async (params) => {
 export const fetchVideoUploadTimeFrequencyFn = async (params) => {
   // fetchVideoFrequency
   const req = `fetchVideoUploadTimeFrequency?${params}`;
-  console.log(req);
   const response = await videoApi.get<IVideosResponse>(
     req
   );
@@ -58,12 +54,8 @@ export const fetchVideoUploadTimeFrequencyFn = async (params) => {
 };
 
 export const getVideosFn = async (page = 1, limit = 30, params) => {
-  console.log(page + " - " + limit + ' - ' + params);
-
   const req = `videos?page=${page}&limit=${limit}&${params}`;
   // if(params) req.concat(`&${params}`);
-
-  console.log(req);
   const response = await videoApi.get<IVideosResponse>(
     req
   );

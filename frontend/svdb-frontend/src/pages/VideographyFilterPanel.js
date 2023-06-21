@@ -184,6 +184,9 @@ const VideographyFilterPanel = ({ filters, onChange }) => {
                 <Select mode="multiple" style={{ width: '95%' }} placeholder="Please select a channel"
                   value={filters.channels}
                   allowClear
+                  filterOption={(input, option) =>
+                    (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                  }
                   onChange={handleChannelChange}
                   options={options}>
                 </Select>
