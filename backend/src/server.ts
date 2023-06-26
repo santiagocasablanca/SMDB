@@ -23,7 +23,7 @@ app.use(express.json({ limit: "10kb" }));
 if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 
 // 11am
-cron.schedule('21 11 * * *', () => { 
+cron.schedule('33 18 * * *', () => { 
   console.log('schuduled and running');
   const youtubeService = new YoutubeService();
   // youtubeService.fetchStatisticsForAllChannels();
@@ -31,7 +31,7 @@ cron.schedule('21 11 * * *', () => {
 
 app.use(
   cors({
-    origin: ["http://localhost:3001"],
+    origin: ["http://localhost:3000"],
     credentials: true,
   })
 );
@@ -382,7 +382,7 @@ async function associateTagsToVideos() {
     // Process each video and associate a tag
     for (const video of videos) {
       const associatedTag = determineTags(video.title);
-      let seriesTag = "";
+      let seriesTag = null;
 
       if (video.channel_title == 'SidemenReacts') {
         associatedTag.push('React');

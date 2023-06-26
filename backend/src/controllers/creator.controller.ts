@@ -6,6 +6,7 @@ const Op = Sequelize.Op;
 import { db, sequelize } from "../util/db";
 const Creator = db.creator;
 const Channel = db.channel;
+const Video = db.video;
 
 
 export const findAllCreatorsController = async (
@@ -21,25 +22,45 @@ export const findAllCreatorsController = async (
     //sort 
     let sort = req.query.sort ? req.query.sort.split('%') : ['name', 'DESC'];
 
-    // const whereClause = {}
-    // if (req.query.channels) {
-    //   console.log(req.query.channels);
-    //   var channelsArr = req.query.channels.split(',');
+    const creators = await Creator.findAndCountAll({
+      limit, offset: skip, order: [sort], include: [{
+        model: Channel,
+        as: 'channels', attributes: ['channel_id', 'custom_url',
+          'title',
+          'subs',
+          'videos',
+          'views',
+          'likes',
+          'comments',
+          'logo_url',
+          'banner_url',
+          'channel_created_at']
+      }, {
+        model: Video,
+        as: 'videosDirected', attributes: [
+          'video_id',
+          'title',
+          'duration',
+          'channel_id',
+          'views',
+          'likes',
+          'comments',
+          'url',
+          'player',
+          'livestream',
+          'serie',
+          'published_at',
+        ]
+      }]
+    });
+    creators.rows.map((creator) => {
+      creator.videos = creator.channels.reduce((accumulator, obj) => accumulator + parseInt(obj.videos), 0);
+      creator.likes = creator.channels.reduce((accumulator, obj) => accumulator + parseInt(obj.likes), 0);
+      creator.subs = creator.channels.reduce((accumulator, obj) => accumulator + parseInt(obj.subs), 0);
+      creator.views = creator.channels.reduce((accumulator, obj) => accumulator + parseInt(obj.views), 0);
+    });
 
-    //   whereClause.title = {
-    //     [Op.or]: channelsArr
-    //   }
-    // }
-    // if(req.query.title) {
-    //   const searchTitle = req.query.title.toLowerCase();
-    //   const lowerTitleCol = Sequelize.fn('lower', Sequelize.col('title'));
-    //   whereClause['title'] = Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('title')), 'LIKE', '%' + searchTitle + '%');
-    // }
 
-    // console.log(whereClause);
-
-    const creators = await Creator.findAndCountAll({ limit, offset: skip, order: [sort], include: ['channels', 'videosDirected']});
-    creators.rows.map(creator => console.log(JSON.stringify(creator)));
 
     res.status(200).json({
       status: "success",
