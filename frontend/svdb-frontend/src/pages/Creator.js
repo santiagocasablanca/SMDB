@@ -1,17 +1,25 @@
-import React,{ useState, useEffect }  from 'react';
-import { Card, Row, Col, Image } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Card, List, Row, Col, Image } from 'antd';
 import insertCss from 'insert-css';
+import ReactPlayer from 'react-player'
 
 
 import { getCreatorsFn } from "../services/creatorApi.ts";
+import { getVideosFn } from "../services/videoApi.ts";
+
 
 import FrequencyCard from "./FrequencyCard";
 import UploadTimeFrequencyCard from "./UploadTimeFrequencyCard";
 import ChannelTotalStats from "./ChannelTotalsStats";
+import variables from '../sass/antd.module.scss'
+import PokemonCard from '../components/PokemonCard';
+
+
 
 const CreatorPage = () => {
 
   const [fetchedData, setFetchedData] = useState([]);
+  const [top10videos, setTop10videos] = useState([]);
 
 
   useEffect(() => {
@@ -30,8 +38,19 @@ const CreatorPage = () => {
         setFetchedData(result.results);
       }
     })
+
+    let paramsTop10 = new URLSearchParams();
+    paramsTop10.append("sort", "views%desc")
+    paramsTop10.append("channels", ['UCWZmCMB7mmKWcXJSIPRhzZw', 'UCDogdKl7t7NHzQ95aEwkdMw', 'UCjB_adDAIxOL8GA4Y4OCt8g', 'UCh5mLn90vUaB1PbRRx_AiaA', 'UCFPElAbES8GHfBZrDrGbSLQ']); //TODO change this to creator channel_id's
+    getVideosFn(1, 10, paramsTop10)
+      .then((result) => {
+        setTop10videos(result.videos);
+      })
+
   }
 
+  // background-color: #ddd;
+  // border: 2px solid #ffffff;
 
   insertCss(`
   .banner {
@@ -42,17 +61,15 @@ const CreatorPage = () => {
   }
 
   .profile {
-    width: 150px;
-    height: 150px;
-    // background-color: #ddd;
+    width: 200px;
+    height: 200px;
     margin: 20px auto;
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
-    // border: 2px solid #ffffff;
     border-radius: 120px;
     margin: 0 auto;
-    margin-top: -60px;
+    margin-top: -120px;
   }
 
   .radius {
@@ -151,17 +168,27 @@ const CreatorPage = () => {
     height: 200px;
   }
 
-  `)
+  .scrollmenu {
+    overflow: auto;
+    white-space: nowrap;
+  }
 
+  .scrollmenu div {
+    display: inline-block;
+   
+  }
+
+  `)
+ 
   return (
     <div>
       <div className="banner">
-        <Image src={fetchedData.length ? fetchedData[2].banner_picture : null}  />
+        <Image src={fetchedData.length ? fetchedData[2].banner_picture : null} />
       </div>
       <div className="profile">
-       {fetchedData.length ?
-        <Image className="radius" src={fetchedData.length ? fetchedData[2].profile_picture : null}  />
-        : ''}
+        {fetchedData.length ?
+          <Image className="radius" src={fetchedData.length ? fetchedData[2].profile_picture : null} />
+          : ''}
       </div>
       <div className="name">{fetchedData.length ? fetchedData[2].name : null}</div>
 
@@ -174,18 +201,55 @@ const CreatorPage = () => {
         </Col>
         <Col span={12}>
           {/* <Card className="heatmap-card"> */}
-            <UploadTimeFrequencyCard />
+          <UploadTimeFrequencyCard />
           {/* </Card> */}
         </Col>
       </Row>
 
-      <div className="carousel">Channel Carousel</div>
+      <Row gutter={16}>
+        <Col span={24}>
+          <List
+            grid={{
+              gutter: 4,
+              column: 10,
+            }}
+            className="scrollmenu"
+            itemLayout="horizontal"
+            style={{
+              background: variables.sdmnPink,
+              padding: 10,
+              marginTop: 20,
+              marginBottom: 20
+            }}
+            // loading={isTop10VideosLoaded}
+            dataSource={top10videos}
+            renderItem={(item) => (
+              <List.Item>
+                <Card title={item.title}
+                  style={{ width: 300 }}
+                  bodyStyle={{ padding: 0 }}>
+                  <ReactPlayer url={item.player.embedHtml} width='100%'></ReactPlayer>
+                  <span>{item.likes}</span>
+                </Card>
+              </List.Item>
+            )}
+          />
+        </Col>
+      </Row>
 
       {/* <div className="yearly-heatmap"> */}
-        <FrequencyCard />
+      <FrequencyCard />
       {/* </div> */}
     </div>
   );
 };
 
+
+
+
+// headStyle={{
+//   textOverflow: 'ellipsis',
+//   overflow: 'hidden',
+//   whiteSpace: 'nowrap'
+// }}
 export default CreatorPage;

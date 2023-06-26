@@ -26,19 +26,19 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
     },
     subs: {
       type: DataTypes.DECIMAL(100),
-      allowNull: true,
+      allowNull: true
     },
     videos: {
       type: DataTypes.DECIMAL(100),
-      allowNull: true,
+      allowNull: true
     },
     views: {
       type: DataTypes.DECIMAL(100),
-      allowNull: true,
+      allowNull: true
     },
     likes: {
       type: DataTypes.DECIMAL(100),
-      allowNull: true,
+      allowNull: true
     },
     comments: {
       type: DataTypes.DECIMAL(100),
@@ -63,7 +63,8 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
       defaultValue: DataTypes.NOW,
       allowNull: false,
     },
-  });
+  },
+  );
 
   return Creator;
 };

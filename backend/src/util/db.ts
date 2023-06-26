@@ -41,6 +41,13 @@ db.creator.belongsToMany(db.channel, {
     otherKey: 'channel_id', // Foreign key in the join table referencing the Video model
   });
 
+  db.channel.belongsToMany(db.creator, {
+    through: 'channel_creator',
+    as: 'channel_creators', // Alias to use when accessing the associated creators
+    foreignKey: 'channel_id', // Foreign key in the join table referencing the Creator model
+    otherKey: 'creator_id', // Foreign key in the join table referencing the Video model
+  });
+
 
    // Creator has many Videos as Director
   db.creator.belongsToMany(db.video, {
