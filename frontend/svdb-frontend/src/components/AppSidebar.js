@@ -47,6 +47,7 @@ const AppSidebar = ({ collapsed }) => {
     // console.log('click ', e);
   };
 
+  // TODO collapsedWidth refactor to remove on mobile screens
   return (
     <Sider breakpoint="lg"
       collapsedWidth="60"
