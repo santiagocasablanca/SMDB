@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Card, List, Row, Col, Image } from 'antd';
 import insertCss from 'insert-css';
 import ReactPlayer from 'react-player'
+import {
+  useParams, useLocation
+} from "react-router-dom";
 
-
-import { getCreatorsFn } from "../services/creatorApi.ts";
+import { getCreatorFn, getCreatorsFn } from "../services/creatorApi.ts";
 import { getVideosFn } from "../services/videoApi.ts";
 
 
@@ -18,35 +20,45 @@ import PokemonCard from '../components/PokemonCard';
 
 const CreatorPage = () => {
 
+  const { id } = useParams();
+  const [isFetched, setIsFetched] = useState(false);
   const [fetchedData, setFetchedData] = useState([]);
   const [top10videos, setTop10videos] = useState([]);
+  const [creator, setCreator] = useState([]);
+  // const {state} = useLocation();
 
 
   useEffect(() => {
+    console.log(id);
     asyncFetch();
   }, []);
 
-  const asyncFetch = () => {
-    console.log('heere')
-    let params = new URLSearchParams();
-    // params.append("channels", selectedChannels);
-    // params.append("publishedAtRange", [startDate.format("YYYY-MM-DD"), endDate.format("YYYY-MM-DD")]);
-    getCreatorsFn(params).then((result) => {
-      console.log(result)
-      if (result.results) {
-        console.log(result.results)
-        setFetchedData(result.results);
+  const asyncFetch = async () => {
+    await getCreatorFn(id).then((res) => {
+      if (res.result) {
+        console.log(res.result);
+        setCreator(res.result);
+        fetchChannels(res.result.channels);
+        setIsFetched(true);
       }
-    })
+    });
+  }
 
+  const fetchChannels = async (channels) => {
+    if(channels === undefined) return;
+    const creatorChannels = await channels?.map((channel) => {
+      return channel.channel_id;
+    });
     let paramsTop10 = new URLSearchParams();
     paramsTop10.append("sort", "views%desc")
-    paramsTop10.append("channels", ['UCWZmCMB7mmKWcXJSIPRhzZw', 'UCDogdKl7t7NHzQ95aEwkdMw', 'UCjB_adDAIxOL8GA4Y4OCt8g', 'UCh5mLn90vUaB1PbRRx_AiaA', 'UCFPElAbES8GHfBZrDrGbSLQ']); //TODO change this to creator channel_id's
-    getVideosFn(1, 10, paramsTop10)
+    paramsTop10.append("channels", creatorChannels);
+    console.log('videos paramsTop10', creatorChannels);
+
+    await getVideosFn(1, 10, paramsTop10)
       .then((result) => {
+        console.log('videos creator', result);
         setTop10videos(result.videos);
       })
-
   }
 
   // background-color: #ddd;
@@ -179,68 +191,73 @@ const CreatorPage = () => {
   }
 
   `)
- 
-  return (
-    <div>
-      <div className="banner">
-        <Image src={fetchedData.length ? fetchedData[2].banner_picture : null} />
-      </div>
-      <div className="profile">
-        {fetchedData.length ?
-          <Image className="radius" src={fetchedData.length ? fetchedData[2].profile_picture : null} />
-          : ''}
-      </div>
-      <div className="name">{fetchedData.length ? fetchedData[2].name : null}</div>
 
-      <Row gutter={16}>
+  return (
+    <>
+      {!isFetched ? (
+        // <LoadingAnimation />
+        <p>Loading...</p>
+      ) : (
+          <div>
+            <div className="banner">
+              <Image src={creator.banner_picture ? creator.banner_picture : null} />
+            </div>
+            <div className="profile">
+              <Image className="radius" src={creator.profile_picture} />
+            </div>
+            <div className="name">{creator.name}</div>
+
+            {/* <Row gutter={16}>
         <Col span={12}>
           <Card className="stats-card">
             <div className="stats-header">Total Stats</div>
             <div className="stats-list">Stats List</div>
           </Card>
         </Col>
-        <Col span={12}>
-          {/* <Card className="heatmap-card"> */}
-          <UploadTimeFrequencyCard />
-          {/* </Card> */}
-        </Col>
-      </Row>
+        <Col span={12}> */}
+            {/* <Card className="heatmap-card"> */}
+            {/* <UploadTimeFrequencyCard /> */}
+            {/* </Card> */}
+            {/* </Col>
+      </Row> */}
 
-      <Row gutter={16}>
-        <Col span={24}>
-          <List
-            grid={{
-              gutter: 4,
-              column: 10,
-            }}
-            className="scrollmenu"
-            itemLayout="horizontal"
-            style={{
-              background: variables.sdmnPink,
-              padding: 10,
-              marginTop: 20,
-              marginBottom: 20
-            }}
-            // loading={isTop10VideosLoaded}
-            dataSource={top10videos}
-            renderItem={(item) => (
-              <List.Item>
-                <Card title={item.title}
-                  style={{ width: 300 }}
-                  bodyStyle={{ padding: 0 }}>
-                  <ReactPlayer url={item.player.embedHtml} width='100%'></ReactPlayer>
-                  <span>{item.likes}</span>
-                </Card>
-              </List.Item>
-            )}
-          />
-        </Col>
-      </Row>
+            <Row gutter={16}>
+              <Col span={24}>
+                <List
+                  grid={{
+                    gutter: 4,
+                    column: 10,
+                  }}
+                  className="scrollmenu"
+                  itemLayout="horizontal"
+                  style={{
+                    background: variables.sdmnPink,
+                    padding: 10,
+                    marginTop: 20,
+                    marginBottom: 20
+                  }}
+                  // loading={isTop10VideosLoaded}
+                  dataSource={top10videos}
+                  renderItem={(item) => (
+                    <List.Item>
+                      <Card title={item.title}
+                        style={{ width: 300 }}
+                        bodyStyle={{ padding: 0 }}>
+                        <ReactPlayer url={item.player.embedHtml} width='100%'></ReactPlayer>
+                        <span>{item.likes}</span>
+                      </Card>
+                    </List.Item>
+                  )}
+                />
+              </Col>
+            </Row>
 
-      {/* <div className="yearly-heatmap"> */}
-      <FrequencyCard />
-      {/* </div> */}
-    </div>
+            {/* <div className="yearly-heatmap"> */}
+            {/* <FrequencyCard /> */}
+            {/* </div> */}
+          </div>
+        )}
+    </>
   );
 };
 
