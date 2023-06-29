@@ -13,7 +13,7 @@ const Videography = React.lazy(() => import('./pages/Videography'))
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
-  { path: '/creator', name: 'Creator', element: Creator, exact: true },
+  { path: '/creator/:id', name: 'Creator', element: Creator},
   { path: '/creators', name: 'Creators', element: Creators, exact: true },
   { path: '/compare', name: 'Compare', element: Compare, exact: true },
   { path: '/videography', name: 'Videography', element: Videography, exact: true },

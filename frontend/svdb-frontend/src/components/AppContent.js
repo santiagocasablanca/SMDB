@@ -35,6 +35,9 @@ const AppContent = () => {
                 <Route
                   key={idx}
                   path={route.path}
+                  loader={({ params }) => {
+                    console.log(params.teamId); // "hotspur"
+                  }}
                   exact={route.exact}
                   name={route.name}
                   element={<route.element />}

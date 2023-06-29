@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, List, Row, Col, Image, Table, Space, Avatar, Button, Popover, Tag } from 'antd';
 import { LikeOutlined, YoutubeOutlined, CalendarOutlined, VideoCameraOutlined, EyeOutlined, NumberOutlined } from '@ant-design/icons';
 
@@ -21,6 +22,7 @@ import useFormatter from '../hooks/useFormatter';
 import dayjs from "dayjs"
 
 const CreatorPage = () => {
+  const navigate = useNavigate();
 
   const [fetchedData, setFetchedData] = useState([]);
   const [selectedItemIndex, setSelectedItemIndex] = useState(-1);
@@ -64,7 +66,7 @@ const CreatorPage = () => {
 
   .since-panel {
     position: absolute;
-    top: 10px;
+    top: 15px;
     right: 5px;
     z-index: 10;
     background-color: rgba(255, 245, 54, 0.7);
@@ -77,6 +79,32 @@ const CreatorPage = () => {
   }
   .since-tag span {
     white-space:nowrap;
+  }
+
+  .channel-table {
+    padding: 0;
+    width: 600px;
+  }
+
+  @media (max-width: 600px) {
+    .since-panel {
+      position: absolute;
+      top: 10px;
+      width: 60px;
+      font-size: 10px;
+    }
+  
+    .since-tag {
+      text-align: center;
+    }
+  
+    .since-tag span {
+      white-space: normal;
+    }
+
+    .channel-table {
+      max-width: 350px;
+    }
   }
 
   `)
@@ -176,6 +204,8 @@ const CreatorPage = () => {
       <>
         <Table size='small'
           pagination={false}
+          className="channel-table"
+          scroll={{ x: 300 }}
           columns={columns}
           dataSource={channels}
           rowKey={(record) => record.channel_id}>
@@ -212,14 +242,21 @@ const CreatorPage = () => {
     const content = (
       <List
         size="small"
+        style={{width:"220px"}}
         dataSource={sortedChannels}
         renderItem={(channel) => (
-          <List.Item><p><Avatar src={<img src={channel.logo_url} alt={channel.logo_url} />} /> - {channel.title} - {dayjs(channel.channel_created_at).format("MMM YYYY")}</p></List.Item>
+          <List.Item>
+            {/* <p><Avatar src={<img src={channel.logo_url} alt={channel.logo_url} />} /> {channel.title} <i>channel created at</i> {dayjs(channel.channel_created_at).format("MMM YYYY")}</p> */}
+            <List.Item.Meta
+              avatar={<Avatar src={channel.logo_url} />}
+              title={channel.title}
+              description={<span><i>created at </i>{dayjs(channel.channel_created_at).format("MMM YYYY")}</span>}
+            />
+          </List.Item>
         )}
       />
     );
 
-    // header={<div><div style={{left:'5px'}}>Channel</div> <div style={{right:'5px'}}> Created at</div></div>}
     return (
       <>
         {!isFetched ? (
@@ -237,6 +274,13 @@ const CreatorPage = () => {
       </>
     );
   };
+
+  const handleClickCreator = (id) => {
+    console.log(id);
+    const url = '/creator/'+id;
+    // not necessary, kind of redudant at the moment. Params are set through useParams and useLocation (state)
+    navigate(url, { state : { id: id }});
+  }
 
   return (<>
     <List
@@ -281,7 +325,8 @@ const CreatorPage = () => {
               // </div>
             }
             hoverable
-          >
+            onClick={() => handleClickCreator(item.id)}
+            key={item.id}>
             <SincePanel channels={item.channels}></SincePanel>
             <StatsPanel subs={intToStringBigNumber(item.subs)} videos={intToStringBigNumber(item.videos)} views={intToStringBigNumber(item.views)}></StatsPanel>
 

@@ -41,6 +41,9 @@ const AppSidebar = ({ collapsed }) => {
     color:  `+ variables.onBg + `;
   }
 
+
+  
+
   `);
 
   const onClick = (e) => {
@@ -50,7 +53,7 @@ const AppSidebar = ({ collapsed }) => {
   // TODO collapsedWidth refactor to remove on mobile screens
   return (
     <Sider breakpoint="lg"
-      collapsedWidth="60"
+      collapsedWidth="0"
       style={sideStyle}
       trigger={null} collapsible collapsed={collapsed}>
       <div className="demo-logo-vertical" />
@@ -69,10 +72,10 @@ const AppSidebar = ({ collapsed }) => {
             path: '/dashboard'
           },
           {
-            key: '/creator',
+            key: '/creators',
             icon: <UserOutlined />,
-            label: <Link to='/creator'>Creators</Link>,
-            path: '/creator'
+            label: <Link to='/creators'>Creators</Link>,
+            path: '/creators'
           },
           {
             key: '/videography',

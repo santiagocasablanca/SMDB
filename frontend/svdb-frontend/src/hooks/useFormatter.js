@@ -5,7 +5,6 @@ const useFormatter = () => {
   const intToStringBigNumber = useMemo(
     () => {
       const formatNumber = num => {
-          console.log(num);
         if (num === undefined) return 0;
         const numericString = num.toString().replace(/[^0-9.]/g, '');
         const parsedNum = parseFloat(numericString);
