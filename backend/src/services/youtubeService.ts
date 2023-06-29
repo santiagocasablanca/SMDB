@@ -5,11 +5,39 @@ const Video = db.video;
 const VideoStats = db.videoStats;
 const Channel = db.channel;
 const ChannelStats = db.channelStats;
+const Creator = db.creator;
+
 
 // Set up the API request parameters
 const apiKey = 'AIzaSyA9IHgl5-gGaQYpN01q2TiYcF5mKw6TQ8A';
 
 class YoutubeService {
+
+    async updateAllCreatorPicturesFromMainChannel() {
+        const creators = await Creator.findAll({
+            include: {
+                model: Channel,
+                as: 'channels', attributes: ['channel_id', 'custom_url',
+                  'title',
+                  'subs',
+                  'videos',
+                  'views',
+                  'likes',
+                  'comments',
+                  'logo_url',
+                  'banner_url',
+                  'channel_created_at']
+              }
+        });
+        creators.map((creator) => {
+            console.log(creator.channels);
+            const channel = creator.channels.find((it) => it.custom_url === creator.custom_url);
+            Creator.update({
+                banner_picture: channel.banner_url,
+                profile_picture: channel.logo_url
+            }, {where: {id : creator.id}});
+        })
+    }
 
     async fetchChannelDataFromAPI(channelId: any) {
         console.log('fetchChannelInfo()' + channelId);
@@ -73,16 +101,12 @@ class YoutubeService {
                         await Video.update({
                             'video_id': item.id,
                             'title': item.snippet.title,
-                            'description': item.snippet.description,
-                            'channel_id': item.snippet.channelId,
-                            'channel_title': item.snippet.channelTitle,
                             'views': item.statistics.viewCount,
                             'likes': item.statistics.likeCount,
                             'dislikes': item.statistics.dislikeCount,
                             'comments': item.statistics.commentCount,
                             'duration': item.contentDetails.duration,
                             'url': item.snippet.thumbnails.high.url,
-                            'player': item.player,
                             'published_at': item.snippet.publishedAt,
                             'livestream': item.liveStreamingDetails,
                             'original_blob': item
