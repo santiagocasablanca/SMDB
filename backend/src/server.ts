@@ -23,11 +23,11 @@ app.use(express.json({ limit: "10kb" }));
 if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 
 // 11am
-cron.schedule('41 10 * * *', () => { 
+cron.schedule('56 18 * * *', () => { 
   console.log('schuduled and running');
   const youtubeService = new YoutubeService();
   // youtubeService.fetchStatisticsForAllChannels();
-});
+})
 
 app.use(
   cors({
@@ -60,6 +60,8 @@ db.sequelize
     console.log("Database connected");
     app.listen(PORT, async () => {
       console.log("listening at port 8005");
+  //     const youtubeService = new YoutubeService();
+  // youtubeService.updateAllCreatorPicturesFromMainChannel();
 
       //extractRelevantTagsFromTitles();
       // associateTagsToVideos();

@@ -10,23 +10,18 @@ const { Content } = Layout;
 // routes config
 
 const AppContent = () => {
-
   // style={{
-  //   // margin: '24px 16px',
-  //   // padding: 24,
-  //   // background: 'white',
-  // }}
+  //   padding: '10px 10px',
+  //   margin: '12px 24px',
+  //   // background: variables.bg,
+  //   color: variables.onBg,
+  //   // primaryColor: variables.primary,
+  //   minHeight: 280,
+  // }}>
   return (
-    <Content
+    <Content>
 
-      style={{
-        padding: '10px 10px',
-        margin: '12px 24px',
-        // background: variables.bg,
-        color: variables.onBg,
-        // primaryColor: variables.primary,
-        minHeight: 280,
-      }}>
+      
       <Suspense>
         <Routes>
           {routes.map((route, idx) => {
@@ -35,9 +30,6 @@ const AppContent = () => {
                 <Route
                   key={idx}
                   path={route.path}
-                  loader={({ params }) => {
-                    console.log(params.teamId); // "hotspur"
-                  }}
                   exact={route.exact}
                   name={route.name}
                   element={<route.element />}
