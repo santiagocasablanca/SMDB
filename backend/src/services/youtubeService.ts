@@ -50,8 +50,9 @@ class YoutubeService {
 
             videoData.items.forEach(async (item: any) => {
                 try {
-                    const video = await Video.findOrCreate({
-                        defaults: {
+                    const videoExists = await Video.findOne({ where: { video_id: item.id } });
+                    if (!videoExists) {
+                        await Video.create({
                             'video_id': item.id,
                             'title': item.snippet.title,
                             'description': item.snippet.description,
@@ -67,9 +68,26 @@ class YoutubeService {
                             'published_at': item.snippet.publishedAt,
                             'livestream': item.liveStreamingDetails,
                             'original_blob': item
-                        },
-                        where: { video_id: item.id }
-                    });
+                        });
+                    } else {
+                        await Video.update({
+                            'video_id': item.id,
+                            'title': item.snippet.title,
+                            'description': item.snippet.description,
+                            'channel_id': item.snippet.channelId,
+                            'channel_title': item.snippet.channelTitle,
+                            'views': item.statistics.viewCount,
+                            'likes': item.statistics.likeCount,
+                            'dislikes': item.statistics.dislikeCount,
+                            'comments': item.statistics.commentCount,
+                            'duration': item.contentDetails.duration,
+                            'url': item.snippet.thumbnails.high.url,
+                            'player': item.player,
+                            'published_at': item.snippet.publishedAt,
+                            'livestream': item.liveStreamingDetails,
+                            'original_blob': item
+                        }, { where: { video_id: item.id } });
+                    }
 
                     await VideoStats.create({
                         'video_id': item.id,
@@ -81,7 +99,7 @@ class YoutubeService {
                     })
 
                 } catch (error: any) {
-                    console.log('error fetching and saving: ')
+                    console.log('error fetching and saving video: ')
                     console.error(error);
                 }
             });
@@ -106,8 +124,10 @@ class YoutubeService {
         const logo = data.items[0].snippet.thumbnails.medium.url;
 
         // Store channel data in the database
-        await Channel.findOrCreate({
-            defaults: {
+        const channelExists = await Channel.findOne({ where: { channel_id: channelId } });
+        if (!channelExists) {
+            // create
+            await Channel.create({
                 'channel_id': channelId,
                 'title': channelTitle,
                 'description': channelDescription,
@@ -116,9 +136,21 @@ class YoutubeService {
                 'videos': videoCount,
                 'logo_url': logo,
                 'custom_url': data.items[0].snippet.customUrl
-            },
-            where: { channel_id: channelId }
-        });
+            });
+        } else {
+            // update
+            await Channel.update({
+                'channel_id': channelId,
+                'title': channelTitle,
+                'description': channelDescription,
+                'views': viewCount,
+                'subs': subscriberCount,
+                'videos': videoCount,
+                'logo_url': logo,
+                'custom_url': data.items[0].snippet.customUrl
+            }, { where: { channel_id: channelId } });
+
+        }
 
         await ChannelStats.create({
             'channel_id': channelId,
@@ -140,6 +172,7 @@ class YoutubeService {
                 console.info('Channel ', channel.channel_id);
                 await this.fetchChannelData(channel.channel_id);
 
+                // TODO refactor to update
                 await this.fetchAndCreateVideosFromChannel(channel.channel_id);
             }
             console.info('finished job');
