@@ -23,7 +23,7 @@ app.use(express.json({ limit: "10kb" }));
 if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 
 // 11am
-cron.schedule('56 18 * * *', () => { 
+cron.schedule('26 10 * * *', () => { 
   console.log('schuduled and running');
   const youtubeService = new YoutubeService();
   // youtubeService.fetchStatisticsForAllChannels();
