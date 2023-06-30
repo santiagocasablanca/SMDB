@@ -193,6 +193,7 @@ const CreatorPage = () => {
 
   `)
 
+  const bannerUrl = creator.banner_picture+'=w2560-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj';
   return (
     <>
       {!isFetched ? (
@@ -201,7 +202,7 @@ const CreatorPage = () => {
       ) : (
           <div>
             <div className="banner">
-              <Image src={creator.banner_picture ? creator.banner_picture : null}
+              <Image src={bannerUrl}
                 style={{ height: '300px', objectFit: 'cover' }}
                 preview={false} />
             </div>
@@ -265,7 +266,7 @@ const CreatorPage = () => {
               </Col>
             </Row>
 
-            <Row gutter={16}>
+            {/* <Row gutter={16}>
               <Col span={24}>
                 <List
                   grid={{
@@ -280,7 +281,6 @@ const CreatorPage = () => {
                     marginTop: 20,
                     marginBottom: 20
                   }}
-                  // loading={isTop10VideosLoaded}
                   dataSource={top10videos}
                   renderItem={(item) => (
                     <List.Item>
@@ -288,13 +288,12 @@ const CreatorPage = () => {
                         style={{ width: '600px' }}
                         bodyStyle={{ padding: 0, width: '600px' }}>
                         <ReactPlayer url={item.player.embedHtml} width='100%'></ReactPlayer>
-                        {/* <span>{item.likes}</span> */}
                       </Card>
                     </List.Item>
                   )}
                 />
               </Col>
-            </Row>
+            </Row> */}
 
             {/* <div className="yearly-heatmap"> */}
             {/* <FrequencyCard /> */}

@@ -30,7 +30,6 @@ class YoutubeService {
               }
         });
         creators.map((creator) => {
-            console.log(creator.channels);
             const channel = creator.channels.find((it) => it.custom_url === creator.custom_url);
             Creator.update({
                 banner_picture: channel.banner_url,
@@ -42,7 +41,7 @@ class YoutubeService {
     async fetchChannelDataFromAPI(channelId: any) {
         console.log('fetchChannelInfo()' + channelId);
 
-        const url = `https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&id=${channelId}&key=${apiKey}`;
+        const url = `https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics,brandingSettings&id=${channelId}&key=${apiKey}`;
         let response = await fetch(url);
 
         return response.json(); //await
@@ -145,7 +144,9 @@ class YoutubeService {
         const viewCount = data.items[0].statistics.viewCount;
         const subscriberCount = data.items[0].statistics.subscriberCount;
         const videoCount = data.items[0].statistics.videoCount;
-        const logo = data.items[0].snippet.thumbnails.medium.url;
+        const logo = data.items[0].snippet.thumbnails.high.url;
+        const banner = data.items[0].brandingSettings.image ? data.items[0].brandingSettings.image.bannerExternalUrl : null;
+
 
         // Store channel data in the database
         const channelExists = await Channel.findOne({ where: { channel_id: channelId } });
@@ -159,6 +160,7 @@ class YoutubeService {
                 'subs': subscriberCount,
                 'videos': videoCount,
                 'logo_url': logo,
+                'banner_url': banner,
                 'custom_url': data.items[0].snippet.customUrl
             });
         } else {
