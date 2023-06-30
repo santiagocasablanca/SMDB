@@ -27,7 +27,7 @@ const AppSidebar = ({ collapsed }) => {
 
 
   const sideStyle = {
-    background: variables.sdmnDarkBlue,
+    // background: variables.babyPowder,
     primaryColor: variables.sdmnPink,
     colorBgTextHover: variables.sdmnYellow,
     color: variables.onSurface
@@ -37,6 +37,11 @@ const AppSidebar = ({ collapsed }) => {
 
   :where(.css-dev-only-do-not-override-yp4umk).ant-menu-dark .ant-menu-item-selected, 
   :where(.css-dev-only-do-not-override-yp4umk).ant-menu-dark>.ant-menu .ant-menu-item-selected {
+    background:  `+ variables.sdmnYellow + `;
+    color:  `+ variables.onBg + `;
+  }
+
+  .ant-menu-dark .ant-menu-item-selected, .ant-menu-dark>.ant-menu .ant-menu-item-selected {
     background:  `+ variables.sdmnYellow + `;
     color:  `+ variables.onBg + `;
   }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, List, Row, Col, Image, Table, Space, Avatar, Button, Popover, Tag } from 'antd';
-import { LikeOutlined, YoutubeOutlined, CalendarOutlined, VideoCameraOutlined, EyeOutlined, NumberOutlined } from '@ant-design/icons';
+import { Card, List, Row, Col, Image, Table, Space, Avatar, Button, Popover, Tag, Typography } from 'antd';
+import { LikeOutlined, YoutubeOutlined, CalendarOutlined, VideoCameraOutlined, EyeOutlined, NumberOutlined, FilterOutlined } from '@ant-design/icons';
 
 import insertCss from 'insert-css';
 import ReactPlayer from 'react-player'
@@ -16,10 +16,13 @@ import UploadTimeFrequencyCard from "./UploadTimeFrequencyCard";
 import ChannelTotalStats from "./ChannelTotalsStats";
 import variables from '../sass/antd.module.scss'
 import useFormatter from '../hooks/useFormatter';
-
-
-
 import dayjs from "dayjs"
+
+
+
+
+
+const { Title } = Typography;
 
 const CreatorPage = () => {
   const navigate = useNavigate();
@@ -86,6 +89,25 @@ const CreatorPage = () => {
     width: 600px;
   }
 
+  .headerPanel {
+    padding: 10px;
+  }
+
+  .headerPanel h3 {
+    color: `+ variables.oxfordBlue + `;
+  }
+
+  .headerPanel button span {
+    background: `+ variables.oxfordBlue + `;
+    color: `+ variables.sdmnYellow + `;
+    
+  }
+
+  .creators-list {
+    padding: 10px;
+  }
+  
+
   @media (max-width: 600px) {
     .since-panel {
       position: absolute;
@@ -108,6 +130,23 @@ const CreatorPage = () => {
   }
 
   `)
+
+  const HeaderPanel = ({ title, filters, onChange }) => {
+    // style={{ color: 'black' }}
+    return (
+      <Row className="headerPanel">
+        <Col span="22">
+          <Title level={3}>{title}</Title>
+        </Col>
+        <Col span="2">
+          <div style={{float:'right'}}>
+
+            <Button icon={<FilterOutlined />}>Filter</Button>
+          </div>
+        </Col>
+      </Row>
+    );
+  };
 
   const StatsPanel = ({ subs, views, videos }) => {
     const content = (
@@ -242,7 +281,7 @@ const CreatorPage = () => {
     const content = (
       <List
         size="small"
-        style={{width:"220px"}}
+        style={{ width: "220px" }}
         dataSource={sortedChannels}
         renderItem={(channel) => (
           <List.Item>
@@ -277,12 +316,13 @@ const CreatorPage = () => {
 
   const handleClickCreator = (id) => {
     console.log(id);
-    const url = '/creator/'+id;
+    const url = '/creator/' + id;
     // not necessary, kind of redudant at the moment. Params are set through useParams and useLocation (state)
-    navigate(url, { state : { id: id }});
+    navigate(url, { state: { id: id } });
   }
 
   return (<>
+    <HeaderPanel title="Creators"></HeaderPanel>
     <List
       grid={{
         gutter: 8,
@@ -293,15 +333,15 @@ const CreatorPage = () => {
         xl: 4,
         xxl: 5,
       }}
-      className="scrollmenu"
+      className="creators-list"
       itemLayout="horizontal"
-      style={{
-        background: variables.sdmnPink,
-        padding: 20,
-        marginTop: 20,
-        marginBottom: 20,
-        borderRadius: '5px'
-      }}
+      // style={{
+      //   background: variables.sdmnPink,
+      //   padding: 20,
+      //   marginTop: 20,
+      //   marginBottom: 20,
+      //   borderRadius: '5px'
+      // }}
       // loading={isTop10VideosLoaded}
       dataSource={fetchedData}
       renderItem={(item, index) => (

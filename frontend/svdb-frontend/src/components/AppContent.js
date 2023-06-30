@@ -10,16 +10,16 @@ const { Content } = Layout;
 // routes config
 
 const AppContent = () => {
-  // style={{
-  //   padding: '10px 10px',
-  //   margin: '12px 24px',
-  //   // background: variables.bg,
-  //   color: variables.onBg,
-  //   // primaryColor: variables.primary,
-  //   minHeight: 280,
-  // }}>
+  
   return (
-    <Content>
+    <Content style={{
+      // padding: '10px 10px',
+      // margin: '12px 24px',
+      // background: variables.bg,
+      color: variables.onBg,
+      // primaryColor: variables.primary,
+      minHeight: 280,
+    }}>
 
       
       <Suspense>
