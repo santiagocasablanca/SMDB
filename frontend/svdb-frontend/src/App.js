@@ -28,13 +28,14 @@ class App extends Component {
   
     // darkAlgorithm
     // defaultAlgorithm
+    // background: variables.bg
     return (
       <ConfigProvider
         theme={{
           algorithm: theme.darkAlgorithm,
           token: {
             colorPrimary: "#F5C518",
-            background: variables.bg
+            
           },
         }}
       >

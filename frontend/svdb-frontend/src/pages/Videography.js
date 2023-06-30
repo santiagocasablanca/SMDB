@@ -18,12 +18,12 @@ import VideographyStatsPanel from "./VideographyStatsPanel";
 // } 
 
 const Videography = () => {
+  // border: 1px solid black;
   insertCss(`
 
   .filterPanel {
-    background: `+ variables.sdmnPink + `;
+    background: `+ variables.aquamarine + `;
     color: `+ variables.onBg + `;
-    border: 1px solid black;
   }
 
   .editPanel {
@@ -52,7 +52,7 @@ const Videography = () => {
 
     }
     .ant-table-wrapper .ant-table-row-expand-icon {
-      border-color: `+ variables.onSurface + `;
+      border-color: `+ variables.onBg + `;
     }
 
 

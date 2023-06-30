@@ -26,13 +26,14 @@ const DefaultLayout = () => {
       <Layout className="body flex-grow-1 px-3">
         <AppHeader collapsed={collapsed} childToParent={childToParent} />
         <Layout hasSider style={{
-          // padding: '30px', bg sdmnPink sdmnLightBlue
-          background: variables.sdmnLightBlue,
+          // padding: '30px', bg sdmnPink sdmnLightBlue babyPowder secondary
+          background: variables.aquamarine,
           color: variables.onBg,
-          primaryColor: variables.sdmnYellow
-        }} >
+          primaryColor: variables.sdmnYellow,
+          textColor: variables.onBg
+        }}>
 
-<AppSidebar collapsed={collapsed} />
+          <AppSidebar collapsed={collapsed} />
 
           <AppContent />
         </Layout>

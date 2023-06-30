@@ -19,11 +19,17 @@ $myrtleGreen: #587B7F;
 $fireRed: #DB162F;
 $miniPink: #FFDDE2;
 
+$babyPowder: #FBFEFB;
+$oxfordBlue: #011529;
+$redPantone: #E71D36;
+$orangePeel: #FF9F1C;
+$aquamarine: #78FECF;
 
 
 
 
 :export {
+  onyx: $onyx;
   primaryColor: $primaryColor;
   secondaryColor: $secondaryColor;
   coolGray: $coolGray;
@@ -49,6 +55,11 @@ $miniPink: #FFDDE2;
   sdmnYellow: #FCF536;
   sdmnWhite: white;
   sdmnBlack: black;
+  babyPowder: $babyPowder;
+  oxfordBlue: $oxfordBlue;
+  redPantone: $redPantone;
+  orangePeel: $orangePeel;
+  aquamarine: $aquamarine;
 }
 
 // antigo #FCF536 
