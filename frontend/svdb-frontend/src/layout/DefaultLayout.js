@@ -26,8 +26,9 @@ const DefaultLayout = () => {
       <Layout className="body flex-grow-1 px-3">
         <AppHeader collapsed={collapsed} childToParent={childToParent} />
         <Layout hasSider style={{
-          // padding: '30px', bg sdmnPink sdmnLightBlue babyPowder secondary
-          background: variables.aquamarine,
+          // padding: '30px', bg sdmnPink sdmnLightBlue babyPowder secondary  aquamarine oxfordBlue
+          // new tries
+          background: variables.oxfordBlueSofter8,
           color: variables.onBg,
           primaryColor: variables.sdmnYellow,
           textColor: variables.onBg
