@@ -95,7 +95,7 @@ const CreatorPage = () => {
   }
 
   .headerPanel h3 {
-    color: `+ variables.sdmnYellow + `;
+    color: `+ variables.oxfordBlue + `;
   }
  
   .headerPanel button span {

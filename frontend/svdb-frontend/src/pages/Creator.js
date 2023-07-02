@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, List, Row, Col, Image } from 'antd';
+import { Card, List, Row, Col, Image, Typography } from 'antd';
 import insertCss from 'insert-css';
 import ReactPlayer from 'react-player'
 import {
@@ -16,6 +16,7 @@ import ChannelTotalStats from "./ChannelTotalsStats";
 import variables from '../sass/antd.module.scss'
 import PokemonCard from '../components/PokemonCard';
 
+const { Title } = Typography;
 
 
 const CreatorPage = () => {
@@ -73,24 +74,28 @@ const CreatorPage = () => {
     font-size: 24px;
   }
 
-  .profile {
-    width: 128px;
-    height: 128px;
-    margin: 20px auto;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-    border-radius: 120px;
-    margin: 0 auto;
-    margin-top: -120px;
+  .banner img {
+    height: 300px;
+    object-fit: cover;
   }
 
+  .profile {
+    display: flex;
+    margin: 20px 100px;
+  }
+
+  .profilePicture {
+    width: 128px;
+    height: 128px;
+    background-size: cover;    
+    background-repeat: no-repeat;
+  }
+  
   .radius {
     border-radius: 50%;
   }
 
   .name {
-    text-align: center;
     font-size: 30px;
     font-weight: bold;
     margin-bottom: 20px;
@@ -182,7 +187,7 @@ const CreatorPage = () => {
   }
 
   .creatorContainer {
-    margin: 10px auto;
+    margin: 0 100px auto;
     
   }
 
@@ -194,6 +199,29 @@ const CreatorPage = () => {
   .scrollmenu div {
     display: inline-block;
    
+  }
+
+  .channel_info {
+    flex: 1;
+    align-items: flex-start;
+  }
+
+  @media (max-width: 600px) {
+    .creatorContainer {
+      margin: 0 20px auto;
+    }
+
+    .banner img {
+      height: auto;
+    }
+
+    .profile {
+      width: 128px;
+      height: 128px;
+      margin: 20px 20px;
+      
+    }
+    
   }
 
   `)
@@ -208,13 +236,17 @@ const CreatorPage = () => {
           <div>
             <div className="banner">
               <Image src={bannerUrl}
-                style={{ height: '300px', objectFit: 'cover' }}
                 preview={false} />
             </div>
             <div className="profile">
-              <Image className="radius" src={creator.profile_picture} />
+              <div className="profilePicture">
+                <Image className="radius" src={creator.profile_picture} />
+              </div>
+              <div className="channel_info">
+                {/* <div className="name">{creator.name}</div> */}
+                <Title level={3}>{creator.name}</Title>
+              </div>
             </div>
-            <div className="name">{creator.name}</div>
 
             <div className="creatorContainer">
 
