@@ -91,12 +91,13 @@ const CreatorPage = () => {
 
   .headerPanel {
     padding: 10px;
+    color: `+ variables.sdmnYellow + `;
   }
 
   .headerPanel h3 {
-    color: `+ variables.oxfordBlue + `;
+    color: `+ variables.sdmnYellow + `;
   }
-
+ 
   .headerPanel button span {
     background: `+ variables.oxfordBlue + `;
     color: `+ variables.sdmnYellow + `;

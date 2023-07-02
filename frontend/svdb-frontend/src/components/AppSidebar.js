@@ -52,6 +52,7 @@ const AppSidebar = ({ collapsed }) => {
   `);
 
   const onClick = (e) => {
+    dispatch({type: 'DECREMENT'});
     // console.log('click ', e);
   };
 
