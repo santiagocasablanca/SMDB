@@ -16,7 +16,6 @@ import ChannelTotalStats from "./ChannelTotalsStats";
 import variables from '../sass/antd.module.scss';
 import useFormatter from '../hooks/useFormatter';
 
-import PokemonCard from '../components/PokemonCard';
 
 const { Title, Text } = Typography;
 

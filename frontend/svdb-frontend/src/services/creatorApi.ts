@@ -27,3 +27,12 @@ export const getCreatorsFn = async (page = 1, limit = 30, params) => {
   );
   return response.data;
 };
+
+// fetchCreatorStatsController
+export const getCreatorStatsFn = async (params) => {
+  const req = `creator/fetchStats?${params}`;
+  const response = await api.get<IChannelResponse>(
+    req
+  );
+  return response.data;
+};

@@ -1,5 +1,9 @@
 import { useMemo } from 'react';
 import dayjs from 'dayjs';
+var duration = require('dayjs/plugin/duration')
+dayjs.extend(duration)
+var relativeTime = require('dayjs/plugin/relativeTime')
+dayjs.extend(relativeTime)
 
 const useFormatter = () => {
   const intToStringBigNumber = useMemo(
@@ -47,7 +51,36 @@ const useFormatter = () => {
     []
   );
 
-  return { intToStringBigNumber, parseDate, parseDuration };
+  const humanizeDurationFromSeconds = useMemo(
+    () => {
+      return (durationAsSeconds) => dayjs.duration(durationAsSeconds, 'seconds').humanize();
+    }, 
+    []
+  )
+
+  const displayDurationFromSeconds = useMemo(
+    () => {
+      return (durationAsSeconds) => {
+        const parsed = dayjs.duration(durationAsSeconds, 'seconds');
+        const returnValue = parsed.get('days') + 'd, ' + parsed.get('hours') + 'h and ' + parsed.get('minutes') + 'm'
+        return returnValue;
+      }
+    }, 
+    []
+  )
+
+  const displayVideoDurationFromSeconds = useMemo(
+    () => {
+      return (durationAsSeconds) => {
+        const parsed = dayjs.duration(durationAsSeconds, 'seconds');
+        const returnValue = parsed.get('hours') + ':' + parsed.get('minutes') + ':' + parsed.get('seconds');
+        return returnValue;
+      }
+    }, 
+    []
+  )
+
+  return { intToStringBigNumber, parseDate, parseDuration, humanizeDurationFromSeconds, displayDurationFromSeconds, displayVideoDurationFromSeconds };
 };
 
 export default useFormatter;

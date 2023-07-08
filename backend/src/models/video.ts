@@ -31,6 +31,10 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
       type: DataTypes.STRING(20),
       allowNull: false,
     },
+    duration_parsed: {
+      type: DataTypes.INTEGER(1000),
+      allowNull: true,
+    },
     channel_id: {
       type: DataTypes.STRING(50),
       allowNull: false,

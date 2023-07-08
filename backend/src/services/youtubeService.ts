@@ -75,7 +75,7 @@ class YoutubeService {
             let videoResponse = await fetch(videoUrl);
             let videoData = await videoResponse.json();
 
-            videoData.items.forEach(async (item: any) => {
+            videoData.items?.forEach(async (item: any) => {
                 try {
                     const videoExists = await Video.findOne({ where: { video_id: item.id } });
                     if (!videoExists) {
