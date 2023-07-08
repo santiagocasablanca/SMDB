@@ -411,8 +411,7 @@ export const findAllVideosController = async (
     // console.log(whereClause);
 
     const videos = await Video.findAndCountAll({ where: whereClause, limit, offset: skip, order: [sort] });
-    // console.log(videos);
-
+    
     res.status(200).json({
       status: "success",
       results: videos.count,

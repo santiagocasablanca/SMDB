@@ -132,3 +132,56 @@ export const findAllCreatorsController = async (
   }
 };
 
+export const fetchCreatorStatsController = async (
+  req: Request<{}, {}, {}>,
+  res: Response
+) => {
+  try {
+
+    console.log('fetchCreatorStatsController     BLA BAL', req.query, req.params);
+
+    const whereClause = {}
+    if (req.query.channels) {
+      console.log(req.query.channels);
+      var channelsArr = req.query.channels.split(',');
+
+      whereClause.channel_id = {
+        [Op.or]: channelsArr
+      }
+    }
+
+    if (req.query.publishedAtRange) {
+      let rangeDate = req.query.publishedAtRange.split(',');
+      const publishedAtSearchInitial = dayjs(rangeDate[0]).format("YYYY-MM-DD");
+      const publishedAtSearchFinal = dayjs(rangeDate[1]).format("YYYY-MM-DD");
+
+      whereClause['published_at'] = { [Sequelize.Op.between]: [publishedAtSearchInitial, publishedAtSearchFinal] };
+    }
+
+
+
+    const records = await Video.findAll({
+      attributes: [
+        // [sequelize.literal("video.\"channel_id\""), 'channel'],
+        "channel_id",
+        "channel_title",
+        [sequelize.fn("COUNT", sequelize.col('*')), "total_videos"],
+        [sequelize.fn("SUM", sequelize.col('views')), "views"],
+        [sequelize.fn("SUM", sequelize.col('likes')), "likes"],
+        [sequelize.fn("SUM", sequelize.col('duration_parsed')), "duration"], // string shit
+        [sequelize.fn("SUM", sequelize.col('comments')), "comments"],
+      ], where: whereClause, group: ['channel_id', 'channel_title']
+    });
+
+    res.status(200).json({
+      status: "success",
+      results: records,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: error.message,
+    });
+  }
+};
+

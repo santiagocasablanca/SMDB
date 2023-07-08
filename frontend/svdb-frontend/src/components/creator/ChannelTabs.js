@@ -82,7 +82,7 @@ const ChannelTabs = ({_creator, _channels}) => {
             }].concat(channels));
             setIsLoaded(true);
         }
-    }, []);
+    }, [_creator, _channels]);
 
     const ChannelTab = ({ channel }) => {
         const bannerUrl = channel.banner_url + '=w2560-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj';
@@ -113,7 +113,7 @@ const ChannelTabs = ({_creator, _channels}) => {
         );
 
         return (
-            <Popover content={content} placement="bottom">
+            <Popover content={content} placement="top">
                 <Space className="tabTitle">
                     <Image className="tabTitleImg circular" width="100%" height="100%" src={channel.logo_url} preview={false}></Image>
                 </Space>
