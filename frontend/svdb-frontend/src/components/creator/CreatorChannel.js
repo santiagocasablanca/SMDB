@@ -124,6 +124,7 @@ const CreatorChannel = ({ creator, channel }) => {
                     duration: {
                         title: 'Total Duration',
                         unparsedValue: sumDuration,
+                        parsedValue: displayVideoDurationFromSeconds(sumDuration),
                         value: displayDurationFromSeconds(sumDuration),
                         humanized: humanizeDurationFromSeconds(sumDuration),
                         unparsedAvg: (sumDuration / sumTotalVideos),
@@ -159,7 +160,11 @@ const CreatorChannel = ({ creator, channel }) => {
                                 <Col span={24}>
                                     <Title style={{ color: 'black' }} level={5}>Recent</Title>
                                     <HorizontalVideoList _videos={mostRecentVideos} />
+
                                     <Title style={{ color: 'black' }} level={5}>Most Viewed</Title>
+                                    <HorizontalVideoList _videos={top10videos} />
+
+                                    <Title style={{ color: 'black' }} level={5}>Last Appearences in other channels // TODO</Title>
                                     <HorizontalVideoList _videos={top10videos} />
 
                                     {/* <HorizontalVideoList _videos={top10videos} /> */}
