@@ -11,7 +11,7 @@ const useFormatter = () => {
       const formatNumber = num => {
         if (num === undefined) return 0;
         const numericString = num.toString().replace(/[^0-9.]/g, '');
-        const parsedNum = parseFloat(numericString);
+        const parsedNum = parseFloat(numericString).toFixed(0);
         if (parsedNum < 1000) {
           return parsedNum.toString();
         }
@@ -58,17 +58,20 @@ const useFormatter = () => {
     []
   )
 
+
+//        const returnValue = parsed.get('days') + 'd, ' + parsed.get('hours') + 'h and ' + parsed.get('minutes') + 'm'
   const displayDurationFromSeconds = useMemo(
     () => {
       return (durationAsSeconds) => {
         const parsed = dayjs.duration(durationAsSeconds, 'seconds');
-        const returnValue = parsed.get('days') + 'd, ' + parsed.get('hours') + 'h and ' + parsed.get('minutes') + 'm'
+        const returnValue = parsed.get('days') + 'd' + parsed.get('hours') + 'h' + parsed.get('minutes') + 'm'
         return returnValue;
       }
     }, 
     []
   )
 
+  // TODO add days and other stuff? (parsed.get('days') ? parsed.get('days') + ':' : '') + 
   const displayVideoDurationFromSeconds = useMemo(
     () => {
       return (durationAsSeconds) => {

@@ -23,7 +23,7 @@ app.use(express.json({ limit: "10kb" }));
 if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 
 // 11am
-cron.schedule('55 11 * * *', () => { 
+cron.schedule('15 18 * * *', () => { 
   console.log('schuduled and running');
   const youtubeService = new YoutubeService();
   // youtubeService.fetchStatisticsForAllChannels();
@@ -80,16 +80,16 @@ db.sequelize
 const apiKey = 'AIzaSyDB5XiiHdTnBGm0qGEBevS65AdZIIjT3KM'; // 'AIzaSyA9IHgl5-gGaQYpN01q2TiYcF5mKw6TQ8A';
 
 const channel_ids = [
-  // "UCDogdKl7t7NHzQ95aEwkdMw", // Sidemen
-  // "UCh5mLn90vUaB1PbRRx_AiaA", // MoreSidemen
+  "UCDogdKl7t7NHzQ95aEwkdMw", // Sidemen
+  "UCh5mLn90vUaB1PbRRx_AiaA", // MoreSidemen
   // "UCjRkTl_HP4zOh3UFaThgRZw", // SidemenReacts
   // "UCWZmCMB7mmKWcXJSIPRhzZw", // https://www.youtube.com/@Miniminter,  https://pbs.twimg.com/profile_images/1640809891399979008/B3V1ylDx_400x400.jpg
   // "UCjB_adDAIxOL8GA4Y4OCt8g", // https://www.youtube.com/@MM7Games, 
   // "UCFPElAbES8GHfBZrDrGbSLQ", // https://www.youtube.com/@Whatsgoodpodcast, 
   // "UCPwrSW0HPiba4lu1DW_zdjA", // https://www.youtube.com/@RandolphUK, 
   // "UC0P_148sT5v0SQHgfaUXh4w", // https://www.youtube.com/@Randolph2 https://www.youtube.com/channel/
-  "UChntGq8THlUokhc1tT-M2wA", // Zerkaa 
-  "UCst9GLZ-X47MxWBmx9cCrKA", // zerkaaPlays
+  // "UChntGq8THlUokhc1tT-M2wA", // Zerkaa 
+  // "UCst9GLZ-X47MxWBmx9cCrKA", // zerkaaPlays
   // "UCmVhkn3V5He-ONb4wUNRcwg", // zerkaaclips
   // "UCk5azh7kjYWMkWQsLrqn_9w", // zerkaaShorts
   // "UCVtFOytbRpEvzLjvqGG5gxQ", // KSI
@@ -217,6 +217,7 @@ async function fetchVideos(_channel_id) {
             'dislikes': item.statistics.dislikeCount,
             'comments': item.statistics.commentCount,
             'duration': item.contentDetails.duration,
+            'duration_parsed': parseDuration(item.contentDetails.duration),
             'url': item.snippet.thumbnails.high.url,
             'player': item.player,
             'published_at': item.snippet.publishedAt,
@@ -355,6 +356,15 @@ function determineTags(title) {
   });
 
   return associatedTags;
+}
+
+async function parseDuration(durationString) {
+  const regex = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
+  const matches = durationString.match(regex);
+  const hours = matches[1] ? parseInt(matches[1]) : 0;
+  const minutes = matches[2] ? parseInt(matches[2]) : 0;
+  const seconds = matches[3] ? parseInt(matches[3]) : 0;
+  return hours * 3600 + minutes * 60 + seconds;
 }
 
 // Function to check if a phrase is present in a given set of tokens

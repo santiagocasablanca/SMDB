@@ -7,6 +7,15 @@ const Channel = db.channel;
 const ChannelStats = db.channelStats;
 const Creator = db.creator;
 
+async function parseDuration(durationString) {
+    const regex = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
+    const matches = durationString.match(regex);
+    const hours = matches[1] ? parseInt(matches[1]) : 0;
+    const minutes = matches[2] ? parseInt(matches[2]) : 0;
+    const seconds = matches[3] ? parseInt(matches[3]) : 0;
+    return hours * 3600 + minutes * 60 + seconds;
+}
+
 
 // Set up the API request parameters
 const apiKey = 'AIzaSyA9IHgl5-gGaQYpN01q2TiYcF5mKw6TQ8A';
@@ -54,6 +63,8 @@ class YoutubeService {
         return response.json();
     }
 
+    
+
     async fetchAndCreateVideosFromChannel(channelId: any) {
 
         let nextPageToken = '';
@@ -90,6 +101,7 @@ class YoutubeService {
                             'dislikes': item.statistics.dislikeCount,
                             'comments': item.statistics.commentCount,
                             'duration': item.contentDetails.duration,
+                            'duration_parsed': parseDuration(item.contentDetails.duration),
                             'url': item.snippet.thumbnails.high.url,
                             'player': item.player,
                             'published_at': item.snippet.publishedAt,
@@ -105,6 +117,7 @@ class YoutubeService {
                             'dislikes': item.statistics.dislikeCount,
                             'comments': item.statistics.commentCount,
                             'duration': item.contentDetails.duration,
+                            'duration_parsed': parseDuration(item.contentDetails.duration),
                             'url': item.snippet.thumbnails.high.url,
                             'published_at': item.snippet.publishedAt,
                             'livestream': item.liveStreamingDetails,

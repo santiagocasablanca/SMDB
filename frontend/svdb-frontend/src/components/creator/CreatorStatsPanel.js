@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Card, List, Row, Col, Image, Avatar, Table, Typography, Space, Descriptions, Spin, Progress, Popover } from 'antd';
-import { LikeOutlined, YoutubeOutlined, CalendarOutlined, VideoCameraOutlined, EyeOutlined, NumberOutlined, FilterOutlined } from '@ant-design/icons';
+import { Card, List, Row, Col, Image, Avatar, Table, Typography, Space, Descriptions, Spin, Progress, Popover, Divider, Tooltip } from 'antd';
+import { LikeOutlined, YoutubeOutlined, CalendarOutlined, CommentOutlined, ClockCircleOutlined, VideoCameraOutlined, EyeOutlined, NumberOutlined, FilterOutlined, ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 import { green, red } from '@ant-design/colors';
 import insertCss from 'insert-css';
 
@@ -54,8 +54,8 @@ const CreatorStatsPanel = ({ creator, channel, stats, mostRecentVideos, isAllCha
   }
 
   .profilePicture {
-    width: 128px;
-    height: 128px;
+    width: 115px;
+    height: 115px;
     background-size: cover;    
     background-repeat: no-repeat;
     float:right;
@@ -75,7 +75,7 @@ const CreatorStatsPanel = ({ creator, channel, stats, mostRecentVideos, isAllCha
 
   .channel_stats_info {
     align-items: flex-start;
-    padding: 20px 10px;
+    padding: 0px 10px;
   }
 
   .channel_stats_info h3 {
@@ -94,11 +94,14 @@ const CreatorStatsPanel = ({ creator, channel, stats, mostRecentVideos, isAllCha
     text-wrap: nowrap;
     font-size: 13px;
     font-weight: 500;
-    margin-top: 0px !important;
+    margin-top: -2px !important;
   }
 
   .moreStatsContainer {
     padding: 0 20px;
+    justify-items: center;
+    background-color: `+ variables.coolerGray6 + `;
+    color: `+ variables.onSurface + `;
   }
 
   .since-panel {
@@ -263,11 +266,6 @@ const CreatorStatsPanel = ({ creator, channel, stats, mostRecentVideos, isAllCha
     };
 
     const Last5VideosComponent = ({ stats }) => {
-        const [fifthColor, setFifthColor] = useState();
-        const [fourthColor, setFourthColor] = useState();
-        const [thirdColor, setThirdColor] = useState();
-        const [secondColor, setSecondColor] = useState();
-        const [firstColor, setFirstColor] = useState();
 
         const getColor = (value) => {
             if (value < 0.9) return '#ff4d4f';
@@ -275,21 +273,16 @@ const CreatorStatsPanel = ({ creator, channel, stats, mostRecentVideos, isAllCha
             if (value >= 1) return '#52c41a';
         }
 
-        useEffect(() => {
-            if (stats) {
-                const reversedArray = stats.reverse();
+        const getIcon = (value) => {
+            if (value < 0.9) return <ArrowDownOutlined />;
+            if (value > 0.9 && value < 1) return;
+            if (value >= 1) return <ArrowUpOutlined />;
+        }
 
-                setFifthColor(getColor(reversedArray[0].value));
-                setFourthColor(getColor(reversedArray[1].value));
-                setThirdColor(getColor(reversedArray[2].value));
-                setSecondColor(getColor(reversedArray[3].value));
-                setFirstColor(getColor(reversedArray[4].value));
-
-            }
-        }, [stats]);
-
+        // TODO implement this -> videoPreview?
         const content = (index) => (
             <Space>
+                <Image src={stats[index].video.url} width='100%' height='150px' preview={false}></Image>
                 <p>{stats[index].videoValue}</p>
                 <p>{parseDate(stats[index].video.published_at)}</p>
             </Space>
@@ -300,19 +293,19 @@ const CreatorStatsPanel = ({ creator, channel, stats, mostRecentVideos, isAllCha
             <>
                 <Space gutter={2}>
                     <Popover content={content(4)} placement="top">
-                        <Avatar style={{ backgroundColor: firstColor }} shape="square" size="small" />
+                        <Avatar icon={getIcon(stats[4].value)} style={{ backgroundColor: getColor(stats[4].value) }} shape="square" size="small" />
                     </Popover>
                     <Popover content={content(3)} placement="top">
-                        <Avatar style={{ backgroundColor: secondColor }} shape="square" size="small" />
+                        <Avatar icon={getIcon(stats[3].value)} style={{ backgroundColor: getColor(stats[3].value) }} shape="square" size="small" />
                     </Popover>
                     <Popover content={content(2)} placement="top">
-                        <Avatar style={{ backgroundColor: thirdColor }} shape="square" size="small" />
+                        <Avatar icon={getIcon(stats[2].value)} style={{ backgroundColor: getColor(stats[2].value) }} shape="square" size="small" />
                     </Popover>
                     <Popover content={content(1)} placement="top">
-                        <Avatar style={{ backgroundColor: fourthColor }} shape="square" size="small" />
+                        <Avatar icon={getIcon(stats[1].value)} style={{ backgroundColor: getColor(stats[1].value) }} shape="square" size="small" />
                     </Popover>
                     <Popover content={content(0)} placement="top">
-                        <Avatar style={{ backgroundColor: fifthColor }} shape="square" size="small" />
+                        <Avatar icon={getIcon(stats[0].value)} style={{ backgroundColor: getColor(stats[0].value) }} shape="square" size="small" />
                     </Popover>
                 </Space>
             </>
@@ -320,7 +313,20 @@ const CreatorStatsPanel = ({ creator, channel, stats, mostRecentVideos, isAllCha
     }
 
 
+
+
     const ChannelPanel = ({ _channel }) => {
+
+        const StatPanel = ({ title, value }) => {
+            return (
+                <>
+                    <Space.Compact direction="vertical" size="small" style={{ width: '75px' }}>
+                        <p style={{ marginTop: '10px', marginBottom: '-1px' }}>{title}</p>
+                        <Title level={5}>{value}</Title>
+                    </Space.Compact>
+                </>
+            );
+        }
 
         const bannerUrl = _channel.banner_url + '=w2560-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj';
 
@@ -333,7 +339,7 @@ const CreatorStatsPanel = ({ creator, channel, stats, mostRecentVideos, isAllCha
                     cover={
                         <Image alt={_channel.title}
                             // style={{ maxHeight: '100%', objectFit: 'cover' }} borderRadius: '5px'
-                            style={{ height: '300px', objectFit: 'cover' }}
+                            style={{ height: '200px', objectFit: 'cover' }}
                             src={bannerUrl}
                             preview={false}
                             fallback="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMIAAADDCAYAAADQvc6UAAABRWlDQ1BJQ0MgUHJvZmlsZQAAKJFjYGASSSwoyGFhYGDIzSspCnJ3UoiIjFJgf8LAwSDCIMogwMCcmFxc4BgQ4ANUwgCjUcG3awyMIPqyLsis7PPOq3QdDFcvjV3jOD1boQVTPQrgSkktTgbSf4A4LbmgqISBgTEFyFYuLykAsTuAbJEioKOA7DkgdjqEvQHEToKwj4DVhAQ5A9k3gGyB5IxEoBmML4BsnSQk8XQkNtReEOBxcfXxUQg1Mjc0dyHgXNJBSWpFCYh2zi+oLMpMzyhRcASGUqqCZ16yno6CkYGRAQMDKMwhqj/fAIcloxgHQqxAjIHBEugw5sUIsSQpBobtQPdLciLEVJYzMPBHMDBsayhILEqEO4DxG0txmrERhM29nYGBddr//5/DGRjYNRkY/l7////39v///y4Dmn+LgeHANwDrkl1AuO+pmgAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAwqADAAQAAAABAAAAwwAAAAD9b/HnAAAHlklEQVR4Ae3dP3PTWBSGcbGzM6GCKqlIBRV0dHRJFarQ0eUT8LH4BnRU0NHR0UEFVdIlFRV7TzRksomPY8uykTk/zewQfKw/9znv4yvJynLv4uLiV2dBoDiBf4qP3/ARuCRABEFAoBEgghggQAQZQKAnYEaQBAQaASKIAQJEkAEEegJmBElAoBEgghggQAQZQKAnYEaQBAQaASKIAQJEkAEEegJmBElAoBEgghggQAQZQKAnYEaQBAQaASKIAQJEkAEEegJmBElAoBEgghggQAQZQKAnYEaQBAQaASKIAQJEkAEEegJmBElAoBEgghggQAQZQKAnYEaQBAQaASKIAQJEkAEEegJmBElAoBEgghggQAQZQKAnYEaQBAQaASKIAQJEkAEEegJmBElAoBEgghggQAQZQKAnYEaQBAQaASKIAQJEkAEEegJmBElAoBEgghggQAQZQKAnYEaQBAQaASKIAQJEkAEEegJmBElAoBEgghggQAQZQKAnYEaQBAQaASKIAQJEkAEEegJmBElAoBEgghggQAQZQKAnYEaQBAQaASKIAQJEkAEEegJmBElAoBEgghggQAQZQKAnYEaQBAQaASKIAQJEkAEEegJmBElAoBEgghggQAQZQKAnYEaQBAQaASKIAQJEkAEEegJmBElAoBEgghgg0Aj8i0JO4OzsrPv69Wv+hi2qPHr0qNvf39+iI97soRIh4f3z58/u7du3SXX7Xt7Z2enevHmzfQe+oSN2apSAPj09TSrb+XKI/f379+08+A0cNRE2ANkupk+ACNPvkSPcAAEibACyXUyfABGm3yNHuAECRNgAZLuYPgEirKlHu7u7XdyytGwHAd8jjNyng4OD7vnz51dbPT8/7z58+NB9+/bt6jU/TI+AGWHEnrx48eJ/EsSmHzx40L18+fLyzxF3ZVMjEyDCiEDjMYZZS5wiPXnyZFbJaxMhQIQRGzHvWR7XCyOCXsOmiDAi1HmPMMQjDpbpEiDCiL358eNHurW/5SnWdIBbXiDCiA38/Pnzrce2YyZ4//59F3ePLNMl4PbpiL2J0L979+7yDtHDhw8vtzzvdGnEXdvUigSIsCLAWavHp/+qM0BcXMd/q25n1vF57TYBp0a3mUzilePj4+7k5KSLb6gt6ydAhPUzXnoPR0dHl79WGTNCfBnn1uvSCJdegQhLI1vvCk+fPu2ePXt2tZOYEV6/fn31dz+shwAR1sP1cqvLntbEN9MxA9xcYjsxS1jWR4AIa2Ibzx0tc44fYX/16lV6NDFLXH+YL32jwiACRBiEbf5KcXoTIsQSpzXx4N28Ja4BQoK7rgXiydbHjx/P25TaQAJEGAguWy0+2Q8PD6/Ki4R8EVl+bzBOnZY95fq9rj9zAkTI2SxdidBHqG9+skdw43borCXO/ZcJdraPWdv22uIEiLA4q7nvvCug8WTqzQveOH26fodo7g6uFe/a17W3+nFBAkRYENRdb1vkkz1CH9cPsVy/jrhr27PqMYvENYNlHAIesRiBYwRy0V+8iXP8+/fvX11Mr7L7ECueb/r48eMqm7FuI2BGWDEG8cm+7G3NEOfmdcTQw4h9/55lhm7DekRYKQPZF2ArbXTAyu4kDYB2YxUzwg0gi/41ztHnfQG26HbGel/crVrm7tNY+/1btkOEAZ2M05r4FB7r9GbAIdxaZYrHdOsgJ/wCEQY0J74TmOKnbxxT9n3FgGGWWsVdowHtjt9Nnvf7yQM2aZU/TIAIAxrw6dOnAWtZZcoEnBpNuTuObWMEiLAx1HY0ZQJEmHJ3HNvGCBBhY6jtaMoEiJB0Z29vL6ls58vxPcO8/zfrdo5qvKO+d3Fx8Wu8zf1dW4p/cPzLly/dtv9Ts/EbcvGAHhHyfBIhZ6NSiIBTo0LNNtScABFyNiqFCBChULMNNSdAhJyNSiECRCjUbEPNCRAhZ6NSiAARCjXbUHMCRMjZqBQiQIRCzTbUnAARcjYqhQgQoVCzDTUnQIScjUohAkQo1GxDzQkQIWejUogAEQo121BzAkTI2agUIkCEQs021JwAEXI2KoUIEKFQsw01J0CEnI1KIQJEKNRsQ80JECFno1KIABEKNdtQcwJEyNmoFCJAhELNNtScABFyNiqFCBChULMNNSdAhJyNSiECRCjUbEPNCRAhZ6NSiAARCjXbUHMCRMjZqBQiQIRCzTbUnAARcjYqhQgQoVCzDTUnQIScjUohAkQo1GxDzQkQIWejUogAEQo121BzAkTI2agUIkCEQs021JwAEXI2KoUIEKFQsw01J0CEnI1KIQJEKNRsQ80JECFno1KIABEKNdtQcwJEyNmoFCJAhELNNtScABFyNiqFCBChULMNNSdAhJyNSiECRCjUbEPNCRAhZ6NSiAARCjXbUHMCRMjZqBQiQIRCzTbUnAARcjYqhQgQoVCzDTUnQIScjUohAkQo1GxDzQkQIWejUogAEQo121BzAkTI2agUIkCEQs021JwAEXI2KoUIEKFQsw01J0CEnI1KIQJEKNRsQ80JECFno1KIABEKNdtQcwJEyNmoFCJAhELNNtScABFyNiqFCBChULMNNSdAhJyNSiEC/wGgKKC4YMA4TAAAAABJRU5ErkJggg=="
@@ -349,51 +355,90 @@ const CreatorStatsPanel = ({ creator, channel, stats, mostRecentVideos, isAllCha
                             <Col span={20}>
                                 <div className="channel_stats_info">
                                     <Title level={3}>{_channel.title}</Title>
+                                    <Title level={5}>{_channel.custom_url}</Title>
                                     <Space>
-                                        <Title level={5}>{_channel.custom_url}</Title>
                                         <p>{intToStringBigNumber(_channel.subs)} subs</p>
                                         <p>{intToStringBigNumber(_channel.videos)} videos</p>
+                                        <p>{intToStringBigNumber(_channel.views)} views</p>
                                     </Space>
+                                    <p>Created at {parseDate(_channel?.channel_created_at)}</p>
                                 </div>
                             </Col>
                         </Row>
                     </div>
                     <div className="moreStatsContainer">
-                        <Descriptions column={{ xs: 1, sm: 1, md: 1, lg: 2 }}>
+                        <Space split={<Divider type="vertical" />}>
+                            <Tooltip title="Views">
+                                <div style={{ width: '20px' }}>
+                                    <EyeOutlined />
+                                </div>
+                            </Tooltip>
+                            <StatPanel title="Total" value={stats?.views.humanized}></StatPanel>
+                            <StatPanel title="Avg" value={stats?.views.avg}></StatPanel>
+                            {/* TODO change value for most liked, needed to pass the most/least liked videos */}
+                            <StatPanel title="Most" value={stats?.views.avg}></StatPanel>
+                            <StatPanel title="Least" value={stats?.views.avg}></StatPanel>
 
-                            <Descriptions.Item label="Subscribers">{intToStringBigNumber(_channel?.subs)}</Descriptions.Item>
-                            <Descriptions.Item label="Created at">{parseDate(_channel?.channel_created_at)}</Descriptions.Item>
-                            <Descriptions.Item label="Videos">{intToStringBigNumber(_channel?.videos)}</Descriptions.Item>
-                            <Descriptions.Item label="Videos on the DB">{stats?.videos.value}</Descriptions.Item>
-
-                            <Descriptions.Item label="Views">{stats?.views.humanized}</Descriptions.Item>
-                            <Descriptions.Item label="Avg Views">{stats?.views.avg}</Descriptions.Item>
-                            <Descriptions.Item span={2}>
+                            <Space.Compact direction="vertical">
+                                <p style={{ marginTop: '3px', marginBottom: '-1px' }}>Last 5</p>
                                 <Last5VideosComponent stats={last5VideosStats.views}></Last5VideosComponent>
-                            </Descriptions.Item>
+                            </Space.Compact>
+                        </Space>
 
+                        <Space split={<Divider type="vertical" />}>
+                            <Tooltip title="Likes">
+                                <div style={{ width: '20px' }}>
+                                    <LikeOutlined />
+                                </div>
+                            </Tooltip>
+                            <StatPanel title="Total" value={stats?.likes.humanized}></StatPanel>
+                            <StatPanel title="Avg" value={stats?.likes.avg}></StatPanel>
+                            {/* TODO change value for most liked, needed to pass the most/least liked videos */}
+                            <StatPanel title="Most" value={stats?.likes.avg}></StatPanel>
+                            <StatPanel title="Least" value={stats?.likes.avg}></StatPanel>
 
-                            <Descriptions.Item label="Likes">{stats?.likes.humanized}</Descriptions.Item>
-                            <Descriptions.Item label="Avg Likes">{stats?.likes.avg}</Descriptions.Item>
-                            <Descriptions.Item span={2}>
+                            <Space.Compact direction="vertical">
+                                <p style={{ marginTop: '3px', marginBottom: '-1px' }}>Last 5</p>
                                 <Last5VideosComponent stats={last5VideosStats.likes}></Last5VideosComponent>
-                            </Descriptions.Item>
+                            </Space.Compact>
+                        </Space>
 
-                            <Descriptions.Item label="Comments">{stats?.comments.humanized}</Descriptions.Item>
-                            <Descriptions.Item label="Avg Comments">{stats?.comments.avg}</Descriptions.Item>
-                            <Descriptions.Item span={2}>
+                        <Space split={<Divider type="vertical" />}>
+                            <Tooltip title="Comments">
+                                <div style={{ width: '20px' }}>
+                                    <CommentOutlined />
+                                </div>
+                            </Tooltip>
+                            <StatPanel title="Total" value={stats?.comments.humanized}></StatPanel>
+                            <StatPanel title="Avg" value={stats?.comments.avg}></StatPanel>
+                            {/* TODO change value for most liked, needed to pass the most/least liked videos */}
+                            <StatPanel title="Most" value={stats?.comments.avg}></StatPanel>
+                            <StatPanel title="Least" value={stats?.comments.avg}></StatPanel>
+
+                            <Space.Compact direction="vertical">
+                                <p style={{ marginTop: '3px', marginBottom: '-1px' }}>Last 5</p>
                                 <Last5VideosComponent stats={last5VideosStats.comments}></Last5VideosComponent>
-                            </Descriptions.Item>
+                            </Space.Compact>
+                        </Space>
 
-                            <Descriptions.Item label="Duration">{stats?.duration.value}</Descriptions.Item>
-                            <Descriptions.Item label="Avg Duration">{stats?.duration.avg}</Descriptions.Item>
-                            <Descriptions.Item span={2}>
+                        <Space split={<Divider type="vertical" />}>
+                            <Tooltip title="Duration">
+                                <div style={{ width: '20px' }}>
+                                    <ClockCircleOutlined />
+                                </div>
+                            </Tooltip>
+                            <StatPanel title="Total" value={stats?.duration.value}></StatPanel>
+                            <StatPanel title="Avg" value={stats?.duration.avg}></StatPanel>
+                            {/* TODO change value for most liked, needed to pass the most/least liked videos */}
+                            <StatPanel title="Most" value={stats?.duration.avg}></StatPanel>
+                            <StatPanel title="Least" value={stats?.duration.avg}></StatPanel>
+
+                            <Space.Compact direction="vertical">
+                                <p style={{ marginTop: '3px', marginBottom: '-1px' }}>Last 5</p>
                                 <Last5VideosComponent stats={last5VideosStats.duration}></Last5VideosComponent>
-                            </Descriptions.Item>
-
-                        </Descriptions>
+                            </Space.Compact>
+                        </Space>
                     </div>
-
                 </Card>
             </>
         );
