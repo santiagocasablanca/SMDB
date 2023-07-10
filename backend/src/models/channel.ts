@@ -57,6 +57,10 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
       type: DataTypes.STRING(1000),
       allowNull: true,
     },
+    playlist_id: {
+      type: DataTypes.STRING(50),
+      allowNull: true,
+    },
     channel_created_at: {
       type: DataTypes.DATE,
       allowNull: true,

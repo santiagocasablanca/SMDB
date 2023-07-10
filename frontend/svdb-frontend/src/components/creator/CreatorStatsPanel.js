@@ -86,7 +86,7 @@ const CreatorStatsPanel = ({ creator, channel, stats, mostRecentVideos, isAllCha
   .channel_stats_info h5 {
     color: `+ variables.onSurface + `;
     text-wrap: nowrap;
-    margin-top: -10px !important;
+    margin-top: -15px !important;
   }
 
   .channel_stats_info p {
@@ -95,9 +95,11 @@ const CreatorStatsPanel = ({ creator, channel, stats, mostRecentVideos, isAllCha
     font-size: 13px;
     font-weight: 500;
     margin-top: -2px !important;
+    margin-bottom: 0px;
   }
 
   .moreStatsContainer {
+    overflow: auto;
     padding: 0 20px;
     justify-items: center;
     background-color: `+ variables.coolerGray6 + `;
@@ -121,6 +123,10 @@ const CreatorStatsPanel = ({ creator, channel, stats, mostRecentVideos, isAllCha
     white-space:nowrap;
   }
 
+  .creatorChannelCard {
+    width: 95%;
+  }
+
   @media (max-width: 600px) {
     .creatorContainer {
       margin: 0 20px;
@@ -137,8 +143,12 @@ const CreatorStatsPanel = ({ creator, channel, stats, mostRecentVideos, isAllCha
     }
 
     .channel_stats_info {
-      padding: 0px 10px;
+      padding: 0px 20px;
     }
+
+    .creatorChannelCard {
+        width: 100%;
+      }
     
   }
 
@@ -328,13 +338,35 @@ const CreatorStatsPanel = ({ creator, channel, stats, mostRecentVideos, isAllCha
             );
         }
 
+        const StatRow = ({ title, icon, stats, last5 }) => {
+            return (
+                <Space split={<Divider type="vertical" />} size="small">
+                    <Tooltip title={title}>
+                        <div style={{ width: '20px' }}>
+                            {icon}
+                        </div>
+                    </Tooltip>
+                    <StatPanel title="Total" value={stats?.humanized}></StatPanel>
+                    <StatPanel title="Avg" value={stats?.avg}></StatPanel>
+                    {/* TODO change value for most liked, needed to pass the most/least liked videos */}
+                    <StatPanel title="Most" value={stats?.most}></StatPanel>
+                    <StatPanel title="Least" value={stats?.least}></StatPanel>
+
+                    <Space.Compact direction="vertical">
+                        <p style={{ marginTop: '3px', marginBottom: '-1px' }}>Last 5</p>
+                        <Last5VideosComponent stats={last5}></Last5VideosComponent>
+                    </Space.Compact>
+                </Space>
+            );
+        }
+
         const bannerUrl = _channel.banner_url + '=w2560-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj';
 
         return (
             <>
                 <Card
                     bordered={false}
-                    style={{ width: '95%' }}
+                    className="creatorChannelCard"
                     bodyStyle={{ padding: 0 }}
                     cover={
                         <Image alt={_channel.title}
@@ -367,77 +399,18 @@ const CreatorStatsPanel = ({ creator, channel, stats, mostRecentVideos, isAllCha
                         </Row>
                     </div>
                     <div className="moreStatsContainer">
-                        <Space split={<Divider type="vertical" />}>
-                            <Tooltip title="Views">
-                                <div style={{ width: '20px' }}>
-                                    <EyeOutlined />
-                                </div>
-                            </Tooltip>
-                            <StatPanel title="Total" value={stats?.views.humanized}></StatPanel>
-                            <StatPanel title="Avg" value={stats?.views.avg}></StatPanel>
-                            {/* TODO change value for most liked, needed to pass the most/least liked videos */}
-                            <StatPanel title="Most" value={stats?.views.avg}></StatPanel>
-                            <StatPanel title="Least" value={stats?.views.avg}></StatPanel>
+                        <StatRow title="Views" icon={<EyeOutlined />}
+                            stats={stats?.views} last5={last5VideosStats.views}></StatRow>
 
-                            <Space.Compact direction="vertical">
-                                <p style={{ marginTop: '3px', marginBottom: '-1px' }}>Last 5</p>
-                                <Last5VideosComponent stats={last5VideosStats.views}></Last5VideosComponent>
-                            </Space.Compact>
-                        </Space>
+                        <StatRow title="Likes" icon={<LikeOutlined />}
+                            stats={stats?.likes} last5={last5VideosStats.likes}></StatRow>
 
-                        <Space split={<Divider type="vertical" />}>
-                            <Tooltip title="Likes">
-                                <div style={{ width: '20px' }}>
-                                    <LikeOutlined />
-                                </div>
-                            </Tooltip>
-                            <StatPanel title="Total" value={stats?.likes.humanized}></StatPanel>
-                            <StatPanel title="Avg" value={stats?.likes.avg}></StatPanel>
-                            {/* TODO change value for most liked, needed to pass the most/least liked videos */}
-                            <StatPanel title="Most" value={stats?.likes.avg}></StatPanel>
-                            <StatPanel title="Least" value={stats?.likes.avg}></StatPanel>
+                        <StatRow title="Comments" icon={<CommentOutlined />}
+                            stats={stats?.comments} last5={last5VideosStats.comments}></StatRow>
 
-                            <Space.Compact direction="vertical">
-                                <p style={{ marginTop: '3px', marginBottom: '-1px' }}>Last 5</p>
-                                <Last5VideosComponent stats={last5VideosStats.likes}></Last5VideosComponent>
-                            </Space.Compact>
-                        </Space>
+                        <StatRow title="Duration" icon={<ClockCircleOutlined />}
+                            stats={stats?.duration} last5={last5VideosStats.duration}></StatRow>
 
-                        <Space split={<Divider type="vertical" />}>
-                            <Tooltip title="Comments">
-                                <div style={{ width: '20px' }}>
-                                    <CommentOutlined />
-                                </div>
-                            </Tooltip>
-                            <StatPanel title="Total" value={stats?.comments.humanized}></StatPanel>
-                            <StatPanel title="Avg" value={stats?.comments.avg}></StatPanel>
-                            {/* TODO change value for most liked, needed to pass the most/least liked videos */}
-                            <StatPanel title="Most" value={stats?.comments.avg}></StatPanel>
-                            <StatPanel title="Least" value={stats?.comments.avg}></StatPanel>
-
-                            <Space.Compact direction="vertical">
-                                <p style={{ marginTop: '3px', marginBottom: '-1px' }}>Last 5</p>
-                                <Last5VideosComponent stats={last5VideosStats.comments}></Last5VideosComponent>
-                            </Space.Compact>
-                        </Space>
-
-                        <Space split={<Divider type="vertical" />}>
-                            <Tooltip title="Duration">
-                                <div style={{ width: '20px' }}>
-                                    <ClockCircleOutlined />
-                                </div>
-                            </Tooltip>
-                            <StatPanel title="Total" value={stats?.duration.value}></StatPanel>
-                            <StatPanel title="Avg" value={stats?.duration.avg}></StatPanel>
-                            {/* TODO change value for most liked, needed to pass the most/least liked videos */}
-                            <StatPanel title="Most" value={stats?.duration.avg}></StatPanel>
-                            <StatPanel title="Least" value={stats?.duration.avg}></StatPanel>
-
-                            <Space.Compact direction="vertical">
-                                <p style={{ marginTop: '3px', marginBottom: '-1px' }}>Last 5</p>
-                                <Last5VideosComponent stats={last5VideosStats.duration}></Last5VideosComponent>
-                            </Space.Compact>
-                        </Space>
                     </div>
                 </Card>
             </>

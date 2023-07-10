@@ -80,6 +80,14 @@ const CreatorChannel = ({ creator, channel }) => {
                 let sumLikes = 0;
                 let sumDuration = 0; // in seconds
                 let sumComments = 0;
+                let mostViewed = 0;
+                let leastViewed = null;
+                let mostliked = 0;
+                let leastLiked = null;
+                let mostCommented = 0;
+                let leastCommented = null;
+                let longest = 0;
+                let shortest = null;
 
                 for (const result of data) {
                     sumTotalVideos += parseInt(result.total_videos);
@@ -87,7 +95,19 @@ const CreatorChannel = ({ creator, channel }) => {
                     sumLikes += parseInt(result.likes);
                     sumDuration += parseInt(result.duration);
                     sumComments += parseInt(result.comments);
+                    mostViewed = (result.mostViewed > mostViewed ? result.mostViewed : mostViewed);
+                    leastViewed = (leastViewed ? (result.leastViewed < leastViewed ? result.leastViewed : leastViewed) : result.leastViewed);
+                    mostliked = (result.mostliked > mostliked ? result.mostliked : mostliked);
+                    leastLiked = (leastLiked ? (result.leastLiked < leastLiked ? result.leastLiked : leastLiked) : result.leastLiked);
+
+                    mostCommented = (result.mostCommented > mostCommented ? result.mostCommented : mostCommented);
+                    leastCommented = (leastCommented ? (result.leastCommented < leastCommented ? result.leastCommented : leastCommented) : result.leastCommented);
+                    longest = (result.longest > longest ? result.longest : longest);
+                    shortest = (shortest ? (result.shortest < shortest ? result.shortest : shortest) : result.shortest);
                 }
+
+
+                // TODO clean this mess!!! 
 
                 setStats({
                     subs: {
@@ -100,7 +120,9 @@ const CreatorChannel = ({ creator, channel }) => {
                         value: sumViews,
                         humanized: intToStringBigNumber(sumViews),
                         unparsedAvg: (sumViews / sumTotalVideos),
-                        avg: intToStringBigNumber((sumViews / sumTotalVideos))
+                        avg: intToStringBigNumber((sumViews / sumTotalVideos)),
+                        most: '',
+                        least: ''
                     },
                     likes: {
                         title: 'Total Likes',
@@ -126,7 +148,8 @@ const CreatorChannel = ({ creator, channel }) => {
                         unparsedValue: sumDuration,
                         parsedValue: displayVideoDurationFromSeconds(sumDuration),
                         value: displayDurationFromSeconds(sumDuration),
-                        humanized: humanizeDurationFromSeconds(sumDuration),
+                        humanized: displayDurationFromSeconds(sumDuration), 
+                        evenMoreHumanized: humanizeDurationFromSeconds(sumDuration),
                         unparsedAvg: (sumDuration / sumTotalVideos),
                         avg: displayVideoDurationFromSeconds(sumDuration / sumTotalVideos)
                     },
@@ -150,12 +173,12 @@ const CreatorChannel = ({ creator, channel }) => {
                         </Row>
                     </div>
                     <br></br>
-                    <Row gutter={16}>
-                        <Col span={12}>
+                    <Row gutter={[16,16]}>
+                        <Col span={24} xl={12}>
                             <Title style={{ color: 'black' }} level={5}>Channel Stats</Title>
                             <CreatorStatsPanel creator={creator} channel={channel} stats={stats} mostRecentVideos={mostRecentVideos} isAllChannels={isAllChannels}></CreatorStatsPanel>
                         </Col>
-                        <Col span={12}>
+                        <Col span={24} xl={12}>
                             <Row gutter={16}>
                                 <Col span={24}>
                                     <Title style={{ color: 'black' }} level={5}>Recent</Title>
