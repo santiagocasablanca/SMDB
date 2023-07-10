@@ -96,14 +96,9 @@ const ChannelTabs = ({_creator, _channels}) => {
                 <div>
                     <Space>
                         <Title level={3}>{channel.title}</Title>
-
-                        <Text style={{ float: 'right' }} type="secondary">{parseDate(channel.channel_created_at, "MMM YYYY")}</Text>
                     </Space>
                     <br></br>
                     <Space>
-                        <Title level={5}>{channel.custom_url}</Title>
-                        {/* </Space>
-                    <Space> */}
                         <Text type="secondary">{intToStringBigNumber(channel.subs)} subs</Text>
                         <Text type="secondary">{intToStringBigNumber(channel.videos)} videos</Text>
                         <Text type="secondary">{intToStringBigNumber(channel.views)} views</Text>

@@ -52,17 +52,17 @@ class YoutubeService {
     }
 
     async fetchChannelDataFromAPI(channelId: any) {
-        const url = `https://www.googleapis.com/youtube/v3/channels?part=snippet,contentDetails,statistics,brandingSettings&id=${channelId}&key=${apiKey}`;
+        const url = `https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics,brandingSettings&id=${channelId}&key=${apiKey}`;
         console.log('calling YOUTUBE API: ', url);
         let response = await fetch(url);
 
         return response.json(); //await
     }
 
-    // https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=UUDogdKl7t7NHzQ95aEwkdMw&pageToken=EAAaB1BUOkNQb0I&_=1688923054074
+    // https://www.googleapis.com/youtube/v3/playlistItems?key=AIzaSyASTMQck-jttF8qy9rtEnt1HyEYw5AmhE8&quotaUser=Rif1J5iCV3GTvrl3ubMBBOWAetFJw5yYmZoVLs5o&part=snippet&maxResults=50&playlistId=UUDogdKl7t7NHzQ95aEwkdMw&pageToken=EAAaB1BUOkNQb0I&_=1688923054074
 
-    async fetchVideoDataFromAPI(playlistId: any, nextPageToken: any) {
-        let url = `https://www.googleapis.com/youtube/v3/playlistItems?key=${apiKey}&playlistId=${playlistId}&part=snippet,id&maxResults=50&pageToken=${nextPageToken}`;
+    async fetchVideoDataFromAPI(channelId: any, nextPageToken: any) {
+        let url = `https://www.googleapis.com/youtube/v3/search?key=${apiKey}&channelId=${channelId}&part=snippet,id&order=title&publishedBefore=2019-01-01T00:00:00Z&type=video&maxResults=50&pageToken=${nextPageToken}`;
         console.log('calling YOUTUBE API: ', url);
 
         let response = await fetch(url);
@@ -71,9 +71,11 @@ class YoutubeService {
     }
 
 
-    async fetchAndCreateVideosFromChannel(channelId: any, playlistId: any) {
+
+    async fetchAndCreateVideosFromChannel(channelId: any) {
 
         let nextPageToken = '';
+        
 
         let allVideos: any[] = [];
         let data: any;
@@ -81,16 +83,16 @@ class YoutubeService {
 
         do {
             try {
-                data = await this.fetchVideoDataFromAPI(playlistId, nextPageToken);
-                await delay(3000);
+                data = await this.fetchVideoDataFromAPI(channelId, nextPageToken);
+                await delay(5000);
             } catch (error: any) {
-                console.log('Error fetching videos for: ' + playlistId);
+                console.log('Error fetching videos for: ' + channelId);
                 console.error(error);
             }
 
-            // console.log(data.nextPageToken, data.prevPageToken, data);
+            console.log(data.nextPageToken, data.prevPageToken, data.pageInfo);
 
-            let videoIds = data.items.map(item => item.snippet.resourceId.videoId).join(',');
+            let videoIds = data.items.map(item => item.id.videoId).join(',');
             let videoUrl = `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics,contentDetails,player,liveStreamingDetails&id=${videoIds}&key=${apiKey}`;
             console.log('calling YOUTUBE API: ', videoUrl);
 
@@ -100,7 +102,7 @@ class YoutubeService {
             videoData.items?.forEach(async (item: any) => {
                 try {
                     index++;
-                    // console.log(index);
+                    console.log(index);
                     const parsedDuration = await parseDuration(item.contentDetails.duration);
                     const videoExists = await Video.findOne({ where: { video_id: item.id } });
                     if (!videoExists) {
@@ -156,8 +158,7 @@ class YoutubeService {
             });
 
             await Channel.update({ 'updated_at': new Date() }, { where: { channel_id: channelId } });
-            console.log(index);
-            await delay(4000);
+            await delay(5000);
             nextPageToken = data.nextPageToken;
             console.log(nextPageToken);
 
@@ -178,7 +179,6 @@ class YoutubeService {
         const videoCount = data.items[0].statistics.videoCount;
         const logo = data.items[0].snippet.thumbnails.high.url;
         const banner = data.items[0].brandingSettings.image ? data.items[0].brandingSettings.image.bannerExternalUrl : null;
-        const playlistId = data.items[0].contentDetails.relatedPlaylists.uploads;
 
 
         // Store channel data in the database
@@ -194,7 +194,6 @@ class YoutubeService {
                 'videos': videoCount,
                 'logo_url': logo,
                 'banner_url': banner,
-                'playlist_id': playlistId,
                 'custom_url': data.items[0].snippet.customUrl
             });
         } else {
@@ -207,8 +206,6 @@ class YoutubeService {
                 'subs': subscriberCount,
                 'videos': videoCount,
                 'logo_url': logo,
-                'banner_url': banner,
-                'playlist_id': playlistId,
                 'custom_url': data.items[0].snippet.customUrl,
                 'updated_at': new Date(),
             }, { where: { channel_id: channelId } });
@@ -230,15 +227,16 @@ class YoutubeService {
         console.log('starting job');
         try {
             const channels = await Channel.findAll({ order: [['updated_at', 'ASC']] });
+            // await this.fetchChannelData('UCDogdKl7t7NHzQ95aEwkdMw');
 
-            // await this.fetchAndCreateVideosFromChannel('UCDogdKl7t7NHzQ95aEwkdMw', 'UUDogdKl7t7NHzQ95aEwkdMw'); // sidemen
+            await this.fetchAndCreateVideosFromChannel('UCDogdKl7t7NHzQ95aEwkdMw'); // sidemen
             for (const channel of channels) {
-                console.info('Channel ', channel.channel_id, channel.title, channel.playlist_id, channel.updated_at, channel.created_at);
+                console.info('Channel ', channel.channel_id, channel.title, channel.updated_at, channel.created_at);
                 // await this.fetchChannelData(channel.channel_id);
 
                 // TODO refactor to update
-                // await delay(30000);
-                // await this.fetchAndCreateVideosFromChannel(channel.channel_id, channel.playlist_id);
+                await delay(30000);
+                // await this.fetchAndCreateVideosFromChannel(channel.channel_id);
 
                 console.log('finished chanel: ', channel.channel_id);
             }

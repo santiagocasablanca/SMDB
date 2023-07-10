@@ -9,7 +9,7 @@ const sequelize = new Sequelize(POSTGRES_URL, {
         timestamps: false
     },
     logging: console.log, // Log queries to the console
-    logQueryParameters: true,
+    // logQueryParameters: true,
 });
 
 const db = {};

@@ -23,7 +23,7 @@ app.use(express.json({ limit: "10kb" }));
 if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 
 // 11am
-cron.schedule('15 18 * * *', () => { 
+cron.schedule('37 13 * * *', () => { 
   console.log('schuduled and running');
   const youtubeService = new YoutubeService();
   // youtubeService.fetchStatisticsForAllChannels();
@@ -66,9 +66,14 @@ db.sequelize
       //extractRelevantTagsFromTitles();
       // associateTagsToVideos();
 
+  //     const youtubeService = new YoutubeService();
+  // youtubeService.fetchStatisticsForAllChannels();
       channel_ids.forEach(item => {
         console.log("fetching for channel " + item);
         // fetchChannelInfo(item);
+
+
+
         // fetchVideos(item);
       })
     })
@@ -81,7 +86,7 @@ const apiKey = 'AIzaSyDB5XiiHdTnBGm0qGEBevS65AdZIIjT3KM'; // 'AIzaSyA9IHgl5-gGaQ
 
 const channel_ids = [
   "UCDogdKl7t7NHzQ95aEwkdMw", // Sidemen
-  "UCh5mLn90vUaB1PbRRx_AiaA", // MoreSidemen
+  // "UCh5mLn90vUaB1PbRRx_AiaA", // MoreSidemen
   // "UCjRkTl_HP4zOh3UFaThgRZw", // SidemenReacts
   // "UCWZmCMB7mmKWcXJSIPRhzZw", // https://www.youtube.com/@Miniminter,  https://pbs.twimg.com/profile_images/1640809891399979008/B3V1ylDx_400x400.jpg
   // "UCjB_adDAIxOL8GA4Y4OCt8g", // https://www.youtube.com/@MM7Games, 
@@ -109,69 +114,6 @@ const channel_ids = [
   // "UC9-3c4LzdzT_HvW3Xuti9wg", // Calfreezy 
   // "UCQ-YJstgVdAiCT52TiBWDbg"  // Chrismd   https://pbs.twimg.com/profile_images/1519273593917652992/-f0YNS2S_400x400.jpg https://pbs.twimg.com/profile_banners/384932951/1613394511/1500x500
 ];
-
-async function fetchChannelInfo(_channel_id) {
-
-  console.log('fetchChannelInfo()' + _channel_id);
-
-  try {
-
-    const url = `https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics,brandingSettings&id=${_channel_id}&key=${apiKey}`;
-    let response = await fetch(url);
-
-    let data = await response.json();
-    console.log('data: ' + JSON.stringify(data));
-
-    // const channelData = JSON.parse(data);
-
-    // Extract relevant attributes from the API response
-    const channelId = data.items[0].id;
-    const channel_title = data.items[0].snippet.title;
-    const channelDescription = data.items[0].snippet.description;
-    const viewCount = data.items[0].statistics.viewCount;
-    const subscriberCount = data.items[0].statistics.subscriberCount;
-    const videoCount = data.items[0].statistics.videoCount;
-    const logo = data.items[0].snippet.thumbnails.medium.url;
-    const createdAt = data.items[0].snippet.publishedAt;
-    const banner = data.items[0].brandingSettings.image ? data.items[0].brandingSettings.image.bannerExternalUrl : null;
-
-    const channel = await Channel.findOrCreate({
-      defaults: {
-        'channel_id': _channel_id,
-        'title': channel_title,
-        'description': channelDescription,
-        'views': viewCount,
-        'subs': subscriberCount,
-        'videos': videoCount,
-        'logo_url': logo,
-        'custom_url': data.items[0].snippet.customUrl,
-        'banner_url': banner,
-        'channel_created_at': createdAt
-      },
-      where: { channel_id: _channel_id }
-    });
-
-    const channelStats = await ChannelStats.create({
-      'channel_id': _channel_id,
-      'views': viewCount,
-      'subs': subscriberCount,
-      'videos': videoCount,
-      'fetched_at': new Date()
-    })
-    // subs
-    // videos
-    // views
-    // likes
-    // comments
-    // fetched_at
-    // channel_id
-    return;
-
-  } catch (error: any) {
-    console.log(error);
-  }
-}
-
 
 
 async function fetchVideos(_channel_id) {
