@@ -268,7 +268,7 @@ const CreatorPage = () => {
                 </Col>
               </Row>
 
-{/* TODO */}
+              {/* TODO */}
               <Row gutter={16}>
                 <Col span={24}>
                   <Tabs
@@ -278,9 +278,9 @@ const CreatorPage = () => {
                     style={{
                       color: 'black',
                     }}
-                    items={[{label:'Overview', key:'_overview'},{label:'Graphs?', key:'_graphs'},
-                      {label:'Series', key:'_series'},{label:'Games', key:'_games'},{label:'Appearences/Crossover', key:'_appearences'}, 
-                      {label:'Shorts', key:'_shorts'},{label:'Videography', key:'_videography'}]}
+                    items={[{ label: 'Overview', key: '_overview' }, { label: 'Graphs?', key: '_graphs' },
+                    { label: 'Series', key: '_series' }, { label: 'Games', key: '_games' }, { label: 'Appearences/Crossover', key: '_appearences' },
+                    { label: 'Shorts', key: '_shorts' }, { label: 'Videography', key: '_videography' }]}
                   />
                 </Col>
               </Row>

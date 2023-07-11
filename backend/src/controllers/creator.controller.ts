@@ -167,9 +167,17 @@ export const fetchCreatorStatsController = async (
         "channel_title",
         [sequelize.fn("COUNT", sequelize.col('*')), "total_videos"],
         [sequelize.fn("SUM", sequelize.col('views')), "views"],
+        [sequelize.fn("MAX", sequelize.col('views')), "most_viewed"],
+        [sequelize.fn("MIN", sequelize.col('views')), "least_viewed"],
         [sequelize.fn("SUM", sequelize.col('likes')), "likes"],
-        [sequelize.fn("SUM", sequelize.col('duration_parsed')), "duration"], // string shit
+        [sequelize.fn("MAX", sequelize.col('likes')), "most_liked"],
+        [sequelize.fn("MIN", sequelize.col('likes')), "least_liked"],
+        [sequelize.fn("SUM", sequelize.col('duration_parsed')), "duration"],
+        [sequelize.fn("MAX", sequelize.col('duration_parsed')), "longest"],
+        [sequelize.fn("MIN", sequelize.col('duration_parsed')), "shortest"],
         [sequelize.fn("SUM", sequelize.col('comments')), "comments"],
+        [sequelize.fn("MAX", sequelize.col('comments')), "most_commented"],
+        [sequelize.fn("MIN", sequelize.col('comments')), "least_commented"],
       ], where: whereClause, group: ['channel_id', 'channel_title']
     });
 

@@ -30,6 +30,9 @@ const CreatorChannel = ({ creator, channel }) => {
     const [stats, setStats] = useState({
         subs: {}, views: {}, videos: {}, likes: {}, comments: {}, avg: {}, duration: {}
     });
+    const [channelsStats, setChannelsStats] = useState([{ channel_id: "",
+        subs: {}, views: {}, videos: {}, likes: {}, comments: {}, avg: {}, duration: {}
+    }]);
 
     useEffect(() => {
         if (channel !== null) {
@@ -73,7 +76,63 @@ const CreatorChannel = ({ creator, channel }) => {
 
         await getCreatorStatsFn(params)
             .then((result) => {
-                const data = (result.results)
+                const data = (result.results);
+                let tempArray = [];
+                for (const el of data) {
+                    tempArray.push({
+                        channel_id: el.channel_id,
+                        subs: {
+                            title: 'Total Subscribers',
+                            value: el.subs,
+                            content: <p>{el.subs}</p>
+                        },
+                        views: {
+                            title: 'Total Views',
+                            value: el.views,
+                            humanized: intToStringBigNumber(el.views),
+                            avg: (el.views / el.total_videos),
+                            humanizedAvg: intToStringBigNumber((el.views / el.total_videos)),
+                            most: intToStringBigNumber(el.most_viewed),
+                            least: intToStringBigNumber(el.least_viewed)
+                        },
+                        likes: {
+                            title: 'Total Likes',
+                            value: el.likes,
+                            humanized: intToStringBigNumber(el.likes),
+                            avg: (el.likes / el.total_videos),
+                            humanizedAvg: intToStringBigNumber(el.likes / el.total_videos),
+                            most: intToStringBigNumber(el.most_liked),
+                            least: intToStringBigNumber(el.least_liked)
+                        },
+                        comments: {
+                            title: 'Total Comments',
+                            value: el.comments,
+                            humanized: intToStringBigNumber(el.comments),
+                            avg: (el.comments / el.total_videos),
+                            humanizedAvg: intToStringBigNumber(el.comments / el.total_videos),
+                            most: intToStringBigNumber(el.most_commented),
+                            least: intToStringBigNumber(el.least_commented)
+                        },
+                        videos: {
+                            title: 'Videos Published',
+                            value: el.total_videos,
+                            humanized: intToStringBigNumber(el.total_videos)
+                        },
+                        duration: {
+                            title: 'Total Duration',
+                            value: el.duration,
+                            parsedValue: displayVideoDurationFromSeconds(el.duration),
+                            humanized: displayDurationFromSeconds(el.duration), 
+                            evenMoreHumanized: humanizeDurationFromSeconds(el.duration),
+                            avg: (el.duration / el.total_videos),
+                            humanizedAvg: displayVideoDurationFromSeconds(el.duration / el.total_videos),
+                            most: displayVideoDurationFromSeconds(el.longest),
+                            least: displayVideoDurationFromSeconds(el.shortest)
+                        }
+                    });
+                }
+
+                setChannelsStats(tempArray);
 
                 let sumTotalVideos = 0;
                 let sumViews = 0;
@@ -82,7 +141,7 @@ const CreatorChannel = ({ creator, channel }) => {
                 let sumComments = 0;
                 let mostViewed = 0;
                 let leastViewed = null;
-                let mostliked = 0;
+                let mostLiked = 0;
                 let leastLiked = null;
                 let mostCommented = 0;
                 let leastCommented = null;
@@ -95,13 +154,13 @@ const CreatorChannel = ({ creator, channel }) => {
                     sumLikes += parseInt(result.likes);
                     sumDuration += parseInt(result.duration);
                     sumComments += parseInt(result.comments);
-                    mostViewed = (result.mostViewed > mostViewed ? result.mostViewed : mostViewed);
-                    leastViewed = (leastViewed ? (result.leastViewed < leastViewed ? result.leastViewed : leastViewed) : result.leastViewed);
-                    mostliked = (result.mostliked > mostliked ? result.mostliked : mostliked);
-                    leastLiked = (leastLiked ? (result.leastLiked < leastLiked ? result.leastLiked : leastLiked) : result.leastLiked);
+                    mostViewed = (result.most_viewed > mostViewed ? result.most_viewed : mostViewed);
+                    leastViewed = (leastViewed ? (result.least_viewed < leastViewed ? result.least_viewed : leastViewed) : result.least_viewed);
+                    mostLiked = (result.most_liked > mostLiked ? result.most_liked : mostLiked);
+                    leastLiked = (leastLiked ? (result.least_liked < leastLiked ? result.least_liked : leastLiked) : result.least_liked);
 
-                    mostCommented = (result.mostCommented > mostCommented ? result.mostCommented : mostCommented);
-                    leastCommented = (leastCommented ? (result.leastCommented < leastCommented ? result.leastCommented : leastCommented) : result.leastCommented);
+                    mostCommented = (result.most_commented > mostCommented ? result.most_commented : mostCommented);
+                    leastCommented = (leastCommented ? (result.least_commented < leastCommented ? result.least_commented : leastCommented) : result.least_commented);
                     longest = (result.longest > longest ? result.longest : longest);
                     shortest = (shortest ? (result.shortest < shortest ? result.shortest : shortest) : result.shortest);
                 }
@@ -121,22 +180,26 @@ const CreatorChannel = ({ creator, channel }) => {
                         humanized: intToStringBigNumber(sumViews),
                         unparsedAvg: (sumViews / sumTotalVideos),
                         avg: intToStringBigNumber((sumViews / sumTotalVideos)),
-                        most: '',
-                        least: ''
+                        most: intToStringBigNumber(mostViewed),
+                        least: intToStringBigNumber(leastViewed)
                     },
                     likes: {
                         title: 'Total Likes',
                         value: sumLikes,
                         humanized: intToStringBigNumber(sumLikes),
                         unparsedAvg: (sumLikes / sumTotalVideos),
-                        avg: intToStringBigNumber(sumLikes / sumTotalVideos)
+                        avg: intToStringBigNumber(sumLikes / sumTotalVideos),
+                        most: intToStringBigNumber(mostLiked),
+                        least: intToStringBigNumber(leastLiked)
                     },
                     comments: {
                         title: 'Total Comments',
                         value: sumComments,
                         humanized: intToStringBigNumber(sumComments),
                         unparsedAvg: (sumComments / sumTotalVideos),
-                        avg: intToStringBigNumber(sumComments / sumTotalVideos)
+                        avg: intToStringBigNumber(sumComments / sumTotalVideos),
+                        most: intToStringBigNumber(mostCommented),
+                        least: intToStringBigNumber(leastCommented)
                     },
                     videos: {
                         title: 'Videos Published',
@@ -151,7 +214,9 @@ const CreatorChannel = ({ creator, channel }) => {
                         humanized: displayDurationFromSeconds(sumDuration), 
                         evenMoreHumanized: humanizeDurationFromSeconds(sumDuration),
                         unparsedAvg: (sumDuration / sumTotalVideos),
-                        avg: displayVideoDurationFromSeconds(sumDuration / sumTotalVideos)
+                        avg: displayVideoDurationFromSeconds(sumDuration / sumTotalVideos),
+                        most: displayVideoDurationFromSeconds(longest),
+                        least: displayVideoDurationFromSeconds(shortest)
                     },
 
                 })
@@ -174,11 +239,11 @@ const CreatorChannel = ({ creator, channel }) => {
                     </div>
                     <br></br>
                     <Row gutter={[16,16]}>
-                        <Col span={24} xl={12}>
+                        <Col span={24} xl={14}>
                             <Title style={{ color: 'black' }} level={5}>Channel Stats</Title>
-                            <CreatorStatsPanel creator={creator} channel={channel} stats={stats} mostRecentVideos={mostRecentVideos} isAllChannels={isAllChannels}></CreatorStatsPanel>
+                            <CreatorStatsPanel creator={creator} channel={channel} stats={stats} channelsStats={channelsStats} mostRecentVideos={mostRecentVideos} isAllChannels={isAllChannels}></CreatorStatsPanel>
                         </Col>
-                        <Col span={24} xl={12}>
+                        <Col span={24} xl={10}>
                             <Row gutter={16}>
                                 <Col span={24}>
                                     <Title style={{ color: 'black' }} level={5}>Recent</Title>
