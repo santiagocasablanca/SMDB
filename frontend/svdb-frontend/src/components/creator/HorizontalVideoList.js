@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Card, List, Row, Col, Image, Avatar, Table,Popover, Typography, Space, Spin } from 'antd';
+import { Card, List, Row, Col, Image, Avatar, Table, Divider, Popover, Typography, Space, Spin } from 'antd';
+import { LikeOutlined, YoutubeOutlined, CalendarOutlined, CommentOutlined, ClockCircleOutlined, VideoCameraOutlined, EyeOutlined, NumberOutlined, FilterOutlined, ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
+
 import insertCss from 'insert-css';
 import CreatorStatsPanel from './CreatorStatsPanel'
 
@@ -42,11 +44,21 @@ const HorizontalVideoList = ({ _videos }) => {
                     renderItem={(item) => (
                         <List.Item>
                             <Card
-                                style={{ width: '200px', fontSize: '12px' }}
+                                style={{ width: '220px', fontSize: '12px' }}
                                 bodyStyle={{ padding: 0 }}>
                                 <Popover content={item.title} placement="top">
-                                    <Image style={{borderRadius:'8px'}}src={item.url} width='198px' height='150px' preview={false} />
-                                    <p style={{color:'white', fontSize:'10px'}}>{item.title}</p>
+                                    <Image style={{ borderRadius: '8px', objectFit: 'cover' }} src={item.url} width='218px' height='168px' preview={false} />
+                                    <p style={{ color: 'white', fontSize: '10px', margin: '0px 5px' }}>{item.title}</p>
+                                    <div>
+                                        <Space split={<Divider type="vertical" />} size="small" style={{marginLeft:'5px'}}>
+                                            <p style={{ color: 'white', fontSize: '10px' }}><EyeOutlined /> {intToStringBigNumber(item.views)}</p>
+                                            <p style={{ color: 'white', fontSize: '10px' }}><LikeOutlined /> {intToStringBigNumber(item.likes)}</p>
+                                            <p style={{ color: 'white', fontSize: '10px' }}><CommentOutlined /> {intToStringBigNumber(item.comments)}</p>
+
+                                        </Space>
+                                    </div>
+
+                                    <p style={{ color: 'white', fontSize: '10px', top: '0px', position: 'absolute', right: '5px' }}>{parseDate(item.published_at, "DD MMM YYYY")}</p>
                                 </Popover>
                                 {/* TODO onclick? */}
                                 {/* <ReactPlayer url={item.player.embedHtml} width='100%' height='150px'></ReactPlayer> */}

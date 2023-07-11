@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, List, Row, Col, Image, Avatar, Table, Typography, Space, Descriptions, Spin, Progress, Popover, Divider, Tooltip } from 'antd';
+import { Card, List, Row, Col, Image, Avatar, Table, Typography, Space, Descriptions, Divider, Spin, Progress, Popover, Tooltip } from 'antd';
 import { LikeOutlined, YoutubeOutlined, CalendarOutlined, CommentOutlined, ClockCircleOutlined, VideoCameraOutlined, EyeOutlined, NumberOutlined, FilterOutlined, ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 import { green, red } from '@ant-design/colors';
 import insertCss from 'insert-css';
@@ -11,13 +11,14 @@ const { Title, Text } = Typography;
 
 
 
-const CreatorStatsPanel = ({ creator, channel, stats, mostRecentVideos, isAllChannels }) => {
+const CreatorStatsPanel = ({ creator, channel, stats, channelsStats, mostRecentVideos, isAllChannels }) => {
 
     const { intToStringBigNumber, parseDate, parseDuration, humanizeDurationFromSeconds, displayVideoDurationFromSeconds, displayDurationFromSeconds } = useFormatter();
     const [isLoaded, setIsLoaded] = useState(false);
     const [last5VideosStats, setLast5VideoStats] = useState({ views: [], likes: [], comments: [], duration: [] });
 
     useEffect(() => {
+        console.log(channelsStats);
         if (mostRecentVideos !== null) {
             const tempViews = [];
             const tempLikes = [];
@@ -31,7 +32,7 @@ const CreatorStatsPanel = ({ creator, channel, stats, mostRecentVideos, isAllCha
             })
             setLast5VideoStats({ views: tempViews, likes: tempLikes, comments: tempComments, duration: tempDuration });
         }
-    }, [mostRecentVideos]);
+    }, [mostRecentVideos, channelsStats]);
 
 
     insertCss(`
@@ -106,6 +107,14 @@ const CreatorStatsPanel = ({ creator, channel, stats, mostRecentVideos, isAllCha
     color: `+ variables.onSurface + `;
   }
 
+  .moreStatsContainer h5 {
+    font-size: 14px;
+  }
+
+  .moreStatsContainer p {
+    font-size: 11px;
+  }
+
   .since-panel {
     position: absolute;
     top: 15px;
@@ -125,6 +134,7 @@ const CreatorStatsPanel = ({ creator, channel, stats, mostRecentVideos, isAllCha
 
   .creatorChannelCard {
     width: 95%;
+    height: 630px;
   }
 
   @media (max-width: 600px) {
@@ -155,14 +165,13 @@ const CreatorStatsPanel = ({ creator, channel, stats, mostRecentVideos, isAllCha
   `)
 
 
-    const ChannelsTablePanel = ({ channels }) => {
+  // no need for this mess i guess! TODO refactor
+    const ChannelsTablePanel = ({ channels, channelsStats }) => {
         useEffect(() => {
-            console.log(channels);
-        });
-
-        // the columns are the channels
-        // the rows are the static information
-
+            channels.map((channel) => {
+                channel.stats = channelsStats?.filter((channelStat) => channel.channel_id == channelStat.channel_id)[0];
+            });
+        }, [channels, channelsStats]);
 
         // logo_url
         const columns = [
@@ -191,10 +200,58 @@ const CreatorStatsPanel = ({ creator, channel, stats, mostRecentVideos, isAllCha
                 render: (val) => <p>{intToStringBigNumber(val)}</p>,
             },
             {
-                title: 'Views',
+                title: 'Total Views',
                 dataIndex: 'views',
                 key: 'views',
                 render: (val) => <p>{intToStringBigNumber(val)}</p>,
+            },
+            {
+                title: 'Avg Views',
+                dataIndex: 'stats',
+                key: 'stats',
+                render: (val) => <p>{val?.views?.humanizedAvg}</p>,
+            },
+            {
+                title: 'Most Viewed',
+                dataIndex: 'stats',
+                key: 'stats',
+                render: (val) => <p>{val?.views?.most}</p>,
+            },
+            {
+                title: 'Total Likes',
+                dataIndex: 'stats',
+                key: 'stats',
+                render: (val) => <p>{val?.likes?.humanized}</p>,
+            },
+            {
+                title: 'Avg Likes',
+                dataIndex: 'stats',
+                key: 'stats',
+                render: (val) => <p>{val?.likes?.humanizedAvg}</p>,
+            },
+            {
+                title: 'Most Liked',
+                dataIndex: 'stats',
+                key: 'stats',
+                render: (val) => <p>{val?.likes?.most}</p>,
+            },
+            {
+                title: 'Play time',
+                dataIndex: 'stats',
+                key: 'stats',
+                render: (val) => <p>{val?.duration?.humanized}</p>,
+            },
+            {
+                title: 'Avg Video Duration',
+                dataIndex: 'stats',
+                key: 'stats',
+                render: (val) => <p>{val?.duration?.humanizedAvg}</p>,
+            },
+            {
+                title: 'Longest',
+                dataIndex: 'stats',
+                key: 'stats',
+                render: (val) => <p>{val?.duration?.most}</p>,
             },
             {
                 title: 'Created At',
@@ -214,7 +271,6 @@ const CreatorStatsPanel = ({ creator, channel, stats, mostRecentVideos, isAllCha
                     dataSource={channels}
                     rowKey={(record) => record.channel_id}
                     summary={(pageData) => {
-                        console.log(pageData);
                         let totalSubs = 0;
                         let totalVideos = 0;
                         let totalViews = 0;
@@ -330,7 +386,7 @@ const CreatorStatsPanel = ({ creator, channel, stats, mostRecentVideos, isAllCha
         const StatPanel = ({ title, value }) => {
             return (
                 <>
-                    <Space.Compact direction="vertical" size="small" style={{ width: '75px' }}>
+                    <Space.Compact direction="vertical" size="small" style={{ width: '80px' }}>
                         <p style={{ marginTop: '10px', marginBottom: '-1px' }}>{title}</p>
                         <Title level={5}>{value}</Title>
                     </Space.Compact>
@@ -342,11 +398,11 @@ const CreatorStatsPanel = ({ creator, channel, stats, mostRecentVideos, isAllCha
             return (
                 <Space split={<Divider type="vertical" />} size="small">
                     <Tooltip title={title}>
-                        <div style={{ width: '20px' }}>
+                        <div style={{ width: '15px' }}>
                             {icon}
                         </div>
                     </Tooltip>
-                    <StatPanel title="Total" value={stats?.humanized}></StatPanel>
+                    <StatPanel title="Total" value={stats?.humanized} width="80px"></StatPanel>
                     <StatPanel title="Avg" value={stats?.avg}></StatPanel>
                     {/* TODO change value for most liked, needed to pass the most/least liked videos */}
                     <StatPanel title="Most" value={stats?.most}></StatPanel>
@@ -401,12 +457,15 @@ const CreatorStatsPanel = ({ creator, channel, stats, mostRecentVideos, isAllCha
                     <div className="moreStatsContainer">
                         <StatRow title="Views" icon={<EyeOutlined />}
                             stats={stats?.views} last5={last5VideosStats.views}></StatRow>
+                        <Divider style={{margin: '2px 0px'}} />
 
                         <StatRow title="Likes" icon={<LikeOutlined />}
                             stats={stats?.likes} last5={last5VideosStats.likes}></StatRow>
+                        <Divider style={{margin: '2px 0px'}} />
 
                         <StatRow title="Comments" icon={<CommentOutlined />}
                             stats={stats?.comments} last5={last5VideosStats.comments}></StatRow>
+                        <Divider style={{margin: '2px 0px'}} />
 
                         <StatRow title="Duration" icon={<ClockCircleOutlined />}
                             stats={stats?.duration} last5={last5VideosStats.duration}></StatRow>
@@ -426,7 +485,7 @@ const CreatorStatsPanel = ({ creator, channel, stats, mostRecentVideos, isAllCha
         <> {isLoaded ?
             (
                 isAllChannels ? (
-                    <ChannelsTablePanel channels={creator?.channels}></ChannelsTablePanel>
+                    <ChannelsTablePanel channels={creator?.channels} channelsStats={channelsStats}></ChannelsTablePanel>
                 ) : (
                         <ChannelPanel _channel={channel}></ChannelPanel>
                     )
