@@ -33,27 +33,40 @@ const VideoDrawer = ({ _video, _open, childToParent }) => {
         setOpen(false);
     };
 
-    return (
+    const title = (
         <>
-            <Drawer title={video.title}
-                placement="bottom"
-                width={500}
-                height={800}
-                onClose={onClose}
-                open={open}
-                extra={
+            {video.title}
+        </>
+    );
+
+    return (
+        <> {
+            open ? (
+                <Drawer title={title}
+                    placement="bottom"
+                    width={500}
+                    height={800}
+                    onClose={onClose}
+                    open={open}
+                    extra={
+                        <Space>
+                            <Text>{parseDate(video.published_at, "DD MMM YYYY")}</Text>
+                            {/* <Button onClick={onClose}>Cancel</Button>
+                        <Button type="primary" onClick={onClose}>OK</Button> */}
+                        </Space>
+                    }
+                >
+
+                    {/* <p>{video.title}</p> */}
+                    <ReactPlayer url={video.player.embedHtml} width='100%' height='600px'></ReactPlayer>
                     <Space>
-                        <Button onClick={onClose}>Cancel</Button>
-                        <Button type="primary" onClick={onClose}>OK</Button>
+
                     </Space>
-                }>
-
-                {/* <p>{video.title}</p> */}
-                <ReactPlayer url={video.player.embedHtml} width='100%' height='600px'></ReactPlayer>
-
-                <p>Some contents...</p>
-                <p>Some contents...</p>
-            </Drawer>
+                    <p>Some contents...</p>
+                    <p>Some contents...</p>
+                </Drawer>
+            ) : ('')
+        }
         </>
     );
 }

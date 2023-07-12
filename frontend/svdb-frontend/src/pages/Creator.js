@@ -32,14 +32,12 @@ const CreatorPage = () => {
 
 
   useEffect(() => {
-    console.log(id);
     asyncFetch();
   }, []);
 
   const asyncFetch = async () => {
     await getCreatorFn(id).then((res) => {
       if (res.result) {
-        console.log(res.result);
         setCreator(res.result);
         setIsFetched(true);
       }

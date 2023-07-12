@@ -29,7 +29,6 @@ const VideographyFilterPanel = ({ filters, onChange }) => {
       .then((result) => {
         const temp = []
         result.results.forEach((item) => {
-          console.log(item.title + ' ' + item.channel_id)
           temp.push({
             label: item.title,
             value: item.channel_id,

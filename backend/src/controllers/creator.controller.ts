@@ -157,7 +157,9 @@ export const fetchCreatorStatsController = async (
 
       whereClause['published_at'] = { [Sequelize.Op.between]: [publishedAtSearchInitial, publishedAtSearchFinal] };
     }
-
+    if(req.query.ignoreShorts) {
+      whereClause['duration_parsed'] = { [Sequelize.Op.gt]: '60'};
+    }
 
 
     const records = await Video.findAll({

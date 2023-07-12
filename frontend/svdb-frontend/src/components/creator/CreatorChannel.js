@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Card, List, Row, Col, Image, Avatar, Table, Typography, Space, Statistic, Spin } from 'antd';
+import { Card, List, Row, Col, Image, Avatar, Table, Typography, Space, Statistic, Segmented, Spin } from 'antd';
+import {
+    LikeOutlined, BarsOutlined,
+    AppstoreOutlined, YoutubeOutlined, CalendarOutlined, CommentOutlined, ClockCircleOutlined, VideoCameraOutlined, EyeOutlined, NumberOutlined, FilterOutlined, ArrowUpOutlined, ArrowDownOutlined
+} from '@ant-design/icons';
+
 import insertCss from 'insert-css';
 import CreatorStatsPanel from './CreatorStatsPanel'
 import HorizontalVideoList from './HorizontalVideoList'
@@ -10,6 +15,7 @@ import useFormatter from '../../hooks/useFormatter';
 import { getVideosFn } from "../../services/videoApi.ts";
 import ReactPlayer from 'react-player'
 import { getCreatorStatsFn } from "../../services/creatorApi.ts";
+import CreatorFrequencyCard from './CreatorFrequencyCard';
 
 
 
@@ -30,7 +36,8 @@ const CreatorChannel = ({ creator, channel }) => {
     const [stats, setStats] = useState({
         subs: {}, views: {}, videos: {}, likes: {}, comments: {}, avg: {}, duration: {}
     });
-    const [channelsStats, setChannelsStats] = useState([{ channel_id: "",
+    const [channelsStats, setChannelsStats] = useState([{
+        channel_id: "",
         subs: {}, views: {}, videos: {}, likes: {}, comments: {}, avg: {}, duration: {}
     }]);
 
@@ -128,7 +135,7 @@ const CreatorChannel = ({ creator, channel }) => {
                             title: 'Total Duration',
                             value: el.duration,
                             parsedValue: displayVideoDurationFromSeconds(el.duration),
-                            humanized: displayDurationFromSeconds(el.duration), 
+                            humanized: displayDurationFromSeconds(el.duration),
                             evenMoreHumanized: humanizeDurationFromSeconds(el.duration),
                             avg: (el.duration / el.total_videos),
                             humanizedAvg: displayVideoDurationFromSeconds(el.duration / el.total_videos),
@@ -219,7 +226,7 @@ const CreatorChannel = ({ creator, channel }) => {
                         unparsedValue: sumDuration,
                         parsedValue: displayVideoDurationFromSeconds(sumDuration),
                         value: displayDurationFromSeconds(sumDuration),
-                        humanized: displayDurationFromSeconds(sumDuration), 
+                        humanized: displayDurationFromSeconds(sumDuration),
                         evenMoreHumanized: humanizeDurationFromSeconds(sumDuration),
                         unparsedAvg: (sumDuration / sumTotalVideos),
                         avg: displayVideoDurationFromSeconds(sumDuration / sumTotalVideos),
@@ -246,9 +253,10 @@ const CreatorChannel = ({ creator, channel }) => {
                         </Row>
                     </div>
                     <br></br>
-                    <Row gutter={[16,16]}>
+                    <Row gutter={[16, 16]}>
                         <Col span={24} xl={12}>
                             <Title style={{ color: 'black' }} level={5}>Channel Stats</Title>
+                           
                             <CreatorStatsPanel creator={creator} channel={channel} stats={stats} channelsStats={channelsStats} mostRecentVideos={mostRecentVideos} isAllChannels={isAllChannels}></CreatorStatsPanel>
                         </Col>
                         <Col span={24} xl={12}>
@@ -268,6 +276,9 @@ const CreatorChannel = ({ creator, channel }) => {
                                 </Col>
                             </Row>
                         </Col>
+                    </Row>
+                    <Row gutter={[16, 16]}>
+                        <CreatorFrequencyCard _channels={isAllChannels? creator.channels : [channel]}></CreatorFrequencyCard>
                     </Row>
                     <br></br>
                 </>

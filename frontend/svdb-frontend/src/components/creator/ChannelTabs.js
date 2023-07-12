@@ -58,9 +58,6 @@ const ChannelTabs = ({_creator, _channels}) => {
     useEffect(() => {
         setCreator(_creator);
 
-        console.log('creator ', _creator);
-        console.log('channels: ', _channels)
-
         if (_channels !== undefined || _channels.length > 0) {
 
             const sortedChannels = _channels.sort(
@@ -74,7 +71,6 @@ const ChannelTabs = ({_creator, _channels}) => {
                     children: <CreatorChannel creator={_creator} channel={_channel} />,
                 };
             });
-            console.log('afteer stuff, ', channels );
             setChannels([{
                 label: 'All Channels',
                 key: 'allChannels',
