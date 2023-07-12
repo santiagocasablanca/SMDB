@@ -209,7 +209,7 @@ export const fetchVideoFrequency = async (
       console.log(req.query.channels);
       var channelsArr = req.query.channels.split(',');
 
-      whereClause.channel_title = {
+      whereClause.channel_id = {
         [Op.or]: channelsArr
       }
     }
@@ -257,7 +257,7 @@ export const fetchVideosChannelStats = async (
       console.log(req.query.channels);
       var channelsArr = req.query.channels.split(',');
 
-      whereClause.channel_title = {
+      whereClause.channel_id = {
         [Op.or]: channelsArr
       }
     }
@@ -318,7 +318,7 @@ export const fetchVideoUploadTimeFrequency = async (
       console.log(req.query.channels);
       var channelsArr = req.query.channels.split(',');
 
-      whereClause.channel_title = {
+      whereClause.channel_id = {
         [Op.or]: channelsArr
       }
     }

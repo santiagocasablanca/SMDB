@@ -13,7 +13,6 @@ export const api = axios.create({
 export const getCreatorFn = async (id) => {
   const req = `creators/${id}`;
 
-  console.log(req);
   const response = await api.get<IChannelResponse>(
     req
   );

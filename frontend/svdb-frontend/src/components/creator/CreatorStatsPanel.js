@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Card, List, Row, Col, Image, Avatar, Table, Typography, Space, Descriptions, Divider, Spin, Progress, Popover, Tooltip } from 'antd';
-import { LikeOutlined, YoutubeOutlined, CalendarOutlined, CommentOutlined, ClockCircleOutlined, VideoCameraOutlined, EyeOutlined, NumberOutlined, FilterOutlined, ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
+import {
+    LikeOutlined, BarsOutlined,
+    AppstoreOutlined, YoutubeOutlined, CalendarOutlined, CommentOutlined, ClockCircleOutlined, VideoCameraOutlined, EyeOutlined, NumberOutlined, FilterOutlined, ArrowUpOutlined, ArrowDownOutlined
+} from '@ant-design/icons';
 import { green, red } from '@ant-design/colors';
 import insertCss from 'insert-css';
 
@@ -18,7 +21,6 @@ const CreatorStatsPanel = ({ creator, channel, stats, channelsStats, mostRecentV
     const [last5VideosStats, setLast5VideoStats] = useState({ views: [], likes: [], comments: [], duration: [] });
 
     useEffect(() => {
-        console.log(channelsStats);
         if (mostRecentVideos !== null) {
             const tempViews = [];
             const tempLikes = [];
@@ -272,7 +274,7 @@ const CreatorStatsPanel = ({ creator, channel, stats, channelsStats, mostRecentV
                         className="channel-table"
                         scroll={{ x: 300 }}
                         columns={columns}
-                        
+
                         dataSource={channels}
                         rowKey={(record) => record.channel_id}
                         summary={(pageData) => {
@@ -299,9 +301,9 @@ const CreatorStatsPanel = ({ creator, channel, stats, channelsStats, mostRecentV
                                 mostLiked = (parseInt(stats?.likes.most) > mostLiked ? stats?.likes.most : mostLiked);
                                 longest = (parseInt(stats?.duration.most) > longest ? stats?.duration.most : longest);
                             });
-                            avgLikes = (totalLikes/totalVideos); 
-                            avgViews = (totalViews/totalVideos);
-                            avgDuration = (duration/totalVideos);
+                            avgLikes = (totalLikes / totalVideos);
+                            avgViews = (totalViews / totalVideos);
+                            avgDuration = (duration / totalVideos);
                             return (
                                 <>
                                     <Table.Summary.Row>
@@ -359,7 +361,6 @@ const CreatorStatsPanel = ({ creator, channel, stats, channelsStats, mostRecentV
         const [creationDate, setCreationDate] = useState({});
 
         useEffect(() => {
-            // console.log(channels);
             if (channel) {
                 setCreationDate(channel.channel_created_at);
                 setIsFetched(true);
@@ -536,11 +537,12 @@ const CreatorStatsPanel = ({ creator, channel, stats, channelsStats, mostRecentV
         <> {isLoaded ?
             (
                 isAllChannels ? (
-                    <ChannelsTablePanel channels={creator?.channels} channelsStats={channelsStats}></ChannelsTablePanel>
+                    <>
+                        <ChannelsTablePanel channels={creator?.channels} channelsStats={channelsStats}></ChannelsTablePanel>
+                    </>
                 ) : (
                         <ChannelPanel _channel={channel}></ChannelPanel>
                     )
-
             ) : (
                 <Spin />
             )
