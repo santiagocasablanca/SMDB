@@ -165,12 +165,15 @@ const CreatorStatsPanel = ({ creator, channel, stats, channelsStats, mostRecentV
   `)
 
 
-  // no need for this mess i guess! TODO refactor
+    // no need for this mess i guess! TODO refactor
     const ChannelsTablePanel = ({ channels, channelsStats }) => {
+        const [isLoaded, setIsLoaded] = useState(false);
+
         useEffect(() => {
             channels.map((channel) => {
                 channel.stats = channelsStats?.filter((channelStat) => channel.channel_id == channelStat.channel_id)[0];
             });
+            setIsLoaded(true);
         }, [channels, channelsStats]);
 
         // logo_url
@@ -215,7 +218,7 @@ const CreatorStatsPanel = ({ creator, channel, stats, channelsStats, mostRecentV
                 title: 'Most Viewed',
                 dataIndex: 'stats',
                 key: 'stats',
-                render: (val) => <p>{val?.views?.most}</p>,
+                render: (val) => <p>{val?.views?.humanizedMost}</p>,
             },
             {
                 title: 'Total Likes',
@@ -233,7 +236,7 @@ const CreatorStatsPanel = ({ creator, channel, stats, channelsStats, mostRecentV
                 title: 'Most Liked',
                 dataIndex: 'stats',
                 key: 'stats',
-                render: (val) => <p>{val?.likes?.most}</p>,
+                render: (val) => <p>{val?.likes?.humanizedMost}</p>,
             },
             {
                 title: 'Play time',
@@ -251,7 +254,7 @@ const CreatorStatsPanel = ({ creator, channel, stats, channelsStats, mostRecentV
                 title: 'Longest',
                 dataIndex: 'stats',
                 key: 'stats',
-                render: (val) => <p>{val?.duration?.most}</p>,
+                render: (val) => <p>{val?.duration?.humanizedMost}</p>,
             },
             {
                 title: 'Created At',
@@ -262,43 +265,91 @@ const CreatorStatsPanel = ({ creator, channel, stats, channelsStats, mostRecentV
         ];
 
         return (
-            <>
-                <Table size='small'
-                    pagination={false}
-                    className="channel-table"
-                    scroll={{ x: 300 }}
-                    columns={columns}
-                    dataSource={channels}
-                    rowKey={(record) => record.channel_id}
-                    summary={(pageData) => {
-                        let totalSubs = 0;
-                        let totalVideos = 0;
-                        let totalViews = 0;
-                        pageData.forEach(({ subs, videos, views }) => {
-                            totalSubs += parseInt(subs);
-                            totalVideos += parseInt(videos);
-                            totalViews += parseInt(views);
-                        });
-                        return (
-                            <>
-                                <Table.Summary.Row>
-                                    <Table.Summary.Cell index={0}></Table.Summary.Cell>
-                                    <Table.Summary.Cell index={1}>Totals</Table.Summary.Cell>
-                                    <Table.Summary.Cell index={2}>
-                                        <Text>{intToStringBigNumber(totalSubs)}</Text>
-                                    </Table.Summary.Cell>
-                                    <Table.Summary.Cell index={3}>
-                                        <Text>{intToStringBigNumber(totalVideos)}</Text>
-                                    </Table.Summary.Cell>
-                                    <Table.Summary.Cell index={4}>
-                                        <Text>{intToStringBigNumber(totalViews)}</Text>
-                                    </Table.Summary.Cell>
-                                </Table.Summary.Row>
+            <> {isLoaded ?
+                (
+                    <Table size='small'
+                        pagination={false}
+                        className="channel-table"
+                        scroll={{ x: 300 }}
+                        columns={columns}
+                        
+                        dataSource={channels}
+                        rowKey={(record) => record.channel_id}
+                        summary={(pageData) => {
+                            let totalSubs = 0;
+                            let totalVideos = 0;
+                            let totalViews = 0;
+                            let avgViews = 0;
+                            let mostViewed = 0;
+                            let totalLikes = 0;
+                            let avgLikes = 0;
+                            let mostLiked = 0;
+                            let duration = 0;
+                            let avgDuration = 0;
+                            let longest = 0;
+                            // Avg Views	Most Viewed	Total Likes	Avg Likes	Most Liked	Play time	Avg Video Duration	Longest
+                            let n_channels = pageData.length;
+                            pageData.forEach(({ subs, videos, views, stats }) => {
+                                totalSubs += parseInt(subs);
+                                totalVideos += parseInt(videos);
+                                totalViews += parseInt(views);
+                                totalLikes += parseInt(stats?.likes.value);
+                                duration += parseInt(stats?.duration.value);
+                                mostViewed = (parseInt(stats?.views.most) > mostViewed ? stats?.views.most : mostViewed);
+                                mostLiked = (parseInt(stats?.likes.most) > mostLiked ? stats?.likes.most : mostLiked);
+                                longest = (parseInt(stats?.duration.most) > longest ? stats?.duration.most : longest);
+                            });
+                            avgLikes = (totalLikes/totalVideos); 
+                            avgViews = (totalViews/totalVideos);
+                            avgDuration = (duration/totalVideos);
+                            return (
+                                <>
+                                    <Table.Summary.Row>
+                                        <Table.Summary.Cell index={0}></Table.Summary.Cell>
+                                        <Table.Summary.Cell index={1}>Totals</Table.Summary.Cell>
+                                        <Table.Summary.Cell index={2}>
+                                            {intToStringBigNumber(totalSubs)}
+                                        </Table.Summary.Cell>
+                                        <Table.Summary.Cell index={3}>
+                                            {intToStringBigNumber(totalVideos)}
+                                        </Table.Summary.Cell>
+                                        <Table.Summary.Cell index={4}>
+                                            {intToStringBigNumber(totalViews)}
+                                        </Table.Summary.Cell>
+                                        <Table.Summary.Cell index={5}>
+                                            {intToStringBigNumber(avgViews)}
+                                        </Table.Summary.Cell>
+                                        <Table.Summary.Cell index={6}>
+                                            {intToStringBigNumber(mostViewed)}
+                                        </Table.Summary.Cell>
+                                        <Table.Summary.Cell index={7}>
+                                            {intToStringBigNumber(totalLikes)}
+                                        </Table.Summary.Cell>
+                                        <Table.Summary.Cell index={8}>
+                                            {intToStringBigNumber(avgLikes)}
+                                        </Table.Summary.Cell>
+                                        <Table.Summary.Cell index={9}>
+                                            {intToStringBigNumber(mostLiked)}
+                                        </Table.Summary.Cell>
+                                        <Table.Summary.Cell index={10}>
+                                            {displayDurationFromSeconds(duration)}
+                                        </Table.Summary.Cell>
+                                        <Table.Summary.Cell index={11}>
+                                            {displayVideoDurationFromSeconds(avgDuration)}
+                                        </Table.Summary.Cell>
+                                        <Table.Summary.Cell index={12}>
+                                            {displayVideoDurationFromSeconds(longest)}
+                                        </Table.Summary.Cell>
+                                    </Table.Summary.Row>
 
-                            </>
-                        );
-                    }}>
-                </Table>
+                                </>
+                            );
+                        }}>
+                    </Table>
+                ) : (
+                    <Spin />
+                )
+            }
             </>
         );
     };
@@ -457,15 +508,15 @@ const CreatorStatsPanel = ({ creator, channel, stats, channelsStats, mostRecentV
                     <div className="moreStatsContainer">
                         <StatRow title="Views" icon={<EyeOutlined />}
                             stats={stats?.views} last5={last5VideosStats.views}></StatRow>
-                        <Divider style={{margin: '2px 0px'}} />
+                        <Divider style={{ margin: '2px 0px' }} />
 
                         <StatRow title="Likes" icon={<LikeOutlined />}
                             stats={stats?.likes} last5={last5VideosStats.likes}></StatRow>
-                        <Divider style={{margin: '2px 0px'}} />
+                        <Divider style={{ margin: '2px 0px' }} />
 
                         <StatRow title="Comments" icon={<CommentOutlined />}
                             stats={stats?.comments} last5={last5VideosStats.comments}></StatRow>
-                        <Divider style={{margin: '2px 0px'}} />
+                        <Divider style={{ margin: '2px 0px' }} />
 
                         <StatRow title="Duration" icon={<ClockCircleOutlined />}
                             stats={stats?.duration} last5={last5VideosStats.duration}></StatRow>
