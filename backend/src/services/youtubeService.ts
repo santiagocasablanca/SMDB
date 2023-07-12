@@ -226,23 +226,23 @@ class YoutubeService {
 
 
     async fetchStatisticsForAllChannels() {
-        console.info("STARTING JOB");
         console.log('starting job');
         try {
             const channels = await Channel.findAll({ order: [['updated_at', 'ASC']] });
 
             // await this.fetchAndCreateVideosFromChannel('UCDogdKl7t7NHzQ95aEwkdMw', 'UUDogdKl7t7NHzQ95aEwkdMw'); // sidemen
             for (const channel of channels) {
-                console.info('Channel ', channel.channel_id, channel.title, channel.playlist_id, channel.updated_at, channel.created_at);
-                // await this.fetchChannelData(channel.channel_id);
+                console.log('/n/n starting for chanel: ', channel.title);
+                // console.info('Channel ', channel.channel_id, channel.title, channel.playlist_id, channel.updated_at, channel.created_at);
+                await this.fetchChannelData(channel.channel_id);
 
                 // TODO refactor to update
-                // await delay(30000);
-                // await this.fetchAndCreateVideosFromChannel(channel.channel_id, channel.playlist_id);
+                await delay(1000);
+                await this.fetchAndCreateVideosFromChannel(channel.channel_id, channel.playlist_id);
 
-                console.log('finished chanel: ', channel.channel_id);
+                console.log('/n/n finished chanel: ', channel.title);
             }
-            console.info('finished job');
+            console.info('/n/n finished job /n/n');
 
         } catch (error) {
             console.error('Error fetching YouTube statistics:', error);

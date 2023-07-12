@@ -92,8 +92,10 @@ const CreatorChannel = ({ creator, channel }) => {
                             humanized: intToStringBigNumber(el.views),
                             avg: (el.views / el.total_videos),
                             humanizedAvg: intToStringBigNumber((el.views / el.total_videos)),
-                            most: intToStringBigNumber(el.most_viewed),
-                            least: intToStringBigNumber(el.least_viewed)
+                            most: el.most_viewed,
+                            least: el.least_viewed,
+                            humanizedMost: intToStringBigNumber(el.most_viewed),
+                            humanizedLeast: intToStringBigNumber(el.least_viewed)
                         },
                         likes: {
                             title: 'Total Likes',
@@ -101,8 +103,10 @@ const CreatorChannel = ({ creator, channel }) => {
                             humanized: intToStringBigNumber(el.likes),
                             avg: (el.likes / el.total_videos),
                             humanizedAvg: intToStringBigNumber(el.likes / el.total_videos),
-                            most: intToStringBigNumber(el.most_liked),
-                            least: intToStringBigNumber(el.least_liked)
+                            most: el.most_liked,
+                            least: el.least_liked,
+                            humanizedMost: intToStringBigNumber(el.most_liked),
+                            humanizedLeast: intToStringBigNumber(el.least_liked)
                         },
                         comments: {
                             title: 'Total Comments',
@@ -110,8 +114,10 @@ const CreatorChannel = ({ creator, channel }) => {
                             humanized: intToStringBigNumber(el.comments),
                             avg: (el.comments / el.total_videos),
                             humanizedAvg: intToStringBigNumber(el.comments / el.total_videos),
-                            most: intToStringBigNumber(el.most_commented),
-                            least: intToStringBigNumber(el.least_commented)
+                            most: el.most_commented,
+                            least: el.least_commented,
+                            humanizedMost: intToStringBigNumber(el.most_commented),
+                            humanizedLeast: intToStringBigNumber(el.least_commented)
                         },
                         videos: {
                             title: 'Videos Published',
@@ -126,8 +132,10 @@ const CreatorChannel = ({ creator, channel }) => {
                             evenMoreHumanized: humanizeDurationFromSeconds(el.duration),
                             avg: (el.duration / el.total_videos),
                             humanizedAvg: displayVideoDurationFromSeconds(el.duration / el.total_videos),
-                            most: displayVideoDurationFromSeconds(el.longest),
-                            least: displayVideoDurationFromSeconds(el.shortest)
+                            most: el.longest,
+                            least: el.shortest,
+                            humanizedMost: displayVideoDurationFromSeconds(el.longest),
+                            humanizedLeast: displayVideoDurationFromSeconds(el.shortest)
                         }
                     });
                 }
@@ -239,11 +247,11 @@ const CreatorChannel = ({ creator, channel }) => {
                     </div>
                     <br></br>
                     <Row gutter={[16,16]}>
-                        <Col span={24} xl={14}>
+                        <Col span={24} xl={12}>
                             <Title style={{ color: 'black' }} level={5}>Channel Stats</Title>
                             <CreatorStatsPanel creator={creator} channel={channel} stats={stats} channelsStats={channelsStats} mostRecentVideos={mostRecentVideos} isAllChannels={isAllChannels}></CreatorStatsPanel>
                         </Col>
-                        <Col span={24} xl={10}>
+                        <Col span={24} xl={12}>
                             <Row gutter={16}>
                                 <Col span={24}>
                                     <Title style={{ color: 'black' }} level={5}>Recent</Title>
