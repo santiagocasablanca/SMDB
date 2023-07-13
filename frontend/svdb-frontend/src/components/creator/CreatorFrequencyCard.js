@@ -3,7 +3,8 @@ import ReactDOM from 'react-dom';
 import { Treemap, Heatmap, G2 } from '@ant-design/plots';
 import {
   Card, Divider, Carousel, Select,
-  Row, Space,
+  Row, Space, Popover,
+  Avatar,
   Col, List, Typography, Spin
 } from 'antd';
 import { getVideosFn, getTreeMapPlotForTagsFn, fetchVideoFrequencyFn } from "../../services/videoApi.ts"
@@ -11,6 +12,8 @@ import dayjs from "dayjs"
 import insertCss from 'insert-css';
 // import LoadingAnimation from './LoadingAnimation';
 import useFormatter from '../../hooks/useFormatter';
+import variables from '../../sass/antd.module.scss';
+
 
 
 var weekOfYear = require('dayjs/plugin/weekOfYear')
@@ -35,7 +38,7 @@ const { Title, Text } = Typography;
 const CreatorFrequencyCard = (_channels) => {
   const { intToStringBigNumber, parseDate, parseDuration, humanizeDurationFromSeconds, displayVideoDurationFromSeconds, displayDurationFromSeconds } = useFormatter();
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear().toString());
-  const [selectedChannels, setSelectedChannels] = useState(_channels._channels.map(item => {return item.channel_id;}));
+  const [selectedChannels, setSelectedChannels] = useState(_channels._channels.map(item => { return item.channel_id; }));
   const [defaultValue, setDefaultValue] = useState([]);
   const [channels, setChannels] = useState([]);
   const [frequencyData, setFrequencyData] = useState([]);
@@ -196,17 +199,17 @@ const CreatorFrequencyCard = (_channels) => {
     color: ({ count }) => {
 
       if (count == 0) {
-        return 'azure';
+        return variables.freq1;
       } else if (count == 1) {
-        return '#89CFF0';
+        return variables.freq2;
       }
-      else if (count == 2) {
-        return '#0096FF';
+      else if (count > 1 && count <= 3) {
+        return variables.freq3;
       }
-      else if (count == 3) {
-        return '#0047AB';
+      else if (count > 3 && count <= 5) {
+        return variables.freq4;
       }
-      return '#581845';
+      return variables.freq5;
     },
     reflect: 'y',
     shape: 'boundary-polygon',
@@ -342,13 +345,13 @@ const CreatorFrequencyCard = (_channels) => {
     font-size: 15px;
   }
 `);
-// defaultValue={defaultValue} 
+  // defaultValue={defaultValue} 
   const titleBar = (
     <Row>
-      <Col sm={24} md={12}><Title level={5}>Yearly Upload Frequency Heatmap</Title></Col>
-      <Col sm={24} md={12} style={{ float: 'right' }}>
+      <Col sm={24} md={20}><Title level={5}>Yearly Upload Frequency Heatmap</Title></Col>
+      <Col sm={24} md={4} style={{ float: 'right' }}>
         <Space.Compact block >
-          <Select style={{ width: "15%" }} defaultValue={selectedYear} onChange={handleYearChange}>
+          <Select defaultValue={selectedYear} onChange={handleYearChange}>
             <Option value="2023">2023</Option>
             <Option value="2022">2022</Option>
             <Option value="2021">2021</Option>
@@ -367,8 +370,9 @@ const CreatorFrequencyCard = (_channels) => {
             <Option value="2016">2008</Option>
             {/* Add more options as needed */}
           </Select>
+          
 
-          <Select mode="multiple" allowClear style={{ width: "85%", overflow: 'auto', height: '30px', fontSize: '11px' }}  value={selectedChannels} onChange={handleChannelChange} options={channels}>
+          <Select mode="multiple" allowClear maxTagCount='responsive' style={{ width: "150px", fontSize: '11px' }} value={selectedChannels} onChange={handleChannelChange} options={channels}>
 
             {/* Add more options as needed */}
           </Select>
@@ -385,11 +389,28 @@ const CreatorFrequencyCard = (_channels) => {
       ) : (
           <>
             <Card title={titleBar} style={{ width: 100 + '%' }}>
-              {/* <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-                <Col className="gutter-row"> */}
+
+
               <Heatmap {...heatmapConfig} />
-              {/* </Col>
-              </Row> */}
+              <Text style={{float: 'right', marginTop: '10px'}} type="secondary">Less <Space gutter={2}>
+                <Popover content={<Text>0 Uploads</Text>} placement="top">
+                  <Avatar style={{ backgroundColor: variables.freq1 }} shape="square" size="small" />
+                </Popover>
+                <Popover content={<Text>1 Upload</Text>} placement="top">
+                  <Avatar style={{ backgroundColor: variables.freq2 }} shape="square" size="small" />
+                </Popover>
+                <Popover content={<Text>1 to 3 Uploads</Text>} placement="top">
+                  <Avatar style={{ backgroundColor: variables.freq3 }} shape="square" size="small" />
+                </Popover>
+                <Popover content={<Text>4 to 5 Uploads</Text>} placement="top">
+                  <Avatar style={{ backgroundColor: variables.freq4 }} shape="square" size="small" />
+                </Popover>
+                <Popover content={<Text>More than 6 Uploads</Text>} placement="top">
+                  <Avatar style={{ backgroundColor: variables.freq5 }} shape="square" size="small" />
+                </Popover>
+              </Space> More</Text>
+
+
             </Card>
 
           </>
