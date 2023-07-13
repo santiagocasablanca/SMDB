@@ -35,7 +35,7 @@ const { Title, Text } = Typography;
 const CreatorFrequencyCard = (_channels) => {
   const { intToStringBigNumber, parseDate, parseDuration, humanizeDurationFromSeconds, displayVideoDurationFromSeconds, displayDurationFromSeconds } = useFormatter();
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear().toString());
-  const [selectedChannels, setSelectedChannels] = useState([]);
+  const [selectedChannels, setSelectedChannels] = useState(_channels._channels.map(item => {return item.channel_id;}));
   const [defaultValue, setDefaultValue] = useState([]);
   const [channels, setChannels] = useState([]);
   const [frequencyData, setFrequencyData] = useState([]);
@@ -342,13 +342,13 @@ const CreatorFrequencyCard = (_channels) => {
     font-size: 15px;
   }
 `);
-
+// defaultValue={defaultValue} 
   const titleBar = (
     <Row>
-      <Col sm={24} md={18}><Title level={5}>Yearly Upload Frequency Heatmap</Title></Col>
-      <Col sm={24} md={6} style={{ float: 'right' }}>
+      <Col sm={24} md={12}><Title level={5}>Yearly Upload Frequency Heatmap</Title></Col>
+      <Col sm={24} md={12} style={{ float: 'right' }}>
         <Space.Compact block >
-          <Select style={{ minWidth: "30%" }} defaultValue={selectedYear} onChange={handleYearChange}>
+          <Select style={{ width: "15%" }} defaultValue={selectedYear} onChange={handleYearChange}>
             <Option value="2023">2023</Option>
             <Option value="2022">2022</Option>
             <Option value="2021">2021</Option>
@@ -368,7 +368,7 @@ const CreatorFrequencyCard = (_channels) => {
             {/* Add more options as needed */}
           </Select>
 
-          <Select mode="multiple" style={{ minWidth: "70%" }} value={selectedChannels} defaultValue={defaultValue} onChange={handleChannelChange} options={channels}>
+          <Select mode="multiple" allowClear style={{ width: "85%", overflow: 'auto', height: '30px', fontSize: '11px' }}  value={selectedChannels} onChange={handleChannelChange} options={channels}>
 
             {/* Add more options as needed */}
           </Select>

@@ -24,13 +24,10 @@ const VideoPreview = ({ _video }) => {
     const [open, setOpen] = useState(false);
 
     const showDrawer = () => {
-        console.log('show')
         setOpen(true);
     };
 
     const childToParent = (childdata) => {
-        console.log('video preview childtoparent ', childdata);
-
         setOpen(childdata);
       }
 
