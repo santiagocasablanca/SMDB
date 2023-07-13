@@ -21,6 +21,7 @@ const CreatorStatsPanel = ({ creator, channel, stats, channelsStats, mostRecentV
     const [last5VideosStats, setLast5VideoStats] = useState({ views: [], likes: [], comments: [], duration: [] });
 
     useEffect(() => {
+        console.log(channelsStats);
         if (mostRecentVideos !== null) {
             const tempViews = [];
             const tempLikes = [];
@@ -262,14 +263,14 @@ const CreatorStatsPanel = ({ creator, channel, stats, channelsStats, mostRecentV
                 title: 'Created At',
                 dataIndex: 'channel_created_at',
                 key: 'channel_created_at',
-                render: (date) => <p>{parseDate(date)}</p>,
+                render: (date) => <p style={{width:'150px'}}>{parseDate(date)}</p>,
             }
         ];
 
         return (
             <> {isLoaded ?
                 (
-                    <Table size='small'
+                    <Table size='large'
                         pagination={false}
                         className="channel-table"
                         scroll={{ x: 300 }}
