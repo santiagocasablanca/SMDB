@@ -10,7 +10,7 @@ import useFormatter from '../../hooks/useFormatter';
 const { Title, Text } = Typography;
 
 
-const ChannelTabs = ({_creator, _channels}) => {
+const ChannelTabs = ({ _creator, _channels }) => {
 
     const { intToStringBigNumber, parseDate, parseDuration } = useFormatter();
     const [isLoaded, setIsLoaded] = useState(false);
@@ -115,17 +115,22 @@ const ChannelTabs = ({_creator, _channels}) => {
     return (
         <>
             {isLoaded ?
-                (
-                    <Tabs
-                        defaultActiveKey="1"
-                        // type="card"
-                        size="small"
-                        style={{
-                            color: 'black',
-                        }}
-                        items={channels}
-                    />
-                ) : (' ')
+                (_creator?.channels.length > 1 ?
+                    (
+                        <Tabs
+                            defaultActiveKey="1"
+                            // type="card"
+                            size="small"
+                            style={{
+                                color: 'black',
+                            }}
+                            items={channels}
+                        />
+                    ) : (
+                        <CreatorChannel creator={_creator} channel={_creator?.channels?.[0]}></CreatorChannel>
+                    )
+                )
+                : ('')
             }
         </>
     );
