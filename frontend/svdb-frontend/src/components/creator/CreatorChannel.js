@@ -16,7 +16,7 @@ import { getVideosFn } from "../../services/videoApi.ts";
 import ReactPlayer from 'react-player'
 import { getCreatorStatsFn } from "../../services/creatorApi.ts";
 import CreatorFrequencyCard from './CreatorFrequencyCard';
-
+import CreatorUploadTimeFrequencyCard from './CreatorUploadTimeFrequencyCard';
 
 
 
@@ -256,7 +256,7 @@ const CreatorChannel = ({ creator, channel }) => {
                     <Row gutter={[16, 16]}>
                         <Col span={24} xl={12}>
                             <Title style={{ color: 'black' }} level={5}>Channel Stats</Title>
-                           
+
                             <CreatorStatsPanel creator={creator} channel={channel} stats={stats} channelsStats={channelsStats} mostRecentVideos={mostRecentVideos} isAllChannels={isAllChannels}></CreatorStatsPanel>
                         </Col>
                         <Col span={24} xl={12}>
@@ -277,8 +277,27 @@ const CreatorChannel = ({ creator, channel }) => {
                             </Row>
                         </Col>
                     </Row>
+                    <br></br>
                     <Row gutter={[16, 16]}>
-                        <CreatorFrequencyCard _channels={isAllChannels? creator.channels : [channel]}></CreatorFrequencyCard>
+                        <CreatorFrequencyCard _channels={isAllChannels ? creator.channels : [channel]}></CreatorFrequencyCard>
+                    </Row>
+                    <br></br>
+
+                    <Row gutter={[16, 16]}>
+                        <Col span={24} xl={12}>
+                            <Row gutter={16}>
+                                <Col span={24}>
+                                    <Title style={{ color: 'black' }} level={5}>Recent</Title>
+                                    <HorizontalVideoList _videos={mostRecentVideos} />
+
+                                    <Title style={{ color: 'black' }} level={5}>Most Viewed</Title>
+                                    <HorizontalVideoList _videos={top10videos} />
+                                </Col>
+                            </Row>
+                        </Col>
+                        <Col span={24} xl={12}>
+                            <CreatorUploadTimeFrequencyCard _channels={isAllChannels ? creator.channels : [channel]}></CreatorUploadTimeFrequencyCard>
+                        </Col>
                     </Row>
                     <br></br>
                 </>
