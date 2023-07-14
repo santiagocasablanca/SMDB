@@ -1,13 +1,17 @@
 # This is just a proof of concept. 
 
+No great concerns were taken during the implementation in regard of coding best practises. Although, some of the classic layered architecture were implemented.
+This REST API runs on an Express.js server (using Node.js and Sequelize) and has endpoints for performing (mostly) read operations on a PostgreSQL.
+The class youtubeService.ts has methods for fetching information regarding Channel and Video information and storing the data into the correspondent tables (models: channel, video, channel_stats and video_stats). The stats table maintain the historic values for the stats (subs, views, likes, comments) for each time the information is fetched from the Youtube API. In order to keep within the API ratee limits, some delays are invoked during the fetching algorithms. 
+There's also the backbone of a job service (still on server.ts) responsible for automatic regular fetching (using cron jobs).
+
 Useful commands 
 docker-compose up
 yarn start
 npx sequelize-cli db:migrate
 
-#  (Using this article as backbone) 
-Build a CRUD API with Node.js and Sequelize
 
-In this article, you'll learn how to build a complete CRUD API with Node.js and Sequelize. The REST API will run on an Express.js server and have endpoints for performing CRUD operations against a PostgreSQL database.
+
+#  (Using this article as backbone) 
 
 ![Build a CRUD API with Node.js and Sequelize](https://codevoweb.com/wp-content/uploads/2023/01/Build-a-CRUD-API-with-Node.js-and-Sequelize.webp)
