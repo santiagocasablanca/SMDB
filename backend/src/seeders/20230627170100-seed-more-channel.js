@@ -9,7 +9,7 @@ async function fetchChannelInfo(_channel_id) {
         let data = await response.json();
         return data.items[0];
 
-    } catch (error: any) {
+    } catch (error) {
         console.log(error);
     }
 }
