@@ -2,11 +2,13 @@ import { Request, Response } from "express";
 
 
 import { db, sequelize } from "../util/db";
+import { SearchReqQuery } from "./types";
 const VideoStats = db.videoStats;
 
+type VideoReqQuery = SearchReqQuery;
 
 export const findAllVideoStatsController = async (
-  req: Request<{}, {}, {}>,
+  req: Request<{}, {}, {}, VideoReqQuery>,
   res: Response
 ) => {
   try {

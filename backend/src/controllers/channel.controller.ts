@@ -4,11 +4,11 @@ const { Sequelize, QueryTypes } = require('sequelize');
 const Op = Sequelize.Op;
 
 import { db, sequelize } from "../util/db";
+import { ChannelsSearchReqQuery } from "./types";
 const Channel = db.channel;
 
-
 export const findAllChannelsController = async (
-  req: Request<{}, {}, {}>,
+  req: Request<any, any, any, ChannelsSearchReqQuery>,
   res: Response
 ) => {
   try {
@@ -20,13 +20,15 @@ export const findAllChannelsController = async (
     //sort 
     let sort = req.query.sort ? req.query.sort.split('%') : ['title', 'DESC'];
 
-    const whereClause = {}
+    let whereClause = {}
     if (req.query.channels) {
       console.log(req.query.channels);
       var channelsArr = req.query.channels.split(',');
 
-      whereClause.title = {
-        [Op.or]: channelsArr
+      whereClause = {
+        title: {
+          [Op.or]: channelsArr
+        }
       }
     }
     // if(req.query.title) {

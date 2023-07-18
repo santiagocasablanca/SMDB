@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import NoteModel from "../models/model";
+import { SearchReqQuery } from "./types";
 
 export const createNoteController = async (
   req: Request<{}, {}>,
@@ -102,7 +103,7 @@ export const findNoteController = async (
 };
 
 export const findAllNotesController = async (
-  req: Request,
+  req: Request<any, any, any, SearchReqQuery>,
   res: Response
 ) => {
   try {

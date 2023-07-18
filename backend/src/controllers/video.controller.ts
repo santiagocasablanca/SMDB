@@ -4,6 +4,7 @@ const { Sequelize, QueryTypes } = require('sequelize');
 const Op = Sequelize.Op;
 
 import { db, sequelize } from "../util/db";
+import { ChannelsReqQuery, ChannelsSearchReqQuery, SearchReqQuery } from "./types";
 const Video = db.video;
 
 export const createVideoController = async (
@@ -79,7 +80,7 @@ export const updateVideoController = async (
 };
 
 export const findVideoController = async (
-  req: Request<>,
+  req: Request,
   res: Response
 ) => {
   try {
@@ -189,7 +190,7 @@ export const fetchAllTags = async (
 }
 
 export const fetchVideoFrequency = async (
-  req: Request,
+  req: Request<any, any, any, ChannelsSearchReqQuery>,
   res: Response
 ) => {
   try {
@@ -203,14 +204,15 @@ export const fetchVideoFrequency = async (
     // ORDER BY 
     //  day
     let sort = req.query.sort ? req.query.sort.split('%') : ['day', 'ASC'];
-    const whereClause = {
-    }
+    let whereClause = {}
     if (req.query.channels) {
       console.log(req.query.channels);
       var channelsArr = req.query.channels.split(',');
 
-      whereClause.channel_id = {
-        [Op.or]: channelsArr
+      whereClause = {
+        channel_id: {
+          [Op.or]: channelsArr
+        }
       }
     }
 
@@ -246,19 +248,20 @@ export const fetchVideoFrequency = async (
 }
 
 export const fetchVideosChannelStats = async (
-  req: Request<{}, {}, {}>,
+  req: Request<{}, {}, {}, ChannelsReqQuery>,
   res: Response
 ) => {
   try {
 
-    const whereClause = {
-    }
+    let whereClause = {}
     if (req.query.channels) {
       console.log(req.query.channels);
       var channelsArr = req.query.channels.split(',');
 
-      whereClause.channel_id = {
-        [Op.or]: channelsArr
+      whereClause = {
+        channel_id: {
+          [Op.or]: channelsArr
+        }
       }
     }
 
@@ -297,7 +300,7 @@ export const fetchVideosChannelStats = async (
 
 
 export const fetchVideoUploadTimeFrequency = async (
-  req: Request<{}, {}, {}>,
+  req: Request<{}, {}, {}, ChannelsReqQuery>,
   res: Response
 ) => {
   try {
@@ -312,14 +315,15 @@ export const fetchVideoUploadTimeFrequency = async (
     // week_day, upload_hour
     // ORDER BY
     // week_day, upload_hour;
-    const whereClause = {
-    }
+    let whereClause = {}
     if (req.query.channels) {
       console.log(req.query.channels);
       var channelsArr = req.query.channels.split(',');
 
-      whereClause.channel_id = {
-        [Op.or]: channelsArr
+      whereClause = {
+        channel_id: {
+          [Op.or]: channelsArr
+        }
       }
     }
 
@@ -359,7 +363,7 @@ export const fetchVideoUploadTimeFrequency = async (
 }
 
 export const findAllVideosController = async (
-  req: Request<{}, {}, {}>,
+  req: Request<{}, {}, {}, ChannelsSearchReqQuery & { series?: string, title?: string }>,
   res: Response
 ) => {
   try {
@@ -372,20 +376,24 @@ export const findAllVideosController = async (
     //sort 
     let sort = req.query.sort ? req.query.sort.split('%') : ['published_at', 'DESC'];
 
-    const whereClause = {}
+    let whereClause = {}
     if (req.query.channels) {
       console.log(req.query.channels);
       var channelsArr = req.query.channels.split(',');
 
-      whereClause.channel_id = {
-        [Op.or]: channelsArr
+      whereClause = {
+        channel_id: {
+          [Op.or]: channelsArr
+        }        
       }
     }
     if (req.query.series) {
       var seriessArr = req.query.series.split(',');
 
-      whereClause.serie = {
-        [Op.or]: seriessArr
+      whereClause = {
+        serie: {
+          [Op.or]: seriessArr
+        }
       }
     }
     if (req.query.title) {

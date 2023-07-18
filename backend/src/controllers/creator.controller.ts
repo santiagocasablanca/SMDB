@@ -4,6 +4,7 @@ const { Sequelize, QueryTypes } = require('sequelize');
 const Op = Sequelize.Op;
 
 import { db, sequelize } from "../util/db";
+import { ChannelsSearchReqQuery, SearchReqQuery } from "./types";
 const Creator = db.creator;
 const Channel = db.channel;
 const Video = db.video;
@@ -67,7 +68,7 @@ export const fetchCreatorController = async (
 };
 
 export const findAllCreatorsController = async (
-  req: Request<{}, {}, {}>,
+  req: Request<{}, {}, {}, SearchReqQuery>,
   res: Response
 ) => {
   try {
@@ -133,20 +134,22 @@ export const findAllCreatorsController = async (
 };
 
 export const fetchCreatorStatsController = async (
-  req: Request<{}, {}, {}>,
+  req: Request<{}, {}, {}, ChannelsSearchReqQuery & { ignoreShorts: boolean }>,
   res: Response
 ) => {
   try {
 
     console.log('fetchCreatorStatsController     BLA BAL', req.query, req.params);
 
-    const whereClause = {}
+    let whereClause = {}
     if (req.query.channels) {
       console.log(req.query.channels);
       var channelsArr = req.query.channels.split(',');
 
-      whereClause.channel_id = {
-        [Op.or]: channelsArr
+      whereClause = {
+        channel_id: {
+          [Op.or]: channelsArr
+        }
       }
     }
 
