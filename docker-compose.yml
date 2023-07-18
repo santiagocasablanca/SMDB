@@ -1,0 +1,27 @@
+version: '3.7'
+
+services:
+  backend:
+    image: smdb/backend
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    ports:
+      - 8005:8005
+    environment:
+      POSTGRES_HOST: 127.0.0.1
+      POSTGRES_PORT: 6505
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: svdb
+      DATABASE_URL: postgresql://admin:password123@localhost:6505/svdb?schema=public
+      PORT: 8005
+      NODE_ENV: development
+
+  frontend:
+    image: smdb/frontend
+    build:
+      context: frontend/svdb-frontend
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
