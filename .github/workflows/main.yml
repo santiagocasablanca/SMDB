@@ -8,6 +8,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - dockerfile: ./src/Backend/Dockerfile
+          - dockerfile: ./src/Frontend
     steps:
       -
         name: Checkout
