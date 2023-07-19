@@ -20,6 +20,6 @@ FROM nginx:1.17.9-alpine
 
 WORKDIR /usr/share/nginx/html
 
-COPY --from=build-env /opt/yo/frontend/dist ./
+COPY --from=build-env /opt/frontend/build ./
 
 EXPOSE 80
