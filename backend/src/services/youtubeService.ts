@@ -255,7 +255,6 @@ class YoutubeService {
     async fetchChannelAndVideoData(channelId: any) {
         await this.fetchChannelData(channelId);
         const channel = await Channel.findOne({where: {channel_id: channelId}});
-        console.log('channel: ', channel);
         await delay(1000);
         await this.fetchAndCreateVideosFromChannel(channel.channel_id, channel.playlist_id);
     }

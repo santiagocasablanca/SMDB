@@ -434,7 +434,7 @@ const CreatorPage = () => {
             hoverable
             // onClick={() => handleClickCreator(item.id)}
             key={item.id}>
-            {item.channels.length > 1 ? (
+            {item.channels.length > 0 ? (
               <>
                 <SincePanel channels={item.channels}></SincePanel>
                 <StatsPanel subs={intToStringBigNumber(item.subs)} videos={intToStringBigNumber(item.videos)} views={intToStringBigNumber(item.views)}></StatsPanel>
