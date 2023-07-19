@@ -56,7 +56,7 @@ class YoutubeService {
         console.log('calling YOUTUBE API: ', url);
         let response = await fetch(url);
 
-        return response.json(); //await
+        return await response.json(); //await
     }
 
     // https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=UUDogdKl7t7NHzQ95aEwkdMw&pageToken=EAAaB1BUOkNQb0I&_=1688923054074
@@ -67,7 +67,7 @@ class YoutubeService {
 
         let response = await fetch(url);
 
-        return response.json();
+        return await response.json();
     }
 
 
@@ -167,6 +167,7 @@ class YoutubeService {
 
 
     async fetchChannelData(channelId: any) {
+        console.log('youtube service: ', channelId)
         // Fetch channel data using the YouTube API
         const data = await this.fetchChannelDataFromAPI(channelId);
 
@@ -182,7 +183,7 @@ class YoutubeService {
 
 
         // Store channel data in the database
-        const channelExists = await Channel.findOne({ where: { channel_id: channelId } });
+        let channelExists = await Channel.findOne({ where: { channel_id: channelId } });
         if (!channelExists) {
             // create
             await Channel.create({
@@ -193,6 +194,7 @@ class YoutubeService {
                 'subs': subscriberCount,
                 'videos': videoCount,
                 'logo_url': logo,
+                'channel_created_at': data.items[0].snippet.publishedAt,
                 'banner_url': banner,
                 'playlist_id': playlistId,
                 'custom_url': data.items[0].snippet.customUrl
@@ -206,6 +208,7 @@ class YoutubeService {
                 'views': viewCount,
                 'subs': subscriberCount,
                 'videos': videoCount,
+                'channel_created_at': data.items[0].snippet.publishedAt,
                 'logo_url': logo,
                 'banner_url': banner,
                 'playlist_id': playlistId,
@@ -247,6 +250,14 @@ class YoutubeService {
         } catch (error) {
             console.error('Error fetching YouTube statistics:', error);
         }
+    }
+
+    async fetchChannelAndVideoData(channelId: any) {
+        await this.fetchChannelData(channelId);
+        const channel = await Channel.findOne({where: {channel_id: channelId}});
+        console.log('channel: ', channel);
+        await delay(1000);
+        await this.fetchAndCreateVideosFromChannel(channel.channel_id, channel.playlist_id);
     }
 }
 

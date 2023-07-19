@@ -2,6 +2,9 @@ import { Request, Response } from "express";
 const dayjs = require('dayjs')
 const { Sequelize, QueryTypes } = require('sequelize');
 const Op = Sequelize.Op;
+const YoutubeService = require('../services/youtubeService');
+const ChannelCreatorService = require('../services/channelCreatorService');
+
 
 import { db, sequelize } from "../util/db";
 import { ChannelsSearchReqQuery } from "./types";
@@ -55,3 +58,42 @@ export const findAllChannelsController = async (
   }
 };
 
+export const createChannelController = async (
+  req: Request<{}, {}, {}>,
+  res: Response
+) => {
+  try {
+    console.log('STARTING');
+    console.log(req.body);
+    const channel_ids = req.body.channel_ids;
+    const creator_id = req.body.creator_id;
+
+    res.status(200).json({
+      status: "onGoing",
+
+    });
+
+    console.log(channel_ids, creator_id);
+    const youtubeService = new YoutubeService();
+    const channelCreatorService = new ChannelCreatorService();
+
+    for (const id of channel_ids) {
+      console.log(id);
+      const channel = await youtubeService.fetchChannelAndVideoData(id);
+      console.log('controller channel: ', channel);
+      await channelCreatorService.associateWithCreatorWithChannel(
+        id,
+        creator_id
+      );
+    }
+
+    console.log('FINISHED')
+
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: error.message,
+    });
+  }
+
+};

@@ -259,8 +259,7 @@ const UploadTimeFrequencyCard = (_channels) => {
           </Select>
 
 
-          <Select mode="multiple" allowClear maxTagCount='responsive' style={{ width: "150px", fontSize: '11px' }} value={selectedChannels} onChange={handleChannelChange} options={channels}>
-
+          <Select mode="multiple" allowClear maxTagCount='responsive' style={{ width: "250px", fontSize: '11px' }} value={selectedChannels} onChange={handleChannelChange} options={channels}>
             {/* Add more options as needed */}
           </Select>
         </Space.Compact>

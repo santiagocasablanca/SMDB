@@ -268,8 +268,8 @@ const CreatorChannel = ({ creator, channel }) => {
                                     <Title style={{ color: 'black' }} level={5}>Most Viewed</Title>
                                     <HorizontalVideoList _videos={top10videos} />
 
-                                    <Title style={{ color: 'black' }} level={5}>Last Appearences in other channels // TODO</Title>
-                                    <HorizontalVideoList _videos={top10videos} />
+                                    {/* <Title style={{ color: 'black' }} level={5}>Last Appearences in other channels // TODO</Title>
+                                    <HorizontalVideoList _videos={top10videos} /> */}
 
                                     {/* <HorizontalVideoList _videos={top10videos} /> */}
 
@@ -279,7 +279,9 @@ const CreatorChannel = ({ creator, channel }) => {
                     </Row>
                     <br></br>
                     <Row gutter={[16, 16]}>
-                        <CreatorFrequencyCard _channels={isAllChannels ? creator.channels : [channel]}></CreatorFrequencyCard>
+                        <Col span={24} xl={24}>
+                            <CreatorFrequencyCard _channels={isAllChannels ? creator.channels : [channel]}></CreatorFrequencyCard>
+                        </Col>
                     </Row>
                     <br></br>
 
