@@ -80,7 +80,6 @@ export const createChannelController = async (
     for (const id of channel_ids) {
       console.log(id);
       const channel = await youtubeService.fetchChannelAndVideoData(id);
-      console.log('controller channel: ', channel);
       await channelCreatorService.associateWithCreatorWithChannel(
         id,
         creator_id
