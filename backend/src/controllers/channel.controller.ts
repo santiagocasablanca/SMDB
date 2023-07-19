@@ -59,12 +59,11 @@ export const findAllChannelsController = async (
 };
 
 export const createChannelController = async (
-  req: Request<{}, {}, {}>,
+  req: Request<any, any, any, ChannelsSearchReqQuery>,
   res: Response
 ) => {
   try {
     console.log('STARTING');
-    console.log(req.body);
     const channel_ids = req.body.channel_ids;
     const creator_id = req.body.creator_id;
 
