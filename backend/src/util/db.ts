@@ -12,7 +12,7 @@ const sequelize = new Sequelize(POSTGRES_URL, {
     // logQueryParameters: true,
 });
 
-const db = {};
+const db: any = {};
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
