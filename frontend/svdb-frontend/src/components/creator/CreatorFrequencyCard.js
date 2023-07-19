@@ -371,8 +371,8 @@ const CreatorFrequencyCard = (_channels) => {
             {/* Add more options as needed */}
           </Select>
           
-
-          <Select mode="multiple" allowClear maxTagCount='responsive' style={{ width: "150px", fontSize: '11px' }} value={selectedChannels} onChange={handleChannelChange} options={channels}>
+        
+          <Select require mode="multiple" allowClear maxTagCount='responsive' style={{ width: "150px", fontSize: '11px' }} value={selectedChannels} onChange={handleChannelChange} options={channels}>
 
             {/* Add more options as needed */}
           </Select>

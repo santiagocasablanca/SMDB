@@ -35,3 +35,11 @@ export const getCreatorStatsFn = async (params) => {
   );
   return response.data;
 };
+
+
+export const associateChannelIdsToCreatorFn = async (params) => {
+  const req = `channels/`;
+
+  const response = await api.post('channels/', params);
+  return response.data;
+};
