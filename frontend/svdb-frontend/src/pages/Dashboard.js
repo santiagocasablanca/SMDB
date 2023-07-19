@@ -6,15 +6,15 @@ import { Card,Divider, Carousel,
   Col, List, Statistic } from 'antd';
 import { getVideosFn, getTreeMapPlotForTagsFn, fetchVideoFrequencyFn } from "../services/videoApi.ts"
 import dayjs from "dayjs"
-var weekOfYear = require('dayjs/plugin/weekOfYear')
-dayjs.extend(weekOfYear)
 import { LikeOutlined,StarOutlined,MessageOutlined, EyeOutlined, NumberOutlined } from '@ant-design/icons';
 import FrequencyCard from "./FrequencyCard";
 import UploadTimeFrequencyCard from "./UploadTimeFrequencyCard";
 import ChannelTotalStats from "./ChannelTotalsStats";
-
-
 import insertCss from 'insert-css';
+
+
+var weekOfYear = require('dayjs/plugin/weekOfYear')
+dayjs.extend(weekOfYear)
 
 const Dashboard = () => {
 

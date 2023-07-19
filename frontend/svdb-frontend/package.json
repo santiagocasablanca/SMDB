@@ -50,6 +50,7 @@
     ]
   },
   "devDependencies": {
+    "@typescript-eslint/parser": "^6.1.0",
     "typescript": "^5.1.0"
   }
 }
