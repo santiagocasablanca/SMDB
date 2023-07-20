@@ -3,6 +3,10 @@ const dayjs = require('dayjs')
 const { Sequelize, QueryTypes } = require('sequelize');
 const Op = Sequelize.Op;
 
+const YoutubeService = require('../services/youtubeService');
+const ChannelCreatorService = require('../services/channelCreatorService');
+const CreatorService = require('../services/creatorService');
+
 import { db, sequelize } from "../util/db";
 import { ChannelsSearchReqQuery, SearchReqQuery } from "./types";
 const Creator = db.creator;
@@ -133,14 +137,54 @@ export const findAllCreatorsController = async (
   }
 };
 
+export const createCreatorController = async (
+  req: Request<{}, {}, {}, ChannelsSearchReqQuery>,
+  res: Response) => {
+
+  try {
+    console.log('STARTING');
+    const channel_ids = req.body.channel_ids;
+    const name = req.body.name;
+    const custom_url = req.body.custom_url;
+    const profile_picture = req.body.profile_picture;
+
+    
+    const youtubeService = new YoutubeService();
+    const creatorService = new CreatorService();
+    const channelCreatorService = new ChannelCreatorService();
+
+    for (const id of channel_ids) {
+      const creator = await creatorService.create(name, custom_url, profile_picture);
+      console.log('id: ', id);
+      console.log('creator_id: ', creator.id);
+      const channel = await youtubeService.fetchChannelAndVideoData(id);
+      console.log('channel: ', channel.channel_id);
+      await channelCreatorService.associateWithCreatorWithChannel(
+        channel.channel_id,
+        creator.id
+      );
+    }
+
+    res.status(200).json({
+      status: "onGoing",
+
+    });
+
+    console.log('FINISHED')
+
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: error.message,
+    });
+  }
+}
+
 export const fetchCreatorStatsController = async (
   req: Request<{}, {}, {}, ChannelsSearchReqQuery & { ignoreShorts: boolean }>,
   res: Response
 ) => {
   try {
-
-    console.log('fetchCreatorStatsController     BLA BAL', req.query, req.params);
-
     let whereClause = {}
     if (req.query.channels) {
       console.log(req.query.channels);
@@ -160,8 +204,8 @@ export const fetchCreatorStatsController = async (
 
       whereClause['published_at'] = { [Sequelize.Op.between]: [publishedAtSearchInitial, publishedAtSearchFinal] };
     }
-    if(req.query.ignoreShorts) {
-      whereClause['duration_parsed'] = { [Sequelize.Op.gt]: '60'};
+    if (req.query.ignoreShorts) {
+      whereClause['duration_parsed'] = { [Sequelize.Op.gt]: '60' };
     }
 
 

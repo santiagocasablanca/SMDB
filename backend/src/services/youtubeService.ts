@@ -257,6 +257,7 @@ class YoutubeService {
         const channel = await Channel.findOne({where: {channel_id: channelId}});
         await delay(1000);
         await this.fetchAndCreateVideosFromChannel(channel.channel_id, channel.playlist_id);
+        return channel;
     }
 }
 

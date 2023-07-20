@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, List, Row, Col, Image, Table, Space, Avatar, Button, Popover, Tag, Typography, Modal, Form, Input, notification } from 'antd';
+import { Card, List, Row, Col, Image, Table, Space, Avatar, Button, Popover, Tag, Typography, Modal, Form, Tooltip, Input, notification } from 'antd';
 import { LikeOutlined, YoutubeOutlined, CalendarOutlined, VideoCameraOutlined, EyeOutlined, NumberOutlined, FilterOutlined } from '@ant-design/icons';
 
 import insertCss from 'insert-css';
@@ -17,6 +17,7 @@ import ChannelTotalStats from "./ChannelTotalsStats";
 import variables from '../sass/antd.module.scss'
 import useFormatter from '../hooks/useFormatter';
 import dayjs from "dayjs"
+import AddCreatorModal from '../components/creator/AddCreatorModal';
 
 
 
@@ -133,6 +134,10 @@ const CreatorPage = () => {
 
   `)
 
+  // {isAdmin ? (<AddCreatorModal />) : ('')}
+  // <Button icon={<FilterOutlined />}>Filter</Button>
+
+
   const HeaderPanel = ({ title, filters, onChange }) => {
     // style={{ color: 'black' }}
     return (
@@ -142,8 +147,15 @@ const CreatorPage = () => {
         </Col>
         <Col span="2">
           <div style={{ float: 'right' }}>
+            <Space.Compact block>
+              {isAdmin ? (<Tooltip title="Add Creator">
+                <AddCreatorModal />
+              </Tooltip>) : ('')}
+              <Tooltip title="Filter">
+                <Button icon={<FilterOutlined />} />
+              </Tooltip>
+            </Space.Compact>
 
-            <Button icon={<FilterOutlined />}>Filter</Button>
           </div>
         </Col>
       </Row>
@@ -341,7 +353,7 @@ const CreatorPage = () => {
       // with the creator and the inserted channel IDs.
       // Replace the console.log statement with your own logic.
       console.log('Submitted Channel IDs:', values.channelIds);
-      const channel_ids= values.channelIds.split(',').map((id) => id.trim());
+      const channel_ids = values.channelIds.split(',').map((id) => id.trim());
       associateChannelIdsToCreatorFn({ creator_id: creator.id, channel_ids: channel_ids })
 
       // Close the modal

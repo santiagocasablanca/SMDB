@@ -50,7 +50,7 @@ export const findAllChannelsController = async (
       count: channels.count,
       results: channels.rows,
     });
-  } catch (error: any) {
+  } catch (error) {
     res.status(500).json({
       status: "error",
       message: error.message,
