@@ -27,7 +27,7 @@ const AppSidebar = ({ collapsed }) => {
 
 
   const sideStyle = {
-    // background: variables.babyPowder,
+    background: variables.richBlack,
     primaryColor: variables.sdmnPink,
     colorBgTextHover: variables.sdmnYellow,
     color: variables.onSurface

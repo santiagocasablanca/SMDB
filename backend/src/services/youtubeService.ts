@@ -1,4 +1,5 @@
 const { Op } = require('sequelize');
+const { Sequelize } = require('sequelize');
 
 import { db, sequelize } from "../util/db";
 import { now } from "sequelize/types/utils";
@@ -42,12 +43,29 @@ class YoutubeService {
                     'channel_created_at']
             }
         });
+
         creators.map((creator) => {
-            const channel = creator.channels.find((it) => it.custom_url === creator.custom_url);
-            Creator.update({
-                banner_picture: channel.banner_url,
-                profile_picture: channel.logo_url
-            }, { where: { id: creator.id } });
+            console.log('Iterating creators: ', creator.name, creator.custom_url, creator.banner_picture);
+            console.log('channels: ', creator.channels.map(ch => {return ch.custom_url; }))
+            // if(creator.banner_picture === undefined) {
+
+                const channel = creator.channels.find(({ custom_url }) => custom_url === creator.custom_url);
+
+                // const channel = creator.channels.find((it) => {
+                //     console.log('Iterating channels: ', creator.custom_url,it.custom_url, it.banner_url);
+                //     console.log(it.custom_url === creator.custom_url)
+                //     it.custom_url === creator.custom_url
+                // });
+
+                console.log('channel found: ', channel?.channel_id, channel?.custom_url, channel?.banner_url);
+                if (channel) {
+                    
+                    Creator.update({
+                        banner_picture: channel.banner_url,
+                        // profile_picture: channel.logo_url
+                    }, { where: { id: creator.id } });
+                }
+            // }
         })
     }
 
@@ -254,7 +272,7 @@ class YoutubeService {
 
     async fetchChannelAndVideoData(channelId: any) {
         await this.fetchChannelData(channelId);
-        const channel = await Channel.findOne({where: {channel_id: channelId}});
+        const channel = await Channel.findOne({ where: { channel_id: channelId } });
         await delay(1000);
         await this.fetchAndCreateVideosFromChannel(channel.channel_id, channel.playlist_id);
         return channel;

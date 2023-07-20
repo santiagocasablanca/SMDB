@@ -21,19 +21,19 @@ const AppHeader = ({ collapsed, childToParent }) => {
     token: { colorBgContainer },
   } = theme.useToken();
 
-  // const headerStyle = {
-  //   padding: 0,
-  //   background: variables.sdmnWhite,
-  //   borderBottom: "1px solid black",
-  //   color: variables.sdmnBlack
-  // }; // sdmnDarkBlue
+  const headerStyle = {
+    padding: 0,
+    background: variables.coolerGray10,
+    borderBottom: "1px solid " + variables.richBlack,
+    color: variables.richBlack
+  }; // sdmnDarkBlue
 
   const handleClick = () => {
     childToParent(!collapsed);
   };
   // style={headerStyle}
   return (
-    <Header >
+    <Header style={headerStyle}>
       <Space>
         <Button
           type="text"
@@ -41,7 +41,7 @@ const AppHeader = ({ collapsed, childToParent }) => {
           onClick={handleClick}
           style={{
             fontSize: '20px',
-            color: variables.sdmnYellow,
+            color: variables.richBlack,
             width: 60,
             height: 60,
           }}

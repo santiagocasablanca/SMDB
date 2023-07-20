@@ -35,7 +35,7 @@ const VideoPreview = ({ _video }) => {
     useEffect(() => {
         setIsLoaded(true);
     }, []);
-
+// 480 x 270
     return (
         <> {isLoaded ?
             (<>
