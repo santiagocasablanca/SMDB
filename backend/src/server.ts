@@ -24,9 +24,10 @@ cron.schedule('37 13 * * *', () => {
   //     videoMetaService.associateTagsToVideos();
 })
 
+const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN ? process.env.CLIENT_ORIGIN : 'http://localhost:3000';
 app.use(
   cors({
-    origin: ["http://localhost:3000"],
+    origin: [CLIENT_ORIGIN],
     credentials: true,
   })
 );
