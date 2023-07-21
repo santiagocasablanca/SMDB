@@ -8,7 +8,7 @@ const ChannelCreatorService = require('../services/channelCreatorService');
 const CreatorService = require('../services/creatorService');
 
 import { db, sequelize } from "../util/db";
-import { ChannelsSearchReqQuery, SearchReqQuery } from "./types";
+import { ChannelsSearchReqQuery, SearchReqQuery, AddCreatorQuery } from "./types";
 const Creator = db.creator;
 const Channel = db.channel;
 const Video = db.video;
@@ -138,7 +138,7 @@ export const findAllCreatorsController = async (
 };
 
 export const createCreatorController = async (
-  req: Request<{}, {}, {}, ChannelsSearchReqQuery>,
+  req: Request,
   res: Response) => {
 
   try {
@@ -148,7 +148,7 @@ export const createCreatorController = async (
     const custom_url = req.body.custom_url;
     const profile_picture = req.body.profile_picture;
 
-    
+
     const youtubeService = new YoutubeService();
     const creatorService = new CreatorService();
     const channelCreatorService = new ChannelCreatorService();

@@ -9,4 +9,16 @@ export type ChannelsReqQuery = {
   publishedAtRange?: string
 }
 
+export type CreatorsReqQuery = {
+  channels?: string,
+  publishedAtRange?: string
+}
+
+export type AddCreatorQuery = {
+  channel_ids?: [],
+  name: string,
+  custom_url: string,
+  profile_picture: string
+}
+
 export type ChannelsSearchReqQuery = SearchReqQuery & ChannelsReqQuery;
