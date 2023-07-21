@@ -2,7 +2,7 @@ import axios from "axios";
 
 import { IChannelResponse } from "./types";
 
-const BASE_URL = "http://localhost:8005/api/";
+const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:8005/api/";
 
 export const channelApi = axios.create({
   baseURL: BASE_URL,
