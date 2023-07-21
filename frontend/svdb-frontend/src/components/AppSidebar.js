@@ -72,10 +72,10 @@ const AppSidebar = ({ collapsed }) => {
         selectedKeys={location.pathname}
         items={[
           {
-            key: '/dashboard',
+            key: '/home',
             icon: <HomeOutlined />,
-            label: <Link to='/dashboard'>Home</Link>,
-            path: '/dashboard'
+            label: <Link to='/home'>Home</Link>,
+            path: '/home'
           },
           {
             key: '/creators',

@@ -108,7 +108,7 @@ const UploadTimeFrequencyCard = (_channels) => {
         }
       })
 
-      console.log(weekArray);
+      // console.log(weekArray);
 
       setFrequencyData(weekArray);
       setIsLoading(false);
