@@ -23,7 +23,7 @@ const { Title, Text } = Typography;
 
 const HomePage = () => {
   const navigate = useNavigate();
-  const [isAdmin, setIsAdmin] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const [isLoaded, setIsLoaded] = useState(false);
   const { intToStringBigNumber, parseDate, parseDuration } = useFormatter();
@@ -73,7 +73,7 @@ const HomePage = () => {
         };
       });
       console.log(_channels)
-      setChannels(_channels);
+      setChannels(result.results);
       setFilters({ channels: _channels });
       // setSelectedChannels(_channels.map(it => { return it.channel_id; }))
 
@@ -166,9 +166,10 @@ const HomePage = () => {
           <Title level={3}>{title}</Title>
         </Col>
         <Col span="2">
-          <Popover content={content}>
-            <Text italic>information</Text>
-          </Popover>
+          {/* TODO */}
+          {/* <Popover content={content}>
+            <Text italic>information</Text> 
+          </Popover>*/}
         </Col>
       </Row>
     );
@@ -185,7 +186,7 @@ const HomePage = () => {
               <Col span={24} xl={12}>
                 <Row gutter={16}>
                   <Col span={24}>
-                    <Title style={{ color: 'black' }} level={5}>Recent</Title>
+                    <Title style={{ color: 'black' }} level={5}>Most Recent</Title>
                     <HorizontalVideoList _videos={mostRecentVideos} />
 
                     <Title style={{ color: 'black' }} level={5}>Most Viewed</Title>
@@ -200,7 +201,7 @@ const HomePage = () => {
             <br></br>
             <Row gutter={[16, 16]}>
               <Col span={24} xl={24}>
-                {/* <CreatorFrequencyCard _channels={channels}></CreatorFrequencyCard> */}
+                <CreatorFrequencyCard _channels={channels}></CreatorFrequencyCard>
               </Col>
             </Row>
           </div>
