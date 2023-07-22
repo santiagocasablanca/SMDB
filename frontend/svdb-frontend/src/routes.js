@@ -16,9 +16,8 @@ const routes = [
   { path: '/home', name: 'Home', element: Home },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
   { path: '/creator/:id', name: 'Creator', element: Creator},
-  { path: '/creators', name: 'Creators', element: Creators, exact: true },
-  { path: '/videography', name: 'Videography', element: Videography, exact: true },
- 
+  { path: '/creators', name: 'Creators', element: Creators },
+  { path: '/videography', name: 'Videography', element: Videography },
   
 ]
 

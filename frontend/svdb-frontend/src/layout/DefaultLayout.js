@@ -28,13 +28,13 @@ const DefaultLayout = () => {
         <Layout hasSider style={{
           // padding: '30px', bg sdmnPink sdmnLightBlue babyPowder secondary  aquamarine oxfordBlue
           // new tries coolerGray10 oxfordBlueSofter10
-          background: variables.coolerGray10,
+          background: variables.coolerGray8,
           color: variables.onBg,
           primaryColor: variables.sdmnYellow,
           textColor: variables.onBg
         }}>
 
-          <AppSidebar collapsed={collapsed} />
+          <AppSidebar collapsed={collapsed}  childToParent={childToParent} />
 
           <AppContent />
         </Layout>

@@ -22,7 +22,8 @@ const AppHeader = ({ collapsed, childToParent }) => {
   } = theme.useToken();
 
   const headerStyle = {
-    padding: 0,
+    padding: "0 100px",
+    // margin: '0 100px auto',
     background: variables.coolerGray10,
     borderBottom: "1px solid " + variables.richBlack,
     color: variables.richBlack

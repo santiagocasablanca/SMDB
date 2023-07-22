@@ -123,7 +123,7 @@ const HomePage = () => {
   }
 
   .homeHeaderPanel {
-    padding: 10px 30px;
+    margin: 10px 100px auto;
     color: `+ variables.sdmnYellow + `;
   }
 
@@ -142,7 +142,7 @@ const HomePage = () => {
   }
 
   .homeContainer {
-    padding: 10px 30px;
+    margin: 0 100px auto;
   }
   `
   );

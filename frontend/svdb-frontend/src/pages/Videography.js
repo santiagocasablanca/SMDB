@@ -21,161 +21,23 @@ const Videography = () => {
   // border: 1px solid black;
   insertCss(`
 
-  .filterPanel {
-    background: `+ variables.aquamarine + `;
-    color: `+ variables.onBg + `;
+  .bodyContainer {
+    margin: 10px 100px auto;
   }
 
   .editPanel {
     background: `+ variables.sdmnBlack + `;
     color: `+ variables.onSurface + `;
   }
-
-  :where(.css-dev-only-do-not-override-yp4umk).ant-table-wrapper .ant-table.ant-table-small .ant-table-expanded-row-fixed {
-    background: `+ variables.sdmnWhite + `;
+  .filterPanel {
+    margin-top: 10px;
+    background: `+ variables.richBlackSofter + `;
     color: `+ variables.onBg + `;
   }
-  :where(.css-dev-only-do-not-override-yp4umk).ant-table-wrapper .ant-table-expanded-row-fixed {
-    margin: auto;
-    padding: 0;
+  
+  .mb {
+    margin-bottom: 30px;
   }
-
-    .expanded-row {
-      background-color: `+ variables.sdmnYellow + `;
-      color: `+ variables.onBg + `;
-    }
-
-    
-
-    :where(.css-dev-only-do-not-override-yp4umk).ant-collapse>.ant-collapse-item >.ant-collapse-header {
-      color: `+ variables.onBg + `;
-
-    }
-    .ant-table-wrapper .ant-table-row-expand-icon {
-      border-color: `+ variables.onBg + `;
-    }
-
-
-    .ant-collapse>.ant-collapse-item >.ant-collapse-header
-      color: `+ variables.onBg + `;
-    } 
-
-    .ant-form-item .ant-form-item-label >label {
-      color: `+ variables.onBg + `;
-
-    }
-    :where(.css-dev-only-do-not-override-yp4umk).ant-form-item .ant-form-item-label >label {
-      color: `+ variables.onBg + `;
-
-    }
-
-    ::-webkit-input-placeholder {
-      color: `+ variables.onSurface + `;
-
-    }
-
-    :where(.css-dev-only-do-not-override-yp4umk).ant-picker {
-      color: `+ variables.onSurface + `;
-
-    }
-    :where(.css-dev-only-do-not-override-yp4umk).ant-picker .ant-picker-suffix {
-      color: `+ variables.onSurface + `;
-
-    }
-
-    :where(.css-dev-only-do-not-override-yp4umk).ant-picker .ant-picker-separator {
-      color: `+ variables.onSurface + `;
-
-    }
-
-    :where(.css-dev-only-do-not-override-yp4umk).ant-select .ant-select-selection-placeholder {
-      color: `+ variables.onSurface + `;
-
-    }
-
-    :where(.css-dev-only-do-not-override-yp4umk).ant-picker .ant-picker-input >input::placeholder {
-      color: `+ variables.onSurface + `;
-
-    }
-
-    :where(.css-dev-only-do-not-override-yp4umk).ant-select .ant-select-arrow {
-      color: `+ variables.onSurface + `;
-
-    }
-
-
-
-    :where(.css-dev-only-do-not-override-yp4umk).ant-input::placeholder {
-      border-color: `+ variables.onSurface + `;
-      color: `+ variables.onSurface + `;
-    }
-
-
-:where(.css-dev-only-do-not-override-1nd75cd).ant-table-wrapper .ant-table-cell-fix-left, :where(.css-dev-only-do-not-override-1nd75cd).ant-table-wrapper .ant-table-cell-fix-right {
-  position: sticky!important;
-  z-index: 2;
-  background-color: `+ variables.sdmnDarkBlue + `!important;
-      color: `+ variables.onSurface + `!important;
-}
-
-
-
-    
-
-.ant-table-tbody .ant-table-cell-row:hover > th, .ant-table-cell-row:hover > td,
-> th.ant-table-cell-row-hover,
-> td.ant-table-cell-row-hover: {
-  background-color: `+ variables.sdmnDarkBlue + `;
-}
-
-.ant-table-wrapper .ant-table-cell-fix-left, .ant-table-wrapper .ant-table-cell-fix-right {
-  color: `+ variables.onBg + `;
-  background: `+ variables.sdmnYellow + `;
-}
-
-:where(.css-dev-only-do-not-override-yp4umk).ant-table-wrapper .ant-table-tbody >tr.ant-table-row:hover>th, :where(.css-dev-only-do-not-override-yp4umk).ant-table-wrapper .ant-table-tbody >tr.ant-table-row:hover>td, :where(.css-dev-only-do-not-override-yp4umk).ant-table-wrapper .ant-table-tbody >tr >th.ant-table-cell-row-hover, :where(.css-dev-only-do-not-override-yp4umk).ant-table-wrapper .ant-table-tbody >tr >td.ant-table-cell-row-hover {
-  color: `+ variables.onBg + `;
-  background: `+ variables.sdmnYellow + `;
-}
-
-.ant-table-cell {
-  background: `+ variables.sdmnDarkBlue + `;
-    color: `+ variables.onSurface + `;
-}
-
-.ant-table-row-expand-icon-cell {
-  color: `+ variables.sdmnWhite + `!important;
-  // border-color:  `+ variables.sdmnLightBlue + `!important;
-}
-
-    .mb {
-      margin-bottom: 30px;
-    }
-
-
-:where(.css-dev-only-do-not-override-1nd75cd).ant-table-wrapper .ant-table-row-expand-icon:focus, :where(.css-dev-only-do-not-override-1nd75cd).ant-table-wrapper .ant-table-row-expand-icon:hover, :where(.css-dev-only-do-not-override-1nd75cd).ant-table-wrapper .ant-table-row-expand-icon:active {
-  color: `+ variables.sdmnLightBlue + `!important;
-}
-
-.
-
-:where(.css-dev-only-do-not-override-yp4umk).ant-table-wrapper .ant-table-row-expand-icon:focus, :where(.css-dev-only-do-not-override-yp4umk).ant-table-wrapper .ant-table-row-expand-icon:hover, :where(.css-dev-only-do-not-override-yp4umk).ant-table-wrapper .ant-table-row-expand-icon:active {
-  color: `+ variables.sdmnWhite + `;
-  border-color:  `+ variables.sdmnWhite + `;
-}
-
-:where(.css-dev-only-do-not-override-yp4umk).ant-table-wrapper .ant-table-row-expand-icon:focus, :where(.css-dev-only-do-not-override-yp4umk).ant-table-wrapper .ant-table-row-expand-icon:hover {
-  color: `+ variables.sdmnWhite + `;
-  border-color:  `+ variables.sdmnWhite + `;
-}
-
-ant-table-wrapper .ant-table-row-expand-icon:hover {
-  color: `+ variables.sdmnLightBlue + `;
-  border-color:  `+ variables.sdmnLightBlue + `!important;
-
-}
-
-    
   `);
 
 
@@ -408,50 +270,53 @@ ant-table-wrapper .ant-table-row-expand-icon:hover {
 
   return (
     <>
-      <Row span="24" gutter={16}>
-        <Col span="24" className="gutter-row mb">
-          <VideoFilterPanel filters={myFilters} onChange={handleFilterChange} />
-        </Col>
-      </Row>
-      <Row span="24" gutter={16}>
-        <Col span="24" className="gutter-row">
-          <VideographyStatsPanel />
+      <div className="bodyContainer">
 
-        </Col>
-      </Row>
-      <Row span="24" gutter={16}>
-        <Col span="24" className="gutter-row">
-          {/* <Card> */}
-          <div className="table-container">
-            <Table columns={columns} dataSource={videos}
-              scroll={{ x: 1500, y: 900 }}
-              // header={() => 'Results'}
-              onChange={onChange}
-              rowKey={(record) => record.video_id}
-              // rowSelection={rowSelection}
-              expandable={{
-                expandedRowRender: (record) => <VideographyEditPanel video={record}></VideographyEditPanel>,
-                rowExpandable: (record) => record.title !== 'Not Expandable',
-                expandedRowKeys: expandedRowKeys,
-                onExpand: handleExpand
-              }}
-              rowClassName={rowClassName}
-              size="small"
-              style={{
-                controlItemBgHover: variables.primary
-              }}
-              pagination={{
-                total: records,
-                showQuickJumper: true,
-                defaultPageSize: 10,
-                showSizeChanger: true,
-                pageSizeOptions: ["10", "25", "50"]
-              }}
-            />
-          </div>
-          {/* </Card> */}
-        </Col>
-      </Row>
+        <Row span="24" gutter={16}>
+          <Col span="24" className="gutter-row mb">
+            <VideoFilterPanel filters={myFilters} onChange={handleFilterChange} />
+          </Col>
+        </Row>
+        <Row span="24" gutter={16}>
+          <Col span="24" className="gutter-row">
+            <VideographyStatsPanel />
+
+          </Col>
+        </Row>
+        <Row span="24" gutter={16}>
+          <Col span="24" className="gutter-row">
+            {/* <Card> */}
+            <div className="table-container">
+              <Table columns={columns} dataSource={videos}
+                scroll={{ x: 1500, y: 900 }}
+                // header={() => 'Results'}
+                onChange={onChange}
+                rowKey={(record) => record.video_id}
+                // rowSelection={rowSelection}
+                expandable={{
+                  expandedRowRender: (record) => <VideographyEditPanel video={record}></VideographyEditPanel>,
+                  rowExpandable: (record) => record.title !== 'Not Expandable',
+                  expandedRowKeys: expandedRowKeys,
+                  onExpand: handleExpand
+                }}
+                rowClassName={rowClassName}
+                size="small"
+                style={{
+                  controlItemBgHover: variables.primary
+                }}
+                pagination={{
+                  total: records,
+                  showQuickJumper: true,
+                  defaultPageSize: 10,
+                  showSizeChanger: true,
+                  pageSizeOptions: ["10", "25", "50"]
+                }}
+              />
+            </div>
+            {/* </Card> */}
+          </Col>
+        </Row>
+      </div>
     </>
   )
 }

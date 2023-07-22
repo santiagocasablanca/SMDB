@@ -249,7 +249,7 @@ class YoutubeService {
     async fetchStatisticsForAllChannels() {
         console.log('starting job');
         try {
-            const channels = await Channel.findAll({ order: [['updated_at', 'ASC']], limit: '5' });
+            const channels = await Channel.findAll({ order: [['updated_at', 'ASC']] });
 
             // await this.fetchAndCreateVideosFromChannel('UCDogdKl7t7NHzQ95aEwkdMw', 'UUDogdKl7t7NHzQ95aEwkdMw'); // sidemen
             for (const channel of channels) {
