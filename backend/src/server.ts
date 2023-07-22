@@ -37,6 +37,11 @@ app.use(
   })
 );
 
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", process.env.CLIENT_ORIGIN || "*");
+  next();
+});
+
 app.get("/api/healthchecker", (req: Request, res: Response) => {
   res.status(200).json({
     status: "success",
@@ -62,7 +67,7 @@ db.sequelize
     app.listen(PORT, async () => {
       console.log("listening at port 8005");
       const youtubeService = new YoutubeService();
-      // youtubeService.fetchStatisticsForAllChannels();
+      youtubeService.fetchStatisticsForAllChannels();
       // youtubeService.updateAllCreatorPicturesFromMainChannel();
 
 
