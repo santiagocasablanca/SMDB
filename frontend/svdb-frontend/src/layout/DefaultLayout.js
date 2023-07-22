@@ -9,7 +9,7 @@ import variables from '../sass/antd.module.scss'
 
 const DefaultLayout = () => {
 
-  const [collapsed, setCollapsed] = useState(true);
+  const [collapsed, setCollapsed] = useState(false);
 
   const childToParent = (childdata) => {
     setCollapsed(childdata);

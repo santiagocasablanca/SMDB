@@ -10,6 +10,7 @@ import {
 } from '@ant-design/icons';
 import { Button, Layout, Space, theme } from 'antd';
 import variables from '../sass/antd.module.scss'
+import insertCss from 'insert-css'
 
 
 const { Header, Sider, Content } = Layout;
@@ -17,12 +18,24 @@ const { Header, Sider, Content } = Layout;
 
 const AppHeader = ({ collapsed, childToParent }) => {
 
+  insertCss(`
+  .mainHeader {
+    padding: 0 100px auto;
+  }
+
+  @media (max-width: 600px) {
+    .mainHeader {
+      padding: 0 20px;
+    }
+  }
+  `);
+
   const {
     token: { colorBgContainer },
   } = theme.useToken();
 
   const headerStyle = {
-    padding: "0 100px",
+    // padding: "0 100px",
     // margin: '0 100px auto',
     background: variables.coolerGray10,
     borderBottom: "1px solid " + variables.richBlack,
@@ -34,7 +47,7 @@ const AppHeader = ({ collapsed, childToParent }) => {
   };
   // style={headerStyle}
   return (
-    <Header style={headerStyle}>
+    <Header className="mainHeader" style={headerStyle}>
       <Space>
         <Button
           type="text"

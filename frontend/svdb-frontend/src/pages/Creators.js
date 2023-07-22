@@ -116,6 +116,10 @@ const CreatorPage = () => {
   
 
   @media (max-width: 600px) {
+    .bodyContainer {
+      margin: 0 20px;
+    }
+
     .since-panel {
       position: absolute;
       top: 10px;

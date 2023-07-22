@@ -13,8 +13,8 @@ import useFormatter from '../hooks/useFormatter';
 import HorizontalVideoList from '../components/creator/HorizontalVideoList'
 import StatisticsCards from '../components/creator/StatisticsCards'
 
-import CreatorFrequencyCard from '../components/creator/CreatorFrequencyCard';
-import CreatorUploadTimeFrequencyCard from '../components/creator/CreatorUploadTimeFrequencyCard';
+import FrequencyCard from '../components/home/FrequencyCard';
+import UploadTimeFrequencyCard from '../components/home/UploadTimeFrequencyCard';
 
 
 
@@ -144,6 +144,12 @@ const HomePage = () => {
   .homeContainer {
     margin: 0 100px auto;
   }
+
+  @media (max-width: 600px) {
+    .homeContainer {
+      margin: 0 20px;
+    }
+  }
   `
   );
   const handleHomeChannelChange = (channel) => {
@@ -176,7 +182,7 @@ const HomePage = () => {
   };
 
   return (<>
-    <HeaderPanel title="Home" creators={channels}></HeaderPanel>
+    <HeaderPanel title="Home (Work in progress)" creators={channels}></HeaderPanel>
     {isLoaded ?
       (
         <>
@@ -195,15 +201,17 @@ const HomePage = () => {
                 </Row>
               </Col>
               <Col span={24} xl={12}>
-                <CreatorUploadTimeFrequencyCard _channels={channels}></CreatorUploadTimeFrequencyCard>
+                <UploadTimeFrequencyCard _channels={channels}></UploadTimeFrequencyCard>
               </Col>
             </Row>
             <br></br>
             <Row gutter={[16, 16]}>
               <Col span={24} xl={24}>
-                <CreatorFrequencyCard _channels={channels}></CreatorFrequencyCard>
+                <FrequencyCard _channels={channels}></FrequencyCard>
               </Col>
             </Row>
+
+            <br></br>
           </div>
         </>
       ) : (<Spin />)

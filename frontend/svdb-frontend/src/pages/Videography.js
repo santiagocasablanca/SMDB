@@ -38,6 +38,12 @@ const Videography = () => {
   .mb {
     margin-bottom: 30px;
   }
+  
+  @media (max-width: 600px) {
+    .bodyContainer {
+      margin: 0 20px;
+    }
+  }
   `);
 
 
