@@ -15,7 +15,7 @@ app.use(express.json({ limit: "10kb" }));
 if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 
 // 11am
-cron.schedule('00 12 * * *', () => {
+cron.schedule('00 02 * * *', () => {
   console.log('schuduled and running');
   const youtubeService = new YoutubeService();
   youtubeService.fetchStatisticsForAllChannels();
@@ -67,7 +67,7 @@ db.sequelize
     app.listen(PORT, async () => {
       console.log("listening at port 8005");
       const youtubeService = new YoutubeService();
-      youtubeService.fetchStatisticsForAllChannels();
+      // youtubeService.fetchStatisticsForAllChannels();
       // youtubeService.updateAllCreatorPicturesFromMainChannel();
 
 
