@@ -33,7 +33,7 @@ const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN ? process.env.CLIENT_ORIGIN : 'h
 app.use(
   cors({
     origin: [CLIENT_ORIGIN],
-    credentials: true,
+    credentials: false,
   })
 );
 
