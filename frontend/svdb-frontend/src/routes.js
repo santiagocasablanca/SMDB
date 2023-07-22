@@ -3,7 +3,6 @@ import React from 'react'
 const Dashboard = React.lazy(() => import('./pages/Dashboard'))
 const Home = React.lazy(() => import('./pages/Home'))
 
-const Compare = React.lazy(() => import('./pages/Compare'))
 const Creator = React.lazy(() => import('./pages/Creator'))
 const Creators = React.lazy(() => import('./pages/Creators'))
 const Videography = React.lazy(() => import('./pages/Videography'))
