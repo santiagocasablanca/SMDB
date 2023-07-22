@@ -6,7 +6,7 @@ const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:8005/api/";
 
 export const videoApi = axios.create({
   baseURL: BASE_URL,
-  withCredentials: true,
+  withCredentials: false,
 });
 
 // videoApi.defaults.headers.common["content-type"] = "application/json";

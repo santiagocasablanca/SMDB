@@ -8,7 +8,7 @@ const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:8005/api/";
 // TODO clean redundant code
 export const api = axios.create({
   baseURL: BASE_URL,
-  withCredentials: true,
+  withCredentials: false,
 });
 
 export const getCreatorFn = async (id) => {
