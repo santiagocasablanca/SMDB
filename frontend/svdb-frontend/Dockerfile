@@ -19,7 +19,7 @@ RUN yarn build
 FROM nginx:1.17.9-alpine
 
 # Copy the custom Nginx configuration to the container  
-COPY .nginx.conf /etc/nginx/conf.d/default.conf
+COPY .nginx.conf /usr/share/nginx/conf.d/default.conf
 
 WORKDIR /usr/share/nginx/html
 
