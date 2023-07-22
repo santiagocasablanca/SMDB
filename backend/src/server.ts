@@ -26,12 +26,7 @@ cron.schedule('30 23 * * *', () => {
 })
 
 const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN ? process.env.CLIENT_ORIGIN : 'http://localhost:3000';
-app.use(
-  cors({
-    origin: [CLIENT_ORIGIN],
-    credentials: true,
-  })
-);
+app.use(cors());
 
 app.get("/api/healthchecker", (req: Request, res: Response) => {
   res.status(200).json({
