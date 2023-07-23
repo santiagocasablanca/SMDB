@@ -21,7 +21,7 @@ const AppContent = () => {
       minHeight: 280,
     }}>
 
-      
+
       <Suspense>
         <Routes>
           {routes.map((route, idx) => {

@@ -101,11 +101,11 @@ const CreatorPage = () => {
   }
 
   .headerPanel h3 {
-    color: `+ variables.oxfordBlue + `;
+    color: `+ variables.sdmnBlack + `;
   }
  
   .headerPanel button span {
-    background: `+ variables.oxfordBlue + `;
+    background: `+ variables.sdmnBlack + `;
     color: `+ variables.sdmnYellow + `;
     
   }

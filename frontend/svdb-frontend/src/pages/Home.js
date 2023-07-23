@@ -189,7 +189,7 @@ const HomePage = () => {
           <div className="homeContainer">
 
             <Row gutter={[16, 16]}>
-              <Col span={24} xl={12}>
+              <Col span={24} md={24} lg={12} xl={16}>
                 <Row gutter={16}>
                   <Col span={24}>
                     <Title style={{ color: 'black' }} level={5}>Most Recent</Title>
@@ -200,7 +200,7 @@ const HomePage = () => {
                   </Col>
                 </Row>
               </Col>
-              <Col span={24} xl={12}>
+              <Col span={24} md={24} lg={12} xl={8}>
                 <UploadTimeFrequencyCard _channels={channels}></UploadTimeFrequencyCard>
               </Col>
             </Row>

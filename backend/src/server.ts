@@ -67,7 +67,7 @@ db.sequelize
     app.listen(PORT, async () => {
       console.log("listening at port 8005");
       const youtubeService = new YoutubeService();
-      youtubeService.fetchStatisticsForAllChannels();
+      // youtubeService.fetchStatisticsForAllChannels();
       // youtubeService.updateAllCreatorPicturesFromMainChannel();
 
 

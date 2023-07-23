@@ -191,7 +191,7 @@ const CreatorFrequencyCard = (_channels) => {
 
   const heatmapConfig = {
     data: frequencyData,
-    height: 400,
+    height: 200,
     width: 1300,
     autoFit: true,
     xField: 'week',
@@ -341,6 +341,10 @@ const CreatorFrequencyCard = (_channels) => {
     display: flex;
     flex-direction: column;
   }
+  .heatmapContainer {
+    padding: 20px;
+    width: 100%;
+  }
   .title{
     font-weight: bold;
     font-size: 15px;
@@ -385,38 +389,40 @@ const CreatorFrequencyCard = (_channels) => {
       ) : (
           <>
             <Row>
-              <Col sm={23}>
+              <Col span={24}>
                 <Title style={{ color: "black" }} level={5}>Yearly Upload Frequency Heatmap</Title>
-              </Col>
-              <Col span={1}>
-                <Popover content={filter} placement="bottom">
-                  <Button icon={<FilterOutlined />} />
-                </Popover>
               </Col>
             </Row>
             <Row justify="center">
+              <Card className="heatmapContainer">
+                <div style={{ position: 'absolute', top: '5px', right: '10px' }}>
+                <Popover content={filter} placement="bottom">
+                  <Button style={{ color: "white", paddingBottom: "2px" }} type="text" icon={<FilterOutlined />} />
+                </Popover>
 
-              <Heatmap {...heatmapConfig} />
-              {/* <div style={{position: 'absolute', bottom: '5px', right: '10px'}}>
+                </div>
 
-                <Text style={{ float: 'right', marginTop: '10px' }} type="secondary">Less <Space gutter={2}>
-                  <Popover content={<Text>0 Uploads</Text>} placement="top">
-                    <Avatar style={{ backgroundColor: variables.freq1 }} shape="square" size="small" />
-                  </Popover>
-                  <Popover content={<Text>1 Upload</Text>} placement="top">
-                    <Avatar style={{ backgroundColor: variables.freq2 }} shape="square" size="small" />
-                  </Popover>
-                  <Popover content={<Text>1 to 3 Uploads</Text>} placement="top">
-                    <Avatar style={{ backgroundColor: variables.freq3 }} shape="square" size="small" />
-                  </Popover>
-                  <Popover content={<Text>4 to 5 Uploads</Text>} placement="top">
-                    <Avatar style={{ backgroundColor: variables.freq4 }} shape="square" size="small" />
-                  </Popover>
-                  <Popover content={<Text>More than 6 Uploads</Text>} placement="top">
-                    <Avatar style={{ backgroundColor: variables.freq5 }} shape="square" size="small" />
-                  </Popover>
-                </Space> More</Text>
-              </div> */}
+                <Heatmap {...heatmapConfig} />
+                <div style={{ position: 'absolute', bottom: '5px', right: '10px' }}>
+                  <Text style={{ float: 'right', marginTop: '10px' }} type="secondary">Less <Space gutter={2}>
+                    <Popover content={<Text>0 Uploads</Text>} placement="top">
+                      <Avatar style={{ backgroundColor: variables.freq1 }} shape="square" size="small" />
+                    </Popover>
+                    <Popover content={<Text>1 Upload</Text>} placement="top">
+                      <Avatar style={{ backgroundColor: variables.freq2 }} shape="square" size="small" />
+                    </Popover>
+                    <Popover content={<Text>1 to 3 Uploads</Text>} placement="top">
+                      <Avatar style={{ backgroundColor: variables.freq3 }} shape="square" size="small" />
+                    </Popover>
+                    <Popover content={<Text>4 to 5 Uploads</Text>} placement="top">
+                      <Avatar style={{ backgroundColor: variables.freq4 }} shape="square" size="small" />
+                    </Popover>
+                    <Popover content={<Text>More than 6 Uploads</Text>} placement="top">
+                      <Avatar style={{ backgroundColor: variables.freq5 }} shape="square" size="small" />
+                    </Popover>
+                  </Space> More</Text>
+                </div>
+              </Card>
 
 
             </Row>

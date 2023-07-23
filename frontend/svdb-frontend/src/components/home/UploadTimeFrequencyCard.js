@@ -258,7 +258,7 @@ const UploadTimeFrequencyCard = (_channels) => {
       </Select>
 
 
-      <Select mode="multiple" allowClear  style={{ width: "550px", fontSize: '12px' }} value={selectedChannels} onChange={handleChannelChange} options={channels}>
+      <Select mode="multiple" allowClear maxTagCount='responsive' style={{ width: "350px", fontSize: '12px' }} value={selectedChannels} onChange={handleChannelChange} options={channels}>
         {/* Add more options as needed */}
       </Select>
     </Space.Compact>
@@ -272,38 +272,39 @@ const UploadTimeFrequencyCard = (_channels) => {
       ) : (
           <>
             <Row>
-              <Col sm={23}>
-                <Title style={{color: "black"}} level={5}>Day and Time Upload Frequency Heatmap</Title>
-              </Col>
-              <Col span={1}>
-                <Popover content={filterPopover} placement="bottom">
-                  <Button icon={<FilterOutlined />} />
-                </Popover>
+              <Col span={24}>
+                <Title style={{ color: "black" }} level={5}>Day and Time Upload Frequency Heatmap</Title>
               </Col>
             </Row>
             <Row justify="center">
+              <Card>
+                <div style={{ position: 'absolute', top: '5px', right: '10px' }}>
+                  <Popover content={filterPopover} placement="bottom">
+                    <Button style={{ color: "white", paddingBottom: "2px" }} type="text" icon={<FilterOutlined />} />
+                  </Popover>
+                </div>
+                <Heatmap {...heatmapTimeConfig} />
+                <div style={{ position: 'absolute', bottom: '5px', right: '10px' }}>
 
-              <Heatmap {...heatmapTimeConfig} />
-              <div style={{ position: 'absolute', bottom: '5px', right: '10px' }}>
-
-                <Text style={{ float: 'right', marginTop: '0px' }} type="secondary">Less <Space gutter={2}>
-                  <Popover content={<Text>0 Uploads</Text>} placement="top">
-                    <Avatar style={{ backgroundColor: variables.freq1 }} shape="square" size="small" />
-                  </Popover>
-                  <Popover content={<Text>1 Upload</Text>} placement="top">
-                    <Avatar style={{ backgroundColor: variables.freq2 }} shape="square" size="small" />
-                  </Popover>
-                  <Popover content={<Text>1 to 3 Uploads</Text>} placement="top">
-                    <Avatar style={{ backgroundColor: variables.freq3 }} shape="square" size="small" />
-                  </Popover>
-                  <Popover content={<Text>4 to 5 Uploads</Text>} placement="top">
-                    <Avatar style={{ backgroundColor: variables.freq4 }} shape="square" size="small" />
-                  </Popover>
-                  <Popover content={<Text>More than 6 Uploads</Text>} placement="top">
-                    <Avatar style={{ backgroundColor: variables.freq5 }} shape="square" size="small" />
-                  </Popover>
-                </Space> More</Text>
-              </div>
+                  <Text style={{ float: 'right', marginTop: '0px' }} type="secondary">Less <Space gutter={2}>
+                    <Popover content={<Text>0 Uploads</Text>} placement="top">
+                      <Avatar style={{ backgroundColor: variables.freq1 }} shape="square" size="small" />
+                    </Popover>
+                    <Popover content={<Text>1 Upload</Text>} placement="top">
+                      <Avatar style={{ backgroundColor: variables.freq2 }} shape="square" size="small" />
+                    </Popover>
+                    <Popover content={<Text>1 to 3 Uploads</Text>} placement="top">
+                      <Avatar style={{ backgroundColor: variables.freq3 }} shape="square" size="small" />
+                    </Popover>
+                    <Popover content={<Text>4 to 5 Uploads</Text>} placement="top">
+                      <Avatar style={{ backgroundColor: variables.freq4 }} shape="square" size="small" />
+                    </Popover>
+                    <Popover content={<Text>More than 6 Uploads</Text>} placement="top">
+                      <Avatar style={{ backgroundColor: variables.freq5 }} shape="square" size="small" />
+                    </Popover>
+                  </Space> More</Text>
+                </div>
+              </Card>
             </Row>
           </>
         )}
