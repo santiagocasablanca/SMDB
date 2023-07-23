@@ -1,12 +1,16 @@
 import React from 'react'
 import variables from '../sass/antd.module.scss'
 import '../fonts/amazon-ember.css';
+import { useNavigate } from 'react-router-dom';
+
 
 import insertCss from 'insert-css'
 
 
 
 const AppLogo = () => {
+  const navigate = useNavigate();
+
   // height: 100%;
   // margin-right: 10px;
   // margin-left: 10px;
@@ -49,12 +53,21 @@ const AppLogo = () => {
           gap: 1px;
         }
       }
+
+      .logo:hover {
+        cursor: pointer;
+      }
       
     `);
   // margin-right: 10px;
+  const handleClick = () => {
+    const url = '/home/';
+    // not necessary, kind of redudant at the moment. Params are set through useParams and useLocation (state)
+    navigate(url);
+  }
 
   return (
-    <div className="logo">
+    <div className="logo"  onClick={() => handleClick()}>
       <div className="rectangle">
         <span className="letters">
           <span className="letter">S</span>

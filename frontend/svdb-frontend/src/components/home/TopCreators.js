@@ -44,6 +44,12 @@ const TopCreators = () => {
     .topCreators {
       padding: 0px;
     }
+    .creatorCard{
+      
+    }
+    .creatorCard:hover {
+      cursor: pointer;
+    }
   `);
 
   const handleClick = (id) => {
@@ -75,9 +81,10 @@ const TopCreators = () => {
                   }}
                   itemLayout="vertical"
                   dataSource={topCreators}
-                  renderItem={(item) => (
+                  renderItem={(item, index) => (
                     <List.Item>
                       <Card
+                        className="creatorCard"
                         title={item.name}
                         style={{ borderRadius: '8px', width: '100%', fontSize: '12px', border: '0px' }}
                         onClick={() => handleClick(item.id)}

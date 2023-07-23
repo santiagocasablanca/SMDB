@@ -36,7 +36,7 @@ const HorizontalVideoList = ({ _videos }) => {
             (
                 <List
                     grid={{
-                        gutter: 4,
+                        gutter: 6,
                         column: 10,
                     }}
                     className="scrollmenu"

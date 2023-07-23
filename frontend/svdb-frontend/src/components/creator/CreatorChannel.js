@@ -248,7 +248,7 @@ const CreatorChannel = ({ creator, channel }) => {
             (
                 <>
                     <div style={{ width: '100%' }}>
-                        <Row gutter={[2, 2]} wrap={false} style={{ overflow: 'auto', whiteSpace: 'nowrap' }}>
+                        <Row gutter={[8, 4]} wrap={false} style={{ overflow: 'auto', whiteSpace: 'nowrap' }}>
                             <StatisticsCards stats={stats} />
                         </Row>
                     </div>

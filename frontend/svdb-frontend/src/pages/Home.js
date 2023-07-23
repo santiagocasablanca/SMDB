@@ -214,6 +214,22 @@ const HomePage = () => {
             </Row>
 
             <br></br>
+            <Row gutter={[16, 16]}>
+              <Col span={24} md={24} lg={12} xl={8}>
+                <UploadTimeFrequencyCard _channels={channels}></UploadTimeFrequencyCard>
+              </Col>
+              <Col span={24} md={24} lg={12} xl={16}>
+                <Row gutter={16}>
+                  <Col span={24}>
+                    <Title style={{ color: 'black' }} level={5}>TODO Most Recent</Title>
+                    <HorizontalVideoList _videos={mostRecentVideos} />
+
+                    <Title style={{ color: 'black' }} level={5}>TODO Most Viewed</Title>
+                    <HorizontalVideoList _videos={top10videos} />
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
           </div>
         </>
       ) : (<Spin />)

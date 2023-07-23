@@ -393,7 +393,7 @@ const FrequencyCard = (_channels) => {
                 <Title style={{ color: "black" }} level={5}>Yearly Upload Frequency Heatmap</Title>
               </Col>
             </Row>
-            <Row justify="center">
+            <Row>
               <Card className="heatmapContainer">
                 <div style={{ position: 'absolute', top: '5px', right: '10px' }}>
                 <Popover content={filter} placement="bottom">
