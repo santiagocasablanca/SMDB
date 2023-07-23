@@ -138,7 +138,9 @@ export const findAllCreatorsController = async (
   }
 };
 
-export const findTopCreatorsController = async (req: Request, res: Response) => {
+export const findTopCreatorsController = async (
+  req: Request<{}, {}, {}, ChannelsSearchReqQuery & { ignoreShorts: boolean }>,
+  res: Response) => {
   try {
     const page = req.query.page || 1;
     const limit = req.query.limit || 10;
