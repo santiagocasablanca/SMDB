@@ -15,7 +15,7 @@ import {
 } from "../controllers/video.controller";
 
 import { findAllChannelsController, createChannelController } from "../controllers/channel.controller";
-import { findAllCreatorsController, fetchCreatorController, fetchCreatorStatsController, createCreatorController } from "../controllers/creator.controller";
+import { findAllCreatorsController, fetchCreatorController, fetchCreatorStatsController, findTopCreatorsController, createCreatorController } from "../controllers/creator.controller";
 
 const router = express.Router();
 
@@ -28,6 +28,8 @@ router.route("/creators/")
   .post(createCreatorController);
 router.route("/creators/:id")
   .get(fetchCreatorController);
+router.route("/topCreators")
+  .get(findTopCreatorsController);
 
 router.route("/creator/fetchStats")
   .get(fetchCreatorStatsController);

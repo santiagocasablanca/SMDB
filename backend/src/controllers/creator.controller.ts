@@ -82,8 +82,9 @@ export const findAllCreatorsController = async (
     const skip = (page - 1) * limit;
 
     //sort 
-    let sort = req.query.sort ? req.query.sort.split('%') : ['name', 'DESC'];
+    let sort = req.query.sort ? req.query.sort.split('%') : ['name', 'ASC'];
 
+    // TODO implement this query! more views and likes over videos uploaded on range
     const creators = await Creator.findAndCountAll({
       limit, offset: skip, order: [sort], include: [{
         model: Channel,
@@ -136,6 +137,85 @@ export const findAllCreatorsController = async (
     });
   }
 };
+
+export const findTopCreatorsController = async (req: Request, res: Response) => {
+  try {
+    const page = req.query.page || 1;
+    const limit = req.query.limit || 10;
+    const skip = (page - 1) * limit;
+    //sort 
+    let sort = req.query.sort ? req.query.sort.split('%') : ['name', 'ASC'];
+
+    let whereClause = {}
+    if (req.query.channels) {
+      console.log(req.query.channels);
+      var channelsArr = req.query.channels.split(',');
+
+      whereClause = {
+        channel_id: {
+          [Op.or]: channelsArr
+        }
+      }
+    }
+
+    if (req.query.publishedAtRange) {
+      let rangeDate = req.query.publishedAtRange.split(',');
+      const publishedAtSearchInitial = dayjs(rangeDate[0]).format("YYYY-MM-DD");
+      const publishedAtSearchFinal = dayjs(rangeDate[1]).format("YYYY-MM-DD");
+
+      whereClause['published_at'] = { [Sequelize.Op.between]: [publishedAtSearchInitial, publishedAtSearchFinal] };
+    }
+    if (req.query.ignoreShorts) {
+      whereClause['duration_parsed'] = { [Sequelize.Op.gt]: '60' };
+    }
+
+    const creators = await Creator.findAndCountAll({
+      where: whereClause,
+      limit, offset: skip, order: [sort], include: [{
+        model: Channel,
+        as: 'channels', attributes: ['channel_id', 'custom_url',
+          'title',
+          'subs',
+          'videos',
+          'views',
+          'likes',
+          'comments',
+          'logo_url',
+          'banner_url',
+          'channel_created_at']
+      }, {
+        model: Video,
+        as: 'videosDirected', attributes: [
+          'video_id',
+          'title',
+          'duration',
+          'channel_id',
+          'views',
+          'likes',
+          'comments',
+          'url',
+          'player',
+          'livestream',
+          'serie',
+          'published_at',
+        ]
+      }]
+    });
+
+    res.status(200).json({
+      status: "success",
+      count: creators.count,
+      results: creators.rows,
+    });
+
+
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: error.message,
+    });
+  }
+}
 
 export const createCreatorController = async (
   req: Request,

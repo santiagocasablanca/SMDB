@@ -36,7 +36,7 @@ dayjs().weekYear()
 const { Option } = Select;
 const { Title, Text } = Typography;
 
-const CreatorFrequencyCard = (_channels) => {
+const FrequencyCard = (_channels) => {
   const { intToStringBigNumber, parseDate, parseDuration, humanizeDurationFromSeconds, displayVideoDurationFromSeconds, displayDurationFromSeconds } = useFormatter();
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear().toString());
   const [selectedChannels, setSelectedChannels] = useState(_channels._channels.map(item => { return item.channel_id; }));
@@ -433,4 +433,4 @@ const CreatorFrequencyCard = (_channels) => {
   )
 }
 
-export default CreatorFrequencyCard
+export default FrequencyCard

@@ -28,6 +28,14 @@ export const getCreatorsFn = async (page = 1, limit = 30, params) => {
   return response.data;
 };
 
+export const getTopCreatorsFn = async (page = 1, limit = 30, params) => {
+  const req = `topCreators?page=${page}&limit=${limit}&${params}`;
+  const response = await api.get<IChannelResponse>(
+    req
+  );
+  return response.data;
+};
+
 // fetchCreatorStatsController
 export const getCreatorStatsFn = async (params) => {
   const req = `creator/fetchStats?${params}`;
