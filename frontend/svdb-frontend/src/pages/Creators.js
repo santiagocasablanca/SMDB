@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, List, Row, Col, Image, Table, Space, Avatar, Button, Popover, Tag, Typography, Modal, Form, Tooltip, Input, notification } from 'antd';
-import { LikeOutlined, YoutubeOutlined, CalendarOutlined, VideoCameraOutlined, EyeOutlined, NumberOutlined, FilterOutlined } from '@ant-design/icons';
+import { LikeOutlined, YoutubeOutlined, CalendarOutlined, VideoCameraOutlined, EyeOutlined, UserOutlined, FilterOutlined } from '@ant-design/icons';
 
 import insertCss from 'insert-css';
 import ReactPlayer from 'react-player'
@@ -138,6 +138,9 @@ const CreatorPage = () => {
     .channel-table {
       max-width: 350px;
     }
+    .headerPanel {
+      margin: 10px 10px auto;
+    }
   }
 
   `)
@@ -151,7 +154,7 @@ const CreatorPage = () => {
     return (
       <Row className="headerPanel">
         <Col span="22">
-          <Title level={3}>{title}</Title>
+          <Title level={3}><Space><UserOutlined /> {title}</Space></Title>
         </Col>
         <Col span="2">
           <div style={{ float: 'right' }}>

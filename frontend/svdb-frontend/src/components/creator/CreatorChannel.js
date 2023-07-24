@@ -32,6 +32,8 @@ const CreatorChannel = ({ creator, channel }) => {
     const [isAllChannels, setIsAllChannels] = useState(true);
     const [top10videos, setTop10videos] = useState([]);
     const [mostRecentVideos, setMostRecentVideos] = useState([]);
+    const [paramsTop10, setParamsTop10] = useState();
+    const [paramsRecent, setParamsRecent] = useState();
 
     const [stats, setStats] = useState({
         subs: {}, views: {}, videos: {}, likes: {}, comments: {}, avg: {}, duration: {}
@@ -63,16 +65,24 @@ const CreatorChannel = ({ creator, channel }) => {
         let paramsTop10 = new URLSearchParams();
         paramsTop10.append("sort", "views%desc")
         paramsTop10.append("channels", creatorChannels);
-
+    
+        setParamsTop10({
+            sort: "views%desc",
+            channels: creatorChannels
+        });
         await getVideosFn(1, 10, paramsTop10)
             .then((result) => {
                 setTop10videos(result.videos);
             })
 
+
         let paramsRecent = new URLSearchParams();
         paramsRecent.append("sort", "published_at%desc")
         paramsRecent.append("channels", creatorChannels);
-
+        setParamsRecent({
+            sort: "published_at%desc", 
+            channels: creatorChannels
+        });
         await getVideosFn(1, 10, paramsRecent)
             .then((result) => {
                 setMostRecentVideos(result.videos);
@@ -262,11 +272,9 @@ const CreatorChannel = ({ creator, channel }) => {
                         <Col span={24} xl={12}>
                             <Row gutter={16}>
                                 <Col span={24}>
-                                    <Title style={{ color: 'black' }} level={5}>Recent</Title>
-                                    <HorizontalVideoList _videos={mostRecentVideos} />
+                                    <HorizontalVideoList title="Most Recent" filter={paramsRecent} />
 
-                                    <Title style={{ color: 'black' }} level={5}>Most Viewed</Title>
-                                    <HorizontalVideoList _videos={top10videos} />
+                                    <HorizontalVideoList title="Most Viewed" filter={paramsTop10} />
 
                                     {/* <Title style={{ color: 'black' }} level={5}>Last Appearences in other channels // TODO</Title>
                                     <HorizontalVideoList _videos={top10videos} /> */}
@@ -289,11 +297,9 @@ const CreatorChannel = ({ creator, channel }) => {
                         <Col span={24} xl={12}>
                             <Row gutter={16}>
                                 <Col span={24}>
-                                    <Title style={{ color: 'black' }} level={5}>Recent</Title>
-                                    <HorizontalVideoList _videos={mostRecentVideos} />
+                                    <HorizontalVideoList title="Most Recent" filter={paramsRecent} />
 
-                                    <Title style={{ color: 'black' }} level={5}>Most Viewed</Title>
-                                    <HorizontalVideoList _videos={top10videos} />
+                                    <HorizontalVideoList title="Most Viewed" filter={paramsTop10} />
                                 </Col>
                             </Row>
                         </Col>

@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, Spin, Row, Col, Image, Select, Space, Avatar, Button, Popover, Tag, Typography, Modal, Form, Tooltip, Input, notification } from 'antd';
-import { LikeOutlined, YoutubeOutlined, CalendarOutlined, VideoCameraOutlined, EyeOutlined, NumberOutlined, FilterOutlined } from '@ant-design/icons';
+import { LikeOutlined, YoutubeOutlined, CalendarOutlined, VideoCameraOutlined, EyeOutlined, NumberOutlined, FilterOutlined, HomeOutlined } from '@ant-design/icons';
 import insertCss from 'insert-css';
 import { getCreatorsFn } from "../services/creatorApi.ts";
 import { getChannelsFn } from "../services/channelApi.ts";
 
-import { getVideosFn } from "../services/videoApi.ts";
 
 import variables from '../sass/antd.module.scss'
 import useFormatter from '../hooks/useFormatter';
@@ -23,7 +22,7 @@ import TopCreators from '../components/home/TopCreators'
 const { Title, Text } = Typography;
 
 const HomePage = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState(false);
 
   const [isLoaded, setIsLoaded] = useState(false);
@@ -36,11 +35,14 @@ const HomePage = () => {
 
   const [filters, setFilters] = useState({ channels: [], published_atRange: [] });
 
+  const [paramsTop10, setParamsTop10] = useState({sort: "views%desc"});
+  const [paramsRecent, setParamsRecent] = useState({sort: "published_at%desc"});
+  
   useEffect(() => {
     asyncFetch();
   }, []);
-
-  const asyncFetch = async () => {
+  
+  const asyncFetch = () => {
 
     let params = new URLSearchParams();
     params.limit = 100;
@@ -80,32 +82,7 @@ const HomePage = () => {
 
     });
 
-    // TODO remove shorts!? duration > 5 min
-    let paramsTop10 = new URLSearchParams();
-    paramsTop10.append("sort", "views%desc");
-    for (const property in filters) {
-      if (filters[property] && filters[property] != '' && filters[property].length >= 1)
-        paramsTop10.append(property, filters[property]);
-    }
-    // paramsTop10.append("channels", creatorChannels);
 
-    await getVideosFn(1, 10, paramsTop10)
-      .then((result) => {
-        setTop10videos(result.videos);
-      })
-
-    let paramsRecent = new URLSearchParams();
-    paramsRecent.append("sort", "published_at%desc")
-    for (const property in filters) {
-      if (filters[property] && filters[property] != '' && filters[property].length >= 1)
-        paramsRecent.append(property, filters[property]);
-    }
-    // paramsRecent.append("channels", creatorChannels);
-
-    await getVideosFn(1, 10, paramsRecent)
-      .then((result) => {
-        setMostRecentVideos(result.videos);
-      });
     setIsLoaded(true);
   }
 
@@ -129,15 +106,15 @@ const HomePage = () => {
   }
 
   .homeHeaderPanel h3 {
-    color: `+ variables.oxfordBlue + `;
+    color: `+ variables.richBlack + `;
   }
   .homeHeaderPanel span {
     color: `+ variables.richBlack + `;
-    float: right;
+    gap: 5px;
   }
  
   .homeHeaderPanel button span {
-    background: `+ variables.oxfordBlue + `;
+    background: `+ variables.richBlack + `;
     color: `+ variables.sdmnYellow + `;
     
   }
@@ -149,6 +126,9 @@ const HomePage = () => {
   @media (max-width: 600px) {
     .homeContainer {
       margin: 0 20px;
+    }
+    .homeHeaderPanel {
+      margin: 10px 30px auto;
     }
   }
   `
@@ -170,7 +150,7 @@ const HomePage = () => {
     return (
       <Row className="homeHeaderPanel">
         <Col span="22">
-          <Title level={3}>{title}</Title>
+          <Title level={3}><Space><HomeOutlined /> {title}</Space></Title>
         </Col>
         <Col span="2">
           {/* TODO */}
@@ -183,7 +163,7 @@ const HomePage = () => {
   };
 
   return (<>
-    <HeaderPanel title="Home (Work in progress)" creators={channels}></HeaderPanel>
+    <HeaderPanel title="Home" creators={channels}></HeaderPanel>
     {isLoaded ?
       (
         <>
@@ -192,12 +172,10 @@ const HomePage = () => {
             <Row gutter={[16, 16]}>
               <Col span={24} md={24} lg={14} xl={14}>
                 <Row gutter={16}>
-                  <Col span={24}>
-                    <Title style={{ color: 'black' }} level={5}>Most Recent</Title>
-                    <HorizontalVideoList _videos={mostRecentVideos} />
+                  <Col span={24}>                    
+                    <HorizontalVideoList title="Most Recent" filter={paramsRecent}/>
 
-                    <Title style={{ color: 'black' }} level={5}>Most Viewed</Title>
-                    <HorizontalVideoList _videos={top10videos} />
+                    <HorizontalVideoList title="Most Viewed" filter={paramsTop10}/>
                   </Col>
                 </Row>
               </Col>
@@ -221,11 +199,9 @@ const HomePage = () => {
               <Col span={24} md={24} lg={12} xl={16}>
                 <Row gutter={16}>
                   <Col span={24}>
-                    <Title style={{ color: 'black' }} level={5}>TODO Most Recent</Title>
-                    <HorizontalVideoList _videos={mostRecentVideos} />
+                    <HorizontalVideoList title="Most Recent" filter={paramsRecent} />
 
-                    <Title style={{ color: 'black' }} level={5}>TODO Most Viewed</Title>
-                    <HorizontalVideoList _videos={top10videos} />
+                    <HorizontalVideoList title="Most Viewed" filter={paramsTop10} />
                   </Col>
                 </Row>
               </Col>
