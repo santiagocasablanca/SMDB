@@ -117,7 +117,8 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
 
   Video.belongsTo(Channel, {
     sourceKey: 'channel_id',
-    // foreignKey: 'videos'
+    as: 'channel',
+    foreignKey: 'channel_id'
   });
 
   Video.belongsToMany(Creator, {

@@ -148,18 +148,19 @@ export const findTopCreatorsController = async (
     //sort 
     let sort = req.query.sort ? req.query.sort.split('%') : ['name', 'ASC'];
 
-    let whereClause = {}
+    let channelClause = {}
     if (req.query.channels) {
       console.log(req.query.channels);
       var channelsArr = req.query.channels.split(',');
-
-      whereClause = {
+      
+      channelClause = {
         channel_id: {
           [Op.or]: channelsArr
         }
       }
     }
-
+    
+    let whereClause = {}
     if (req.query.publishedAtRange) {
       let rangeDate = req.query.publishedAtRange.split(',');
       const publishedAtSearchInitial = dayjs(rangeDate[0]).format("YYYY-MM-DD");
@@ -184,7 +185,8 @@ export const findTopCreatorsController = async (
           'comments',
           'logo_url',
           'banner_url',
-          'channel_created_at']
+          'channel_created_at'], 
+          where: channelClause
       }, {
         model: Video,
         as: 'videosDirected', attributes: [

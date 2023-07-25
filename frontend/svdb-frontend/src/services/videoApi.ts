@@ -63,7 +63,14 @@ export const getVideosFn = async (page = 1, limit = 30, params) => {
   return response.data;
 };
 
+export const getVideoFn = async (id) => {
+  const req = `videos/${id}`;
 
+  const response = await videoApi.get<IVideosResponse>(
+    req
+  );
+  return response.data;
+};
 
 export const fetchAllSeries = async () => {
   const req = `fetchAllSeries`;

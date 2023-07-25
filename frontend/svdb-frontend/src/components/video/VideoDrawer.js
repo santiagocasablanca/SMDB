@@ -22,12 +22,12 @@ const VideoDrawer = ({ _video, _open, childToParent }) => {
     useEffect(() => {
         setVideo(_video);
         setOpen(_open);
-        console.log('video drawer')
+        // console.log('video drawer')
     }, [_video, _open]);
 
 
     const onClose = () => {
-        console.log('video drawer on close')
+        // console.log('video drawer on close')
 
         childToParent(false);
         setOpen(false);
@@ -45,7 +45,7 @@ const VideoDrawer = ({ _video, _open, childToParent }) => {
                 <Drawer title={title}
                     placement="bottom"
                     width={500}
-                    height={800}
+                    height="70%"
                     onClose={onClose}
                     open={open}
                     extra={

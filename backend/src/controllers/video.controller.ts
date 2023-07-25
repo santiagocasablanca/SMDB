@@ -4,8 +4,9 @@ const { Sequelize, QueryTypes } = require('sequelize');
 const Op = Sequelize.Op;
 
 import { db, sequelize } from "../util/db";
-import { ChannelsReqQuery, ChannelsSearchReqQuery, SearchReqQuery } from "./types";
+import { ChannelsReqQuery, ChannelsSearchReqQuery, VideosSearchReqQuery, SearchReqQuery } from "./types";
 const Video = db.video;
+const Channel = db.channel;
 
 export const createVideoController = async (
   req: Request<{}, {}>,
@@ -190,10 +191,14 @@ export const fetchAllTags = async (
 }
 
 export const fetchVideoFrequency = async (
-  req: Request<any, any, any, ChannelsSearchReqQuery>,
+  req: Request<any, any, any, VideosSearchReqQuery>,
   res: Response
 ) => {
   try {
+
+
+    let excludeShorts = req.query.excludeShorts ? req.query.excludeShorts : true;
+
 
     //     SELECT
     //   DATE(v."publishedAt") AS day, COUNT(*) AS frequency, SUM(views) AS total_views, SUM(likes) AS total_likes, SUM(comments) AS total_comments
@@ -224,6 +229,12 @@ export const fetchVideoFrequency = async (
       whereClause['published_at'] = { [Sequelize.Op.between]: [publishedAtSearchInitial, publishedAtSearchFinal] };
     }
 
+    if(excludeShorts) {
+      whereClause['duration_parsed'] = { [Sequelize.Op.gt]: ['1064'] };
+    } else {
+      
+    }
+
     // console.log(JSON.stringify(whereClause));
     const records = await Video.findAll({
       attributes: [
@@ -248,10 +259,14 @@ export const fetchVideoFrequency = async (
 }
 
 export const fetchVideosChannelStats = async (
-  req: Request<{}, {}, {}, ChannelsReqQuery>,
+  req: Request<{}, {}, {}, VideosSearchReqQuery>,
   res: Response
 ) => {
   try {
+
+
+    let excludeShorts = req.query.excludeShorts ? req.query.excludeShorts : true;
+
 
     let whereClause = {}
     if (req.query.channels) {
@@ -271,6 +286,12 @@ export const fetchVideosChannelStats = async (
       const publishedAtSearchFinal = dayjs(rangeDate[1]).format("YYYY-MM-DD");
 
       whereClause['published_at'] = { [Sequelize.Op.between]: [publishedAtSearchInitial, publishedAtSearchFinal] };
+    }
+
+    if(excludeShorts) {
+      whereClause['duration_parsed'] = { [Sequelize.Op.gt]: ['1064'] };
+    } else {
+      
     }
 
     console.log(JSON.stringify(whereClause));
@@ -300,10 +321,14 @@ export const fetchVideosChannelStats = async (
 
 
 export const fetchVideoUploadTimeFrequency = async (
-  req: Request<{}, {}, {}, ChannelsReqQuery>,
+  req: Request<{}, {}, {}, VideosSearchReqQuery>,
   res: Response
 ) => {
   try {
+
+
+    let excludeShorts = req.query.excludeShorts ? req.query.excludeShorts : true;
+
 
     // SELECT
     // EXTRACT(DOW FROM "video"."publishedAt") AS week_day,
@@ -335,6 +360,12 @@ export const fetchVideoUploadTimeFrequency = async (
       whereClause['published_at'] = { [Sequelize.Op.between]: [publishedAtSearchInitial, publishedAtSearchFinal] };
     }
 
+    if(excludeShorts) {
+      whereClause['duration_parsed'] = { [Sequelize.Op.gt]: ['1064'] };
+    } else {
+      
+    }
+
     console.log(JSON.stringify(whereClause));
     const records = await Video.findAll({
       attributes: [
@@ -363,12 +394,10 @@ export const fetchVideoUploadTimeFrequency = async (
 }
 
 export const findAllVideosController = async (
-  req: Request<{}, {}, {}, ChannelsSearchReqQuery & { series?: string, title?: string }>,
+  req: Request<{}, {}, {}, VideosSearchReqQuery & { series?: string, title?: string }>,
   res: Response
 ) => {
   try {
-    console.log('IM HERE SEARCHIN ALL ' + JSON.stringify(req.query));
-    // console.log('FUCK : ' + req.query.sort);
     const page = req.query.page || 1;
     const limit = req.query.limit || 10;
     const skip = (page - 1) * limit;
@@ -376,17 +405,19 @@ export const findAllVideosController = async (
     //sort 
     let sort = req.query.sort ? req.query.sort.split('%') : ['published_at', 'DESC'];
 
+    let excludeShorts = req.query.excludeShorts ? req.query.excludeShorts : true;
+
     let whereClause = {}
     if (req.query.channels) {
-      console.log(req.query.channels);
       var channelsArr = req.query.channels.split(',');
 
       whereClause = {
         channel_id: {
           [Op.or]: channelsArr
-        }        
+        }
       }
     }
+
     if (req.query.series) {
       var seriessArr = req.query.series.split(',');
 
@@ -396,30 +427,31 @@ export const findAllVideosController = async (
         }
       }
     }
+
     if (req.query.title) {
       const searchTitle = req.query.title.toLowerCase();
       const lowerTitleCol = Sequelize.fn('lower', Sequelize.col('title'));
       whereClause['title'] = Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('title')), 'LIKE', '%' + searchTitle + '%');
     }
 
-    console.log(req.query.publishedAtRange);
     if (req.query.publishedAtRange) {
       let rangeDate = req.query.publishedAtRange.split(',');
-
       const publishedAtSearchInitial = dayjs(rangeDate[0]).format("YYYY-MM-DD");
       const publishedAtSearchFinal = dayjs(rangeDate[1]).format("YYYY-MM-DD");
-      // console.log(publishedAtSearchInitial);
-      // console.log(publishedAtSearchFinal);
-
-      // const betweenClause = { [Sequelize.Op.between]: [publishedAtSearch[0], publishedAtSearch[1]] };
       whereClause['published_at'] = { [Sequelize.Op.between]: [publishedAtSearchInitial, publishedAtSearchFinal] };
-      // whereClause[Sequelize.Op.or] = [{ publishedAt: betweenClause }, { final_date: betweenClause }];
+      
+    }
+
+    if(excludeShorts) {
+      whereClause['duration_parsed'] = { [Sequelize.Op.gt]: ['1064'] };
+    } else {
+      
     }
 
     // console.log(whereClause);
 
     const videos = await Video.findAndCountAll({ where: whereClause, limit, offset: skip, order: [sort] });
-    
+
     res.status(200).json({
       status: "success",
       results: videos.count,
@@ -460,3 +492,40 @@ export const deleteVideoController = async (
     });
   }
 };
+
+
+export const fetchVideoController = async (
+  req: Request<{}, {}, {}>,
+  res: Response
+) => {
+  try {
+    const id = req.params['id'];
+    console.log(id);
+    const video = await Video.findOne({
+      where: { video_id: id },
+      include: [{
+        model: Channel,
+        as: 'channel', attributes: ['channel_id', 'custom_url',
+          'title',
+          'subs',
+          'videos',
+          'views',
+          'likes',
+          'comments',
+          'logo_url',
+          'banner_url',
+          'channel_created_at']
+      }]
+    })
+
+    res.status(200).json({
+      status: "success",
+      result: video,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: error.message,
+    });
+  }
+}; 

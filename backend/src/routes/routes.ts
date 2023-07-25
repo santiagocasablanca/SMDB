@@ -11,10 +11,11 @@ import {
   findVideoController,
   updateVideoController,
   fetchAllSeries,
-  fetchAllTags
+  fetchAllTags,
+  fetchVideoController
 } from "../controllers/video.controller";
 
-import { findAllChannelsController, createChannelController } from "../controllers/channel.controller";
+import { fetchChannelController, findAllChannelsController, createChannelController } from "../controllers/channel.controller";
 import { findAllCreatorsController, fetchCreatorController, fetchCreatorStatsController, findTopCreatorsController, createCreatorController } from "../controllers/creator.controller";
 
 const router = express.Router();
@@ -22,6 +23,9 @@ const router = express.Router();
 router.route("/channels/")
   .get(findAllChannelsController)
   .post(createChannelController);
+router.route("/channels/:id")
+  .get(fetchChannelController);
+  
 
 router.route("/creators/")
   .get(findAllCreatorsController)
@@ -38,11 +42,12 @@ router
   .route("/videos/")
   .get(findAllVideosController)
   .post(createVideoController);
+
 router
-  .route("/videos/:videoId")
-  .get(findVideoController)
-  .patch(updateVideoController)
-  .delete(deleteVideoController);
+  .route("/videos/:id")
+  .get(fetchVideoController);
+  // .patch(updateVideoController)
+  // .delete(deleteVideoController);
 
 router
   .route("/fetchAllSeries/")

@@ -34,6 +34,10 @@ const Videography = () => {
     background: `+ variables.richBlackSofter + `;
     color: `+ variables.onBg + `;
   }
+
+  .table-container p {
+    color: white;
+  }
   
   .mb {
     margin-bottom: 30px;

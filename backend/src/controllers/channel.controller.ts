@@ -10,6 +10,29 @@ import { db, sequelize } from "../util/db";
 import { ChannelsSearchReqQuery } from "./types";
 const Channel = db.channel;
 
+export const fetchChannelController = async (
+  req: Request<{}, {}, {}>,
+  res: Response
+) => {
+  try {
+    const id = req.params['id'];
+    console.log(id);
+    const channel = await Channel.findOne({
+      where: { channel_id: id }
+    })
+
+    res.status(200).json({
+      status: "success",
+      result: channel,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: error.message,
+    });
+  }
+};  
+
 export const findAllChannelsController = async (
   req: Request<any, any, any, ChannelsSearchReqQuery>,
   res: Response

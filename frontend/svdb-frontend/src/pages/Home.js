@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, Spin, Row, Col, Image, Select, Space, Avatar, Button, Popover, Tag, Typography, Modal, Form, Tooltip, Input, notification } from 'antd';
+import { Card, Spin, Row, Col, Image, Select, Space, Avatar, Button, Popover, Tag, Typography, Modal, Carousel, List, Tooltip, Input, notification, Skeleton } from 'antd';
 import { LikeOutlined, YoutubeOutlined, CalendarOutlined, VideoCameraOutlined, EyeOutlined, NumberOutlined, FilterOutlined, HomeOutlined } from '@ant-design/icons';
 import insertCss from 'insert-css';
 import { getCreatorsFn } from "../services/creatorApi.ts";
 import { getChannelsFn } from "../services/channelApi.ts";
+import { getVideosFn } from "../services/videoApi.ts";
 
 
 import variables from '../sass/antd.module.scss'
@@ -15,7 +16,8 @@ import StatisticsCards from '../components/creator/StatisticsCards'
 import FrequencyCard from '../components/home/FrequencyCard';
 import UploadTimeFrequencyCard from '../components/home/UploadTimeFrequencyCard';
 import TopCreators from '../components/home/TopCreators'
-
+import VideoPreviewForHighlight from '../components/video/VideoPreviewForHighlight';
+import dayjs from 'dayjs';
 
 
 
@@ -31,61 +33,55 @@ const HomePage = () => {
   const [channels, setChannels] = useState([]);
   const [selectedChannels, setSelectedChannels] = useState();
   const [top10videos, setTop10videos] = useState([]);
+  const [topChannelIds, setTopChannelIds] = useState([]);
   const [mostRecentVideos, setMostRecentVideos] = useState([]);
 
   const [filters, setFilters] = useState({ channels: [], published_atRange: [] });
 
-  const [paramsTop10, setParamsTop10] = useState({sort: "views%desc"});
-  const [paramsRecent, setParamsRecent] = useState({sort: "published_at%desc"});
-  
+  const [paramsTop10, setParamsTop10] = useState({ sort: "views%desc" });
+  const [paramsRecent, setParamsRecent] = useState({ sort: "published_at%desc" });
+
   useEffect(() => {
-    asyncFetch();
-  }, []);
-  
-  const asyncFetch = () => {
 
-    let params = new URLSearchParams();
-    params.limit = 100;
-    // params.append("channels", selectedChannels);
-    // params.append("publishedAtRange", [startDate.format("YYYY-MM-DD"), endDate.format("YYYY-MM-DD")]);
-    // getCreatorsFn(params).then((result) => {
-    //   if (result.results) {
-    //     setCreators(result.results);
-    //     const _creatorChannels = result.results.map(it => { return it.channels; });
+    async function fetchData() {
+      let now = dayjs();
+      let oldDate = dayjs().subtract(7, 'days');
+      let range = [];
+      range.push(oldDate.format());
+      range.push(now.format());
 
-    //     const allChannels = [];
-    //     const channels = _creatorChannels.map((_channels) => {
-    //       _channels.map((_channel) => {
-    //         allChannels.push({
-    //           label: _channel.title,
-    //           key: _channel.channel_id,
-    //         });
-    //       });
-    //     });
-    //     console.log(allChannels)
-    //     setChannels(allChannels);
-    //     setSelectedChannels(allChannels.map(it => { return it._channe_id; }))
-    //   }
-    // })
 
-    getChannelsFn(params).then((result) => {
-      const _channels = result.results.map(it => {
-        return {
-          label: it.title,
-          key: it.channel_id
-        };
+      let _paramsTop10 = new URLSearchParams();
+      _paramsTop10.append("sort", "views%desc")
+      _paramsTop10.append("publishedAtRange", range)
+      _paramsTop10.append("shorts", "false")
+      getVideosFn(1, 10, _paramsTop10)
+        .then((result) => {
+          setTop10videos(result.videos);
+          setTopChannelIds(result.videos.map(video => { return video.channel_id; }));
+        })
+
+      let params = new URLSearchParams();
+      params.limit = 100;
+      getChannelsFn(params).then((result) => {
+        const _channels = result.results.map(it => {
+          return {
+            label: it.title,
+            key: it.channel_id
+          };
+        });
+
+        setChannels(result.results);
+        setFilters({ channels: _channels });
+        // setSelectedChannels(_channels.map(it => { return it.channel_id; }))
+
       });
-      console.log(_channels)
-      setChannels(result.results);
-      setFilters({ channels: _channels });
-      // setSelectedChannels(_channels.map(it => { return it.channel_id; }))
-
-    });
 
 
-    setIsLoaded(true);
-  }
-
+      setIsLoaded(true);
+    }
+    fetchData();
+  }, []);
 
   insertCss(`  
 
@@ -101,7 +97,9 @@ const HomePage = () => {
   }
 
   .homeHeaderPanel {
-    margin: 10px 100px auto;
+    margin: 20px 100px auto;
+    margin-bottom: 20px;
+    
     color: `+ variables.sdmnYellow + `;
   }
 
@@ -123,12 +121,20 @@ const HomePage = () => {
     margin: 0 100px auto;
   }
 
+  :where(.css-dev-only-do-not-override-kda5v0).ant-carousel .slick-dots-bottom {
+    bottom: 55px !important;
+  }
+
   @media (max-width: 600px) {
     .homeContainer {
       margin: 0 20px;
     }
     .homeHeaderPanel {
       margin: 10px 30px auto;
+    }
+
+    :where(.css-dev-only-do-not-override-kda5v0).ant-carousel .slick-dots-bottom {
+      bottom: 67px !important;
     }
   }
   `
@@ -140,7 +146,6 @@ const HomePage = () => {
 
   const HeaderPanel = ({ title, creators }) => {
     useEffect(() => {
-      console.log(creators)
     }, []);
 
     const content = (
@@ -162,6 +167,24 @@ const HomePage = () => {
     );
   };
 
+  const HighlightedVideos = ({ title, videos }) => {
+    return (
+      <>
+        <Row><Col span={24}><Title style={{ color: 'black' }} level={5}>{title}</Title></Col></Row>
+
+        <Carousel dots={false} style={{ color: variables.richBlack }} autoplay>
+          {videos?.map((video, index) => {
+            return (
+              <VideoPreviewForHighlight _video={video} key={video.video_id}></VideoPreviewForHighlight>
+            )
+
+          })}
+        </Carousel>
+      </>
+    );
+  }
+
+
   return (<>
     <HeaderPanel title="Home" creators={channels}></HeaderPanel>
     {isLoaded ?
@@ -170,18 +193,15 @@ const HomePage = () => {
           <div className="homeContainer">
 
             <Row gutter={[16, 16]}>
-              <Col span={24} md={24} lg={14} xl={14}>
-                <Row gutter={16}>
-                  <Col span={24}>                    
-                    <HorizontalVideoList title="Most Recent" filter={paramsRecent}/>
-
-                    <HorizontalVideoList title="Most Viewed" filter={paramsTop10}/>
+              <Col span={24} md={24} lg={12} xl={12}>
+                <Row gutter={12}>
+                  <Col span={24}>
+                    <HighlightedVideos title="Highlighted" videos={top10videos}></HighlightedVideos>
                   </Col>
                 </Row>
               </Col>
-              <Col span={24} md={24} lg={10} xl={10}>
-                {/* <UploadTimeFrequencyCard _channels={channels}></UploadTimeFrequencyCard> */}
-                <TopCreators></TopCreators>
+              <Col span={24} md={24} lg={12} xl={12}>
+                <TopCreators channel_ids={topChannelIds} />
               </Col>
             </Row>
             <br></br>

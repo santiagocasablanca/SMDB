@@ -186,9 +186,9 @@ const CreatorPage = () => {
       <div className="stats-panel">
         <Popover content={content} placement="topLeft">
           <div className="stats-tag">
-            <Tag icon={<YoutubeOutlined />} color="blue">{subs}</Tag>
-            <Tag icon={<EyeOutlined />} color="green">{views}</Tag>
-            <Tag icon={<VideoCameraOutlined />} color="orange">{videos}</Tag>
+            <Tag icon={<YoutubeOutlined />} color="black">{subs}</Tag>
+            <Tag icon={<EyeOutlined />} color="black">{views}</Tag>
+            <Tag icon={<VideoCameraOutlined />} color="black">{videos}</Tag>
           </div>
         </Popover>
       </div>

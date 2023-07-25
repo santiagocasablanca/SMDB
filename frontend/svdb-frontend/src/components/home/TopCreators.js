@@ -17,7 +17,7 @@ import { FilterOutlined } from '@ant-design/icons';
 const { Option } = Select;
 const { Title, Text } = Typography;
 
-const TopCreators = () => {
+const TopCreators = ({channel_ids}) => {
   const navigate = useNavigate();
   const { intToStringBigNumber, parseDate, parseDuration, humanizeDurationFromSeconds, displayVideoDurationFromSeconds, displayDurationFromSeconds } = useFormatter();
   const [topCreators, setTopCreators] = useState([]);
@@ -28,7 +28,7 @@ const TopCreators = () => {
   useEffect(() => {
 
     let params = new URLSearchParams();
-    // params.append("channels", selectedChannels);
+    params.append("channels", channel_ids);
     // params.append("publishedAtRange", [startDate.format("YYYY-MM-DD"), endDate.format("YYYY-MM-DD")]);
     getTopCreatorsFn(1, 10, params).then((result) => {
       if (result.results) {
@@ -37,7 +37,7 @@ const TopCreators = () => {
     })
 
     setIsLoading(false);
-  }, []);
+  }, [channel_ids]);
 
 
   insertCss(`
@@ -72,7 +72,7 @@ const TopCreators = () => {
             </Row>
 
             <Card className="topCreators">
-              <div style={{ height: '480px', overflow: 'auto' }}>
+              <div style={{ height: '380px', overflow: 'auto' }}>
 
                 <List
                   grid={{

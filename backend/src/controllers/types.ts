@@ -9,6 +9,12 @@ export type ChannelsReqQuery = {
   publishedAtRange?: string
 }
 
+export type VideosReqQuery = {
+  channels?: string,
+  excludeShorts?: boolean,
+  publishedAtRange?: string
+}
+
 export type CreatorsReqQuery = {
   channels?: string,
   publishedAtRange?: string
@@ -22,3 +28,4 @@ export type AddCreatorQuery = {
 }
 
 export type ChannelsSearchReqQuery = SearchReqQuery & ChannelsReqQuery;
+export type VideosSearchReqQuery = SearchReqQuery & VideosReqQuery;

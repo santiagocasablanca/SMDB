@@ -9,6 +9,14 @@ export const channelApi = axios.create({
   withCredentials: false,
 });
 
+export const getChannelFn = async (id) => {
+  const req = `channels/${id}`;
+
+  const response = await channelApi.get<IChannelResponse>(
+    req
+  );
+  return response.data;
+};
 
 export const getChannelsFn = async (page = 1, limit = 30, params) => {
   const req = `channels?page=${page}&limit=${limit}&${params}`;

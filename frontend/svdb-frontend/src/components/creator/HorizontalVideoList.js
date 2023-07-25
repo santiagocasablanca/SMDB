@@ -31,12 +31,12 @@ const HorizontalVideoList = ({ title, filter }) => {
 
         async function fetchData() {
             let _params = new URLSearchParams();
-            console.log(filter)
+            // console.log(filter)
             for (const property in filter) {
                 if (filter[property] && filter[property] != '' && filter[property].length >= 1)
                     _params.append(property, filter[property]);
             }
-            console.log(_params);
+            // console.log(_params);
 
             await getVideosFn(1, 10, _params)
                 .then((result) => {
