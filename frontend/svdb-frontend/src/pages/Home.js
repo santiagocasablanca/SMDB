@@ -17,6 +17,7 @@ import FrequencyCard from '../components/home/FrequencyCard';
 import UploadTimeFrequencyCard from '../components/home/UploadTimeFrequencyCard';
 import TopCreators from '../components/home/TopCreators'
 import VideoPreviewForHighlight from '../components/video/VideoPreviewForHighlight';
+import HorizontalShortsList from '../components/video/HorizontalShortsList';
 import dayjs from 'dayjs';
 
 
@@ -54,7 +55,6 @@ const HomePage = () => {
       let _paramsTop10 = new URLSearchParams();
       _paramsTop10.append("sort", "views%desc")
       _paramsTop10.append("publishedAtRange", range)
-      _paramsTop10.append("shorts", "false")
       getVideosFn(1, 10, _paramsTop10)
         .then((result) => {
           setTop10videos(result.videos);
@@ -123,6 +123,12 @@ const HomePage = () => {
 
   :where(.css-dev-only-do-not-override-kda5v0).ant-carousel .slick-dots-bottom {
     bottom: 55px !important;
+  }
+
+  @media (max-width: 768px) {
+    .hide-on-small-screen {
+      display: none;
+    }
   }
 
   @media (max-width: 600px) {
@@ -205,9 +211,15 @@ const HomePage = () => {
               </Col>
             </Row>
             <br></br>
-            <Row gutter={[16, 16]}>
+            <Row gutter={[16, 16]} className="hide-on-small-screen">
               <Col span={24} xl={24}>
                 <FrequencyCard _channels={channels}></FrequencyCard>
+              </Col>
+            </Row>
+            <br></br>
+            <Row>
+              <Col span={24}>
+                <HorizontalShortsList title="Most Recent Shorts" filter={paramsRecent} />
               </Col>
             </Row>
 

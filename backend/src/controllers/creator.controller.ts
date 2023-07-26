@@ -149,18 +149,18 @@ export const findTopCreatorsController = async (
     let sort = req.query.sort ? req.query.sort.split('%') : ['name', 'ASC'];
 
     let channelClause = {}
+    let whereClause = {}
     if (req.query.channels) {
-      console.log(req.query.channels);
       var channelsArr = req.query.channels.split(',');
-      
+
       channelClause = {
         channel_id: {
-          [Op.or]: channelsArr
+          // '$channel_creator.channel_id$': {
+          [Op.in]: channelsArr
         }
       }
     }
-    
-    let whereClause = {}
+
     if (req.query.publishedAtRange) {
       let rangeDate = req.query.publishedAtRange.split(',');
       const publishedAtSearchInitial = dayjs(rangeDate[0]).format("YYYY-MM-DD");
@@ -176,6 +176,7 @@ export const findTopCreatorsController = async (
       where: whereClause,
       limit, offset: skip, order: [sort], include: [{
         model: Channel,
+        required: true,
         as: 'channels', attributes: ['channel_id', 'custom_url',
           'title',
           'subs',
@@ -187,24 +188,41 @@ export const findTopCreatorsController = async (
           'banner_url',
           'channel_created_at'], 
           where: channelClause
-      }, {
-        model: Video,
-        as: 'videosDirected', attributes: [
-          'video_id',
-          'title',
-          'duration',
-          'channel_id',
-          'views',
-          'likes',
-          'comments',
-          'url',
-          'player',
-          'livestream',
-          'serie',
-          'published_at',
-        ]
       }]
     });
+
+    // const creators = await Creator.findAndCountAll({
+    //   where: whereClause,
+    //   limit, offset: skip, order: [sort], include: [{
+    //     model: Channel,
+    //     as: 'channels', attributes: ['channel_id', 'custom_url',
+    //       'title',
+    //       'subs',
+    //       'videos',
+    //       'views',
+    //       'likes',
+    //       'comments',
+    //       'logo_url',
+    //       'banner_url',
+    //       'channel_created_at']
+    //   }, {
+      //   model: Video,
+      //   as: 'videosDirected', attributes: [
+      //     'video_id',
+      //     'title',
+      //     'duration',
+      //     'channel_id',
+      //     'views',
+      //     'likes',
+      //     'comments',
+      //     'url',
+      //     'player',
+      //     'livestream',
+      //     'serie',
+      //     'published_at',
+      //   ]
+      // }]
+    // });
 
     res.status(200).json({
       status: "success",

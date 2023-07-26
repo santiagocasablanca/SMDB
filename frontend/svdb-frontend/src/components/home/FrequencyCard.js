@@ -335,21 +335,22 @@ const FrequencyCard = (_channels) => {
   };
 
   insertCss(`
-  .heatmap-container{
-    padding: 16px 0px;
-    width: 200px;
-    display: flex;
-    flex-direction: column;
-  }
+  
   .heatmapContainer {
-    padding: 20px;
+    padding: 20px 20px 20px 20px;
     width: 100%;
   }
   .title{
     font-weight: bold;
     font-size: 15px;
   }
-`);
+
+  @media (max-width: 600px) {
+    .heatmapContainer {
+    }
+  }
+  `);
+  // height: 115px;
   // defaultValue={defaultValue} 
   const filter = (
     <Space.Compact block >
@@ -394,11 +395,11 @@ const FrequencyCard = (_channels) => {
               </Col>
             </Row>
             <Row>
-              <Card className="heatmapContainer">
+              <Card bodyStyle={{ padding: 0, paddingTop: '16px', paddingBottom: '16px' }} className="heatmapContainer">
                 <div style={{ position: 'absolute', top: '5px', right: '10px' }}>
-                <Popover content={filter} placement="bottom">
-                  <Button style={{ color: "white", paddingBottom: "2px" }} type="text" icon={<FilterOutlined />} />
-                </Popover>
+                  <Popover content={filter} placement="bottom">
+                    <Button style={{ color: "white", paddingBottom: "2px" }} type="text" icon={<FilterOutlined />} />
+                  </Popover>
 
                 </div>
 

@@ -52,15 +52,16 @@ const VideoPreview = ({ _video }) => {
         <> {isLoaded ?
             (<>
                 <Card
-                    style={{ width: '220px', fontSize: '12px' }}
+                    style={{ width: '216px', fontSize: '12px' }}
                     onClick={showDrawer}
                     bodyStyle={{ padding: 0, cursor: 'pointer' }}>
                     {/* <Popover content={video.title} placement="top" onClick={showDrawer}> */}
 
-                        <Image style={{ borderRadius: '8px', objectFit: 'cover' }} src={video.url} width='218px' height='168px' preview={false} />
+                        <Image style={{ borderRadius: '8px', objectFit: 'cover' }} src={video.url} width='215px' height='383px' preview={false} />
                         <p style={{ color: 'white', fontSize: '10px', margin: '0px 5px' }}>{video.title}</p>
                         <div>
                             <Space split={<Divider type="vertical" />} size="small" style={{ marginLeft: '5px' }}>
+                                
                                 <p style={{ color: 'white', fontSize: '10px' }}><EyeOutlined /> {intToStringBigNumber(video.views)}</p>
                                 <p style={{ color: 'white', fontSize: '10px' }}><LikeOutlined /> {intToStringBigNumber(video.likes)}</p>
                                 <p style={{ color: 'white', fontSize: '10px' }}><CommentOutlined /> {intToStringBigNumber(video.comments)}</p>

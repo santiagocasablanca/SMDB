@@ -15,16 +15,14 @@ app.use(express.json({ limit: "10kb" }));
 if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 
 // 11am
-cron.schedule('00 21 * * *', () => {
+cron.schedule('00 00 * * *', () => {
   console.log('schuduled and running');
   const youtubeService = new YoutubeService();
   youtubeService.fetchStatisticsForAllChannels();
 })
 
-cron.schedule('00 05 * * *', () => {
+cron.schedule('00 12 * * *', () => {
   console.log('schuduled and running');
-  // const youtubeService = new YoutubeService();
-  // youtubeService.fetchStatisticsForAllChannels();
   // const videoMetaService = new VideoMetaService();
   // videoMetaService.associateTagsToVideos();
 })
@@ -66,8 +64,8 @@ db.sequelize
     console.log("Database connected");
     app.listen(PORT, async () => {
       console.log("listening at port 8005");
-      const youtubeService = new YoutubeService();
-      youtubeService.fetchStatisticsForAllChannels();
+      // const youtubeService = new YoutubeService();
+      // youtubeService.fetchStatisticsForAllChannels();
       // youtubeService.updateAllCreatorPicturesFromMainChannel();
 
 

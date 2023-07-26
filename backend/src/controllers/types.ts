@@ -12,6 +12,7 @@ export type ChannelsReqQuery = {
 export type VideosReqQuery = {
   channels?: string,
   excludeShorts?: boolean,
+  onlyShorts?: boolean,
   publishedAtRange?: string
 }
 

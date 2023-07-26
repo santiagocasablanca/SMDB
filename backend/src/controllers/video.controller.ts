@@ -405,7 +405,7 @@ export const findAllVideosController = async (
     //sort 
     let sort = req.query.sort ? req.query.sort.split('%') : ['published_at', 'DESC'];
 
-    let excludeShorts = req.query.excludeShorts ? req.query.excludeShorts : true;
+    let excludeShorts = req.query.excludeShorts !== undefined ? req.query.excludeShorts : true;
 
     let whereClause = {}
     if (req.query.channels) {
@@ -442,11 +442,13 @@ export const findAllVideosController = async (
       
     }
 
-    if(excludeShorts) {
-      whereClause['duration_parsed'] = { [Sequelize.Op.gt]: ['1064'] };
-    } else {
-      
+    if (req.query.onlyShorts) {
+      whereClause['duration_parsed'] = { [Sequelize.Op.lt]: ['1080'] };
     }
+
+    if(excludeShorts == true) {
+      whereClause['duration_parsed'] = { [Sequelize.Op.gt]: ['1064'] };
+    } 
 
     // console.log(whereClause);
 

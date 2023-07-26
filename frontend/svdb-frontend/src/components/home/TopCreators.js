@@ -17,7 +17,7 @@ import { FilterOutlined } from '@ant-design/icons';
 const { Option } = Select;
 const { Title, Text } = Typography;
 
-const TopCreators = ({channel_ids}) => {
+const TopCreators = ({ channel_ids }) => {
   const navigate = useNavigate();
   const { intToStringBigNumber, parseDate, parseDuration, humanizeDurationFromSeconds, displayVideoDurationFromSeconds, displayDurationFromSeconds } = useFormatter();
   const [topCreators, setTopCreators] = useState([]);
@@ -41,12 +41,7 @@ const TopCreators = ({channel_ids}) => {
 
 
   insertCss(`
-    .topCreators {
-      padding: 0px;
-    }
-    .creatorCard{
-      
-    }
+    
     .creatorCard:hover {
       cursor: pointer;
     }
@@ -71,29 +66,26 @@ const TopCreators = ({channel_ids}) => {
               </Col>
             </Row>
 
-            <Card className="topCreators">
+            <Card bordered={false} className="topCreators" bodyStyle={{ padding: 10 }}>
               <div style={{ height: '380px', overflow: 'auto' }}>
 
                 <List
                   grid={{
-                    gutter: 8,
+                    gutter: 10,
                     column: 2,
                   }}
                   itemLayout="vertical"
                   dataSource={topCreators}
                   renderItem={(item, index) => (
-                    <List.Item>
-                      <Card
-                        className="creatorCard"
-                        title={item.name}
-                        style={{ borderRadius: '8px', width: '100%', fontSize: '12px', border: '0px' }}
-                        onClick={() => handleClick(item.id)}
-                        bodyStyle={{ padding: '2px' }}>
-                        <Image alt={item.name} 
-                          style={{ height: '200px', borderRadius: '8px', objectFit: 'cover', padding: '0px' }} 
-                          src={item.profile_picture} width='100%' height='200px' preview={false} />
+                    <List.Item
+                      className="creatorCard"
+                      onClick={() => handleClick(item.id)}>
 
-                      </Card>
+                      <Title level={5}>{item.name}</Title>
+                      <Image alt={item.name}
+                        style={{ height: '100%', borderRadius: '8px', objectFit: 'cover', padding: '0px' }}
+                        src={item.profile_picture} width='100%' height='200px' preview={false} />
+
                     </List.Item>
                   )}
                 />

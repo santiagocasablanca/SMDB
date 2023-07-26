@@ -24,16 +24,18 @@ const VideoPreviewForHighlight = ({ _video, index }) => {
     const { intToStringBigNumber, parseDate, parseDuration } = useFormatter();
     const [isLoaded, setIsLoaded] = useState(false);
     const [video, setVideo] = useState(_video);
+    const [channel, setChannel] = useState();
     const [logo, setLogo] = useState();
     const [open, setOpen] = useState(false);
 
     useEffect(() => {
-        setIsLoaded(true);
+        
         async function fetchData() {
             await getVideoFn(_video.video_id).then(res => {
                 if (res.result) {
                     setVideo(res.result);
                     setLogo(res.result.channel.logo_url);
+                    setChannel(res.result.channel);
                     setIsLoaded(true);
                 }
             })
@@ -50,6 +52,10 @@ const VideoPreviewForHighlight = ({ _video, index }) => {
     }
 
     insertCss(`
+
+    .videoPreviewForHighlight:hover {
+        cursor: pointer;
+      }
        
         .videoPreviewForHighlight h5, p {
             color: black;
@@ -104,7 +110,7 @@ const VideoPreviewForHighlight = ({ _video, index }) => {
 
 
                 {/* </Popover> */}
-                <VideoDrawer _video={video} _open={open} childToParent={childToParent}></VideoDrawer>
+                <VideoDrawer _video={video} _channel={channel} _open={open} childToParent={childToParent}></VideoDrawer>
             </>
             ) : (
                 <Spin />
