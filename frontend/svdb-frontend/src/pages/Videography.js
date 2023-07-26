@@ -9,7 +9,7 @@ import dayjs from "dayjs"
 import insertCss from 'insert-css'
 import variables from '../sass/antd.module.scss'
 import VideographyStatsPanel from "./VideographyStatsPanel";
-
+import useFormatter from '../hooks/useFormatter';
 
 
 
@@ -18,6 +18,9 @@ import VideographyStatsPanel from "./VideographyStatsPanel";
 // } 
 
 const Videography = () => {
+
+  const { intToStringBigNumber, parseDate, parseDuration, displayVideoDurationFromSeconds, humanizeDurationFromSeconds } = useFormatter();
+
   // border: 1px solid black;
   insertCss(`
 
@@ -76,7 +79,7 @@ const Videography = () => {
       // sortDirections: ['asc', 'desc'],
       fixed: 'left',
     },
-    { key: 'duration', title: 'Duration', dataIndex: 'duration', width: '7%', align: 'right', sorter: true, render: (text) => <p>{parseDuration(text)}</p> },
+    { key: 'duration_parsed', title: 'Duration', dataIndex: 'duration_parsed', width: '7%', align: 'right', sorter: true, render: (text) => <p>{displayVideoDurationFromSeconds(text)}</p> },
     {
       key: 'serie',
       dataIndex: 'serie',
@@ -143,10 +146,6 @@ const Videography = () => {
     // },
   ]
 
-  const parseDuration = (duration) => {
-    return dayjs.duration(duration).format('HH:mm:ss')
-  }
-
 
   const getVideos = useEffect(() => {
     const offset = activePage;//itemsPerPage * activePage - itemsPerPage
@@ -210,29 +209,6 @@ const Videography = () => {
     date: null,
   });
   const filterStr = '';
-
-  const intToStringBigNumber = num => {
-    if (num == null || num == '') return '';
-    num = num.toString().replace(/[^0-9.]/g, '');
-    if (num < 1000) {
-      return num;
-    }
-    let si = [
-      { v: 1E3, s: "K" },
-      { v: 1E6, s: "M" },
-      { v: 1E9, s: "B" },
-      { v: 1E12, s: "T" },
-      { v: 1E15, s: "P" },
-      { v: 1E18, s: "E" }
-    ];
-    let index;
-    for (index = si.length - 1; index > 0; index--) {
-      if (num >= si[index].v) {
-        break;
-      }
-    }
-    return (num / si[index].v).toFixed(2).replace(/\.0+$|(\.[0-9]*[1-9])0+$/, "$1") + si[index].s;
-  };
 
   const isRowExpanded = (record) => expandedRowKeys.includes(record.video_id);
 

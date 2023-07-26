@@ -443,11 +443,11 @@ export const findAllVideosController = async (
     }
 
     if (req.query.onlyShorts) {
-      whereClause['duration_parsed'] = { [Sequelize.Op.lt]: ['1080'] };
+      whereClause['duration_parsed'] = { [Sequelize.Op.lt]: ['69'] };
     }
 
     if(excludeShorts == true) {
-      whereClause['duration_parsed'] = { [Sequelize.Op.gt]: ['1064'] };
+      whereClause['duration_parsed'] = { [Sequelize.Op.gt]: ['69'] };
     } 
 
     // console.log(whereClause);
