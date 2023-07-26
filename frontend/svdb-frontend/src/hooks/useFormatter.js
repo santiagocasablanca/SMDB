@@ -83,7 +83,18 @@ const useFormatter = () => {
     []
   )
 
-  return { intToStringBigNumber, parseDate, parseDuration, humanizeDurationFromSeconds, displayDurationFromSeconds, displayVideoDurationFromSeconds };
+  const displayVideoDurationFromSecondsWithLegend = useMemo(
+    () => {
+      return (durationAsSeconds) => {
+        const parsed = dayjs.duration(durationAsSeconds, 'seconds');
+        const returnValue = (parsed.get('days') > 0 ? (parsed.get('days') + 'd') : '') + (parsed.get('hours') > 0 ? (parsed.get('hours') + 'h') : '') + parsed.get('minutes') + 'm' + parsed.get('seconds') + 's';
+        return returnValue;
+      }
+    }, 
+    []
+  )
+
+  return { intToStringBigNumber, parseDate, parseDuration, humanizeDurationFromSeconds, displayDurationFromSeconds, displayVideoDurationFromSecondsWithLegend, displayVideoDurationFromSeconds };
 };
 
 export default useFormatter;

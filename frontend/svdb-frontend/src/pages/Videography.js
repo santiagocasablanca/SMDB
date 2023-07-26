@@ -19,7 +19,7 @@ import useFormatter from '../hooks/useFormatter';
 
 const Videography = () => {
 
-  const { intToStringBigNumber, parseDate, parseDuration, displayVideoDurationFromSeconds, humanizeDurationFromSeconds } = useFormatter();
+  const { intToStringBigNumber, parseDate, parseDuration, displayVideoDurationFromSeconds, humanizeDurationFromSeconds, displayVideoDurationFromSecondsWithLegend } = useFormatter();
 
   // border: 1px solid black;
   insertCss(`
@@ -79,7 +79,7 @@ const Videography = () => {
       // sortDirections: ['asc', 'desc'],
       fixed: 'left',
     },
-    { key: 'duration_parsed', title: 'Duration', dataIndex: 'duration_parsed', width: '7%', align: 'right', sorter: true, render: (text) => <p>{displayVideoDurationFromSeconds(text)}</p> },
+    { key: 'duration_parsed', title: 'Duration', dataIndex: 'duration_parsed', width: '8%', align: 'right', sorter: true, render: (text) => <p>{displayVideoDurationFromSecondsWithLegend(text)}</p> },
     {
       key: 'serie',
       dataIndex: 'serie',
