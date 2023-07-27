@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, List, Row, Col, Image, Divider, Popover, Avatar, Table, Typography, Space, Spin } from 'antd';
+import { Card, List, Row, Col, Image, Divider, Popover, Avatar, Table, Typography, Space, Spin, Tooltip } from 'antd';
 import { LikeOutlined, YoutubeOutlined, CalendarOutlined, CommentOutlined, ClockCircleOutlined, VideoCameraOutlined, EyeOutlined, UserOutlined, FilterOutlined, ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
@@ -28,7 +28,7 @@ const VideoPreviewForHighlight = ({ _video, index }) => {
     const [directedBy, setDirectedBy] = useState();
     const [logo, setLogo] = useState();
     const [open, setOpen] = useState(false);
-    
+
 
     useEffect(() => {
 
@@ -68,6 +68,26 @@ const VideoPreviewForHighlight = ({ _video, index }) => {
         }
     `);
 
+    const castContent = ({ creators }) => {
+        return (
+            <List
+
+                header={<Text strong>Cast</Text>}
+                size="small"
+                itemLayout="vertical"
+                dataSource={creators}
+                renderItem={(creator, index) => (
+                    <List.Item key={creator.id}>
+                        <List.Item.Meta
+                            avatar={<Avatar key={"draweCast" + index} src={creator.profile_picture} />}
+                            title={creator.name}
+                            description={creator.video_creator.role}
+                        />
+                    </List.Item>
+                )} >
+            </List>
+        )
+    };
 
 
     // 480 x 270
@@ -106,6 +126,7 @@ const VideoPreviewForHighlight = ({ _video, index }) => {
                             <Space size="small" style={{ float: 'right' }}>
                                 <EyeOutlined />{intToStringBigNumber(video.views)}
                                 <LikeOutlined />{intToStringBigNumber(video.likes)}
+                                <CommentOutlined />{intToStringBigNumber(video.comments)}
                             </Space>
                         </Col>
                     </Row>
@@ -117,7 +138,7 @@ const VideoPreviewForHighlight = ({ _video, index }) => {
                                         <Text strong>Directed by</Text>
                                         <Avatar.Group maxCount={2} maxStyle={{ color: '#f56a00', backgroundColor: '#fde3cf' }}>
                                             {directedBy?.map(director => {
-                                                return (<Avatar src={director.profile_picture} />);
+                                                return (<Avatar key={"director" + director.id} size="small" src={director.profile_picture} />);
                                             })}
                                         </Avatar.Group>
 
@@ -128,11 +149,14 @@ const VideoPreviewForHighlight = ({ _video, index }) => {
                                         <>
                                             <Divider></Divider>
                                             <Text strong>Cast</Text>
-                                            <Avatar.Group maxCount={5} maxStyle={{ color: '#f56a00', backgroundColor: '#fde3cf' }}>
-                                                {video.cast.map(cast_creator => {
-                                                    return (<Avatar src={cast_creator.profile_picture} />);
-                                                })}
-                                            </Avatar.Group>
+                                            <Popover placement="bottom" title="Cast" content={castContent(video.cast)} trigger="click">
+
+                                                <Avatar.Group maxCount={5} maxStyle={{ color: '#f56a00', backgroundColor: '#fde3cf' }}>
+                                                    {video.cast.map(cast_creator => {
+                                                        return (<Avatar key={"cast_" + cast_creator.id} size="small" src={cast_creator.profile_picture} />);
+                                                    })}
+                                                </Avatar.Group>
+                                            </Popover>
                                         </>) : ('')
                                 }
                             </Space>

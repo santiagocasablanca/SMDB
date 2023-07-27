@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import { Card, List, Row, Col, Image, Avatar, Table, Typography, Space, Spin, Drawer, Button } from 'antd';
+import { Card, List, Row, Col, Divider, Avatar, Table, Typography, Space, Spin, Drawer, Button, Popover } from 'antd';
 import { LikeOutlined, YoutubeOutlined, CalendarOutlined, CommentOutlined, ClockCircleOutlined, VideoCameraOutlined, EyeOutlined, UserOutlined, FilterOutlined, ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 
 import insertCss from 'insert-css';
@@ -44,11 +44,19 @@ const VideoDrawer = ({ _video, _channel, _open, childToParent }) => {
         </>
     );
 
+    const content = (
+
+        <p>hellp</p>
+    )
+
+
+
     insertCss(`
        
         .videoDrawerContainer {
             padding: 0 80px 0 80px;
         }
+
         @media (max-width: 800px) {
             .videoDrawerContainer {
                 padding: 0 20px 0 20px;
@@ -81,15 +89,15 @@ const VideoDrawer = ({ _video, _channel, _open, childToParent }) => {
                             </Col>
                         </Row>
                         <Row style={{ marginTop: '20px' }}>
-                            <Col span={18}>
+                            <Col span={17}>
                                 <Title level={5} ellipsis={true}>{video.title}</Title>
                             </Col>
-                            <Col span={6}>
+                            <Col span={7}>
                                 <Text style={{ float: 'right' }}>{parseDate(video.published_at, "DD MMM YYYY")}</Text>
                             </Col>
                         </Row>
                         <Row>
-                            <Col span={20}>
+                            <Col span={24} md={12} lg={12} xl={16}>
                                 <Space>
                                     <Avatar src={channel?.logo_url} style={{
                                         backgroundColor: '#f56a00',
@@ -97,10 +105,49 @@ const VideoDrawer = ({ _video, _channel, _open, childToParent }) => {
                                     <Text>{video.channel_title}</Text>
                                 </Space>
                             </Col>
-                            <Col span={4}>
-                                <Space size="small" style={{ float: 'right' }}>
+                            <Col span={24} md={12} lg={12} xl={8}>
+                                <Space size="small" style={{ float: 'right', color: 'white' }}>
                                     <EyeOutlined />{intToStringBigNumber(video.views)}
+                                    <LikeOutlined />{intToStringBigNumber(video.likes)}
+                                    <CommentOutlined />{intToStringBigNumber(video.comments)}
                                 </Space>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col span={24} md={12} lg={12} xl={12}>
+                                <List
+                                    header={<Text strong style={{ marginLeft: '20px' }}>Directed by</Text>}
+                                    size="small"
+                                    itemLayout="vertical"
+                                    dataSource={video?.directedBy}
+                                    //   style={{ width: '100%' }}
+                                    renderItem={(creator, index) => (
+                                        <List.Item key={creator.id}>
+                                            <List.Item.Meta
+                                                avatar={<Avatar key={"drawerDirector" + index} src={creator.profile_picture} />}
+                                                title={creator.name}
+                                            />
+                                        </List.Item>
+                                    )} >
+                                </List>
+                            </Col>
+                            <Col span={24} md={12} lg={12} xl={12}>
+                                <List
+                                    header={<Text strong style={{ marginLeft: '20px' }}>Cast</Text>}
+                                    size="small"
+                                    // style={{ width: '100%' }}
+                                    itemLayout="vertical"
+                                    dataSource={video?.cast}
+                                    renderItem={(creator, index) => (
+                                        <List.Item key={creator.id}>
+                                            <List.Item.Meta
+                                                avatar={<Avatar key={"draweCast" + index} src={creator.profile_picture} />}
+                                                title={<><Text>{creator.name}</Text> <Text italic type="secondary"> as {creator.video_creator.role}</Text></>}
+
+                                            />
+                                        </List.Item>
+                                    )} >
+                                </List>
                             </Col>
                         </Row>
                     </div>
