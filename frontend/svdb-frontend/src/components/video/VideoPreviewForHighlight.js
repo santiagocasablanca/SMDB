@@ -25,16 +25,19 @@ const VideoPreviewForHighlight = ({ _video, index }) => {
     const [isLoaded, setIsLoaded] = useState(false);
     const [video, setVideo] = useState(_video);
     const [channel, setChannel] = useState();
+    const [directedBy, setDirectedBy] = useState();
     const [logo, setLogo] = useState();
     const [open, setOpen] = useState(false);
+    
 
     useEffect(() => {
-        
+
         async function fetchData() {
             await getVideoFn(_video.video_id).then(res => {
                 if (res.result) {
                     setVideo(res.result);
                     setLogo(res.result.channel.logo_url);
+                    setDirectedBy(res.result.directedBy);
                     setChannel(res.result.channel);
                     setIsLoaded(true);
                 }
@@ -81,12 +84,12 @@ const VideoPreviewForHighlight = ({ _video, index }) => {
                             </div>
                         </Col>
                     </Row>
-                    <Row style={{marginTop: '20px'}}>
+                    <Row style={{ marginTop: '20px' }}>
                         <Col span={18}>
                             <Title level={5} ellipsis={true}>{video.title}</Title>
                         </Col>
                         <Col span={6}>
-                            <Text style={{float: 'right'}}>{parseDate(video.published_at, "DD MMM YYYY")}</Text>
+                            <Text style={{ float: 'right' }}>{parseDate(video.published_at, "DD MMM YYYY")}</Text>
                         </Col>
                     </Row>
                     <Row>
@@ -100,12 +103,42 @@ const VideoPreviewForHighlight = ({ _video, index }) => {
                             </Space>
                         </Col>
                         <Col span={4}>
-                            <Space size="small" style={{float: 'right'}}>
+                            <Space size="small" style={{ float: 'right' }}>
                                 <EyeOutlined />{intToStringBigNumber(video.views)}
+                                <LikeOutlined />{intToStringBigNumber(video.likes)}
                             </Space>
                         </Col>
                     </Row>
-                    
+                    <Row>
+                        <Col span={24}>
+                            <Space style={{ float: 'right' }}>
+                                {
+                                    (directedBy.length > 0) ? (<>
+                                        <Text strong>Directed by</Text>
+                                        <Avatar.Group maxCount={2} maxStyle={{ color: '#f56a00', backgroundColor: '#fde3cf' }}>
+                                            {directedBy?.map(director => {
+                                                return (<Avatar src={director.profile_picture} />);
+                                            })}
+                                        </Avatar.Group>
+
+                                    </>) : ('')
+                                }
+                                {
+                                    video?.cast.length > 0 ? (
+                                        <>
+                                            <Divider></Divider>
+                                            <Text strong>Cast</Text>
+                                            <Avatar.Group maxCount={5} maxStyle={{ color: '#f56a00', backgroundColor: '#fde3cf' }}>
+                                                {video.cast.map(cast_creator => {
+                                                    return (<Avatar src={cast_creator.profile_picture} />);
+                                                })}
+                                            </Avatar.Group>
+                                        </>) : ('')
+                                }
+                            </Space>
+                        </Col>
+                    </Row>
+
                 </div>
 
 

@@ -7,6 +7,7 @@ import { db, sequelize } from "../util/db";
 import { ChannelsReqQuery, ChannelsSearchReqQuery, VideosSearchReqQuery, SearchReqQuery } from "./types";
 const Video = db.video;
 const Channel = db.channel;
+const Creator = db.creator;
 
 export const createVideoController = async (
   req: Request<{}, {}>,
@@ -229,10 +230,10 @@ export const fetchVideoFrequency = async (
       whereClause['published_at'] = { [Sequelize.Op.between]: [publishedAtSearchInitial, publishedAtSearchFinal] };
     }
 
-    if(excludeShorts) {
+    if (excludeShorts) {
       whereClause['duration_parsed'] = { [Sequelize.Op.gt]: ['1064'] };
     } else {
-      
+
     }
 
     // console.log(JSON.stringify(whereClause));
@@ -288,10 +289,10 @@ export const fetchVideosChannelStats = async (
       whereClause['published_at'] = { [Sequelize.Op.between]: [publishedAtSearchInitial, publishedAtSearchFinal] };
     }
 
-    if(excludeShorts) {
+    if (excludeShorts) {
       whereClause['duration_parsed'] = { [Sequelize.Op.gt]: ['1064'] };
     } else {
-      
+
     }
 
     console.log(JSON.stringify(whereClause));
@@ -360,10 +361,10 @@ export const fetchVideoUploadTimeFrequency = async (
       whereClause['published_at'] = { [Sequelize.Op.between]: [publishedAtSearchInitial, publishedAtSearchFinal] };
     }
 
-    if(excludeShorts) {
+    if (excludeShorts) {
       whereClause['duration_parsed'] = { [Sequelize.Op.gt]: ['1064'] };
     } else {
-      
+
     }
 
     console.log(JSON.stringify(whereClause));
@@ -439,16 +440,16 @@ export const findAllVideosController = async (
       const publishedAtSearchInitial = dayjs(rangeDate[0]).format("YYYY-MM-DD");
       const publishedAtSearchFinal = dayjs(rangeDate[1]).format("YYYY-MM-DD");
       whereClause['published_at'] = { [Sequelize.Op.between]: [publishedAtSearchInitial, publishedAtSearchFinal] };
-      
+
     }
 
     if (req.query.onlyShorts) {
       whereClause['duration_parsed'] = { [Sequelize.Op.lt]: ['69'] };
     }
 
-    if(excludeShorts == true) {
+    if (excludeShorts == true) {
       whereClause['duration_parsed'] = { [Sequelize.Op.gt]: ['69'] };
-    } 
+    }
 
     // console.log(whereClause);
 
@@ -467,7 +468,19 @@ export const findAllVideosController = async (
   }
 };
 
-
+// , include: [
+//  {
+//   model: Creator,
+//   as: 'directedBy', attributes: ['id', 'custom_url',
+//   'name',
+//   'profile_picture']
+// }, {
+//   model: Creator,
+//   as: 'cast', attributes: ['id', 'custom_url',
+//   'name',
+//   'profile_picture']
+// }
+// ]
 
 export const deleteVideoController = async (
   req: Request,
@@ -517,7 +530,19 @@ export const fetchVideoController = async (
           'logo_url',
           'banner_url',
           'channel_created_at']
-      }]
+      },
+      {
+        model: Creator,
+        as: 'directedBy', attributes: ['id', 'custom_url',
+          'name',
+          'profile_picture']
+      }, {
+        model: Creator,
+        as: 'cast', attributes: ['id', 'custom_url',
+          'name',
+          'profile_picture']
+      }
+      ]
     })
 
     res.status(200).json({

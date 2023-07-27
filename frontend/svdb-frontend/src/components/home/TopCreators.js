@@ -41,7 +41,10 @@ const TopCreators = ({ channel_ids }) => {
 
 
   insertCss(`
-    
+  .ant-spin-container .ant-row {
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+  }
     .creatorCard:hover {
       cursor: pointer;
     }
@@ -66,30 +69,33 @@ const TopCreators = ({ channel_ids }) => {
               </Col>
             </Row>
 
-            <Card bordered={false} className="topCreators" bodyStyle={{ padding: 10 }}>
-              <div style={{ height: '380px', overflow: 'auto' }}>
+            <Card bordered={false} className="topCreators" bodyStyle={{ padding: 20 }}>
+              <Row style={{ height: '380px', overflow: 'auto' }} justify="center">
+                <Col span={24}>
 
-                <List
-                  grid={{
-                    gutter: 10,
-                    column: 2,
-                  }}
-                  itemLayout="vertical"
-                  dataSource={topCreators}
-                  renderItem={(item, index) => (
-                    <List.Item
-                      className="creatorCard"
-                      onClick={() => handleClick(item.id)}>
+                  <List
+                    grid={{
+                      gutter: 10,
+                      column: 2,
+                    }}
+                    itemLayout="vertical"
+                    dataSource={topCreators}
+                    style={{marginLeft: 0, marginRight: 0}}
+                    renderItem={(item, index) => (
+                      <List.Item
+                        className="creatorCard"
+                        onClick={() => handleClick(item.id)}>
 
-                      <Title level={5}>{item.name}</Title>
-                      <Image alt={item.name}
-                        style={{ height: '100%', borderRadius: '8px', objectFit: 'cover', padding: '0px' }}
-                        src={item.profile_picture} width='100%' height='200px' preview={false} />
+                        <Title level={5}>{item.name}</Title>
+                        <Image alt={item.name}
+                          style={{ height: '100%', borderRadius: '8px', objectFit: 'cover', padding: '0px' }}
+                          src={item.profile_picture} width='100%' height='200px' preview={false} />
 
-                    </List.Item>
-                  )}
-                />
-              </div>
+                      </List.Item>
+                    )}
+                  />
+                </Col>
+              </Row>
             </Card>
           </>
         )}
