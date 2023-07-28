@@ -136,7 +136,7 @@ const VideoPreviewForHighlight = ({ _video, index }) => {
                                 {
                                     (directedBy.length > 0) ? (<>
                                         <Text strong>Directed by</Text>
-                                        <Avatar.Group maxCount={2} maxStyle={{ color: '#f56a00', backgroundColor: '#fde3cf' }}>
+                                        <Avatar.Group maxCount={2} maxStyle={{ color: '#000000', backgroundColor: '#FFFFFF' }}>
                                             {directedBy?.map(director => {
                                                 return (<Avatar key={"director" + director.id} size="small" src={director.profile_picture} />);
                                             })}
@@ -151,7 +151,7 @@ const VideoPreviewForHighlight = ({ _video, index }) => {
                                             <Text strong>Cast</Text>
                                             <Popover placement="bottom" title="Cast" content={castContent(video.cast)} trigger="click">
 
-                                                <Avatar.Group maxCount={5} maxStyle={{ color: '#f56a00', backgroundColor: '#fde3cf' }}>
+                                                <Avatar.Group maxCount={5} maxStyle={{ color: '#000000', backgroundColor: variables.primary }}>
                                                     {video.cast.map(cast_creator => {
                                                         return (<Avatar key={"cast_" + cast_creator.id} size="small" src={cast_creator.profile_picture} />);
                                                     })}

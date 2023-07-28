@@ -44,13 +44,6 @@ const VideoDrawer = ({ _video, _channel, _open, childToParent }) => {
         </>
     );
 
-    const content = (
-
-        <p>hellp</p>
-    )
-
-
-
     insertCss(`
        
         .videoDrawerContainer {
@@ -93,9 +86,9 @@ const VideoDrawer = ({ _video, _channel, _open, childToParent }) => {
                         </Space>
                     }>
                     <div className="videoDrawerContainer">
-                        <Row gutter={[8,12]}>
+                        <Row gutter={[8, 12]}>
                             <Col span={24} md={24} lg={16} xl={18}>
-                                <Row gutter={[8,12]}>
+                                <Row gutter={[8, 12]}>
                                     <Col span={24}>
                                         <div className="videoContainer">
                                             <ReactPlayer url={video.player.embedHtml} width='100%' height="100%"></ReactPlayer>
@@ -112,7 +105,10 @@ const VideoDrawer = ({ _video, _channel, _open, childToParent }) => {
                             </Col>
 
                             <Col span={24} md={24} lg={8} xl={6}>
-                                <Row>
+                                <Row style={{
+                                                height: "550px",
+                                                overflow: "auto"
+                                            }}>
                                     <Col span={24}>
                                         <List
                                             header={<Text strong style={{ marginLeft: '20px' }}>Directed by</Text>}
@@ -134,7 +130,6 @@ const VideoDrawer = ({ _video, _channel, _open, childToParent }) => {
                                         <List
                                             header={<Text strong style={{ marginLeft: '20px' }}>Cast</Text>}
                                             size="small"
-                                            // style={{ width: '100%' }}
                                             itemLayout="vertical"
                                             dataSource={video?.cast}
                                             renderItem={(creator, index) => (
