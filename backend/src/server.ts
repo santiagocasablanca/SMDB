@@ -21,7 +21,7 @@ if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 //   youtubeService.fetchStatisticsForAllChannels();
 // })
 
-cron.schedule('45 10 * * *', () => {
+cron.schedule('52 10 * * *', () => {
   console.log('Fetch latest video and channel statistics Job');
   const youtubeService = new YoutubeService();
   // youtubeService.fetchLatestStatisticsForAllChannels();

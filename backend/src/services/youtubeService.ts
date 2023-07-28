@@ -116,7 +116,7 @@ class YoutubeService {
                 let videoResponse = await fetch(videoUrl);
                 videoData = await videoResponse.json();
             } catch (error: any) {
-                console.log('Error fetching videos for: ' + videoUrl);
+                console.log('Error fetching videos for: ' + playlistId);
                 console.error(error);
             }
 
