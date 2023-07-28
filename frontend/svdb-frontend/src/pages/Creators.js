@@ -19,10 +19,6 @@ import useFormatter from '../hooks/useFormatter';
 import dayjs from "dayjs"
 import AddCreatorModal from '../components/creator/AddCreatorModal';
 
-
-
-
-
 const { Title } = Typography;
 
 const CreatorPage = () => {
@@ -158,14 +154,14 @@ const CreatorPage = () => {
         </Col>
         <Col span="2">
           <div style={{ float: 'right' }}>
-            {/* <Space.Compact block>
+            <Space.Compact block>
               {isAdmin ? (<Tooltip title="Add Creator">
                 <AddCreatorModal />
               </Tooltip>) : ('')}
               <Tooltip title="Filter">
                 <Button icon={<FilterOutlined />} />
               </Tooltip>
-            </Space.Compact> */}
+            </Space.Compact>
 
           </div>
         </Col>

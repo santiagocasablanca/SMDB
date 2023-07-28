@@ -1,4 +1,4 @@
-import { Col, Row, Card, Table, Tag } from 'antd';
+import { Col, Row, Card, Table, Tag, Button, Typography, Tooltip, Popover, Select, Space } from 'antd';
 import { green, presetDarkPalettes } from '@ant-design/colors';
 import { yellow } from '@ant-design/colors';
 import { React, useEffect, useState } from "react"
@@ -10,12 +10,16 @@ import insertCss from 'insert-css'
 import variables from '../sass/antd.module.scss'
 import VideographyStatsPanel from "./VideographyStatsPanel";
 import useFormatter from '../hooks/useFormatter';
-
-
+import { LikeOutlined, YoutubeOutlined, CalendarOutlined, VideoCameraOutlined, EyeOutlined, UserOutlined, FilterOutlined } from '@ant-design/icons';
+import VideographyFilterPopoverPanel from './VideographyFilterPopoverPanel';
+import VideographyFilterPanel from './VideographyFilterPanel';
 
 // .ant-input {
 //   color: $coolLighterGray !important;
 // } 
+
+
+const { Title } = Typography;
 
 const Videography = () => {
 
@@ -24,9 +28,26 @@ const Videography = () => {
   // border: 1px solid black;
   insertCss(`
 
-  .bodyContainer {
+  .headerPanel {
+    
+    color: `+ variables.sdmnYellow + `;
+  }
+
+  .headerPanel h3 {
+    color: `+ variables.sdmnBlack + `;
+  }
+ 
+  
+  .videographyBodyContainer {
     margin: 10px 100px auto;
   }
+
+  .ant-pagination {
+    background: #202020;
+    padding: 10px 5px;
+    margin-top: 0px !important;
+  }
+
 
   .editPanel {
     background: `+ variables.sdmnBlack + `;
@@ -47,7 +68,7 @@ const Videography = () => {
   }
   
   @media (max-width: 600px) {
-    .bodyContainer {
+    .videographyBodyContainer {
       margin: 0 20px;
     }
   }
@@ -67,7 +88,6 @@ const Videography = () => {
       dataIndex: 'channel_title',
       title: 'Channel',
       width: '10%',
-      fixed: 'left',
       ellipsis: true,
     },
     {
@@ -75,9 +95,7 @@ const Videography = () => {
       dataIndex: 'title',
       title: 'Title',
       width: '35%',
-      sorter: true,
-      // sortDirections: ['asc', 'desc'],
-      fixed: 'left',
+      sorter: true
     },
     { key: 'duration_parsed', title: 'Duration', dataIndex: 'duration_parsed', width: '8%', align: 'right', sorter: true, render: (text) => <p>{displayVideoDurationFromSecondsWithLegend(text)}</p> },
     {
@@ -254,22 +272,29 @@ const Videography = () => {
     setMyFilters({ ...myFilters, ...newFilters });
   };
 
+
   return (
     <>
-      <div className="bodyContainer">
+      <div className="videographyBodyContainer">
 
-        <Row span="24" gutter={16}>
-          <Col span="24" className="gutter-row mb">
-            <VideoFilterPanel filters={myFilters} onChange={handleFilterChange} />
+        <Row className="headerPanel">
+          <Col span="24">
+            <Title level={3}><Space><YoutubeOutlined /> Videography</Space></Title>
+          </Col>
+          <Col span="24">
+            <VideographyFilterPanel filters={myFilters} onChange={handleFilterChange} />
           </Col>
         </Row>
+        {/* 
         <Row span="24" gutter={16}>
           <Col span="24" className="gutter-row">
             <VideographyStatsPanel />
 
           </Col>
-        </Row>
-        <Row span="24" gutter={16}>
+        </Row> 
+        */}
+        <br></br>
+        <Row gutter={16}>
           <Col span="24" className="gutter-row">
             {/* <Card> */}
             <div className="table-container">
@@ -288,7 +313,25 @@ const Videography = () => {
                 rowClassName={rowClassName}
                 size="small"
                 style={{
-                  controlItemBgHover: variables.primary
+                  controlItemBgHover: variables.primary,
+                  //       itemActiveBg: variables.primary,
+                  // itemActiveBgDisabled: variables.sdmnBlack,
+                  // itemActiveColorDisabled: variables.coolGray,
+                  // itemBg: variables.primary,
+                  // itemInputBg: variables.primary,
+                  // itemLinkBg: variables.sdmnBlack,
+                  // colorLink: variables.smdnWhite,
+
+                  // colorBgContainer: variables.sdmnBlack,
+                  // colorBgContainerDisabled: variables.sdmnBlack,
+                  // colorBgTextActive: variables.primary,
+                  // colorBgTextHover: variables.sdmnBlack,
+                  // colorBorder: variables.sdmnBlack,
+
+                  // colorPrimaryBorder: variables.sdmnBlack,
+                  // colorPrimaryHover: variables.sdmnBlack,
+                  // controlOutline: variables.sdmnBlack,
+                  // colorText: variables.sdmnBlack,
                 }}
                 pagination={{
                   total: records,

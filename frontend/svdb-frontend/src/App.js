@@ -27,7 +27,7 @@ const Videography = React.lazy(() => import('./pages/Videography'))
 
 class App extends Component {
   render() {
-  
+
     // darkAlgorithm
     // defaultAlgorithm
     // background: variables.bg
@@ -37,7 +37,11 @@ class App extends Component {
           algorithm: theme.darkAlgorithm,
           token: {
             colorPrimary: "#F5C518",
+
+            colorLinkActive: variables.primary,
+            colorLinkHover: variables.primary,
             
+
           },
         }}
       >

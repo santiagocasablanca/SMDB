@@ -11,7 +11,7 @@ const { v4: uuidv4 } = require('uuid');
 
 class CreatorService {
 
-    async create(name: string, custom_url: string, profile_picture: string) {
+    async create(name: string, custom_url: string, profile_picture: string, banner_picture: string) {
         console.log('creating new Creator', name);
         const exists = await Creator.findOne({ where: { custom_url: custom_url } });
         if (exists) {
@@ -22,6 +22,7 @@ class CreatorService {
             name: name,
             custom_url: custom_url,
             profile_picture: profile_picture,
+            banner_picture: banner_picture,
             created_at: new Date(),
             updated_at: new Date()
         });

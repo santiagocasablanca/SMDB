@@ -5,67 +5,19 @@ const Op = Sequelize.Op;
 
 import { db, sequelize } from "../util/db";
 import { ChannelsReqQuery, ChannelsSearchReqQuery, VideosSearchReqQuery, SearchReqQuery } from "./types";
+const VideoService = require('../services/videoService');
 const Video = db.video;
 const Channel = db.channel;
 const Creator = db.creator;
-
-export const createVideoController = async (
-  req: Request<{}, {}>,
-  res: Response
-) => {
-  try {
-    const { title, content, category, published } = req.body;
-
-    const video = await Video.create({
-      title,
-      content,
-      category,
-      published,
-    });
-
-    res.status(201).json({
-      status: "success",
-      data: {
-        video,
-      },
-    });
-  } catch (error: any) {
-    if (error.name === "SequelizeUniqueConstraintError") {
-      return res.status(409).json({
-        status: "failed",
-        message: "Video with that title already exists",
-      });
-    }
-
-    res.status(500).json({
-      status: "error",
-      message: error.message,
-    });
-  }
-};
 
 export const updateVideoController = async (
   req: Request,
   res: Response
 ) => {
   try {
-    const result = await Video.update(
-      { ...req.body, updatedAt: Date.now() },
-      {
-        where: {
-          id: req.params.video_id,
-        },
-      }
-    );
 
-    if (result[0] === 0) {
-      return res.status(404).json({
-        status: "fail",
-        message: "Video with that ID not found",
-      });
-    }
-
-    const video = await Video.findByPk(req.params.video_id);
+    const videoService = new VideoService();
+    const video = await videoService.update(req.body.video_id, req.body.tags, req.body.series, req.body.directedBy, req.body.cast);
 
     res.status(200).json({
       status: "success",

@@ -1,14 +1,11 @@
 import express from "express";
 
 import {
-  createVideoController,
-  deleteVideoController,
   findAllVideosController,
   findMostLikedSSGroupedBySeries,
   fetchVideoFrequency,
   fetchVideoUploadTimeFrequency,
   fetchVideosChannelStats,
-  findVideoController,
   updateVideoController,
   fetchAllSeries,
   fetchAllTags,
@@ -40,13 +37,12 @@ router.route("/creator/fetchStats")
 
 router
   .route("/videos/")
-  .get(findAllVideosController)
-  .post(createVideoController);
+  .get(findAllVideosController);
 
 router
   .route("/videos/:id")
-  .get(fetchVideoController);
-  // .patch(updateVideoController)
+  .get(fetchVideoController)
+  .patch(updateVideoController);
   // .delete(deleteVideoController);
 
 router

@@ -76,7 +76,17 @@ const AddCreatorModal = ({ }) => {
                             placeholder="Enter the url for the profile picture"
                         />
                     </Form.Item>
-
+                    <Form.Item
+                        name="banner_picture"
+                        label="Banner Picture URl"
+                        rules={[
+                            { required: true, message: 'Please enter the banner picture url' },
+                        ]}
+                    >
+                        <Input
+                            placeholder="Enter the url for the banner picture"
+                        />
+                    </Form.Item>
 
                     <Form.Item
                         name="channelIds"

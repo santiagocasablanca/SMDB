@@ -21,7 +21,7 @@ if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 //   youtubeService.fetchStatisticsForAllChannels();
 // })
 
-cron.schedule('40 11 * * *', () => {
+cron.schedule('40 00 * * *', () => {
   console.log('Fetch latest video and channel statistics Job');
   const youtubeService = new YoutubeService();
   youtubeService.fetchLatestStatisticsForAllChannels();
@@ -29,8 +29,8 @@ cron.schedule('40 11 * * *', () => {
 
 cron.schedule('00 14 * * *', () => {
   console.log("Associate Tags to Videos Job ")
-  const videoMetaService = new VideoMetaService();
-  videoMetaService.associateTagsToVideos();
+  // const videoMetaService = new VideoMetaService();
+  // videoMetaService.associateTagsToVideos();
 })
 
 const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN ? process.env.CLIENT_ORIGIN : 'http://localhost:3000';
@@ -70,8 +70,9 @@ db.sequelize
     console.log("Database connected");
     app.listen(PORT, async () => {
       console.log("listening at port 8005");
-      // const youtubeService = new YoutubeService();
-      // youtubeService.fetchLastestStatisticsForAllChannels();
+      const youtubeService = new YoutubeService();
+    
+      youtubeService.fetchLastestStatisticsForAllChannels();
       // youtubeService.updateAllCreatorPicturesFromMainChannel();
 
 
