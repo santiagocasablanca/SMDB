@@ -1,8 +1,10 @@
-const { Op } = require('sequelize');
+const { Sequelize, QueryTypes } = require('sequelize');
+
 
 import { db, sequelize } from "../util/db";
 import { now } from "sequelize/types/utils";
 
+const Op = Sequelize.Op;
 const natural = require('natural');
 const tokenizer = new natural.WordTokenizer();
 
@@ -146,7 +148,11 @@ class VideoMetaService {
     async associateTagsToVideos() {
         try {
             // Retrieve all videos from the database
-            const videos = await Video.findAll();
+            const videos = await Video.findAll({where: {
+                tags: {
+                    [Op.eq]: null
+                } 
+            }});
 
             // Process each video and associate a tag
             for (const video of videos) {
