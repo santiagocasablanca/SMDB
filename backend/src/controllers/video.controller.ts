@@ -231,7 +231,7 @@ export const fetchVideoFrequency = async (
     }
 
     if (excludeShorts) {
-      whereClause['duration_parsed'] = { [Sequelize.Op.gt]: ['1064'] };
+      whereClause['duration_parsed'] = { [Sequelize.Op.gt]: ['69'] };
     } else {
 
     }
@@ -290,7 +290,7 @@ export const fetchVideosChannelStats = async (
     }
 
     if (excludeShorts) {
-      whereClause['duration_parsed'] = { [Sequelize.Op.gt]: ['1064'] };
+      whereClause['duration_parsed'] = { [Sequelize.Op.gt]: ['69'] };
     } else {
 
     }
@@ -362,7 +362,7 @@ export const fetchVideoUploadTimeFrequency = async (
     }
 
     if (excludeShorts) {
-      whereClause['duration_parsed'] = { [Sequelize.Op.gt]: ['1064'] };
+      whereClause['duration_parsed'] = { [Sequelize.Op.gt]: ['69'] };
     } else {
 
     }
