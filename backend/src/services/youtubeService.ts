@@ -10,8 +10,14 @@ const ChannelStats = db.channelStats;
 const Creator = db.creator;
 
 async function parseDuration(durationString) {
+
     const regex = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
     const matches = durationString.match(regex);
+
+    if (!matches) {
+        // Return 0 or any other default value if the durationString does not match the format.
+        return 0;
+      }
     const hours = matches[1] ? parseInt(matches[1]) : 0;
     const minutes = matches[2] ? parseInt(matches[2]) : 0;
     const seconds = matches[3] ? parseInt(matches[3]) : 0;
