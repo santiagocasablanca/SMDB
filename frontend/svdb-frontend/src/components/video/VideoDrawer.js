@@ -56,10 +56,21 @@ const VideoDrawer = ({ _video, _channel, _open, childToParent }) => {
         .videoDrawerContainer {
             padding: 0 80px 0 80px;
         }
+        
+        .videoContainer {
+            height: 550px;
+        }
 
-        @media (max-width: 800px) {
+
+        @media (max-width: 900px) {
             .videoDrawerContainer {
-                padding: 0 20px 0 20px;
+                padding: 0 10px 0 10px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .videoContainer {
+                height: 240px;
             }
         }
     `);
@@ -77,77 +88,67 @@ const VideoDrawer = ({ _video, _channel, _open, childToParent }) => {
                     extra={
                         <Space>
                             <Text>{parseDate(video.published_at, "DD MMM YYYY")}</Text>
-                            {/* <Button onClick={onClose}>Cancel</Button>
-                        <Button type="primary" onClick={onClose}>OK</Button> */}
+                            {/* <Button onClick={onClose}>Cancel</Button> */}
+                            {/* <Button type="primary" onClick={onClose}>OK</Button> */}
                         </Space>
                     }>
                     <div className="videoDrawerContainer">
+                        <Row gutter={[8,12]}>
+                            <Col span={24} md={24} lg={16} xl={18}>
+                                <Row gutter={[8,12]}>
+                                    <Col span={24}>
+                                        <div className="videoContainer">
+                                            <ReactPlayer url={video.player.embedHtml} width='100%' height="100%"></ReactPlayer>
+                                        </div>
+                                    </Col>
+                                    <Col span={24}>
+                                        <Space size="small" style={{ float: 'right', color: 'white' }}>
+                                            <EyeOutlined />{intToStringBigNumber(video.views)}
+                                            <LikeOutlined />{intToStringBigNumber(video.likes)}
+                                            <CommentOutlined />{intToStringBigNumber(video.comments)}
+                                        </Space>
+                                    </Col>
+                                </Row>
+                            </Col>
 
-                        <Row>
-                            <Col span={24}>
-                                <ReactPlayer url={video.player.embedHtml} width='100%' height='460px'></ReactPlayer>
-                            </Col>
-                        </Row>
-                        <Row style={{ marginTop: '20px' }}>
-                            <Col span={17}>
-                                <Title level={5} ellipsis={true}>{video.title}</Title>
-                            </Col>
-                            <Col span={7}>
-                                <Text style={{ float: 'right' }}>{parseDate(video.published_at, "DD MMM YYYY")}</Text>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col span={24} md={12} lg={12} xl={16}>
-                                <Space>
-                                    <Avatar src={channel?.logo_url} style={{
-                                        backgroundColor: '#f56a00',
-                                    }} />
-                                    <Text>{video.channel_title}</Text>
-                                </Space>
-                            </Col>
-                            <Col span={24} md={12} lg={12} xl={8}>
-                                <Space size="small" style={{ float: 'right', color: 'white' }}>
-                                    <EyeOutlined />{intToStringBigNumber(video.views)}
-                                    <LikeOutlined />{intToStringBigNumber(video.likes)}
-                                    <CommentOutlined />{intToStringBigNumber(video.comments)}
-                                </Space>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col span={24} md={12} lg={12} xl={12}>
-                                <List
-                                    header={<Text strong style={{ marginLeft: '20px' }}>Directed by</Text>}
-                                    size="small"
-                                    itemLayout="vertical"
-                                    dataSource={video?.directedBy}
-                                    //   style={{ width: '100%' }}
-                                    renderItem={(creator, index) => (
-                                        <List.Item key={creator.id}>
-                                            <List.Item.Meta
-                                                avatar={<Avatar key={"drawerDirector" + index} src={creator.profile_picture} />}
-                                                title={creator.name}
-                                            />
-                                        </List.Item>
-                                    )} >
-                                </List>
-                            </Col>
-                            <Col span={24} md={12} lg={12} xl={12}>
-                                <List
-                                    header={<Text strong style={{ marginLeft: '20px' }}>Cast</Text>}
-                                    size="small"
-                                    // style={{ width: '100%' }}
-                                    itemLayout="vertical"
-                                    dataSource={video?.cast}
-                                    renderItem={(creator, index) => (
-                                        <List.Item key={creator.id}>
-                                            <List.Item.Meta
-                                                avatar={<Avatar key={"draweCast" + index} src={creator.profile_picture} />}
-                                                title={<><Text>{creator.name}</Text> <Text italic type="secondary"> as {creator.video_creator.role}</Text></>}
+                            <Col span={24} md={24} lg={8} xl={6}>
+                                <Row>
+                                    <Col span={24}>
+                                        <List
+                                            header={<Text strong style={{ marginLeft: '20px' }}>Directed by</Text>}
+                                            size="small"
+                                            itemLayout="vertical"
+                                            dataSource={video?.directedBy}
+                                            //   style={{ width: '100%' }}
+                                            renderItem={(creator, index) => (
+                                                <List.Item key={creator.id}>
+                                                    <List.Item.Meta
+                                                        avatar={<Avatar key={"drawerDirector" + index} src={creator.profile_picture} />}
+                                                        title={creator.name}
+                                                    />
+                                                </List.Item>
+                                            )} >
+                                        </List>
+                                    </Col>
+                                    <Col span={24}>
+                                        <List
+                                            header={<Text strong style={{ marginLeft: '20px' }}>Cast</Text>}
+                                            size="small"
+                                            // style={{ width: '100%' }}
+                                            itemLayout="vertical"
+                                            dataSource={video?.cast}
+                                            renderItem={(creator, index) => (
+                                                <List.Item key={creator.id}>
+                                                    <List.Item.Meta
+                                                        avatar={<Avatar key={"draweCast" + index} src={creator.profile_picture} />}
+                                                        title={<><Text>{creator.name}</Text> <Text italic type="secondary"> as {creator.video_creator.role}</Text></>}
 
-                                            />
-                                        </List.Item>
-                                    )} >
-                                </List>
+                                                    />
+                                                </List.Item>
+                                            )} >
+                                        </List>
+                                    </Col>
+                                </Row>
                             </Col>
                         </Row>
                     </div>
