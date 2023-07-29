@@ -29,7 +29,7 @@ const Videography = () => {
   insertCss(`
 
   .headerPanel {
-    
+    padding-top: 10px;
     color: `+ variables.sdmnYellow + `;
   }
 
@@ -71,6 +71,9 @@ const Videography = () => {
     .videographyBodyContainer {
       margin: 0 20px;
     }
+    .headerPanel {
+      margin: 10px 0px auto;
+    }
   }
   `);
 
@@ -94,7 +97,7 @@ const Videography = () => {
       key: 'title',
       dataIndex: 'title',
       title: 'Title',
-      width: '35%',
+      width: '30%',
       sorter: true
     },
     { key: 'duration_parsed', title: 'Duration', dataIndex: 'duration_parsed', width: '8%', align: 'right', sorter: true, render: (text) => <p>{displayVideoDurationFromSecondsWithLegend(text)}</p> },
@@ -111,10 +114,9 @@ const Videography = () => {
           : '')
       ),
     },
-    { key: 'published_at', title: 'Published At', dataIndex: 'published_at', width: '13%', sorter: true, render: (text) => <p>{dayjs(text).format("DD MMM YYYY HH:mm:ss")}</p> },
+    { key: 'published_at', title: 'Published At', dataIndex: 'published_at', width: '10%', sorter: true, render: (text) => <p>{dayjs(text).format("DD MMM YYYY")}</p> },
     { key: 'views', title: 'Views', dataIndex: 'views', width: '8%', align: 'right', sorter: true, render: (text) => <p>{intToStringBigNumber(text)}</p> },
     { key: 'likes', title: 'Likes', dataIndex: 'likes', width: '8%', align: 'right', sorter: true, render: (text) => <p>{intToStringBigNumber(text)}</p> },
-    // { key: 'dilikes', title: 'Dislikes', dataIndex: 'dislikes', width: '8%',  align: 'right', sorter: true, render: (text) => <p>{intToStringBigNumber(text)}</p> },
     { key: 'comments', title: 'Comments', dataIndex: 'comments', width: '8%', align: 'right', sorter: true, render: (text) => <p>{intToStringBigNumber(text)}</p> },
     {
       key: 'tags',
@@ -137,11 +139,11 @@ const Videography = () => {
         )
       ),
     },
-    {
-      key: 'locations',
-      width: '10%',
-      title: "Locations",
-    },
+    // {
+    //   key: 'locations',
+    //   width: '10%',
+    //   title: "Locations",
+    // },
     // {
     //   key: 'cast',
     //   title: "Cast",
@@ -299,13 +301,13 @@ const Videography = () => {
             {/* <Card> */}
             <div className="table-container">
               <Table columns={columns} dataSource={videos}
-                scroll={{ x: 1500, y: 900 }}
+                scroll={{ x: 1460, y: 900 }}
                 // header={() => 'Results'}
                 onChange={onChange}
                 rowKey={(record) => record.video_id}
                 // rowSelection={rowSelection}
                 expandable={{
-                  expandedRowRender: (record) => <VideographyEditPanel video={record}></VideographyEditPanel>,
+                  expandedRowRender: (record) => <VideographyEditPanel _video={record}></VideographyEditPanel>,
                   rowExpandable: (record) => record.title !== 'Not Expandable',
                   expandedRowKeys: expandedRowKeys,
                   onExpand: handleExpand

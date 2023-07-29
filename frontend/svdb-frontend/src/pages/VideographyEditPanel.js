@@ -1,100 +1,146 @@
-import { Row, Col, Typography, List, Avatar, Button, Popconfirm, Space, Card, Image, Descriptions, Form, Input, DatePicker, Select } from 'antd';
-import { LikeOutlined, MessageOutlined, EyeOutlined } from '@ant-design/icons';
+import { Row, Col, Typography, List, Avatar, Button, Popconfirm, Space, Card, Image, Descriptions, Form, Input, DatePicker, Select, Divider } from 'antd';
 import { React, useEffect, useState } from "react"
-import { getVideosFn } from "../services/videoApi.ts"
+import { getVideoFn } from "../services/videoApi.ts"
 import variables from '../sass/antd.module.scss'
 import ReactPlayer from 'react-player'
+import useFormatter from '../hooks/useFormatter';
+import { LikeOutlined, YoutubeOutlined, CalendarOutlined, CommentOutlined, ClockCircleOutlined, VideoCameraOutlined, EyeOutlined, UserOutlined, FilterOutlined, ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
+
+import insertCss from 'insert-css';
 
 
-import dayjs from "dayjs"
-var duration = require('dayjs/plugin/duration')
-dayjs.extend(duration)
+
 const { Text, Link } = Typography;
 
-const VideographyEditPanel = ({ video, onChange }) => {
+const VideographyEditPanel = ({ _video, onChange }) => {
+  const [video, setVideo] = useState(_video);
+  const { intToStringBigNumber, parseDate, parseDuration } = useFormatter();
 
-  const parseDuration = (duration) => {
-    return dayjs.duration(duration).format('HH:mm:ss')
-  }
+  useEffect(() => {
 
-  const parseDate = (date) => {
-    return dayjs(date).format('YYYY-MM-DD HH:mm:ss')
-  }
-
-  const intToStringBigNumber = num => {
-    if (num == null || num == '') return '';
-    num = num.toString().replace(/[^0-9.]/g, '');
-    if (num < 1000) {
-      return num;
+    async function fetchData() {
+      console.log('videoeditpanel loaded')
+        await getVideoFn(_video.video_id).then(res => {
+            if (res.result) {
+                setVideo(res.result);
+            }
+        })
     }
-    let si = [
-      { v: 1E3, s: "K" },
-      { v: 1E6, s: "M" },
-      { v: 1E9, s: "B" },
-      { v: 1E12, s: "T" },
-      { v: 1E15, s: "P" },
-      { v: 1E18, s: "E" }
-    ];
-    let index;
-    for (index = si.length - 1; index > 0; index--) {
-      if (num >= si[index].v) {
-        break;
-      }
-    }
-    return (num / si[index].v).toFixed(2).replace(/\.0+$|(\.[0-9]*[1-9])0+$/, "$1") + si[index].s;
-  };
+    fetchData();
+}, [_video]);
+
+  insertCss(`
+        .editVideoContainer {
+            padding: 0 20px 0 20px;
+        }
+        
+        .videoDimensions {
+            height: 550px;
+        }
 
 
-  const stats = [
-    {
-      key: 'views',
-      title: 'Views',
-      icon: <EyeOutlined />
-    },
-    {
-      key: 'likes',
-      title: 'Likes',
-      icon: <LikeOutlined />
-    },
-    {
-      key: 'comments',
-      title: 'Comments',
-      icon: <MessageOutlined />
-    }
-  ];
+        @media (max-width: 900px) {
+            .editVideoContainer {
+                padding: 0 10px 0 10px;
+            }
+        }
 
-
-  const divStyle = {
-    width: '100%',
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    overflow: 'hidden'
-  }
-
-  const iframeStyle = {
-    flexGrow: 1,
-    border: 'none',
-    margin: 0,
-    padding: 0,
-  }
+        @media (max-width: 600px) {
+            .videoDimensions {
+                height: 215px;
+                width: 315px;
+            }
+        }
+    `);
 
 
   return (
-    <div className="editPanel">
-      <Row>
-        <ReactPlayer url={video.player.embedHtml} width='100%'></ReactPlayer>
-      </Row>
-      <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }} style={{ marginTop: 5 + 'px', padding: 10 }}>
-        <Col className="gutter-row" span={24}>
-          <Descriptions title={video.title} layout="horizontal">
-            <Descriptions.Item label="Channel">{video.channel_title}</Descriptions.Item>
-            <Descriptions.Item label="Published At">{parseDate(video.published_at)}</Descriptions.Item>
-            <Descriptions.Item label="Duration">{parseDuration(video.duration)}</Descriptions.Item>
-            <Descriptions.Item label="Views">{intToStringBigNumber(video.views)}</Descriptions.Item>
-            <Descriptions.Item label="Likes">{intToStringBigNumber(video.likes)}</Descriptions.Item>
-            <Descriptions.Item label="Comments">{intToStringBigNumber(video.comments)}</Descriptions.Item>
-          </Descriptions>
+    // <div className="editPanel">
+    //   <Row>
+    //     <ReactPlayer url={video.player.embedHtml} width='100%'></ReactPlayer>
+    //   </Row>
+    //   <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }} style={{ marginTop: 5 + 'px', padding: 10 }}>
+    //     <Col className="gutter-row" span={24}>
+    //       <Descriptions title={video.title} layout="horizontal" extra={<Button type="primary">Edit</Button>}>
+    //         <Descriptions.Item label="Channel">{video.channel_title}</Descriptions.Item>
+    //         <Descriptions.Item label="Published At">{parseDate(video.published_at)}</Descriptions.Item>
+    //         <Descriptions.Item label="Duration">{parseDuration(video.duration)}</Descriptions.Item>
+    //         <Descriptions.Item label="Views">{intToStringBigNumber(video.views)}</Descriptions.Item>
+    //         <Descriptions.Item label="Likes">{intToStringBigNumber(video.likes)}</Descriptions.Item>
+    //         <Descriptions.Item label="Comments">{intToStringBigNumber(video.comments)}</Descriptions.Item>
+    //       </Descriptions>
+    //     </Col>
+    //   </Row>
+    // </div>
+    <div className="editVideoContainer">
+      <Row gutter={[8, 12]}>
+        <Col span={24} md={24} lg={16} xl={18}>
+          <Row gutter={[8, 12]}>
+            <Col span={24}>
+              <div className="videoDimensions">
+                <ReactPlayer url={video.player.embedHtml} width='100%' height="100%"></ReactPlayer>
+              </div>
+            </Col>
+
+          </Row>
+        </Col>
+
+        <Col span={24} md={24} lg={8} xl={6}>
+          <Row style={{
+            height: "550px",
+            overflow: "auto"
+          }}>
+            <Col span={24}>
+              <Space.Compact direction="vertical" style={{ float: 'right', color: 'white' }}>
+                <Space size="small" style={{ float: 'right'}}> <CalendarOutlined/> <Text type="secondary" style={{ float: 'right' }}>  {parseDate(video.published_at)}</Text> </Space>
+                <Space size="small" style={{ float: 'right' }}>
+                  <EyeOutlined />{intToStringBigNumber(video.views)}
+                  <LikeOutlined />{intToStringBigNumber(video.likes)}
+                  <CommentOutlined />{intToStringBigNumber(video.comments)}
+                </Space>
+                
+              </Space.Compact>
+            </Col>
+            {/* <Col className="gutter-row" span={24}>
+              <Descriptions  layout="horizontal" extra={<Button type="primary">Edit</Button>}>
+                <Descriptions.Item label="Duration">{parseDuration(video.duration)}</Descriptions.Item>
+              </Descriptions>
+            </Col> */}
+            <Col span={24}>
+              <List
+                header={<Text strong style={{ marginLeft: '20px' }}>Directed by</Text>}
+                size="small"
+                itemLayout="vertical"
+                dataSource={video?.directedBy}
+                //   style={{ width: '100%' }}
+                renderItem={(creator, index) => (
+                  <List.Item key={creator.id}>
+                    <List.Item.Meta
+                      avatar={<Avatar key={"drawerDirector" + index} src={creator.profile_picture} />}
+                      title={creator.name}
+                    />
+                  </List.Item>
+                )} >
+              </List>
+            </Col>
+            <Col span={24}>
+              <List
+                header={<Text strong style={{ marginLeft: '20px' }}>Cast</Text>}
+                size="small"
+                itemLayout="vertical"
+                dataSource={video?.cast}
+                renderItem={(creator, index) => (
+                  <List.Item key={creator.id}>
+                    <List.Item.Meta
+                      avatar={<Avatar key={"draweCast" + index} src={creator.profile_picture} />}
+                      title={<><Text>{creator.name}</Text> <Text italic type="secondary"> as {creator.video_creator.role}</Text></>}
+
+                    />
+                  </List.Item>
+                )} >
+              </List>
+            </Col>
+          </Row>
         </Col>
       </Row>
     </div>
