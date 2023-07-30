@@ -48,6 +48,17 @@ const seriesCategories = [
     { category: 'Bake off', keywords: ['bake'] },
     { category: 'Blind Date', keywords: ['blind date'] },
     { category: 'Hot vs Cold', keywords: ['hot vs cold'] },
+    { category: 'Forfeit Wheel of Fortune', keywords: ['Forfeit Wheel of Fortune'] },
+    { category: 'Mystery Box', keywords: ['mystery box'] },
+
+    { category: 'Deal Or Not a Deal', keywords: ['Deal Or Not a Deal'] },
+    { category: 'Meeme Olympics', keywords: ['meme olympics'] },
+    { category: 'Brutally Rate', keywords: ['brutally rate'] },
+    
+    { category: 'Weirdest Restaurants', keywords: ['weirdest restaurants'] },
+    { category: 'Ultimate Bachelor', keywords: ['ultimate bachelor'] },
+    { category: 'Got Talent', keywords: ['got talent'] },
+    { category: '7 Star VS 1 Star Hotel', keywords: ['7 stars vs 1 star'] },
 ];
 
 // Define your tag categories and associated keywords
@@ -95,6 +106,21 @@ const tagCategories = [
     { category: 'FIFA', keywords: ['fifa'] },
     { category: 'Hot vs Cold', keywords: ['hot vs cold'] },
 
+    { category: 'I Survived', keywords: ['I Survived',"Minecraft", "HARDCORE"] },
+    { category: 'Who Wants to be a Millionaire', keywords: ['Who wants to bee a millionaire'] },
+    { category: 'W2S "CANCELLED" MOMENTS', keywords: ['W2S "CANCELLED" MOMENTS'] },
+    { category: 'Its Only Money', keywords: ['Only Money'] },
+    { category: 'Forfeit Wheel of Fortune', keywords: ['Forfeit Wheel of Fortune'] },
+    { category: 'Mystery Box', keywords: ['mystery box'] },
+
+    { category: 'Deal Or Not a Deal', keywords: ['Deal Or Not a Deal'] },
+    { category: 'Meeme Olympics', keywords: ['meme olympics'] },
+    { category: 'Brutally Rate', keywords: ['brutally rate'] },
+    
+    { category: 'Weirdest Restaurants', keywords: ['weirdest restaurants'] },
+    { category: 'Ultimate Bachelor', keywords: ['ultimate bachelor'] },
+    { category: 'Got Talent', keywords: ['got talent'] },
+    { category: '7 Star VS 1 Star Hotel', keywords: ['7 stars vs 1 star'] },
     // Add more categories and keywords as needed
 ];
 
