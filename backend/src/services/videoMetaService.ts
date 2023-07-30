@@ -49,10 +49,10 @@ const seriesCategories = [
     { category: 'Blind Date', keywords: ['blind date'] },
     { category: 'Hot vs Cold', keywords: ['hot vs cold'] },
     { category: 'Forfeit Wheel of Fortune', keywords: ['Forfeit Wheel of Fortune'] },
-    { category: 'Mystery Box', keywords: ['mystery box'] },
+    { category: 'Mystery Box', keywords: ['MYSTERY BOX'] },
 
     { category: 'Deal Or Not a Deal', keywords: ['Deal Or Not a Deal'] },
-    { category: 'Meeme Olympics', keywords: ['meme olympics'] },
+    { category: 'Meme Olympics', keywords: ['meme olympics'] },
     { category: 'Brutally Rate', keywords: ['brutally rate'] },
     
     { category: 'Weirdest Restaurants', keywords: ['weirdest restaurants'] },
@@ -114,14 +114,28 @@ const tagCategories = [
     { category: 'Mystery Box', keywords: ['mystery box'] },
 
     { category: 'Deal Or Not a Deal', keywords: ['Deal Or Not a Deal'] },
-    { category: 'Meeme Olympics', keywords: ['meme olympics'] },
+    { category: 'Meme Olympics', keywords: ['meme olympics'] },
     { category: 'Brutally Rate', keywords: ['brutally rate'] },
     
     { category: 'Weirdest Restaurants', keywords: ['weirdest restaurants'] },
     { category: 'Ultimate Bachelor', keywords: ['ultimate bachelor'] },
     { category: 'Got Talent', keywords: ['got talent'] },
     { category: '7 Star VS 1 Star Hotel', keywords: ['7 stars vs 1 star'] },
+
+    { category: 'Brewpub Simulator', keywords: ['Brewpub Simulator'] },
+    { category: 'GUESS WHO', keywords: ['GUESS WHO'] },
+    { category: 'F1 23 My Team', keywords: ['F1 23 My Team'] },
+    { category: 'Car For Sale Simulator 2023', keywords: ['Car For Sale Simulator 2023'] },
     // Add more categories and keywords as needed
+    // 
+    // 
+    // 
+    // Car For Sale Simulator 2023
+
+
+
+
+
 ];
 
 class VideoMetaService {
@@ -176,7 +190,7 @@ class VideoMetaService {
             // Retrieve all videos from the database
             const videos = await Video.findAll({where: {
                 tags: {
-                    [Op.eq]: null
+                    [Op.or]: [{[Op.eq]: []}, {[Op.is]: null}]
                 } 
             }});
 

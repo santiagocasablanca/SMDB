@@ -70,8 +70,8 @@ db.sequelize
     console.log("Database connected");
     app.listen(PORT, async () => {
       console.log("listening at port 8005");
-      const youtubeService = new YoutubeService();
-      youtubeService.fetchLastestStatisticsForAllChannels();
+      // const youtubeService = new YoutubeService();
+      // youtubeService.fetchLastestStatisticsForAllChannels();
     
       // youtubeService.updateAllCreatorPicturesFromMainChannel();
 
