@@ -15,9 +15,9 @@ export const updateVideoController = async (
   res: Response
 ) => {
   try {
-
+    const id = req.params['id'];
     const videoService = new VideoService();
-    const video = await videoService.update(req.body.video_id, req.body.tags, req.body.series, req.body.directedBy, req.body.cast);
+    const video = await videoService.update(id, req.body.tags, req.body.series, req.body.directedBy, req.body.cast);
 
     res.status(200).json({
       status: "success",
@@ -123,17 +123,21 @@ export const fetchAllTags = async (
 ) => {
   try {
 
-    const records = await sequelize.query("select distinct tags from video v",
-      {
-        type: QueryTypes.SELECT,
-        logging: console.log,
-        raw: true,
-      }
-    );
+    // where: whereClause
+    const tags = await Video.findAll({attributes: ['tags'] });
+    // Flatten the array and convert to a Set to remove duplicates
+    const uniqueTagsSet = new Set(tags.flatMap((item) => item.tags || []));
+    
+    // Convert the Set back to an array
+    const allTags = Array.from(uniqueTagsSet);
+    console.log(allTags);
+
+
+
     // console.log(JSON.stringify(records));
     res.status(200).json({
       status: "success",
-      results: records,
+      results: allTags,
     });
   } catch (error: any) {
     res.status(500).json({
@@ -361,25 +365,27 @@ export const findAllVideosController = async (
     let excludeShorts = req.query.excludeShorts !== undefined ? req.query.excludeShorts : true;
 
     let whereClause = {}
+
     if (req.query.channels) {
       var channelsArr = req.query.channels.split(',');
 
-      whereClause = {
-        channel_id: {
-          [Op.or]: channelsArr
-        }
-      }
+      whereClause['channel_id'] = { [Op.or]: channelsArr };
     }
+
 
     if (req.query.series) {
       var seriessArr = req.query.series.split(',');
 
-      whereClause = {
-        serie: {
-          [Op.or]: seriessArr
-        }
-      }
+      whereClause['serie'] = { [Op.or]: seriessArr };
     }
+
+    if (req.query.tags) {
+      var tagsArr = req.query.tags.split(',');
+
+      whereClause['tags'] = { [Op.contains]: tagsArr };
+    }
+
+
 
     if (req.query.title) {
       const searchTitle = req.query.title.toLowerCase();
@@ -403,7 +409,7 @@ export const findAllVideosController = async (
       whereClause['duration_parsed'] = { [Sequelize.Op.gt]: ['69'] };
     }
 
-    // console.log(whereClause);
+    console.log(whereClause);
 
     const videos = await Video.findAndCountAll({ where: whereClause, limit, offset: skip, order: [sort] });
 

@@ -1,11 +1,10 @@
 import { Row, Col, Typography, List, Avatar, Button, Popconfirm, Space, Card, Image, Descriptions, Form, Input, DatePicker, Select, Divider } from 'antd';
 import { React, useEffect, useState } from "react"
-import { getVideoFn } from "../services/videoApi.ts"
-import variables from '../sass/antd.module.scss'
+import { getVideoFn } from "../../services/videoApi.ts"
 import ReactPlayer from 'react-player'
-import useFormatter from '../hooks/useFormatter';
+import useFormatter from '../../hooks/useFormatter';
 import { LikeOutlined, YoutubeOutlined, CalendarOutlined, CommentOutlined, ClockCircleOutlined, VideoCameraOutlined, EyeOutlined, UserOutlined, FilterOutlined, ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
-import UpdateVideoModal from '../components/video/UpdateVideoModal';
+import UpdateVideoModal from '../video/UpdateVideoModal';
 import insertCss from 'insert-css';
 
 
@@ -93,7 +92,7 @@ const VideographyEditPanel = ({ _video, onChange }) => {
             <Col span={24}>
               <Space.Compact direction="vertical" style={{ float: 'right', color: 'white' }}>
                 <Space size="small" style={{ float: 'right' }}>
-                  <UpdateVideoModal video={ video } />
+                  {/* <UpdateVideoModal video={ video } /> */}
                   <CalendarOutlined /> <Text type="secondary" style={{ float: 'right' }}>  {parseDate(video.published_at)}</Text>
                 </Space>
                 <Space size="small" style={{ float: 'right' }}>

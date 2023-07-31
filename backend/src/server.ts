@@ -14,23 +14,22 @@ const app = express();
 app.use(express.json({ limit: "10kb" }));
 if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 
-// 11am
-// cron.schedule('00 00 * * *', () => {
-//   console.log('schuduled and running');
-//   const youtubeService = new YoutubeService();
-//   youtubeService.fetchStatisticsForAllChannels();
-// })
+const youtubeService = new YoutubeService();
+const videoMetaService = new VideoMetaService();
+
+cron.schedule('00 10 * * *', () => {
+  console.log('Running fetchStatisticsForAllChannels');
+  youtubeService.fetchStatisticsForAllChannels();
+})
 
 cron.schedule('40 00 * * *', () => {
   console.log('Fetch latest video and channel statistics Job');
-  const youtubeService = new YoutubeService();
   youtubeService.fetchLatestStatisticsForAllChannels();
 })
 
-cron.schedule('00 14 * * *', () => {
-  console.log("Associate Tags to Videos Job ")
-  // const videoMetaService = new VideoMetaService();
-  // videoMetaService.associateTagsToVideos();
+cron.schedule('00 09 * * *', () => {
+  console.log("Associate Tags to Videos Job ");
+  videoMetaService.associateTagsToVideos();
 })
 
 const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN ? process.env.CLIENT_ORIGIN : 'http://localhost:3000';
@@ -53,6 +52,23 @@ app.get("/api/healthchecker", (req: Request, res: Response) => {
   });
 });
 
+app.get("/api/jobs/latest/run", (req: Request, res: Response) => {
+  youtubeService.fetchLatestStatisticsForAllChannels();
+  res.status(200).json({
+    status: "success",
+    message: "Running in backbgound!",
+  });
+});
+
+app.get("/api/jobs/tags/run", (req: Request, res: Response) => {
+  videoMetaService.associateTagsToVideos();
+
+  res.status(200).json({
+    status: "success",
+    message: "Running in backbgound!",
+  });
+});
+
 app.use("/api/", noteRouter);
 
 app.all("*", (req: Request, res: Response) => {
@@ -71,14 +87,14 @@ db.sequelize
     app.listen(PORT, async () => {
       console.log("listening at port 8005");
       // const youtubeService = new YoutubeService();
-      // youtubeService.fetchLastestStatisticsForAllChannels();
+      // youtubeService.fetchLatestStatisticsForAllChannels()
     
       // youtubeService.updateAllCreatorPicturesFromMainChannel();
 
 
       //extractRelevantTagsFromTitles();
-      const videoMetaService = new VideoMetaService();
-      videoMetaService.associateTagsToVideos();
+      // const videoMetaService = new VideoMetaService();
+      // videoMetaService.associateTagsToVideos();
     })
   })
   .catch(err => console.log(err));

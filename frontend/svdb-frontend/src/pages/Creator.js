@@ -13,6 +13,7 @@ import ChannelTabs from "../components/creator/ChannelTabs"
 import FrequencyCard from "./FrequencyCard";
 import UploadTimeFrequencyCard from "./UploadTimeFrequencyCard";
 import ChannelTotalStats from "./ChannelTotalsStats";
+import Videography from "../components/creator/Videography";
 import variables from '../sass/antd.module.scss';
 import useFormatter from '../hooks/useFormatter';
 
@@ -26,6 +27,7 @@ const CreatorPage = () => {
   const [isFetched, setIsFetched] = useState(false);
   const [fetchedData, setFetchedData] = useState([]);
   const [creator, setCreator] = useState([]);
+  const [channelIds, setChannelIds] = useState([]);
   // const {state} = useLocation();
   const { intToStringBigNumber, parseDate, parseDuration } = useFormatter();
 
@@ -40,6 +42,7 @@ const CreatorPage = () => {
       if (res.result) {
         setCreator(res.result);
         setIsFetched(true);
+        setChannelIds(res.result.channels.map(channel => {return channel.channel_id}));
       }
     });
   }
@@ -242,9 +245,12 @@ const CreatorPage = () => {
     </Row>
   );
 
-  const SeriesTab = (
-    <p>Hello world</p>
-  );
+  const filters = {
+    
+    channels: channelIds,
+    search: true
+  }
+
 
   const bannerUrl = creator.banner_picture + '=w2560-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj';
   return (
@@ -294,9 +300,13 @@ const CreatorPage = () => {
                           <ChannelTabs _creator={creator} _channels={creator.channels}></ChannelTabs>
                         </Col>
                       </Row></>
-                    }, { label: 'Graphs?', key: '_graphs' },
-                    { label: 'Series', key: '_series', children: <SeriesTab /> }, { label: 'Games', key: '_games' }, { label: 'Appearences/Crossover', key: '_appearences' },
-                    { label: 'Shorts', key: '_shorts' }, { label: 'Videography', key: '_videography' }]}
+                    }, 
+                    { label: 'Videography', key: '_videography', children: <><Videography _filters={filters} /></> },
+                    
+                    // { label: 'Graphs', key: '_graphs' },
+                    // { label: 'Series', key: '_series', children: <><Videography /></> }, { label: 'Games', key: '_games' }, { label: 'Appearences', key: '_appearences' },
+                    // { label: 'Shorts', key: '_shorts' }, 
+                  ]}
                   />
                 </Col>
               </Row>

@@ -2,16 +2,13 @@ import { Col, Row, Card, Table, Tag, Button, Typography, Tooltip, Popover, Selec
 import { green, presetDarkPalettes } from '@ant-design/colors';
 import { yellow } from '@ant-design/colors';
 import { React, useEffect, useState } from "react"
-import { getVideosFn } from "../services/videoApi.ts"
-import VideoFilterPanel from './VideographyFilterPanel'
+import { getVideosFn } from "../../services/videoApi.ts"
 import VideographyEditPanel from './VideographyEditPanel'
 import dayjs from "dayjs"
 import insertCss from 'insert-css'
-import variables from '../sass/antd.module.scss'
-import VideographyStatsPanel from "./VideographyStatsPanel";
-import useFormatter from '../hooks/useFormatter';
+import variables from '../../sass/antd.module.scss'
+import useFormatter from '../../hooks/useFormatter';
 import { LikeOutlined, YoutubeOutlined, CalendarOutlined, VideoCameraOutlined, EyeOutlined, UserOutlined, FilterOutlined } from '@ant-design/icons';
-import VideographyFilterPopoverPanel from './VideographyFilterPopoverPanel';
 import VideographyFilterPanel from './VideographyFilterPanel';
 
 // .ant-input {
@@ -21,41 +18,41 @@ import VideographyFilterPanel from './VideographyFilterPanel';
 
 const { Title } = Typography;
 
-const Videography = ({_filters}) => {
-  
+const Videography = ({ _filters }) => {
+
   const { intToStringBigNumber, parseDate, parseDuration, displayVideoDurationFromSeconds, humanizeDurationFromSeconds, displayVideoDurationFromSecondsWithLegend } = useFormatter();
-  
-    const defaultFilters = {
-      title: '',
-      channels: [],
-      published_atRange: [],
-      tags: [],
-      locations: '',
-      series: [],
-      search: false, // Set this to false by default
-      category: '',
-      date: null,
-    };
-  
-  
-    const [myFilters, setMyFilters] = useState(_filters || defaultFilters);
+
+  const defaultFilters = {
+    title: '',
+    channels: _filters.channels,
+    published_atRange: [],
+    tags: [],
+    locations: '',
+    series: [],
+    search: false, // Set this to false by default
+    category: '',
+    date: null,
+  };
+
+
+  const [myFilters, setMyFilters] = useState(_filters || defaultFilters);
 
   // border: 1px solid black;
+  // .creatorVideographyHeader {
+  //   padding-top: 10px;
+  //   color: `+ variables.sdmnYellow + `;
+  // }
+
+
+
+  // .videographyBodyContainer {
+  //   margin: 10px 100px auto;
+  // }
   insertCss(`
-
-  .headerPanel {
-    padding-top: 10px;
-    color: `+ variables.sdmnYellow + `;
-  }
-
-  .headerPanel h3 {
-    color: `+ variables.sdmnBlack + `;
-  }
- 
-  
-  .videographyBodyContainer {
-    margin: 10px 100px auto;
-  }
+    
+    .creatorVideographyHeader h3 {
+      color: `+ variables.sdmnBlack + `;
+    }
 
   .ant-pagination {
     background: #202020;
@@ -63,19 +60,14 @@ const Videography = ({_filters}) => {
     margin-top: 0px !important;
   }
 
-
-  .editPanel {
-    background: `+ variables.sdmnBlack + `;
-    color: `+ variables.onSurface + `;
+  .table-container p {
+    color: white;
   }
+
   .filterPanel {
     margin-top: 10px;
     background: `+ variables.richBlackSofter + `;
     color: `+ variables.onBg + `;
-  }
-
-  .table-container p {
-    color: white;
   }
   
   .mb {
@@ -83,14 +75,14 @@ const Videography = ({_filters}) => {
   }
   
   @media (max-width: 600px) {
-    .videographyBodyContainer {
-      margin: 0 20px;
-    }
-    .headerPanel {
-      margin: 10px 0px auto;
-    }
   }
   `);
+  // .videographyBodyContainer {
+  //   margin: 0 20px;
+  // }
+  // .creatorVideographyHeader {
+  //   margin: 10px 0px auto;
+  // }
 
 
   const [activePage, setActivePage] = useState(1)
@@ -285,7 +277,7 @@ const Videography = ({_filters}) => {
     <>
       <div className="videographyBodyContainer">
 
-        <Row className="headerPanel">
+        <Row className="creatorVideographyHeader">
           <Col span="24">
             <Title level={3}><Space><YoutubeOutlined /> Videography</Space></Title>
           </Col>

@@ -11,6 +11,7 @@ const { v4: uuidv4 } = require('uuid');
 
 class VideoService {
 
+    // TODO redo
     async update(videoId: string, tags: [], series: [], directedBy: [], cast: []) {
         console.log('Updating video: ', videoId);
         const updateBody= {};
@@ -18,14 +19,15 @@ class VideoService {
             updateBody['tags']= tags;
         }
         if(series && series.length>0) {
-            updateBody['tags']= tags;
+            updateBody['series']= series;
         }
         if(directedBy && directedBy.length>0) {
-            updateBody['tags']= tags;
+            updateBody['directed_by']= directedBy;
         }
         if(cast && cast.length>0) {
-            updateBody['tags']= tags;
+            updateBody['cast']= cast;
         }
+        console.log(updateBody);
 
         // await video.update({ tags: associatedTag, serie: seriesTag });
         // associate cast and directedBy

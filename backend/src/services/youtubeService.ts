@@ -365,7 +365,7 @@ class YoutubeService {
         }
     }
 
-    async fetchLastestStatisticsForAllChannels() {
+    async fetchLatestStatisticsForAllChannels() {
         console.log('starting job : fetchLastestStatisticsForAllChannels');
         try {
             const channels = await Channel.findAll({ order: [['updated_at', 'ASC']] });

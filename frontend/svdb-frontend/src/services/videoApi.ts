@@ -87,3 +87,9 @@ export const fetchAllTags = async () => {
   );
   return response.data;
 };
+
+export const updateVideoFn = async (id, params) => {
+  const req = `videos/${id}`;
+  const response = await videoApi.patch(req, params);
+  return response.data;
+};

@@ -52,7 +52,7 @@ export const findAllChannelsController = async (
       var channelsArr = req.query.channels.split(',');
 
       whereClause = {
-        title: {
+        channel_id: {
           [Op.or]: channelsArr
         }
       }
