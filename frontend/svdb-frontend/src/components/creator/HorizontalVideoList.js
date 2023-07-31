@@ -21,7 +21,6 @@ const { Title, Text } = Typography;
 
 const HorizontalVideoList = ({ title, filter }) => {
     const navigate = useNavigate();
-
     const { intToStringBigNumber, parseDate, parseDuration } = useFormatter();
     const [isLoaded, setIsLoaded] = useState(false);
     const [videos, setVideos] = useState();
@@ -50,9 +49,8 @@ const HorizontalVideoList = ({ title, filter }) => {
 
     const handleClick = () => {
         const url = '/videography';
-        // not necessary, kind of redudant at the moment. Params are set through useParams and useLocation (state) 
-        // useParams(params)
-        navigate(url);
+        console.log(filter);
+        navigate(url,{ state: { filter } });
     }
 
     return (

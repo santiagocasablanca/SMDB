@@ -4,6 +4,7 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   UserOutlined,
+  MobileOutlined,
   HomeOutlined,
   YoutubeOutlined,
   VideoCameraOutlined,
@@ -94,6 +95,12 @@ const AppSidebar = ({ collapsed, childToParent }) => {
               icon: <VideoCameraOutlined />,
               label: <Link to='/videography'>Videography</Link>,
               path: '/videography'
+            },
+            {
+              key: '/shorts',
+              icon: <MobileOutlined />,
+              label: <Link to='/shorts'>Shorts</Link>,
+              path: '/shorts'
             },
             {
               key: '/about',

@@ -2,13 +2,16 @@ import { Col, Row, Card, Table, Tag, Button, Typography, Tooltip, Popover, Selec
 import { green, presetDarkPalettes } from '@ant-design/colors';
 import { yellow } from '@ant-design/colors';
 import { React, useEffect, useState } from "react"
-import { getVideosFn } from "../../services/videoApi.ts"
+import { getVideosFn } from "../services/videoApi.ts"
+import VideoFilterPanel from './VideographyFilterPanel'
 import VideographyEditPanel from './VideographyEditPanel'
 import dayjs from "dayjs"
 import insertCss from 'insert-css'
-import variables from '../../sass/antd.module.scss'
-import useFormatter from '../../hooks/useFormatter';
+import variables from '../sass/antd.module.scss'
+import VideographyStatsPanel from "./VideographyStatsPanel";
+import useFormatter from '../hooks/useFormatter';
 import { LikeOutlined, YoutubeOutlined, CalendarOutlined, VideoCameraOutlined, EyeOutlined, UserOutlined, FilterOutlined } from '@ant-design/icons';
+import VideographyFilterPopoverPanel from './VideographyFilterPopoverPanel';
 import VideographyFilterPanel from './VideographyFilterPanel';
 import { useLocation } from 'react-router-dom';
 
@@ -19,34 +22,46 @@ import { useLocation } from 'react-router-dom';
 
 const { Title } = Typography;
 
-const Videography = ({ title, _filters }) => {
+const Shorts = ({ _filters }) => {
 
   const { intToStringBigNumber, parseDate, parseDuration, displayVideoDurationFromSeconds, humanizeDurationFromSeconds, displayVideoDurationFromSecondsWithLegend } = useFormatter();
   const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
+  // const searchParams = new URLSearchParams(location.state?.filters || {});
 
   const defaultFilters = {
     title: '',
-    channels: _filters.channels,
+    channels: [],
     published_atRange: [],
     tags: [],
     locations: '',
     series: [],
     search: false, // Set this to false by default
     category: '',
-    onlyShorts: Boolean,
-    excludeShorts: Boolean,
-    sort: '',
+    onlyShorts: true,
+    excludeShorts: false,
     date: null,
+    sort: ''
   };
+
 
   const [myFilters, setMyFilters] = useState(_filters || defaultFilters);
 
+  // border: 1px solid black;
   insertCss(`
-    
-    .creatorVideographyHeader h3 {
-      color: `+ variables.sdmnBlack + `;
-    }
+
+  .headerPanel {
+    padding-top: 10px;
+    color: `+ variables.sdmnYellow + `;
+  }
+
+  .headerPanel h3 {
+    color: `+ variables.sdmnBlack + `;
+  }
+ 
+  
+  .videographyBodyContainer {
+    margin: 10px 100px auto;
+  }
 
   .ant-pagination {
     background: #202020;
@@ -54,13 +69,19 @@ const Videography = ({ title, _filters }) => {
     margin-top: 0px !important;
   }
 
-  .table-container p {
-    color: white;
-  }
 
+  .editPanel {
+    background: `+ variables.sdmnBlack + `;
+    color: `+ variables.onSurface + `;
+  }
   .filterPanel {
+    margin-top: 10px;
     background: `+ variables.richBlackSofter + `;
     color: `+ variables.onBg + `;
+  }
+
+  .table-container p {
+    color: white;
   }
   
   .mb {
@@ -68,14 +89,14 @@ const Videography = ({ title, _filters }) => {
   }
   
   @media (max-width: 600px) {
+    .videographyBodyContainer {
+      margin: 0 20px;
+    }
+    .headerPanel {
+      margin: 10px 0px auto;
+    }
   }
   `);
-  // .videographyBodyContainer {
-  //   margin: 0 20px;
-  // }
-  // .creatorVideographyHeader {
-  //   margin: 10px 0px auto;
-  // }
 
 
   const [activePage, setActivePage] = useState(1)
@@ -168,23 +189,15 @@ const Videography = ({ title, _filters }) => {
 
 
   useEffect(() => {
-    const filtersFromQueryParams = {
-      title: searchParams.get("title") || "",
-      channels: searchParams.getAll("channels") || [],
-      published_atRange: searchParams.getAll("published_atRange") || [],
-      tags: searchParams.getAll("tags") || [],
-      locations: searchParams.get("locations") || "",
-      series: searchParams.getAll("series") || [],
-      search: searchParams.get("search") === "true",
-      category: searchParams.get("category") || "",
-      onlyShorts: searchParams.get("onlyShorts") === "true",
-      excludeShorts: searchParams.get("excludeShorts") === "true",
-      sort: searchParams.get("sort") || "",
-      date: searchParams.get("date") || null,
-    };
-    setMyFilters(filtersFromQueryParams);
+    let params = new URLSearchParams();
+    if(location.state && location.state?.filter) {
+      Object.keys(location.state?.filter).forEach((key) => {
+        params.append(key, location.state?.filter[key])
+      })
+    }
+    console.log(params);
+
     const offset = activePage;//itemsPerPage * activePage - itemsPerPage
-    let params = new URLSearchParams()
     Object.keys(columnFilter).forEach((key) => {
       params.append(key, columnFilter[key])
     });
@@ -192,11 +205,16 @@ const Videography = ({ title, _filters }) => {
       columnSorter.column !== undefined &&
       params.append('sort', `${columnSorter.column}%${columnSorter.state}`);
 
+    
+
     for (const property in myFilters) {
-      if (typeof myFilters[property] === 'boolean' || (myFilters[property] && myFilters[property] != '' && myFilters[property].length > 0))
+      // console.log(property, myFilters[property], myFilters[property] && myFilters[property] != '' && myFilters[property].length > 0);
+      if (myFilters[property] && myFilters[property] != '' && myFilters[property].length > 0)
         params.append(property, myFilters[property]);
     }
-    
+
+    // console.log(params);
+
     getVideosFn(offset, itemsPerPage, params)
       .then((result) => {
         setRecords(result.results)
@@ -274,11 +292,11 @@ const Videography = ({ title, _filters }) => {
 
   return (
     <>
-      <div className="">
+      <div className="videographyBodyContainer">
 
-        <Row className="creatorVideographyHeader">
+        <Row className="headerPanel">
           <Col span="24">
-            <Title level={3}><Space><YoutubeOutlined /> {title ? title : 'Videography'}</Space></Title>
+            <Title level={3}><Space><YoutubeOutlined /> Shorts</Space></Title>
           </Col>
           <Col span="24">
             <VideographyFilterPanel filters={myFilters} onChange={handleFilterChange} />
@@ -349,4 +367,4 @@ const Videography = ({ title, _filters }) => {
   )
 }
 
-export default Videography
+export default Shorts;

@@ -41,6 +41,7 @@ const HomePage = () => {
 
   const [paramsTop10, setParamsTop10] = useState({ sort: "views%desc" });
   const [paramsRecent, setParamsRecent] = useState({ sort: "published_at%desc" });
+  const [shortsParamsRecent, setShortsParamsRecent] = useState({ sort: "published_at%desc", onlyShorts: true, excludeShorts: false });
 
   useEffect(() => {
 
@@ -219,7 +220,7 @@ const HomePage = () => {
             <br></br>
             <Row>
               <Col span={24}>
-                <HorizontalShortsList title="Most Recent Shorts" filter={paramsRecent} />
+                <HorizontalShortsList title="Most Recent Shorts" filter={shortsParamsRecent} />
               </Col>
             </Row>
 

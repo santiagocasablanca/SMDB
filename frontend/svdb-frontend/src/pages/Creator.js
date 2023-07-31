@@ -42,7 +42,7 @@ const CreatorPage = () => {
       if (res.result) {
         setCreator(res.result);
         setIsFetched(true);
-        setChannelIds(res.result.channels.map(channel => {return channel.channel_id}));
+        setChannelIds(res.result.channels.map(channel => { return channel.channel_id }));
       }
     });
   }
@@ -246,10 +246,18 @@ const CreatorPage = () => {
   );
 
   const filters = {
-    
+
     channels: channelIds,
     search: true
   }
+
+  const shortsFilters = {
+    channels: channelIds,
+    onlyShorts: true,
+    excludeShorts: false,
+    search: true
+  };
+
 
 
   const bannerUrl = creator.banner_picture + '=w2560-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj';
@@ -300,13 +308,15 @@ const CreatorPage = () => {
                           <ChannelTabs _creator={creator} _channels={creator.channels}></ChannelTabs>
                         </Col>
                       </Row></>
-                    }, 
+                    },
+                    // { label: 'Graphs', key: '_graphs', children: <><CreatorGraphsPanel _filters={filters} /></> },
                     { label: 'Videography', key: '_videography', children: <><Videography _filters={filters} /></> },
-                    
-                    // { label: 'Graphs', key: '_graphs' },
-                    // { label: 'Series', key: '_series', children: <><Videography /></> }, { label: 'Games', key: '_games' }, { label: 'Appearences', key: '_appearences' },
-                    // { label: 'Shorts', key: '_shorts' }, 
-                  ]}
+                    {
+                      label: 'Shorts', key: '_shorts', children: <><Videography title="Shorts" _filters={shortsFilters} /></>
+                    },
+
+                      // { label: 'Series', key: '_series', children: <><Videography /></> }, { label: 'Games', key: '_games' }, { label: 'Appearences', key: '_appearences' },
+                    ]}
                   />
                 </Col>
               </Row>

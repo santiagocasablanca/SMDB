@@ -48,7 +48,7 @@ export const findAllChannelsController = async (
 
     let whereClause = {}
     if (req.query.channels) {
-      console.log(req.query.channels);
+      // console.log(req.query.channels);
       var channelsArr = req.query.channels.split(',');
 
       whereClause = {

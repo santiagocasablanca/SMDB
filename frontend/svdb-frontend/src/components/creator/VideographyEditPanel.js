@@ -28,20 +28,20 @@ const VideographyEditPanel = ({ _video, onChange }) => {
     fetchData();
   }, [_video]);
 
+  // .editVideoContainer {
+  //     padding: 0 20px 0 20px;
+  // }
+  
+  // .editVideoContainer {
+  //     padding: 0 10px 0 10px;
+  // }
   insertCss(`
-        .editVideoContainer {
-            padding: 0 20px 0 20px;
-        }
-        
         .videoDimensions {
             height: 550px;
         }
 
 
         @media (max-width: 900px) {
-            .editVideoContainer {
-                padding: 0 10px 0 10px;
-            }
         }
 
         @media (max-width: 600px) {

@@ -130,10 +130,7 @@ export const fetchAllTags = async (
     
     // Convert the Set back to an array
     const allTags = Array.from(uniqueTagsSet);
-    console.log(allTags);
-
-
-
+   
     // console.log(JSON.stringify(records));
     res.status(200).json({
       status: "success",
@@ -409,7 +406,7 @@ export const findAllVideosController = async (
       whereClause['duration_parsed'] = { [Sequelize.Op.gt]: ['69'] };
     }
 
-    console.log(whereClause);
+    // console.log(whereClause);
 
     const videos = await Video.findAndCountAll({ where: whereClause, limit, offset: skip, order: [sort] });
 

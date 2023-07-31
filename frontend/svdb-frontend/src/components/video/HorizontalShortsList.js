@@ -29,12 +29,10 @@ const HorizontalShortsList = ({ title, filter }) => {
             let _params = new URLSearchParams();
             _params.append("excludeShorts", false);
             _params.append("onlyShorts", true);
-            // console.log(filter)
             for (const property in filter) {
                 if (filter[property] && filter[property] != '' && filter[property].length >= 1)
                     _params.append(property, filter[property]);
             }
-            // console.log(_params);
 
             await getVideosFn(1, 10, _params)
                 .then((result) => {
@@ -47,10 +45,8 @@ const HorizontalShortsList = ({ title, filter }) => {
     }, [filter]);
 
     const handleClick = () => {
-        const url = '/videography';
-        // not necessary, kind of redudant at the moment. Params are set through useParams and useLocation (state) 
-        // useParams(params)
-        navigate(url);
+        const url = '/shorts';
+        navigate(url, { state: { filter } });
     }
 
     return (

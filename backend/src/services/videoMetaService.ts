@@ -22,7 +22,7 @@ async function delay(ms: any) {
 
 const seriesCategories = [
     { category: 'Tinder', keywords: ['tinder'] },
-    { category: '20vs1', keywords: ['20 WOMEN VS 1 SIDEMEN'] },
+    { category: '20vs1', keywords: ['20 WOMEN VS 1 SIDEMEN', '20 VS 1'] },
     { category: 'Road Trip', keywords: ['road TRIP', 'roadtrip', 'road trip'] },
     { category: 'Holiday', keywords: ['holiday'] },
     { category: 'Calories Challenge', keywords: ['calories', 'calorie'] },
@@ -66,7 +66,7 @@ const tagCategories = [
     { category: 'Music', keywords: ['song', 'music video', 'artist', 'album'] },
     { category: 'Football', keywords: ['football', 'goal', 'charity', 'match'], },
     { category: 'Tinder', keywords: ['tinder'] },
-    { category: '20vs1', keywords: ['20 WOMEN VS 1 SIDEMEN'] },
+    { category: '20vs1', keywords: ['20 WOMEN VS 1 SIDEMEN', '20 VS 1'] },
     { category: 'Road Trip', keywords: ['road TRIP', 'roadtrip', 'road trip'] },
     { category: 'Holiday', keywords: ['holiday'] },
     { category: 'Calories Challenge', keywords: ['calories', 'calorie'] },

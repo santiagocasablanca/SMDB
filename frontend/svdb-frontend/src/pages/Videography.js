@@ -13,6 +13,7 @@ import useFormatter from '../hooks/useFormatter';
 import { LikeOutlined, YoutubeOutlined, CalendarOutlined, VideoCameraOutlined, EyeOutlined, UserOutlined, FilterOutlined } from '@ant-design/icons';
 import VideographyFilterPopoverPanel from './VideographyFilterPopoverPanel';
 import VideographyFilterPanel from './VideographyFilterPanel';
+import { useLocation } from 'react-router-dom';
 
 // .ant-input {
 //   color: $coolLighterGray !important;
@@ -21,24 +22,29 @@ import VideographyFilterPanel from './VideographyFilterPanel';
 
 const { Title } = Typography;
 
-const Videography = ({_filters}) => {
-  
+const Videography = ({ _filters }) => {
+
   const { intToStringBigNumber, parseDate, parseDuration, displayVideoDurationFromSeconds, humanizeDurationFromSeconds, displayVideoDurationFromSecondsWithLegend } = useFormatter();
-  
-    const defaultFilters = {
-      title: '',
-      channels: [],
-      published_atRange: [],
-      tags: [],
-      locations: '',
-      series: [],
-      search: false, // Set this to false by default
-      category: '',
-      date: null,
-    };
-  
-  
-    const [myFilters, setMyFilters] = useState(_filters || defaultFilters);
+  const location = useLocation();
+  // const searchParams = new URLSearchParams(location.state?.filters || {});
+
+  const defaultFilters = {
+    title: '',
+    channels: [],
+    published_atRange: [],
+    tags: [],
+    locations: '',
+    series: [],
+    search: false, // Set this to false by default
+    category: '',
+    onlyShorts: false,
+    excludeShorts: true,
+    date: null,
+    sort: ''
+  };
+
+
+  const [myFilters, setMyFilters] = useState(_filters || defaultFilters);
 
   // border: 1px solid black;
   insertCss(`
@@ -182,11 +188,18 @@ const Videography = ({_filters}) => {
   ]
 
 
+
+  // TODO missing setting filters in order to make it clear on the UI what are the applied filters based on the redirected location
   useEffect(() => {
-    console.log(_filters);
-    console.log(myFilters);
+    let params = new URLSearchParams();
+    if(location.state && location.state?.filter) {
+      Object.keys(location.state?.filter).forEach((key) => {
+        params.append(key, location.state?.filter[key])
+      })
+    }
+    console.log(params);
+
     const offset = activePage;//itemsPerPage * activePage - itemsPerPage
-    let params = new URLSearchParams()
     Object.keys(columnFilter).forEach((key) => {
       params.append(key, columnFilter[key])
     });
@@ -194,24 +207,22 @@ const Videography = ({_filters}) => {
       columnSorter.column !== undefined &&
       params.append('sort', `${columnSorter.column}%${columnSorter.state}`);
 
-    // filters && filters.forEach(item => {
-    //   console.log('keyvalue: ' + JSON.stringify(item));
-    //   params.append(item.key, item.value);
-    // });
+    
 
     for (const property in myFilters) {
-      console.log(myFilters[property] && myFilters[property] != '' && myFilters[property].length > 0);
+      // console.log(property, myFilters[property], myFilters[property] && myFilters[property] != '' && myFilters[property].length > 0);
       if (myFilters[property] && myFilters[property] != '' && myFilters[property].length > 0)
         params.append(property, myFilters[property]);
     }
-    console.log(params);
+
+    // console.log(params);
 
     getVideosFn(offset, itemsPerPage, params)
       .then((result) => {
         setRecords(result.results)
         result.results ? setVideos(result.videos) : setVideos([])
       })
-  }, [_filters, activePage, columnFilter, columnSorter, itemsPerPage])
+  }, [_filters, location.search, activePage, columnFilter, columnSorter, itemsPerPage])
 
 
   const onChange = (pagination, filters, sorter, extra) => {

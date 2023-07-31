@@ -6,6 +6,7 @@ const Home = React.lazy(() => import('./pages/Home'))
 const Creator = React.lazy(() => import('./pages/Creator'))
 const Creators = React.lazy(() => import('./pages/Creators'))
 const Videography = React.lazy(() => import('./pages/Videography'))
+const Shorts = React.lazy(() => import('./pages/Shorts'))
 const About = React.lazy(() => import('./pages/About'))
 // const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
 // const Typography = React.lazy(() => import('./views/theme/typography/Typography'))
@@ -19,6 +20,7 @@ const routes = [
   { path: '/creator/:id', name: 'Creator', element: Creator},
   { path: '/creators', name: 'Creators', element: Creators },
   { path: '/videography', name: 'Videography', element: Videography },
+  { path: '/shorts', name: 'Shorts', element: Shorts },
   { path: '/about', name: 'About', element: About },
 ]
 
