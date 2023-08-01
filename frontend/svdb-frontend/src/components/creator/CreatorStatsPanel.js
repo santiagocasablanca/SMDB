@@ -129,6 +129,10 @@ const CreatorStatsPanel = ({ creator, channel, stats, channelsStats, mostRecentV
     border-radius: 5px;
   }
 
+  .channel-table p {
+      color:  `+ variables.onSurface + `;
+  }
+
   .since-tag {
   }
   .since-tag span {

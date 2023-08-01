@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
+  PlayCircleOutlined,
   UserOutlined,
   MobileOutlined,
   HomeOutlined,
@@ -89,6 +90,12 @@ const AppSidebar = ({ collapsed, childToParent }) => {
               icon: <UserOutlined />,
               label: <Link to='/creators'>Creators</Link>,
               path: '/creators'
+            },
+            {
+              key: '/channels',
+              icon: <PlayCircleOutlined />,
+              label: <Link to='/channels'>Channels</Link>,
+              path: '/channels'
             },
             {
               key: '/videography',

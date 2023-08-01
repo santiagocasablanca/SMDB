@@ -4,16 +4,7 @@ import { Card, List, Row, Col, Image, Table, Space, Avatar, Button, Popover, Tag
 import { LikeOutlined, YoutubeOutlined, CalendarOutlined, VideoCameraOutlined, EyeOutlined, UserOutlined, FilterOutlined } from '@ant-design/icons';
 
 import insertCss from 'insert-css';
-import ReactPlayer from 'react-player'
-
-
 import { getCreatorsFn, associateChannelIdsToCreatorFn } from "../services/creatorApi.ts";
-import { getVideosFn } from "../services/videoApi.ts";
-
-
-import FrequencyCard from "./FrequencyCard";
-import UploadTimeFrequencyCard from "./UploadTimeFrequencyCard";
-import ChannelTotalStats from "./ChannelTotalsStats";
 import variables from '../sass/antd.module.scss'
 import useFormatter from '../hooks/useFormatter';
 import dayjs from "dayjs"
