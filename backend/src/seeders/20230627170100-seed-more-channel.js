@@ -34,7 +34,7 @@ const channels_urls = [
   }
 ];
 
-const apiKey = 'AIzaSyA9IHgl5-gGaQYpN01q2TiYcF5mKw6TQ8A';
+const apiKey = process.env.API_KEY;
 
 async function fetchChannelDataFromAPI(channelId) {
   const url = `https://www.googleapis.com/youtube/v3/channels?part=snippet,contentDetails,statistics,brandingSettings&id=${channelId}&key=${apiKey}`;

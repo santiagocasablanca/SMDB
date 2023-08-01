@@ -190,7 +190,7 @@ const Shorts = ({ _filters }) => {
 
   useEffect(() => {
     let params = new URLSearchParams();
-    if(location.state && location.state?.filter) {
+    if (location.state && location.state?.filter) {
       Object.keys(location.state?.filter).forEach((key) => {
         params.append(key, location.state?.filter[key])
       })
@@ -205,15 +205,14 @@ const Shorts = ({ _filters }) => {
       columnSorter.column !== undefined &&
       params.append('sort', `${columnSorter.column}%${columnSorter.state}`);
 
-    
+
 
     for (const property in myFilters) {
-      // console.log(property, myFilters[property], myFilters[property] && myFilters[property] != '' && myFilters[property].length > 0);
-      if (myFilters[property] && myFilters[property] != '' && myFilters[property].length > 0)
+      if (typeof myFilters[property] === 'boolean' || (myFilters[property] && myFilters[property] != '' && myFilters[property].length > 0))
         params.append(property, myFilters[property]);
     }
 
-    // console.log(params);
+    console.log(params);
 
     getVideosFn(offset, itemsPerPage, params)
       .then((result) => {

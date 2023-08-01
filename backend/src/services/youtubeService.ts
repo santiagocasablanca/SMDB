@@ -28,8 +28,7 @@ async function delay(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-// Set up the API request parameters
-const apiKey = 'AIzaSyA9IHgl5-gGaQYpN01q2TiYcF5mKw6TQ8A';
+const apiKey = process.env.API_KEY;
 
 class YoutubeService {
 
