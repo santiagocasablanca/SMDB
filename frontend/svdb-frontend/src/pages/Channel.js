@@ -21,7 +21,7 @@ const ChannelPage = () => {
 
   const { id } = useParams();
   const [isFetched, setIsFetched] = useState(false);
-  const [channel, setChannel] = useState([]);
+  const [channel, setChannel] = useState();
   // const {state} = useLocation();
   const { intToStringBigNumber, parseDate, parseDuration } = useFormatter();
 
@@ -35,6 +35,7 @@ const ChannelPage = () => {
     await getChannelFn(id).then((res) => {
       if (res.result) {
         setChannel(res.result);
+        console.log(res.result);
         setIsFetched(true);      }
     });
   }
@@ -231,12 +232,12 @@ const ChannelPage = () => {
 
   const filters = {
 
-    channels: [channel.channel_id],
+    channels: [channel?.channel_id],
     search: true
   }
 
   const shortsFilters = {
-    channels: [channel.channel_id],
+    channels: [channel?.channel_id],
     onlyShorts: true,
     excludeShorts: false,
     search: true
@@ -244,7 +245,7 @@ const ChannelPage = () => {
 
 
 
-  const bannerUrl = channel.banner_url + '=w2560-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj';
+  const bannerUrl = channel?.banner_url + '=w2560-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj';
   return (
     <>
       {!isFetched ? (

@@ -250,7 +250,13 @@ const CreatorChannel = ({ creator, channel }) => {
 
         setIsLoaded(true);
     }
-
+    insertCss(`
+    @media (max-width: 768px) {
+        .hide-on-small-screen {
+          display: none;
+        }
+      }
+      `);
 
     // FIX responsiveness of this shit
     return (
@@ -286,7 +292,7 @@ const CreatorChannel = ({ creator, channel }) => {
                         </Col>
                     </Row>
                     <br></br>
-                    <Row gutter={[16, 16]}>
+                    <Row gutter={[16, 16]} className="hide-on-small-screen">
                         <Col span={24} xl={24}>
                             <CreatorFrequencyCard _channels={isAllChannels ? creator.channels : [channel]}></CreatorFrequencyCard>
                         </Col>

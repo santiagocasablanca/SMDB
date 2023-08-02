@@ -9,6 +9,7 @@ const ChannelCreatorService = require('../services/channelCreatorService');
 import { db, sequelize } from "../util/db";
 import { ChannelsSearchReqQuery } from "./types";
 const Channel = db.channel;
+const Creator = db.creator;
 
 export const fetchChannelController = async (
   req: Request<{}, {}, {}>,
@@ -18,7 +19,13 @@ export const fetchChannelController = async (
     const id = req.params['id'];
     console.log(id);
     const channel = await Channel.findOne({
-      where: { channel_id: id }
+      where: { channel_id: id },
+      include: [{
+        model: Creator,
+        as: 'creators', attributes: ['id', 'custom_url',
+          'name',
+          'profile_picture']
+      }]
     })
 
     res.status(200).json({

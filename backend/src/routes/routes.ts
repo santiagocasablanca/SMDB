@@ -1,4 +1,5 @@
 import express from "express";
+import apiKeyAuth from '../middlewares/apiKeyAuth'; // Import the API key middleware
 
 import {
   findAllVideosController,
@@ -26,7 +27,7 @@ router.route("/channels/:id")
 
 router.route("/creators/")
   .get(findAllCreatorsController)
-  .post(createCreatorController);
+  .post(apiKeyAuth, createCreatorController);
 router.route("/creators/:id")
   .get(fetchCreatorController);
 router.route("/topCreators")
@@ -42,7 +43,7 @@ router
 router
   .route("/videos/:id")
   .get(fetchVideoController)
-  .patch(updateVideoController);
+  .patch(apiKeyAuth, updateVideoController);
   // .delete(deleteVideoController);
 
 router

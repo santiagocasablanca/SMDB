@@ -92,7 +92,7 @@ const VideographyEditPanel = ({ _video, onChange }) => {
             <Col span={24}>
               <Space.Compact direction="vertical" style={{ float: 'right', color: 'white' }}>
                 <Space size="small" style={{ float: 'right' }}>
-                  {/* <UpdateVideoModal video={ video } /> */}
+                  <UpdateVideoModal video={ video } />
                   <CalendarOutlined /> <Text type="secondary" style={{ float: 'right' }}>  {parseDate(video.published_at)}</Text>
                 </Space>
                 <Space size="small" style={{ float: 'right' }}>

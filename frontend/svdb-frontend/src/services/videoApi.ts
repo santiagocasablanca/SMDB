@@ -88,8 +88,8 @@ export const fetchAllTags = async () => {
   return response.data;
 };
 
-export const updateVideoFn = async (id, params) => {
+export const updateVideoFn = async (apiKey, id, params) => {
   const req = `videos/${id}`;
-  const response = await videoApi.patch(req, params);
+  const response = await videoApi.patch(req, params, {headers: {'X-API-KEY': apiKey}});
   return response.data;
 };

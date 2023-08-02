@@ -46,9 +46,15 @@ export const getCreatorStatsFn = async (params) => {
 };
 
 
-export const createAndAssociateChannelsFn = async (params) => {
-  const response = await api.post('creators/', params);
-  return response.data;
+export const createAndAssociateChannelsFn = async (apiKey, params) => {
+
+  try {
+    const response = await api.post('creators/', params, {headers: {'X-API-KEY': apiKey}});
+    return response.data;
+  }  catch (error) {
+    console.log(error);
+  }
+
 };
 
 export const associateChannelIdsToCreatorFn = async (params) => {

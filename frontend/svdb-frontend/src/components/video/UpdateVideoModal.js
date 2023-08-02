@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, List, Row, Col, Image, Table, Space, Avatar, Button, Popover, Tag, Typography, Modal, Form, Input, notification } from 'antd';
-import { LikeOutlined, UserAddOutlined } from '@ant-design/icons';
+import { EditOutlined } from '@ant-design/icons';
 
 import insertCss from 'insert-css';
 import { getCreatorsFn } from "../../services/creatorApi.ts";
@@ -30,7 +30,7 @@ const UpdateVideoModal = ({ video }) => {
         console.log(video);
         console.log(directorIds, cast);
         // const director_ids = values.directors.split(',').map((id) => id.trim());
-        updateVideoFn(video.video_id, { directedBy: directorIds, cast: cast });
+        updateVideoFn(values.apiKey, video.video_id, { directedBy: directorIds, cast: cast });
         // Close the modal
         setVisible(false);
 
@@ -54,7 +54,7 @@ const UpdateVideoModal = ({ video }) => {
 
     return (
         <>
-            <Button onClick={showModal} icon={<UserAddOutlined />} />
+            <Button type="text" onClick={showModal} icon={<EditOutlined />} />
             <Modal
                 title="Update Video Information"
                 visible={visible}
@@ -62,7 +62,17 @@ const UpdateVideoModal = ({ video }) => {
                 footer={null}>
 
                 <Form onFinish={onFinish} form={form}>
-
+                    <Form.Item
+                        name="apiKey"
+                        label="Api Key"
+                        rules={[
+                            { required: true, message: 'Please enter the api key' },
+                        ]}
+                    >
+                        <Input
+                            placeholder="Enter the Api Key"
+                        />
+                    </Form.Item>
                     <Form.Item
                         name="directedBy"
                         label="Directed by"

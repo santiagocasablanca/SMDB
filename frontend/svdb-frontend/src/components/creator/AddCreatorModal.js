@@ -20,8 +20,9 @@ const AddCreatorModal = ({ }) => {
         setVisible(false);
     };
 
-    const onFinish = (values) => {        const channel_ids = values.channelIds.split(',').map((id) => id.trim());
-        createAndAssociateChannelsFn({ name: values.name, custom_url: values.custom_url, profile_picture: values.profile_picture, banner_picture: values.banner_picture, channel_ids: channel_ids })
+    const onFinish = (values) => {
+        const channel_ids = values.channelIds.split(',').map((id) => id.trim());
+        createAndAssociateChannelsFn(values.apiKey, { name: values.name, custom_url: values.custom_url, profile_picture: values.profile_picture, banner_picture: values.banner_picture, channel_ids: channel_ids })
         // Close the modal
         setVisible(false);
 
@@ -34,7 +35,7 @@ const AddCreatorModal = ({ }) => {
 
     return (
         <>
-            <Button onClick={showModal} icon={<UserAddOutlined />}/>
+            <Button onClick={showModal} icon={<UserAddOutlined />} />
             <Modal
                 title="Add new Creator and Associate Channels Ids"
                 visible={visible}
@@ -43,6 +44,17 @@ const AddCreatorModal = ({ }) => {
                 {/* name	custom_url	profile_picture	banner_picture */}
                 <Form onFinish={onFinish}>
                     {/* name */}
+                    <Form.Item
+                        name="apiKey"
+                        label="Api Key"
+                        rules={[
+                            { required: true, message: 'Please enter the api key' },
+                        ]}
+                    >
+                        <Input
+                            placeholder="Enter the Api Key"
+                        />
+                    </Form.Item>
                     <Form.Item
                         name="name"
                         label="Name"

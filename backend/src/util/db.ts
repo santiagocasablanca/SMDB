@@ -33,6 +33,7 @@ db.channel = require("../models/channel")(sequelize, Sequelize, DataTypes);
 db.video = require("../models/video")(sequelize, Sequelize, DataTypes);
 db.videoStats = require("../models/videoStats")(sequelize, Sequelize, DataTypes);
 db.channelStats = require("../models/channelStats")(sequelize, Sequelize, DataTypes);
+db.apiKey = require("../models/apiKey")(sequelize, Sequelize, DataTypes);
 
 db.creator.belongsToMany(db.channel, {
     through: 'channel_creator',

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, List, Row, Col, Popover, Image, Typography, Avatar, Divider, Tooltip, Space, Spin } from 'antd';
+import { Card, List, Tabs, Row, Col, Popover, Image, Typography, Avatar, Divider, Tooltip, Space, Spin } from 'antd';
 // import CreatorChannel from './CreatorChannel'
 import insertCss from 'insert-css';
 import { LikeOutlined, ArrowDownOutlined, ArrowUpOutlined, ClockCircleOutlined, EyeOutlined, CommentOutlined, FilterOutlined } from '@ant-design/icons';
@@ -139,7 +139,36 @@ const ChannelOverviewTab = ({ _channel }) => {
                 width: 32px !important;
                 height: 32px !important;
             }
+
+            .creatorContainer {
+                margin: 0 20px;
+              }
+          
+              .banner img {
+                height: auto;
+              }
+          
+              .profilePicture {
+                width: 64px;
+                height: 64px;
+                float: left;
+              }
+          
+              .channel_stats_info {
+                padding: 0px 20px;
+              }
+          
+              .creatorChannelCard {
+                  width: 100%;
+                }
+              
         }
+
+        @media (max-width: 768px) {
+            .hide-on-small-screen {
+              display: none;
+            }
+          }
 
     `);
 
@@ -400,6 +429,42 @@ const ChannelOverviewTab = ({ _channel }) => {
             );
         }
 
+
+        const ChannelCreatorsPanel = ({ _creators }) => {
+            const [creatorTabs, setCreatorTabs] = useState([]);
+            useEffect(() => {
+                const creatorsTabs = _creators.map((_creator) => {
+                    return {
+                        label: <div>
+                            <Avatar src={_creator.profile_picture} />
+                            <span style={{ marginLeft: '5px' }}>{_creator.name}</span>
+                        </div>,
+                        key: _creator.id,
+                        children: <></>
+                    };
+                });
+                setCreatorTabs(creatorsTabs);
+            }, [_creators]);
+            return (
+                <div style={{ overflowX: 'auto' }}>
+                    <div style={{ display: 'inline-flex', flexWrap: 'nowrap', padding: '5px 10px' }}>
+                        {_creators.map((creator, index) => (
+                            <div key={"channelElem" + index} style={{ marginRight: '10px', width: '160px' }}>
+
+                                <Text><Avatar src={creator.profile_picture} key={"avatar_channel_s" + index} /> {creator.name}</Text>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                // <Tabs
+                //     defaultActiveKey="1"
+                //     size="small"
+                //     items={creatorTabs}
+                // />
+            );
+        }
+
         const bannerUrl = _channel.banner_url + '=w2560-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj';
 
         return (
@@ -437,6 +502,15 @@ const ChannelOverviewTab = ({ _channel }) => {
                                             </Space>
                                             <p>Created at {parseDate(_channel?.channel_created_at)}</p>
                                         </div>
+                                    </Col>
+                                </Row>
+                            </div>
+                            <div className="channelCreatorsContainer">
+                                <Row gutter={16} justify="center">
+                                    <Col span={24}>
+                                        {_channel.creators?.length > 0 ?
+                                            (<ChannelCreatorsPanel _creators={_channel.creators} />) : (<Text>No creators associated</Text>)
+                                        }
                                     </Col>
                                 </Row>
                             </div>
@@ -530,7 +604,7 @@ const ChannelOverviewTab = ({ _channel }) => {
                     <div style={{ width: '100%' }}>
                         <Row gutter={[8, 4]} wrap={false} style={{ overflow: 'auto', whiteSpace: 'nowrap' }}>
                             <StatisticsCards stats={stats} />
-                            
+
                         </Row>
                     </div>
                     <br></br>
@@ -551,7 +625,7 @@ const ChannelOverviewTab = ({ _channel }) => {
                         </Col>
                     </Row>
                     <br></br>
-                    <Row gutter={[16, 16]}>
+                    <Row gutter={[16, 16]} className="hide-on-small-screen">
                         <Col span={24} xl={24}>
                             <FrequencyCard _channels={[channel]}></FrequencyCard>
                         </Col>
