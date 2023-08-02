@@ -27,16 +27,23 @@ const TopCreators = ({ channel_ids }) => {
 
   useEffect(() => {
 
-    let params = new URLSearchParams();
-    params.append("channels", channel_ids);
-    // params.append("publishedAtRange", [startDate.format("YYYY-MM-DD"), endDate.format("YYYY-MM-DD")]);
-    getTopCreatorsFn(1, 10, params).then((result) => {
-      if (result.results) {
-        setTopCreators(result.results);
-      }
-    })
 
-    setIsLoading(false);
+    async function fetchData() {
+      console.log(channel_ids);
+      if (channel_ids !== null && channel_ids.length > 0) {
+
+        let params = new URLSearchParams();
+        params.append("channels", channel_ids);
+        // params.append("publishedAtRange", [startDate.format("YYYY-MM-DD"), endDate.format("YYYY-MM-DD")]);
+        await getTopCreatorsFn(1, 10, params).then((result) => {
+          if (result.results) {
+            setTopCreators(result.results);
+          }
+          setIsLoading(false);
+        })
+      }
+    }
+    fetchData();
   }, [channel_ids]);
 
 
@@ -80,7 +87,7 @@ const TopCreators = ({ channel_ids }) => {
                     }}
                     itemLayout="vertical"
                     dataSource={topCreators}
-                    style={{marginLeft: 0, marginRight: 0}}
+                    style={{ marginLeft: 0, marginRight: 0 }}
                     renderItem={(item, index) => (
                       <List.Item
                         className="creatorCard"
