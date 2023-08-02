@@ -356,10 +356,11 @@ export const findAllVideosController = async (
     const limit = req.query.limit || 10;
     const skip = (page - 1) * limit;
 
+    // console.log(req.query)
     //sort 
     let sort = req.query.sort ? req.query.sort.split('%') : ['published_at', 'DESC'];
 
-    let excludeShorts = req.query.excludeShorts !== undefined ? req.query.excludeShorts : true;
+    let excludeShorts = req.query.excludeShorts !== undefined ? req.query.excludeShorts : 'true';
 
     let whereClause = {}
 
@@ -382,8 +383,6 @@ export const findAllVideosController = async (
       whereClause['tags'] = { [Op.contains]: tagsArr };
     }
 
-
-
     if (req.query.title) {
       const searchTitle = req.query.title.toLowerCase();
       const lowerTitleCol = Sequelize.fn('lower', Sequelize.col('title'));
@@ -398,11 +397,11 @@ export const findAllVideosController = async (
 
     }
 
-    if (req.query.onlyShorts) {
+    if (req.query.onlyShorts === 'true') {
       whereClause['duration_parsed'] = { [Sequelize.Op.lt]: ['69'] };
     }
 
-    if (excludeShorts == true) {
+    if (excludeShorts === 'true') {
       whereClause['duration_parsed'] = { [Sequelize.Op.gt]: ['69'] };
     }
 

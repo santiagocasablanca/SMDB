@@ -244,7 +244,7 @@ export const createCreatorController = async (
   res: Response) => {
 
   try {
-    console.log('STARTING');
+    console.log('STARTING: ', req.body);
     const channel_ids = req.body.channel_ids;
     const name = req.body.name;
     const custom_url = req.body.custom_url;
@@ -255,8 +255,8 @@ export const createCreatorController = async (
     const creatorService = new CreatorService();
     const channelCreatorService = new ChannelCreatorService();
 
+    const creator = await creatorService.create(name, custom_url, profile_picture, banner_picture);
     for (const id of channel_ids) {
-      const creator = await creatorService.create(name, custom_url, profile_picture, banner_picture);
       console.log('id: ', id);
       console.log('creator_id: ', creator.id);
       const channel = await youtubeService.fetchChannelAndVideoData(id);

@@ -145,14 +145,14 @@ const CreatorPage = () => {
         </Col>
         <Col span="2">
           <div style={{ float: 'right' }}>
-            {/* <Space.Compact block>
+            <Space.Compact block>
               {isAdmin ? (<Tooltip title="Add Creator">
                 <AddCreatorModal />
               </Tooltip>) : ('')}
               <Tooltip title="Filter">
                 <Button icon={<FilterOutlined />} />
               </Tooltip>
-            </Space.Compact> */}
+            </Space.Compact>
 
           </div>
         </Col>

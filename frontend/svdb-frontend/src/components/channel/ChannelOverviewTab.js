@@ -8,7 +8,7 @@ import { getVideosFn } from "../../services/videoApi.ts";
 import { getCreatorStatsFn } from "../../services/creatorApi.ts";
 
 import variables from '../../sass/antd.module.scss';
-import CreatorStatsPanel from '../creator/CreatorStatsPanel'
+import StatisticsCards from '../creator/StatisticsCards'
 import HorizontalVideoList from '../creator/HorizontalVideoList'
 import FrequencyCard from '../home/FrequencyCard';
 import UploadTimeFrequencyCard from '../home/UploadTimeFrequencyCard';
@@ -529,8 +529,8 @@ const ChannelOverviewTab = ({ _channel }) => {
                 <>
                     <div style={{ width: '100%' }}>
                         <Row gutter={[8, 4]} wrap={false} style={{ overflow: 'auto', whiteSpace: 'nowrap' }}>
-                            {/* <StatisticsCards stats={stats} /> */}
-                            STATS CARDS
+                            <StatisticsCards stats={stats} />
+                            
                         </Row>
                     </div>
                     <br></br>

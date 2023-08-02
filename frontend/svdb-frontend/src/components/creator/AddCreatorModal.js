@@ -21,7 +21,7 @@ const AddCreatorModal = ({ }) => {
     };
 
     const onFinish = (values) => {        const channel_ids = values.channelIds.split(',').map((id) => id.trim());
-        createAndAssociateChannelsFn({ name: values.name, custom_url: values.custom_url, profile_picture: values.profile_picture, channel_ids: channel_ids })
+        createAndAssociateChannelsFn({ name: values.name, custom_url: values.custom_url, profile_picture: values.profile_picture, banner_picture: values.banner_picture, channel_ids: channel_ids })
         // Close the modal
         setVisible(false);
 

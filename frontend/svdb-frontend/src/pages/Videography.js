@@ -207,14 +207,14 @@ const Videography = ({ _filters }) => {
       columnSorter.column !== undefined &&
       params.append('sort', `${columnSorter.column}%${columnSorter.state}`);
 
-
+console.log(myFilters);
 
     for (const property in myFilters) {
       if (typeof myFilters[property] === 'boolean' || (myFilters[property] && myFilters[property] != '' && myFilters[property].length > 0))
         params.append(property, myFilters[property]);
     }
 
-    // console.log(params);
+    console.log(params);
 
     getVideosFn(offset, itemsPerPage, params)
       .then((result) => {

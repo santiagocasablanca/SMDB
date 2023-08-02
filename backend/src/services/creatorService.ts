@@ -15,7 +15,7 @@ class CreatorService {
         console.log('creating new Creator', name);
         const exists = await Creator.findOne({ where: { custom_url: custom_url } });
         if (exists) {
-            throw 'AlreadyExistsException()';
+            throw 'AlreadyExistsException(custom_url)';
         }
         const creator = await Creator.create({
             id: uuidv4(),
