@@ -20,7 +20,7 @@ export const getCreatorFn = async (id) => {
   return response.data;
 };
 
-export const getCreatorsFn = async (page = 1, limit = 30, params) => {
+export const getCreatorsFn = async (page = 1, limit = 50, params) => {
   const req = `creators?page=${page}&limit=${limit}&${params}`;
   const response = await api.get<IChannelResponse>(
     req
@@ -28,7 +28,7 @@ export const getCreatorsFn = async (page = 1, limit = 30, params) => {
   return response.data;
 };
 
-export const getTopCreatorsFn = async (page = 1, limit = 30, params) => {
+export const getTopCreatorsFn = async (page = 1, limit = 10, params) => {
   const req = `topCreators?page=${page}&limit=${limit}&${params}`;
   const response = await api.get<IChannelResponse>(
     req
