@@ -233,6 +233,8 @@ const ChannelPage = () => {
   const filters = {
 
     channels: [channel?.channel_id],
+    onlyShorts: false,
+    excludeShorts: true,
     search: true
   }
 

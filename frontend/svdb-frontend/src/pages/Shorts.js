@@ -232,7 +232,7 @@ const Shorts = ({ _filters }) => {
     }
 
     for (const property in myFilters) {
-      if (myFilters[property] && myFilters[property] != '' && myFilters[property].length >= 1)
+      if (typeof myFilters[property] === 'boolean' || (myFilters[property] && myFilters[property] != '' && myFilters[property].length > 0))
         params.append(property, myFilters[property]);
     }
 
@@ -273,7 +273,7 @@ const Shorts = ({ _filters }) => {
         params.append('sort', `${columnSorter.column}%${columnSorter.state}`);
 
       for (const property in newFilters) {
-        if (newFilters[property] && newFilters[property] != '' && newFilters[property].length >= 1)
+        if (typeof newFilters[property] === 'boolean' || (newFilters[property] && newFilters[property] != '' && newFilters[property].length > 0))
           params.append(property, newFilters[property]);
       }
 

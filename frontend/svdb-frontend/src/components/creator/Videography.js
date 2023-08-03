@@ -34,8 +34,8 @@ const Videography = ({ title, _filters }) => {
     series: [],
     search: false, // Set this to false by default
     category: '',
-    onlyShorts: Boolean,
-    excludeShorts: Boolean,
+    onlyShorts: _filters.onlyShorts || false,
+    excludeShorts: _filters.excludeShorts || true,
     sort: '',
     date: null,
   };
@@ -168,44 +168,52 @@ const Videography = ({ title, _filters }) => {
 
 
   useEffect(() => {
-    const filtersFromQueryParams = {
-      title: searchParams.get("title") || "",
-      channels: searchParams.getAll("channels") || [],
-      published_atRange: searchParams.getAll("published_atRange") || [],
-      tags: searchParams.getAll("tags") || [],
-      locations: searchParams.get("locations") || "",
-      series: searchParams.getAll("series") || [],
-      search: searchParams.get("search") === "true",
-      category: searchParams.get("category") || "",
-      onlyShorts: searchParams.get("onlyShorts") === "true",
-      excludeShorts: searchParams.get("excludeShorts") === "true",
-      sort: searchParams.get("sort") || "",
-      date: searchParams.get("date") || null,
-    };
-    setMyFilters(filtersFromQueryParams);
-    const offset = activePage;//itemsPerPage * activePage - itemsPerPage
-    let params = new URLSearchParams()
-    Object.keys(columnFilter).forEach((key) => {
-      params.append(key, columnFilter[key])
-    });
-    columnSorter &&
-      columnSorter.column !== undefined &&
-      params.append('sort', `${columnSorter.column}%${columnSorter.state}`);
 
-    for (const property in myFilters) {
-      if (typeof myFilters[property] === 'boolean' || (myFilters[property] && myFilters[property] != '' && myFilters[property].length > 0))
-        params.append(property, myFilters[property]);
+    async function fetchData() {
+      console.log(myFilters);
+      const filtersFromQueryParams = {
+        title: searchParams.get("title") || "",
+        channels: searchParams.getAll("channels") || [_filters.channels],
+        published_atRange: searchParams.getAll("published_atRange") || [],
+        tags: searchParams.getAll("tags") || [],
+        locations: searchParams.get("locations") || "",
+        series: searchParams.getAll("series") || [],
+        search: searchParams.get("search") === "true",
+        category: searchParams.get("category") || "",
+        onlyShorts: searchParams.get("onlyShorts") === "false",
+        excludeShorts: searchParams.get("excludeShorts") === "true",
+        sort: searchParams.get("sort") || "",
+        date: searchParams.get("date") || null,
+      };
+      setMyFilters(filtersFromQueryParams);
+      const offset = activePage;//itemsPerPage * activePage - itemsPerPage
+      let params = new URLSearchParams()
+      Object.keys(columnFilter).forEach((key) => {
+        params.append(key, columnFilter[key])
+      });
+      columnSorter &&
+        columnSorter.column !== undefined &&
+        params.append('sort', `${columnSorter.column}%${columnSorter.state}`);
+
+      for (const property in myFilters) {
+        if (typeof myFilters[property] === 'boolean' || (myFilters[property] && myFilters[property] != '' && myFilters[property].length > 0))
+          params.append(property, myFilters[property]);
+      }
+      console.log(myFilters);
+      await getVideosFn(offset, itemsPerPage, params)
+        .then((result) => {
+          setRecords(result.results)
+          result.results ? setVideos(result.videos) : setVideos([])
+        })
     }
-    
-    getVideosFn(offset, itemsPerPage, params)
-      .then((result) => {
-        setRecords(result.results)
-        result.results ? setVideos(result.videos) : setVideos([])
-      })
-  }, [_filters, location.search, activePage, columnFilter, columnSorter, itemsPerPage])
-
+    fetchData();
+  }, [_filters, location.search, activePage, itemsPerPage])
+  // columnFilter, columnSorter
 
   const onChange = (pagination, filters, sorter, extra) => {
+    console.log(_filters);
+    console.log(myFilters);
+    console.log(defaultFilters);
     const offset = pagination.current;//itemsPerPage * activePage - itemsPerPage
     let params = new URLSearchParams()
 
@@ -214,9 +222,9 @@ const Videography = ({ title, _filters }) => {
       params.append('sort', `${sorter.field}%${tempSortOrder}`);
     }
 
-    for (const property in myFilters) {
-      if (myFilters[property] && myFilters[property] != '' && myFilters[property].length >= 1)
-        params.append(property, myFilters[property]);
+    for (const property in _filters) {
+      if (typeof _filters[property] === 'boolean' || (_filters[property] && _filters[property] != '' && _filters[property].length > 0))
+        params.append(property, _filters[property]);
     }
 
     getVideosFn(offset, pagination.pageSize, params)
@@ -256,7 +264,7 @@ const Videography = ({ title, _filters }) => {
         params.append('sort', `${columnSorter.column}%${columnSorter.state}`);
 
       for (const property in newFilters) {
-        if (newFilters[property] && newFilters[property] != '' && newFilters[property].length >= 1)
+        if (typeof newFilters[property] === 'boolean' || (newFilters[property] && newFilters[property] != '' && newFilters[property].length > 0))
           params.append(property, newFilters[property]);
       }
 
@@ -268,6 +276,7 @@ const Videography = ({ title, _filters }) => {
 
     }
     myFilters.search = false;
+    console.log('just for be sure')
     setMyFilters({ ...myFilters, ...newFilters });
   };
 

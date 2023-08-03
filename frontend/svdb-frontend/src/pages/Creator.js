@@ -246,8 +246,9 @@ const CreatorPage = () => {
   );
 
   const filters = {
-
     channels: channelIds,
+    onlyShorts: false,
+    excludeShorts: true,
     search: true
   }
 
