@@ -57,7 +57,7 @@ const UpdateVideoModal = ({ video }) => {
             <Button type="text" onClick={showModal} icon={<EditOutlined />} />
             <Modal
                 title="Update Video Information"
-                visible={visible}
+                open={visible}
                 onCancel={handleCancel}
                 footer={null}>
 
@@ -67,8 +67,7 @@ const UpdateVideoModal = ({ video }) => {
                         label="Api Key"
                         rules={[
                             { required: true, message: 'Please enter the api key' },
-                        ]}
-                    >
+                        ]}>
                         <Input
                             placeholder="Enter the Api Key"
                         />

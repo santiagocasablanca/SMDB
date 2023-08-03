@@ -21,10 +21,10 @@ const CreatorSelector = ({ onChange }) => {
       .then((result) => {
         const temp = []
         result.results.forEach((item) => {
-            temp.push({
-              label: item.name,
-              value: item.id
-            });
+          temp.push({
+            label: item.name,
+            value: item.id
+          });
         })
 
         setOptions(temp);
@@ -43,9 +43,15 @@ const CreatorSelector = ({ onChange }) => {
   return (
     <Select mode="multiple" style={{ width: '100%' }} placeholder="Please select a creator"
       value={creators}
+      showSearch
       allowClear
       onChange={handleCreatorChange}
       options={options}
+      optionFilterProp="children"
+      filterOption={(input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
+      filterSort={(optionA, optionB) =>
+        (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+      }
     >
     </Select>
   )

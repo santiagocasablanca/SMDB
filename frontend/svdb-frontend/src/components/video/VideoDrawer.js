@@ -8,6 +8,7 @@ import insertCss from 'insert-css';
 import variables from '../../sass/antd.module.scss';
 import useFormatter from '../../hooks/useFormatter';
 import ReactPlayer from 'react-player'
+import UpdateVideoModal from './UpdateVideoModal';
 
 
 
@@ -81,6 +82,7 @@ const VideoDrawer = ({ _video, _channel, _open, childToParent }) => {
                     extra={
                         <Space>
                             <Text>{parseDate(video.published_at, "DD MMM YYYY")}</Text>
+                            <UpdateVideoModal video={ video } />
                             {/* <Button onClick={onClose}>Cancel</Button> */}
                             {/* <Button type="primary" onClick={onClose}>OK</Button> */}
                         </Space>

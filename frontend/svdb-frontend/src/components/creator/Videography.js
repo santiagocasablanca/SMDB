@@ -170,7 +170,7 @@ const Videography = ({ title, _filters }) => {
   useEffect(() => {
 
     async function fetchData() {
-      console.log(myFilters);
+      // console.log(myFilters);
       const filtersFromQueryParams = {
         title: searchParams.get("title") || "",
         channels: searchParams.getAll("channels") || [_filters.channels],
@@ -199,7 +199,7 @@ const Videography = ({ title, _filters }) => {
         if (typeof myFilters[property] === 'boolean' || (myFilters[property] && myFilters[property] != '' && myFilters[property].length > 0))
           params.append(property, myFilters[property]);
       }
-      console.log(myFilters);
+      // console.log(myFilters);
       await getVideosFn(offset, itemsPerPage, params)
         .then((result) => {
           setRecords(result.results)
@@ -211,9 +211,6 @@ const Videography = ({ title, _filters }) => {
   // columnFilter, columnSorter
 
   const onChange = (pagination, filters, sorter, extra) => {
-    console.log(_filters);
-    console.log(myFilters);
-    console.log(defaultFilters);
     const offset = pagination.current;//itemsPerPage * activePage - itemsPerPage
     let params = new URLSearchParams()
 

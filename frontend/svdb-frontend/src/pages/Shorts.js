@@ -195,7 +195,6 @@ const Shorts = ({ _filters }) => {
         params.append(key, location.state?.filter[key])
       })
     }
-    console.log(params);
 
     const offset = activePage;//itemsPerPage * activePage - itemsPerPage
     Object.keys(columnFilter).forEach((key) => {
@@ -211,9 +210,6 @@ const Shorts = ({ _filters }) => {
       if (typeof myFilters[property] === 'boolean' || (myFilters[property] && myFilters[property] != '' && myFilters[property].length > 0))
         params.append(property, myFilters[property]);
     }
-
-    console.log(params);
-
     getVideosFn(offset, itemsPerPage, params)
       .then((result) => {
         setRecords(result.results)

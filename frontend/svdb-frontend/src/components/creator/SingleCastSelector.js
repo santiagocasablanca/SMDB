@@ -57,9 +57,15 @@ const SingleCastSelector = ({ _options, onChange }) => {
     <Space.Compact>
 
       <Select mode="single" style={{ width: "185px" }} placeholder="Please select a creator"
-        value={creator}
+        showSearch
+        allowClear
         onChange={handleCreatorChange}
-        options={options}>
+        options={options}
+        optionFilterProp="children"
+        filterOption={(input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
+        filterSort={(optionA, optionB) =>
+          (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+        }>
       </Select>
 
       <Input
