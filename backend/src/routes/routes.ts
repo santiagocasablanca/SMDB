@@ -10,7 +10,9 @@ import {
   updateVideoController,
   fetchAllSeries,
   fetchAllTags,
-  fetchVideoController
+  fetchVideoController,
+  findAllVideoGuestsController,
+  findAllAppearencesController
 } from "../controllers/video.controller";
 
 import { fetchChannelController, findAllChannelsController, createChannelController } from "../controllers/channel.controller";
@@ -39,6 +41,13 @@ router.route("/creator/fetchStats")
 router
   .route("/videos/")
   .get(findAllVideosController);
+router
+  .route("/appearences/")
+  .get(findAllAppearencesController);
+
+  router
+  .route("/guests/")
+  .get(findAllVideoGuestsController);
 
 router
   .route("/videos/:id")

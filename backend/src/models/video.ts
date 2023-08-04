@@ -122,7 +122,8 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
   });
 
   Video.belongsToMany(Creator, {
-    through: 'video_creator',
+    // through: 'video_creator',
+    through: { model: 'video_creator', unique: false, role: DataTypes.STRING(50) }, // Explicitly specify the table name and set 'unique' to false
     as: 'cast', // Alias to use when accessing the associated videos as cast
     foreignKey: 'video_id', // Foreign key in the join table referencing the Creator model
     otherKey: 'creator_id', // Foreign key in the join table referencing the Video model

@@ -124,13 +124,13 @@ export const fetchAllTags = async (
   try {
 
     // where: whereClause
-    const tags = await Video.findAll({attributes: ['tags'] });
+    const tags = await Video.findAll({ attributes: ['tags'] });
     // Flatten the array and convert to a Set to remove duplicates
     const uniqueTagsSet = new Set(tags.flatMap((item) => item.tags || []));
-    
+
     // Convert the Set back to an array
     const allTags = Array.from(uniqueTagsSet);
-   
+
     // console.log(JSON.stringify(records));
     res.status(200).json({
       status: "success",
@@ -356,7 +356,7 @@ export const findAllVideosController = async (
     const limit = req.query.limit || 10;
     const skip = (page - 1) * limit;
 
-    // console.log(req.query)
+    console.log(req.query)
     //sort 
     let sort = req.query.sort ? req.query.sort.split('%') : ['published_at', 'DESC'];
 
@@ -370,6 +370,17 @@ export const findAllVideosController = async (
       whereClause['channel_id'] = { [Op.or]: channelsArr };
     }
 
+    if (req.query.excludedChannels) {
+      var channelsArr = req.query.excludedChannels.split(',');
+
+      whereClause['channel_id'] = { [Op.notIn]: channelsArr };
+    }
+
+    if (req.query.castMember) {
+      var creatorArr = req.query.castMember.split(',');
+
+      whereClause['channel_id'] = { [Op.notIn]: channelsArr };
+    }
 
     if (req.query.series) {
       var seriessArr = req.query.series.split(',');
@@ -422,19 +433,255 @@ export const findAllVideosController = async (
   }
 };
 
-// , include: [
-//  {
-//   model: Creator,
-//   as: 'directedBy', attributes: ['id', 'custom_url',
-//   'name',
-//   'profile_picture']
-// }, {
-//   model: Creator,
-//   as: 'cast', attributes: ['id', 'custom_url',
-//   'name',
-//   'profile_picture']
-// }
-// ]
+export const findAllAppearencesController = async (
+  req: Request<{}, {}, {}, VideosSearchReqQuery & { series?: string, title?: string }>,
+  res: Response
+) => {
+  try {
+    const page = req.query.page || 1;
+    const limit = req.query.limit || 10;
+    const skip = (page - 1) * limit;
+
+    console.log(req.query)
+    //sort 
+    let sort = req.query.sort ? req.query.sort.split('%') : ['published_at', 'DESC'];
+
+    let excludeShorts = req.query.excludeShorts !== undefined ? req.query.excludeShorts : 'true';
+
+    let whereClause = {}
+    let castWhereClause = {}
+
+    if (req.query.channels) {
+      var channelsArr = req.query.channels.split(',');
+
+      whereClause['channel_id'] = { [Op.or]: channelsArr };
+    }
+
+    if (req.query.excludedChannels) {
+      var channelsArr = req.query.excludedChannels.split(',');
+
+      whereClause['channel_id'] = { [Op.notIn]: channelsArr };
+    }
+
+    if (req.query.castMember) {
+      var creatorArr = req.query.castMember.split(',');
+
+      castWhereClause['id'] = { [Op.in]: creatorArr };
+    }
+
+    if (req.query.series) {
+      var seriessArr = req.query.series.split(',');
+
+      whereClause['serie'] = { [Op.or]: seriessArr };
+    }
+
+    if (req.query.tags) {
+      var tagsArr = req.query.tags.split(',');
+
+      whereClause['tags'] = { [Op.contains]: tagsArr };
+    }
+
+    if (req.query.title) {
+      const searchTitle = req.query.title.toLowerCase();
+      const lowerTitleCol = Sequelize.fn('lower', Sequelize.col('title'));
+      whereClause['title'] = Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('title')), 'LIKE', '%' + searchTitle + '%');
+    }
+
+    if (req.query.publishedAtRange) {
+      let rangeDate = req.query.publishedAtRange.split(',');
+      const publishedAtSearchInitial = dayjs(rangeDate[0]).format("YYYY-MM-DD");
+      const publishedAtSearchFinal = dayjs(rangeDate[1]).format("YYYY-MM-DD");
+      whereClause['published_at'] = { [Sequelize.Op.between]: [publishedAtSearchInitial, publishedAtSearchFinal] };
+
+    }
+
+    if (req.query.onlyShorts === 'true') {
+      whereClause['duration_parsed'] = { [Sequelize.Op.lt]: ['69'] };
+    }
+
+    if (excludeShorts === 'true') {
+      whereClause['duration_parsed'] = { [Sequelize.Op.gt]: ['69'] };
+    }
+
+    console.log(whereClause);
+
+    // await sequelize.query(
+    //   'SELECT * FROM videos WHERE id = CAST($1 AS int)',
+    //   {
+    //     bind: [5],
+    //     type: QueryTypes.SELECT,
+    //   },
+    // );
+
+    const videos = await Video.findAndCountAll({
+      where: whereClause,
+      nest: true,
+      include: [{
+        model: Creator,
+        as: 'directedBy', attributes: ['id', 'custom_url', 'name', 'profile_picture']
+      },
+      // {
+      //   sequelize.literal(`(
+      //     INNER JOIN ( "video_creator" AS "cast") 
+      //       ON "video"."video_id" = "cast"."video_id" 
+      //       AND "cast"."creator_id" IN ('23ecdddf-ae37-4af4-82a4-d72e572b2072') 
+      //   )`),
+      //   'laughReactionsCount'
+      // }
+      
+        {
+          model: Creator,
+          as: 'cast', 
+          required: true,
+          attributes: ['id', 'custom_url', 'name', 'profile_picture'], 
+          where: castWhereClause
+        }
+      ],
+      raw: true,
+      limit, offset: skip, order: [sort]
+    });
+
+    res.status(200).json({
+      status: "success",
+      results: videos.count,
+      videos: videos.rows,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      status: "error",
+      message: error.message,
+    });
+  }
+};
+
+export const findAllVideoGuestsController = async (
+  req: Request<{}, {}, {}, VideosSearchReqQuery & { series?: string, title?: string }>,
+  res: Response
+) => {
+  try {
+    const page = req.query.page || 1;
+    const limit = req.query.limit || 10;
+    const skip = (page - 1) * limit;
+
+    console.log(req.query)
+    //sort 
+    let sort = req.query.sort ? req.query.sort.split('%') : ['published_at', 'DESC'];
+
+    let excludeShorts = req.query.excludeShorts !== undefined ? req.query.excludeShorts : 'true';
+
+    let whereClause = {}
+    let castWhereClause = {}
+
+    if (req.query.channels) {
+      var channelsArr = req.query.channels.split(',');
+
+      whereClause['channel_id'] = { [Op.or]: channelsArr };
+    }
+
+    if (req.query.excludedChannels) {
+      var channelsArr = req.query.excludedChannels.split(',');
+
+      whereClause['channel_id'] = { [Op.notIn]: channelsArr };
+    }
+
+    if (req.query.castMember) {
+      var creatorArr = req.query.castMember.split(',');
+
+      castWhereClause['id'] = { [Op.in]: creatorArr };
+    }
+
+    if (req.query.notInCastMember) {
+      var creatorArr = req.query.notInCastMember.split(',');
+
+      castWhereClause['id'] = { [Op.notIn]: creatorArr };
+    }
+
+    if (req.query.series) {
+      var seriessArr = req.query.series.split(',');
+
+      whereClause['serie'] = { [Op.or]: seriessArr };
+    }
+
+    if (req.query.tags) {
+      var tagsArr = req.query.tags.split(',');
+
+      whereClause['tags'] = { [Op.contains]: tagsArr };
+    }
+
+    if (req.query.title) {
+      const searchTitle = req.query.title.toLowerCase();
+      const lowerTitleCol = Sequelize.fn('lower', Sequelize.col('title'));
+      whereClause['title'] = Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('title')), 'LIKE', '%' + searchTitle + '%');
+    }
+
+    if (req.query.publishedAtRange) {
+      let rangeDate = req.query.publishedAtRange.split(',');
+      const publishedAtSearchInitial = dayjs(rangeDate[0]).format("YYYY-MM-DD");
+      const publishedAtSearchFinal = dayjs(rangeDate[1]).format("YYYY-MM-DD");
+      whereClause['published_at'] = { [Sequelize.Op.between]: [publishedAtSearchInitial, publishedAtSearchFinal] };
+
+    }
+
+    if (req.query.onlyShorts === 'true') {
+      whereClause['duration_parsed'] = { [Sequelize.Op.lt]: ['69'] };
+    }
+
+    if (excludeShorts === 'true') {
+      whereClause['duration_parsed'] = { [Sequelize.Op.gt]: ['69'] };
+    }
+
+    console.log(whereClause);
+
+    // await sequelize.query(
+    //   'SELECT * FROM videos WHERE id = CAST($1 AS int)',
+    //   {
+    //     bind: [5],
+    //     type: QueryTypes.SELECT,
+    //   },
+    // );
+
+    const videos = await Video.findAndCountAll({
+      where: whereClause,
+      nest: true,
+      include: [{
+        model: Creator,
+        as: 'directedBy', attributes: ['id', 'custom_url', 'name', 'profile_picture']
+      },
+      // {
+      //   sequelize.literal(`(
+      //     INNER JOIN ( "video_creator" AS "cast") 
+      //       ON "video"."video_id" = "cast"."video_id" 
+      //       AND "cast"."creator_id" IN ('23ecdddf-ae37-4af4-82a4-d72e572b2072') 
+      //   )`),
+      //   'laughReactionsCount'
+      // }
+      
+        {
+          model: Creator,
+          as: 'cast', 
+          required: true,
+          attributes: ['id', 'custom_url', 'name', 'profile_picture'], 
+          where: castWhereClause
+        }
+      ],
+      raw: true,
+      limit, offset: skip, order: [sort]
+    });
+
+    console.log(videos.rows);
+
+    res.status(200).json({
+      status: "success",
+      results: videos.count,
+      videos: videos.rows,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      status: "error",
+      message: error.message,
+    });
+  }
+};
 
 export const deleteVideoController = async (
   req: Request,
