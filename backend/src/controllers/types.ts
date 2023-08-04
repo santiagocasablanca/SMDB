@@ -13,6 +13,7 @@ export type VideosReqQuery = {
   channels?: string,
   excludedChannels?: string,
   castMember?: string,
+  notInCastMember?: string,
   tags?: string,
   excludeShorts?: string,
   onlyShorts?: string,
