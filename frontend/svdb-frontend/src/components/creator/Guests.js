@@ -2,16 +2,13 @@ import { Col, Row, Card, Table, Tag, Button, Typography, Tooltip, Popover, Selec
 import { green, presetDarkPalettes } from '@ant-design/colors';
 import { yellow } from '@ant-design/colors';
 import { React, useEffect, useState } from "react"
-import { getVideosFn } from "../services/videoApi.ts"
-import VideoFilterPanel from './VideographyFilterPanel'
+import { getVideoGuestsFn } from "../../services/videoApi.ts"
 import VideographyEditPanel from './VideographyEditPanel'
 import dayjs from "dayjs"
 import insertCss from 'insert-css'
-import variables from '../sass/antd.module.scss'
-import VideographyStatsPanel from "./VideographyStatsPanel";
-import useFormatter from '../hooks/useFormatter';
+import variables from '../../sass/antd.module.scss'
+import useFormatter from '../../hooks/useFormatter';
 import { LikeOutlined, YoutubeOutlined, CalendarOutlined, VideoCameraOutlined, EyeOutlined, UserOutlined, FilterOutlined } from '@ant-design/icons';
-import VideographyFilterPopoverPanel from './VideographyFilterPopoverPanel';
 import VideographyFilterPanel from './VideographyFilterPanel';
 import { useLocation } from 'react-router-dom';
 
@@ -22,48 +19,34 @@ import { useLocation } from 'react-router-dom';
 
 const { Title } = Typography;
 
-const Videography = ({ _filters }) => {
+const Guests = ({ title, _filters }) => {
 
   const { intToStringBigNumber, parseDate, parseDuration, displayVideoDurationFromSeconds, humanizeDurationFromSeconds, displayVideoDurationFromSecondsWithLegend } = useFormatter();
   const location = useLocation();
-  // const searchParams = new URLSearchParams(location.state?.filters || {});
+  const searchParams = new URLSearchParams(location.search);
 
   const defaultFilters = {
     title: '',
-    channels: [],
-    excludedChannels: [],
-    castMember: [],
+    channels: _filters.channels,
     published_atRange: [],
     tags: [],
     locations: '',
     series: [],
     search: false, // Set this to false by default
     category: '',
-    onlyShorts: false,
-    excludeShorts: true,
+    onlyShorts: _filters.onlyShorts || false,
+    excludeShorts: _filters.excludeShorts || true,
+    sort: '',
     date: null,
-    sort: ''
   };
-
 
   const [myFilters, setMyFilters] = useState(_filters || defaultFilters);
 
-  // border: 1px solid black;
   insertCss(`
-
-  .headerPanel {
-    padding-top: 10px;
-    color: `+ variables.sdmnYellow + `;
-  }
-
-  .headerPanel h3 {
-    color: `+ variables.sdmnBlack + `;
-  }
- 
-  
-  .videographyBodyContainer {
-    margin: 10px 100px auto;
-  }
+    
+    .creatorVideographyHeader h3 {
+      color: `+ variables.sdmnBlack + `;
+    }
 
   .ant-pagination {
     background: #202020;
@@ -71,19 +54,13 @@ const Videography = ({ _filters }) => {
     margin-top: 0px !important;
   }
 
-
-  .editPanel {
-    background: `+ variables.sdmnBlack + `;
-    color: `+ variables.onSurface + `;
-  }
-  .filterPanel {
-    margin-top: 10px;
-    background: `+ variables.richBlackSofter + `;
-    color: `+ variables.onBg + `;
-  }
-
   .table-container p {
     color: white;
+  }
+
+  .filterPanel {
+    background: `+ variables.richBlackSofter + `;
+    color: `+ variables.onBg + `;
   }
   
   .mb {
@@ -91,14 +68,14 @@ const Videography = ({ _filters }) => {
   }
   
   @media (max-width: 600px) {
-    .videographyBodyContainer {
-      margin: 0 20px;
-    }
-    .headerPanel {
-      margin: 10px 0px auto;
-    }
   }
   `);
+  // .videographyBodyContainer {
+  //   margin: 0 20px;
+  // }
+  // .creatorVideographyHeader {
+  //   margin: 10px 0px auto;
+  // }
 
 
   const [activePage, setActivePage] = useState(1)
@@ -190,36 +167,48 @@ const Videography = ({ _filters }) => {
   ]
 
 
-
-  // TODO missing setting filters in order to make it clear on the UI what are the applied filters based on the redirected location
   useEffect(() => {
-    let params = new URLSearchParams();
-    if (location.state && location.state?.filter) {
-      Object.keys(location.state?.filter).forEach((key) => {
-        params.append(key, location.state?.filter[key])
-      })
+
+    async function fetchData() {
+      // console.log(myFilters);
+      const filtersFromQueryParams = {
+        title: searchParams.get("title") || "",
+        channels: searchParams.getAll("channels") || [_filters.channels],
+        published_atRange: searchParams.getAll("published_atRange") || [],
+        tags: searchParams.getAll("tags") || [],
+        locations: searchParams.get("locations") || "",
+        series: searchParams.getAll("series") || [],
+        search: searchParams.get("search") === "true",
+        category: searchParams.get("category") || "",
+        onlyShorts: searchParams.get("onlyShorts") === "false",
+        excludeShorts: searchParams.get("excludeShorts") === "true",
+        sort: searchParams.get("sort") || "",
+        date: searchParams.get("date") || null,
+      };
+      setMyFilters(filtersFromQueryParams);
+      const offset = activePage;//itemsPerPage * activePage - itemsPerPage
+      let params = new URLSearchParams()
+      Object.keys(columnFilter).forEach((key) => {
+        params.append(key, columnFilter[key])
+      });
+      columnSorter &&
+        columnSorter.column !== undefined &&
+        params.append('sort', `${columnSorter.column}%${columnSorter.state}`);
+
+      for (const property in myFilters) {
+        if (typeof myFilters[property] === 'boolean' || (myFilters[property] && myFilters[property] != '' && myFilters[property].length > 0))
+          params.append(property, myFilters[property]);
+      }
+      // console.log(myFilters);
+      await getVideoGuestsFn(offset, itemsPerPage, params)
+        .then((result) => {
+          setRecords(result.results)
+          result.results ? setVideos(result.videos) : setVideos([])
+        })
     }
-    console.log(params);
-
-    const offset = activePage;//itemsPerPage * activePage - itemsPerPage
-    Object.keys(columnFilter).forEach((key) => {
-      params.append(key, columnFilter[key])
-    });
-    columnSorter &&
-      columnSorter.column !== undefined &&
-      params.append('sort', `${columnSorter.column}%${columnSorter.state}`);
-
-    for (const property in myFilters) {
-      if (typeof myFilters[property] === 'boolean' || (myFilters[property] && myFilters[property] != '' && myFilters[property].length > 0))
-        params.append(property, myFilters[property]);
-    }
-    getVideosFn(offset, itemsPerPage, params)
-      .then((result) => {
-        setRecords(result.results)
-        result.results ? setVideos(result.videos) : setVideos([])
-      })
-  }, [_filters, location.search, activePage, columnFilter, columnSorter, itemsPerPage])
-
+    fetchData();
+  }, [_filters, location.search, activePage, itemsPerPage])
+  // columnFilter, columnSorter
 
   const onChange = (pagination, filters, sorter, extra) => {
     const offset = pagination.current;//itemsPerPage * activePage - itemsPerPage
@@ -230,12 +219,12 @@ const Videography = ({ _filters }) => {
       params.append('sort', `${sorter.field}%${tempSortOrder}`);
     }
 
-    for (const property in myFilters) {
-      if (typeof myFilters[property] === 'boolean' || (myFilters[property] && myFilters[property] != '' && myFilters[property].length > 0))
-        params.append(property, myFilters[property]);
+    for (const property in _filters) {
+      if (typeof _filters[property] === 'boolean' || (_filters[property] && _filters[property] != '' && _filters[property].length > 0))
+        params.append(property, _filters[property]);
     }
 
-    getVideosFn(offset, pagination.pageSize, params)
+    getVideoGuestsFn(offset, pagination.pageSize, params)
       .then((result) => {
         setRecords(result.results)
         result.results ? setVideos(result.videos) : setVideos([])
@@ -275,8 +264,8 @@ const Videography = ({ _filters }) => {
         if (typeof newFilters[property] === 'boolean' || (newFilters[property] && newFilters[property] != '' && newFilters[property].length > 0))
           params.append(property, newFilters[property]);
       }
-    
-      getVideosFn(offset, itemsPerPage, params)
+
+      getVideoGuestsFn(offset, itemsPerPage, params)
         .then((result) => {
           setRecords(result.results)
           result.results ? setVideos(result.videos) : setVideos([])
@@ -284,17 +273,18 @@ const Videography = ({ _filters }) => {
 
     }
     myFilters.search = false;
+    console.log('just for be sure')
     setMyFilters({ ...myFilters, ...newFilters });
   };
 
 
   return (
     <>
-      <div className="videographyBodyContainer">
+      <div className="">
 
-        <Row className="headerPanel">
+        <Row className="creatorVideographyHeader">
           <Col span="24">
-            <Title level={3}><Space><YoutubeOutlined /> Videography</Space></Title>
+            <Title level={3}><Space><YoutubeOutlined /> {title ? title : 'Videography'}</Space></Title>
           </Col>
           <Col span="24">
             <VideographyFilterPanel filters={myFilters} onChange={handleFilterChange} />
@@ -365,4 +355,4 @@ const Videography = ({ _filters }) => {
   )
 }
 
-export default Videography
+export default Guests;

@@ -14,8 +14,10 @@ import FrequencyCard from "./FrequencyCard";
 import UploadTimeFrequencyCard from "./UploadTimeFrequencyCard";
 import ChannelTotalStats from "./ChannelTotalsStats";
 import Videography from "../components/creator/Videography";
+import Appearences from "../components/creator/Appearences";
 import variables from '../sass/antd.module.scss';
 import useFormatter from '../hooks/useFormatter';
+import Guests from '../components/creator/Guests';
 
 
 const { Title, Text } = Typography;
@@ -259,6 +261,22 @@ const CreatorPage = () => {
     search: true
   };
 
+  const appearencesFilters = {
+    // channels: channelIds,
+    excludedChannels: channelIds,
+    castMember: [creator.id],
+    onlyShorts: false,
+    excludeShorts: true,
+    search: true
+  }
+
+  const guestsFilters = {
+    channels: channelIds,
+    notInCastMember: [creator.id],
+    onlyShorts: false,
+    excludeShorts: true,
+    search: true
+  }
 
 
   const bannerUrl = creator.banner_picture + '=w2560-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj';
@@ -315,8 +333,11 @@ const CreatorPage = () => {
                     {
                       label: 'Shorts', key: '_shorts', children: <><Videography title="Shorts" _filters={shortsFilters} /></>
                     },
+                    { label: 'Appearences', key: '_appearences', children: <><Appearences title="Appearences" _filters={appearencesFilters} /> </> },
+                    // { label: 'Guests', key: '_guests', children: <><Guests title="Guests" _filters={guestsFilters} /> </> }
 
-                      // { label: 'Series', key: '_series', children: <><Videography /></> }, { label: 'Games', key: '_games' }, { label: 'Appearences', key: '_appearences' },
+
+                      // { label: 'Series', key: '_series', children: <><Videography /></> }, { label: 'Games', key: '_games' }, { label: 'Appearences', key: '_appearences' }, 
                     ]}
                   />
                 </Col>

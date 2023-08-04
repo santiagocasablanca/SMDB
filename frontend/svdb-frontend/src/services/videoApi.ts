@@ -63,6 +63,24 @@ export const getVideosFn = async (page = 1, limit = 30, params) => {
   return response.data;
 };
 
+export const getAppearencesFn = async (page = 1, limit = 30, params) => {
+  const req = `appearences?page=${page}&limit=${limit}&${params}`;
+  // if(params) req.concat(`&${params}`);
+  const response = await videoApi.get<IVideosResponse>(
+    req
+  );
+  return response.data;
+};
+
+export const getVideoGuestsFn = async (page = 1, limit = 30, params) => {
+  const req = `guests?page=${page}&limit=${limit}&${params}`;
+  // if(params) req.concat(`&${params}`);
+  const response = await videoApi.get<IVideosResponse>(
+    req
+  );
+  return response.data;
+};
+
 export const getVideoFn = async (id) => {
   const req = `videos/${id}`;
 
