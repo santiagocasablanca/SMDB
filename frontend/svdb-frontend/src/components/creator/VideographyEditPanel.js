@@ -12,15 +12,17 @@ import insertCss from 'insert-css';
 const { Text, Link } = Typography;
 
 const VideographyEditPanel = ({ _video, onChange }) => {
-  const [video, setVideo] = useState(_video);
+  const [video, setVideo] = useState();
   const { intToStringBigNumber, parseDate, parseDuration } = useFormatter();
 
   useEffect(() => {
 
     async function fetchData() {
+      console.log(_video);
       console.log('videoeditpanel loaded')
       await getVideoFn(_video.video_id).then(res => {
         if (res.result) {
+          console.log(res.result);
           setVideo(res.result);
         }
       })
@@ -77,7 +79,7 @@ const VideographyEditPanel = ({ _video, onChange }) => {
           <Row gutter={[8, 12]}>
             <Col span={24}>
               <div className="videoDimensions">
-                <ReactPlayer url={video.player.embedHtml} width='100%' height="100%"></ReactPlayer>
+                <ReactPlayer url={video?.player.embedHtml} width='100%' height="100%"></ReactPlayer>
               </div>
             </Col>
 
@@ -93,12 +95,12 @@ const VideographyEditPanel = ({ _video, onChange }) => {
               <Space.Compact direction="vertical" style={{ float: 'right', color: 'white' }}>
                 <Space size="small" style={{ float: 'right' }}>
                   <UpdateVideoModal video={ video } />
-                  <CalendarOutlined /> <Text type="secondary" style={{ float: 'right' }}>  {parseDate(video.published_at)}</Text>
+                  <CalendarOutlined /> <Text type="secondary" style={{ float: 'right' }}>  {parseDate(video?.published_at)}</Text>
                 </Space>
                 <Space size="small" style={{ float: 'right' }}>
-                  <EyeOutlined />{intToStringBigNumber(video.views)}
-                  <LikeOutlined />{intToStringBigNumber(video.likes)}
-                  <CommentOutlined />{intToStringBigNumber(video.comments)}
+                  <EyeOutlined />{intToStringBigNumber(video?.views)}
+                  <LikeOutlined />{intToStringBigNumber(video?.likes)}
+                  <CommentOutlined />{intToStringBigNumber(video?.comments)}
                 </Space>
 
               </Space.Compact>
