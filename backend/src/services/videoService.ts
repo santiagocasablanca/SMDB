@@ -42,6 +42,16 @@ class VideoService {
 
             // Create new records in the directedBy and cast tables if the arrays are not empty
             if (directedBy && directedBy.length > 0) {
+                // DELETE records at DIRECTOR with :video_id
+                // Delete existing records associated with the video_id in the director table
+                await sequelize.query(
+                    'DELETE FROM director WHERE video_id = :videoId',
+                    {
+                        replacements: { videoId },
+                        transaction,
+                    }
+                );
+
                 for (const creatorId of directedBy) {
                     await sequelize.query(
                         'INSERT INTO director (video_id, creator_id) VALUES (:videoId, :creatorId)',
@@ -54,6 +64,15 @@ class VideoService {
             }
 
             if (cast && cast.length > 0) {
+                // DELETE records at VIDEO_CREATOR with :video_id
+                await sequelize.query(
+                    'DELETE FROM video_creator WHERE video_id = :videoId',
+                    {
+                        replacements: { videoId },
+                        transaction,
+                    }
+                );
+
                 await db.videoCreator.bulkCreate(
                     cast.map((creator: any) => ({
                         video_id: videoId,
@@ -77,25 +96,6 @@ class VideoService {
             return false;
         }
 
-        // if (directedBy && directedBy.length > 0) {
-        //     updateBody['directed_by'] = directedBy;
-
-        // }
-        // if (cast && cast.length > 0) {
-        //     updateBody['video_creator'] = cast;
-        // }
-        // console.log(updateBody);
-
-        // // await video.update({ tags: associatedTag, serie: seriesTag });
-        // // associate cast and directedBy
-        // return await Video.update(
-        //     { updateBody, updated_at: Date.now() },
-        //     {
-        //         where: {
-        //             video_id: videoId,
-        //         },
-        //     }
-        // );
     }
 }
 

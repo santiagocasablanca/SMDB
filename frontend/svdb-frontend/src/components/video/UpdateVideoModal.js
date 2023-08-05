@@ -13,8 +13,8 @@ import CastSelector from '../creator/CastSelector';
 
 const UpdateVideoModal = ({ video }) => {
     const [visible, setVisible] = useState(false);
-    const [directorIds, setDirectorIds] = useState([]);
-    const [cast, setCast] = useState([]);
+    const [directorIds, setDirectorIds] = useState(video?.directedBy.map(creator => creator.id) || []);
+    const [cast, setCast] = useState(video?.cast.map(creator => {return {creator:creator.video_creator.creator_id, role: creator.video_creator.role}}) || []);
 
     const [form] = Form.useForm();
 
@@ -47,7 +47,7 @@ const UpdateVideoModal = ({ video }) => {
     }
 
     const handleCast = (values) => {
-        console.log('handling cast, ' + values);
+        console.log('handling cast, ' + JSON.stringify(values));
         setCast(values);
         form.setFieldsValue({ cast: values });
     }
@@ -76,17 +76,17 @@ const UpdateVideoModal = ({ video }) => {
                         name="directedBy"
                         label="Directed by"
                         rules={[
-                            { required: true, message: 'Please enter at least one creator' },
+                            { required: false, message: 'Please enter at least one creator' },
                         ]}>
-                        <CreatorSelector onChange={handleDirector} />
+                        <CreatorSelector onChange={handleDirector} _selectedCreators={directorIds} />
                     </Form.Item>
                     <Form.Item
                         label="Cast"
                         name="cast"
                         rules={[
-                            { required: true, message: 'Please enter at least one creator' },
+                            { required: false, message: 'Please enter at least one creator' },
                         ]}>
-                        <CastSelector onChange={handleCast} />
+                        <CastSelector onChange={handleCast} _selectedCast={cast} />
                     </Form.Item>
 
                     <Form.Item>

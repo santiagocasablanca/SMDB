@@ -7,11 +7,11 @@ import SingleCastSelector from "./SingleCastSelector"
 
 const { Title, Text } = Typography;
 
-const CastSelector = ({ _video, onChange }) => {
+const CastSelector = ({ _selectedCast, onChange }) => {
   const [showAddMore, setShowAddMore] = useState(true);
   const [originalOptions, setOriginalOptions] = useState([]);
   const [options, setOptions] = useState([]);
-  const [cast, setCast] = useState([]);
+  const [cast, setCast] = useState(_selectedCast || []);
   const [creators, setCreators] = useState([]);
 
   useEffect(() => {
@@ -34,6 +34,7 @@ const CastSelector = ({ _video, onChange }) => {
         })
         setOriginalOptions(temp);
         setOptions(temp);
+      
       })
   };
 
@@ -43,6 +44,7 @@ const CastSelector = ({ _video, onChange }) => {
   };
 
   const handleCastChange = (_cast) => {
+    console.log('handling ')
     setCast([...cast, _cast]); // Create a new array with the updated cast
     setOptions(filterOptions(options, [{ value: _cast.creator }]));
     setShowAddMore(true);
@@ -51,8 +53,11 @@ const CastSelector = ({ _video, onChange }) => {
   };
 
   const handleClose = (removedTag) => {
+    console.log('removing, ', removedTag)
     const newTags = cast.filter((tag) => tag !== removedTag);
+    console.log(newTags);
     setCast(newTags);
+    onChange(newTags);
     const findOriginal = originalOptions.find((option) =>  option.value === removedTag.creator);
     setOptions([...options, findOriginal]);
   };
