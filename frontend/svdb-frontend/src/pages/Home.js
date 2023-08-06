@@ -18,6 +18,7 @@ import UploadTimeFrequencyCard from '../components/home/UploadTimeFrequencyCard'
 import TopCreators from '../components/home/TopCreators'
 import VideoPreviewForHighlight from '../components/video/VideoPreviewForHighlight';
 import HorizontalShortsList from '../components/video/HorizontalShortsList';
+import HorizontalHighlightedList from '../components/video/HorizontalHighlightedList';
 import dayjs from 'dayjs';
 
 
@@ -41,6 +42,7 @@ const HomePage = () => {
 
   const [paramsTop10, setParamsTop10] = useState({ sort: "views%desc" });
   const [paramsRecent, setParamsRecent] = useState({ sort: "published_at%desc" });
+  const [paramsTop10Liked, setParamsTop10Liked] = useState({ sort: "likes%desc" });
   const [shortsParamsRecent, setShortsParamsRecent] = useState({ sort: "published_at%desc", onlyShorts: true, excludeShorts: false });
 
   useEffect(() => {
@@ -212,6 +214,12 @@ const HomePage = () => {
               </Col>
             </Row>
             <br></br>
+            <Row>
+              <Col span={24}>
+                <HorizontalHighlightedList title="Most Recent" filter={paramsRecent} />
+              </Col>
+            </Row>
+            <br></br>
             <Row gutter={[16, 16]} className="hide-on-small-screen">
               <Col span={24} xl={24}>
                 <FrequencyCard _channels={channels}></FrequencyCard>
@@ -232,9 +240,9 @@ const HomePage = () => {
               <Col span={24} md={24} lg={12} xl={16}>
                 <Row gutter={16}>
                   <Col span={24}>
-                    <HorizontalVideoList title="Most Recent" filter={paramsRecent} />
-
                     <HorizontalVideoList title="Most Viewed" filter={paramsTop10} />
+
+                    <HorizontalVideoList title="Most Liked" filter={paramsTop10Liked} />
                   </Col>
                 </Row>
               </Col>

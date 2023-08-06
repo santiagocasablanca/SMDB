@@ -418,7 +418,19 @@ export const findAllVideosController = async (
 
     // console.log(whereClause);
 
-    const videos = await Video.findAndCountAll({ where: whereClause, limit, offset: skip, order: [sort] });
+    const videos = await Video.findAndCountAll({ where: whereClause, 
+      include: [{
+        model: Channel,
+        as: 'channel', attributes: ['channel_id', 'custom_url',
+          'title',
+          'subs',
+          'videos',
+          'views',
+          'likes',
+          'comments',
+          'logo_url',]
+      }],
+      limit, offset: skip, order: [sort] });
 
     res.status(200).json({
       status: "success",

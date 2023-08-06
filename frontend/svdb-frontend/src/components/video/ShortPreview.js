@@ -36,14 +36,18 @@ const VideoPreview = ({ _video }) => {
 
     useEffect(() => {
         async function fetchData() {
-            await getVideoFn(_video.video_id).then(res => {
-                if (res.result) {
-                    setVideo(res.result);
-                    setLogo(res.result.channel.logo_url);
-                    setChannel(res.result.channel);
-                    setIsLoaded(true);
-                }
-            })
+            setVideo(_video);
+            setChannel(_video?.channel);
+            setLogo(_video?.channel.logo_url);
+            setIsLoaded(true);
+            // await getVideoFn(_video.video_id).then(res => {
+            //     if (res.result) {
+            //         setLogo(res.result.channel.logo_url);
+            //         setChannel(res.result.channel);
+            //         setIsLoaded(true);
+            //         setVideo(res.result);
+            //     }
+            // })
         }
         fetchData();
     }, [_video]);
