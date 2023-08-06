@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, Spin, Row, Col, Image, Select, Space, Avatar, Button, Popover, Tag, Typography, Modal, Form, Tooltip, Input, notification, Divider } from 'antd';
-import { CrownOutlined, GithubOutlined } from '@ant-design/icons';
+import { CrownOutlined, GithubOutlined, LinkedinOutlined, MailOutlined } from '@ant-design/icons';
 import insertCss from 'insert-css';
 import variables from '../sass/antd.module.scss';
 import { AppLogo } from '../components';
@@ -85,14 +85,25 @@ const AboutPage = () => {
       </Card>
     </Row>
   );
+
+  const aboutMeTitle = (
+    <Row justify="center">
+      <Card style={{ width: '90%', backgroundColor: 'white' }} bodyStyle={{ padding: '2px' }}>
+        <Space style={{ marginLeft: '10px' }}><Avatar src="https://media.licdn.com/dms/image/D4D35AQHkJ7Xk52eXcw/profile-framedphoto-shrink_400_400/0/1687518557082?e=1691866800&v=beta&t=a4MXziFTspw1KI09kGoLusaFSpXAF1CkN5KaSe1JCRw"></Avatar> <Title style={{ color: 'black', marginBottom: '0px', textWrap: 'wrap' }} ellipsis={{
+          tooltip: 'Open for work!',
+        }}>Open for work!!</Title></Space>
+      </Card>
+    </Row>
+  );
+
   return (<>
     <HeaderPanel title="About"></HeaderPanel>
     {isLoaded ?
       (
         <div className="aboutContainer">
-          <Row>
+          <Row gutter={[8, 10]}>
             <Col md={24} lg={24} xl={12}>
-              <Card title={svdbProjectTitle} headStyle={{padding: '10px'}} style={{ width: '100%' }}>
+              <Card title={svdbProjectTitle} headStyle={{ padding: '10px' }} >
 
 
                 <Divider orientation="left">STILL UNDER CONSTRUCTION</Divider>
@@ -117,6 +128,55 @@ const AboutPage = () => {
                   <li><a href="https://mattw.io/youtube-metadata/">https://mattw.io/youtube-metadata/</a></li>
                   <li><a href="https://codevoweb.com/wp-content/uploads/2023/01/Build-a-CRUD-API-with-Node.js-and-Sequelize.webp">https://codevoweb.com/wp-content/uploads/2023/01/Build-a-CRUD-API-with-Node.js-and-Sequelize.webp</a></li>
                 </ul>
+              </Card>
+            </Col>
+            <Col md={24} lg={24} xl={12}>
+              <Card title={aboutMeTitle} headStyle={{ padding: '10px' }} >
+
+
+                <Divider orientation="left">Background</Divider>
+
+                <p>Faculty of Engineering of University of Porto 2013</p>
+                <p>MSc Degree in Computing Engineering</p>
+
+                <p>10+ years of experience in full-stack development, working on a diverse range of web applications, including <Text code>Asset Management Solution</Text>, <Text code>HR and Attendance Management Solution</Text>,
+                <Text code>Utilities Custom Care and Billing Solution</Text>, and various consulting projects.</p>
+                <Space>
+                  <Link href="mailto:tiagomartinslomba@gmail.com"><MailOutlined /> Contact me</Link>
+                  <Divider />
+
+                  <Link href="https://www.linkedin.com/in/tiago-martins-lomba/"><LinkedinOutlined /> Linkedin</Link>
+                  <Divider />
+                  <Link href="https://github.com/santiagocasablanca/SMDB"><GithubOutlined /> Visit the Project Github</Link>
+                </Space>
+
+                <Divider orientation="left">Last experience [2018-2023]</Divider>
+
+                <p>
+                  Yo! is a modular multi-vendor and multi-tenant product mainly focused on employee and attendance management.
+                  It started as an internal project with me as the architect and backend developer, alongside a senior frontend developer.
+                  We adopted a microservice-based modular architecture using a MEAN stack, which proved to be valuable due to its fast development and successful deployment.
+                  Coincidentally, during that time, Vodafone Portugal was in search of a product with similar features for their product catalog, leading to the birth of Vodafone Teamlog.
+                  Currently, Yo! is being sold by Wondercom, while Teamlog not only remains Vodafone's product catalog but has also become the SaaS product with the highest number of licenses sold at Vodafone Portugal
+                  in the year 2021, and it continues to grow.
+                </p>
+
+                <p>
+                  Over the last 2 years, I was the product owner, responsible for defining the product's features and high-level architecture,
+                  while also managing the development team consisting of an analyst, a designer, a tester, and developers.
+                </p>
+
+
+                <Divider orientation="left">Tech Stack experience:</Divider>
+                <p>
+                  <Text code>Java</Text>; <Text code>Spring Data</Text>; <Text code>Hibernate</Text>; <Text code>JEE, EJB, JMS, JSF</Text>; <Text code>ELK - ElasticSearch and Kibana</Text>;
+                  <Text code>Jenkins</Text>; <Text code>Maven</Text>; <Text code>Thorntail</Text>;
+
+                  <Text code>Nodejs</Text>; <Text code>Angular</Text>; <Text code>Ionic</Text>; <Text code>Sequelizejs</Text>; <Text code>Docker</Text>; <Text code>SQL</Text>;
+                  <Text code>NOSQL</Text>;
+                </p>
+
+
               </Card>
             </Col>
           </Row>

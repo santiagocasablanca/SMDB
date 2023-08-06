@@ -60,6 +60,9 @@ const VideoDrawer = ({ _video, _channel, _open, childToParent }) => {
             .videoDrawerContainer {
                 padding: 0 10px 0 10px;
             }
+            .videoContainer {
+                height: 400px;
+            }
         }
 
         @media (max-width: 600px) {
