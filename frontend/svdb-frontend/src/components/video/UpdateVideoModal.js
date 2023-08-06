@@ -13,12 +13,16 @@ import CastSelector from '../creator/CastSelector';
 
 const UpdateVideoModal = ({ video }) => {
     const [visible, setVisible] = useState(false);
-    const [directorIds, setDirectorIds] = useState(video?.directedBy?.map(creator => creator.id) || []);
-    const [cast, setCast] = useState(video?.cast?.map(creator => {return {creator:creator.video_creator.creator_id, role: creator.video_creator.role}}) || []);
+    const [directorIds, setDirectorIds] = useState();
+    const [cast, setCast] = useState();
 
     const [form] = Form.useForm();
 
     const showModal = () => {
+        console.log('video: ', video);
+        setDirectorIds(video?.directedBy?.map(creator => creator.id) || []);
+        setCast(video?.cast?.map(creator => {return {creator:creator.video_creator.creator_id, role: creator.video_creator.role}}) || []);
+        console.log(directorIds);
         setVisible(true);
     };
 
