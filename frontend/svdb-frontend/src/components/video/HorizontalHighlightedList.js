@@ -84,6 +84,11 @@ const HorizontalHighlightedList = ({ title, filter }) => {
             setLogo(video?.channel?.logo_url);
         }, [video]);
 
+        const goToChannel = () => {
+            const url = '/channel/' + video.channel_id;
+            // not necessary, kind of redudant at the moment. Params are set through useParams and useLocation (state)
+            navigate(url, { state: { id: video.channel_id } });
+        }
 
         return (
             <> {isLoaded ?
@@ -108,7 +113,7 @@ const HorizontalHighlightedList = ({ title, filter }) => {
 
                             </Space>
                         </div>
-                        <Avatar src={logo} style={{
+                        <Avatar src={logo} onClick={goToChannel} style={{
                             backgroundColor: '#f56a00', top: '5px', position: 'absolute', left: '5px'
                         }} />
                         <p style={{ color: 'white', fontSize: '10px', top: '0px', position: 'absolute', right: '5px' }}>{parseDate(video.published_at, "DD MMM YYYY")}</p>

@@ -6,12 +6,15 @@ import useFormatter from '../../hooks/useFormatter';
 import { LikeOutlined, YoutubeOutlined, CalendarOutlined, CommentOutlined, ClockCircleOutlined, VideoCameraOutlined, EyeOutlined, UserOutlined, FilterOutlined, ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 import UpdateVideoModal from '../video/UpdateVideoModal';
 import insertCss from 'insert-css';
+import { useNavigate } from 'react-router-dom';
 
 
 
 const { Text, Link } = Typography;
 
 const VideographyEditPanel = ({ _video, onChange }) => {
+  const navigate = useNavigate();
+
   const [video, setVideo] = useState();
   const { intToStringBigNumber, parseDate, parseDuration } = useFormatter();
 
@@ -30,10 +33,18 @@ const VideographyEditPanel = ({ _video, onChange }) => {
     fetchData();
   }, [_video]);
 
+  const goToCreator = (id) => {
+    // do nothing for now
+    // const url = '#/creator/' + id;
+    // window.location.replace(url);
+    // not necessary, kind of redudant at the moment. Params are set through useParams and useLocation (state)
+    // navigate(url, { state: { id: id } });
+  }
+
   // .editVideoContainer {
   //     padding: 0 20px 0 20px;
   // }
-  
+
   // .editVideoContainer {
   //     padding: 0 10px 0 10px;
   // }
@@ -42,6 +53,9 @@ const VideographyEditPanel = ({ _video, onChange }) => {
             height: 550px;
         }
 
+        .showPointer:hover {
+          cursor: pointer;
+        }
 
         @media (max-width: 900px) {
         }
@@ -94,7 +108,7 @@ const VideographyEditPanel = ({ _video, onChange }) => {
             <Col span={24}>
               <Space.Compact direction="vertical" style={{ float: 'right', color: 'white' }}>
                 <Space size="small" style={{ float: 'right' }}>
-                  <UpdateVideoModal video={ video } />
+                  <UpdateVideoModal video={video} />
                   <CalendarOutlined /> <Text type="secondary" style={{ float: 'right' }}>  {parseDate(video?.published_at)}</Text>
                 </Space>
                 <Space size="small" style={{ float: 'right' }}>
@@ -118,7 +132,7 @@ const VideographyEditPanel = ({ _video, onChange }) => {
                 dataSource={video?.directedBy}
                 //   style={{ width: '100%' }}
                 renderItem={(creator, index) => (
-                  <List.Item key={creator.id}>
+                  <List.Item key={creator.id} onClick={() => goToCreator(creator.id)} className="showPointer">
                     <List.Item.Meta
                       avatar={<Avatar key={"drawerDirector" + index} src={creator.profile_picture} />}
                       title={creator.name}
@@ -134,7 +148,7 @@ const VideographyEditPanel = ({ _video, onChange }) => {
                 itemLayout="vertical"
                 dataSource={video?.cast}
                 renderItem={(creator, index) => (
-                  <List.Item key={creator.id}>
+                  <List.Item key={creator.id} onClick={() => goToCreator(creator.id)} className="showPointer">
                     <List.Item.Meta
                       avatar={<Avatar key={"draweCast" + index} src={creator.profile_picture} />}
                       title={<><Text>{creator.name}</Text> <Text italic type="secondary"> as {creator.video_creator.role}</Text></>}

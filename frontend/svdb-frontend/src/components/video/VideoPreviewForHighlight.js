@@ -6,6 +6,8 @@ import 'react-lazy-load-image-component/src/effects/blur.css';
 import { Skeleton } from 'antd';
 import insertCss from 'insert-css';
 import VideoDrawer from './VideoDrawer'
+import { useNavigate } from 'react-router-dom';
+
 
 import variables from '../../sass/antd.module.scss';
 import useFormatter from '../../hooks/useFormatter';
@@ -20,6 +22,8 @@ const { Title, Text } = Typography;
 
 
 const VideoPreviewForHighlight = ({ _video, index }) => {
+    const navigate = useNavigate();
+
 
     const { intToStringBigNumber, parseDate, parseDuration } = useFormatter();
     const [isLoaded, setIsLoaded] = useState(false);
@@ -33,26 +37,40 @@ const VideoPreviewForHighlight = ({ _video, index }) => {
     useEffect(() => {
 
         async function fetchData() {
-            await getVideoFn(_video.video_id).then(res => {
-                if (res.result) {
-                    setVideo(res.result);
-                    setLogo(res.result.channel.logo_url);
-                    setDirectedBy(res.result.directedBy);
-                    setChannel(res.result.channel);
+            setVideo(_video);
+                    setLogo(_video?.channel.logo_url);
+                    setDirectedBy(_video?.directedBy);
+                    setChannel(_video?.channel);
                     setIsLoaded(true);
-                }
-            })
+            // await getVideoFn(_video.video_id).then(res => {
+            //     if (res.result) {
+            //         setVideo(res.result);
+            //         setLogo(res.result.channel.logo_url);
+            //         setDirectedBy(res.result.directedBy);
+            //         setChannel(res.result.channel);
+            //         setIsLoaded(true);
+            //     }
+            // })
         }
         fetchData();
     }, [_video]);
 
     const showDrawer = () => {
+        console.log('show drawer')
         setOpen(true);
     };
 
     const childToParent = (childdata) => {
         setOpen(childdata);
     }
+
+    const goToChannel = () => {
+        console.log('go to channel')
+        const url = '/channel/' + _video.channel_id;
+        // not necessary, kind of redudant at the moment. Params are set through useParams and useLocation (state)
+        navigate(url, { state: { id: _video.channel_id } });
+    }
+    
 
     insertCss(`
 
@@ -114,7 +132,7 @@ const VideoPreviewForHighlight = ({ _video, index }) => {
                     </Row>
                     <Row>
                         <Col span={20}>
-                            <Space>
+                            <Space onClick={goToChannel}>
                                 <Avatar src={logo} style={{
                                     backgroundColor: '#f56a00',
                                 }} />

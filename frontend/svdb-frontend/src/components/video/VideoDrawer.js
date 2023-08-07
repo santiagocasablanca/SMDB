@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import { Card, List, Row, Col, Divider, Avatar, Table, Typography, Space, Spin, Drawer, Button, Popover } from 'antd';
 import { LikeOutlined, YoutubeOutlined, CalendarOutlined, CommentOutlined, ClockCircleOutlined, VideoCameraOutlined, EyeOutlined, UserOutlined, FilterOutlined, ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
 
 import insertCss from 'insert-css';
 
@@ -17,7 +18,7 @@ const { Title, Text } = Typography;
 
 
 const VideoDrawer = ({ _video, _channel, _open, childToParent }) => {
-
+    const navigate = useNavigate();
     const { intToStringBigNumber, parseDate, parseDuration } = useFormatter();
     const [video, setVideo] = useState(_video);
     const [channel, setChannel] = useState(_channel);
@@ -39,6 +40,13 @@ const VideoDrawer = ({ _video, _channel, _open, childToParent }) => {
         setOpen(false);
     };
 
+    const goToCreator = (id) => {
+        console.log('heere: ', id);
+        const url = '/creator/' + id;
+        // not necessary, kind of redudant at the moment. Params are set through useParams and useLocation (state)
+        navigate(url, { state: { id: id } });
+    }
+
     const title = (
         <>
             {video.title}
@@ -54,6 +62,10 @@ const VideoDrawer = ({ _video, _channel, _open, childToParent }) => {
         .videoContainer {
             height: 550px;
         }
+
+        .showPointer:hover {
+            cursor: pointer;
+          }
 
 
         @media (max-width: 900px) {
@@ -85,7 +97,7 @@ const VideoDrawer = ({ _video, _channel, _open, childToParent }) => {
                     extra={
                         <Space>
                             <Text>{parseDate(video.published_at, "DD MMM YYYY")}</Text>
-                            <UpdateVideoModal video={ video } />
+                            <UpdateVideoModal video={video} />
                             {/* <Button onClick={onClose}>Cancel</Button> */}
                             {/* <Button type="primary" onClick={onClose}>OK</Button> */}
                         </Space>
@@ -111,9 +123,9 @@ const VideoDrawer = ({ _video, _channel, _open, childToParent }) => {
 
                             <Col span={24} md={24} lg={8} xl={6}>
                                 <Row style={{
-                                                height: "550px",
-                                                overflow: "auto"
-                                            }}>
+                                    height: "550px",
+                                    overflow: "auto"
+                                }}>
                                     <Col span={24}>
                                         <List
                                             header={<Text strong style={{ marginLeft: '20px' }}>Directed by</Text>}
@@ -122,10 +134,11 @@ const VideoDrawer = ({ _video, _channel, _open, childToParent }) => {
                                             dataSource={video?.directedBy}
                                             //   style={{ width: '100%' }}
                                             renderItem={(creator, index) => (
-                                                <List.Item key={creator.id}>
+                                                <List.Item key={creator.id} onClick={() => goToCreator(creator.id)} className="showPointer">
                                                     <List.Item.Meta
                                                         avatar={<Avatar key={"drawerDirector" + index} src={creator.profile_picture} />}
                                                         title={creator.name}
+
                                                     />
                                                 </List.Item>
                                             )} >
@@ -138,7 +151,7 @@ const VideoDrawer = ({ _video, _channel, _open, childToParent }) => {
                                             itemLayout="vertical"
                                             dataSource={video?.cast}
                                             renderItem={(creator, index) => (
-                                                <List.Item key={creator.id}>
+                                                <List.Item key={creator.id} onClick={() => goToCreator(creator.id)} className="showPointer">
                                                     <List.Item.Meta
                                                         avatar={<Avatar key={"draweCast" + index} src={creator.profile_picture} />}
                                                         title={<><Text>{creator.name}</Text> <Text italic type="secondary"> as {creator.video_creator.role}</Text></>}

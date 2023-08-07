@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, List, Row, Col, Image, Divider, Popover, Avatar, Table, Typography, Space, Spin } from 'antd';
 import { LikeOutlined, YoutubeOutlined, CalendarOutlined, CommentOutlined, ClockCircleOutlined, VideoCameraOutlined, EyeOutlined, NumberOutlined, FilterOutlined, ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
 
 import insertCss from 'insert-css';
 import VideoDrawer from './VideoDrawer'
@@ -17,6 +18,7 @@ const { Title, Text } = Typography;
 
 
 const VideoPreview = ({ _video }) => {
+    const navigate = useNavigate();
 
     const { intToStringBigNumber, parseDate, parseDuration } = useFormatter();
     const [isLoaded, setIsLoaded] = useState(false);
@@ -31,6 +33,12 @@ const VideoPreview = ({ _video }) => {
 
     const childToParent = (childdata) => {
         setOpen(childdata);
+    }
+
+    const goToChannel = () => {
+        const url = '/channel/' + _video.channel_id;
+        // not necessary, kind of redudant at the moment. Params are set through useParams and useLocation (state)
+        navigate(url, { state: { id: _video.channel_id } });
     }
 
 
@@ -72,7 +80,7 @@ const VideoPreview = ({ _video }) => {
 
                             </Space>
                         </div>
-                        <Avatar src={logo} style={{
+                        <Avatar src={logo} onClick={goToChannel} style={{
                             backgroundColor: '#f56a00', top: '5px', position: 'absolute', left: '5px'
                         }} />
                         <p style={{ color: 'white', fontSize: '10px', top: '0px', position: 'absolute', right: '5px' }}>{parseDate(video.published_at, "DD MMM YYYY")}</p>
