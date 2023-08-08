@@ -158,7 +158,7 @@ const AboutPage = () => {
                   It started as an internal project with me as the architect and backend developer, alongside a senior frontend developer.
                   We adopted a microservice-based modular architecture using a MEAN stack, which proved to be valuable due to its fast development and successful deployment.
                   Coincidentally, during that time, Vodafone Portugal was in search of a product with similar features for their product catalog, leading to the birth of Vodafone Teamlog.
-                  Currently, Yo! is being sold by Wondercom, while Teamlog not only remains Vodafone's product catalog but has also become the SaaS product with the highest number of licenses sold at Vodafone Portugal
+                  Currently, Yo! is being sold by Wondercom, while Teamlog not only remains on Vodafone's product catalog but has also become the SaaS product with the highest number of licenses sold at Vodafone Portugal
                   in the year 2021, and it continues to grow.
                 </Paragraph>
 
@@ -168,7 +168,7 @@ const AboutPage = () => {
                 </p>
 
 
-                <Divider orientation="left">Tech Stack experience:</Divider>
+                <Divider orientation="left">Tech Stack experience</Divider>
                 <p>
                   <Text code>Java</Text>; <Text code>Spring Data</Text>; <Text code>Hibernate</Text>; <Text code>JEE, EJB, JMS, JSF</Text>; <Text code>ELK - ElasticSearch and Kibana</Text>;
                   <Text code>Jenkins</Text>; <Text code>Maven</Text>; <Text code>Thorntail</Text>;
@@ -198,13 +198,13 @@ const AboutPage = () => {
 
                   <p>The application also introduces the concepts of <Text code>directed_by</Text>, used to represent the main creator(s) responsible for a given <Text code>video</Text>, and <Text code>cast</Text> (creator_id, role) used for storing the creators that appear in each video.</p>
 
-                  <Divider orientation="left">Technologies Used:</Divider>
+                  <Divider orientation="left">Technologies Used</Divider>
                   <p><Text code>Node.js</Text>,  <Text code>Express.js</Text>,  <Text code>Docker</Text>,  <Text code>Sequelize</Text>,  <Text code>PostgreSQL</Text>,  <Text code>React</Text>,  <Text code>antd</Text>
                   </p>
                   <Link href="https://github.com/santiagocasablanca/SMDB"><GithubOutlined /> Visit the Project Github</Link>
                   <br></br>
                   <br></br>
-                  <Divider orientation="left">Project Inspirations:</Divider>
+                  <Divider orientation="left">Project Inspirations</Divider>
                   <ul>
                     <li><a href="https://mattw.io/youtube-metadata/">https://mattw.io/youtube-metadata/</a></li>
                     <li><a href="https://codevoweb.com/wp-content/uploads/2023/01/Build-a-CRUD-API-with-Node.js-and-Sequelize.webp">https://codevoweb.com/wp-content/uploads/2023/01/Build-a-CRUD-API-with-Node.js-and-Sequelize.webp</a></li>
