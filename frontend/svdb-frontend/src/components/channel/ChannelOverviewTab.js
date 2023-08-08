@@ -13,6 +13,7 @@ import HorizontalVideoList from '../creator/HorizontalVideoList'
 import FrequencyCard from '../home/FrequencyCard';
 import UploadTimeFrequencyCard from '../home/UploadTimeFrequencyCard';
 import useFormatter from '../../hooks/useFormatter';
+// import TreeMapPlot from '../graphs/TreeMapPlot';
 
 const { Title, Text } = Typography;
 
@@ -29,6 +30,8 @@ const ChannelOverviewTab = ({ _channel }) => {
 
     const [paramsTop10, setParamsTop10] = useState();
     const [paramsRecent, setParamsRecent] = useState();
+    const [paramsTreeMapPlot, setParamsTreeMapPlot] = useState({ sort: "views%desc", channels: [_channel.channel_id] });
+
 
     const [stats, setStats] = useState({
         subs: {}, views: {}, videos: {}, likes: {}, comments: {}, avg: {}, duration: {}
@@ -647,6 +650,12 @@ const ChannelOverviewTab = ({ _channel }) => {
                         </Col>
                     </Row>
                     <br></br>
+
+                    {/* <Row>
+                        <Col span={24} xl={12}>
+                            <TreeMapPlot filter={paramsTreeMapPlot} />
+                        </Col>
+                    </Row> */}
                 </>
                 :
                 <Spin />

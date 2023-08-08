@@ -40,6 +40,7 @@ const HomePage = () => {
 
   const [filters, setFilters] = useState({ channels: [], published_atRange: [] });
 
+
   const [paramsTop10, setParamsTop10] = useState({ sort: "views%desc" });
   const [paramsRecent, setParamsRecent] = useState({ sort: "published_at%desc" });
   const [paramsTop10Liked, setParamsTop10Liked] = useState({ sort: "likes%desc" });
@@ -247,6 +248,7 @@ const HomePage = () => {
                 </Row>
               </Col>
             </Row>
+            
           </div>
         </>
       ) : (<Spin />)

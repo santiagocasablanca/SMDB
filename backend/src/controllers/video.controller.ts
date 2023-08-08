@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response, urlencoded } from "express";
 const dayjs = require('dayjs')
 const { Sequelize, QueryTypes } = require('sequelize');
 const Op = Sequelize.Op;
@@ -62,15 +62,36 @@ export const findVideoController = async (
 };
 // :orderBy
 export const findMostLikedSSGroupedBySeries = async (
-  req: Request,
+  req: Request<any, any, any, VideosSearchReqQuery>,
   res: Response
 ) => {
   try {
+    let publishedAtSearchInitial;
+
+    console.log(req.query);
+    let publishedAtSearchFinal;
+    let channel_Ids;
+    let sort = req.query.sort ? req.query.sort.split('%') : ['views', 'DESC'];
+    if (req.query.publishedAtRange) {
+      let rangeDate = req.query.publishedAtRange.split(',');
+      publishedAtSearchInitial = dayjs(rangeDate[0]).format("YYYY-MM-DD");
+      publishedAtSearchFinal = dayjs(rangeDate[1]).format("YYYY-MM-DD");
+    } else {
+      publishedAtSearchInitial = '2010-05-23 23:00:00.000 +00:00';
+      publishedAtSearchFinal = '2023-06-23 23:00:00.000 +00:00';
+    }
+
+    if (req.query.channels) {
+      console.log(req.query.channels);
+      var channelsArr = req.query.channels.split(',');
+
+      channel_Ids = channelsArr
+    }
 
     const records = await sequelize.query("select serie, count(*) as videos, sum(views) as views, sum(likes) as likes, sum(comments) as comments" +
-      " from video v where channel_title = 'Sidemen' and serie is not null and published_at BETWEEN (:initial) AND (:final) GROUP By v.serie order by likes desc ",
+      " from video v where channel_id IN (:channelIds) and serie is not null and published_at BETWEEN (:initial) AND (:final) GROUP By v.serie order by (:orderBy) ",
       {
-        replacements: { initial: '2010-05-23 23:00:00.000 +00:00', final: '2023-06-23 23:00:00.000 +00:00', orderBy: 'likes desc' },
+        replacements: { channelIds: channel_Ids, initial: publishedAtSearchInitial, final: publishedAtSearchFinal, orderBy: sort },
         // bind: { initial: '2010-05-23 23:00:00.000 +00:00', final: '2023-06-23 23:00:00.000 +00:00', orderBy: 'likes desc' },
         type: QueryTypes.SELECT,
         logging: console.log,
@@ -418,7 +439,26 @@ export const findAllVideosController = async (
 
     // console.log(whereClause);
 
-    const videos = await Video.findAndCountAll({ where: whereClause, 
+    const videos = await Video.findAndCountAll({
+      attributes: ['video_id', 'title',
+        'duration',
+        'duration_parsed',
+        'channel_id',
+        'channel_title',
+        'views',
+        'likes',
+        'dislikes',
+        'comments',
+        'url',
+        'player',
+        'tags',
+        'locations',
+        'category',
+        'serie',
+        'game',
+        'published_at',
+        'updated_at'
+      ], where: whereClause,
       include: [{
         model: Channel,
         as: 'channel', attributes: ['channel_id', 'custom_url',
@@ -434,12 +474,13 @@ export const findAllVideosController = async (
         model: Creator,
         as: 'directedBy', attributes: ['id', 'custom_url', 'name', 'profile_picture']
       },
-        {
-          model: Creator,
-          as: 'cast', 
-          attributes: ['id', 'custom_url', 'name', 'profile_picture'],
-        }],
-      limit, offset: skip, order: [sort] });
+      {
+        model: Creator,
+        as: 'cast',
+        attributes: ['id', 'custom_url', 'name', 'profile_picture'],
+      }],
+      limit, offset: skip, order: [sort]
+    });
 
     res.status(200).json({
       status: "success",
@@ -535,6 +576,25 @@ export const findAllAppearencesController = async (
     // );
 
     const videos = await Video.findAndCountAll({
+      attributes: ['video_id', 'title',
+        'duration',
+        'duration_parsed',
+        'channel_id',
+        'channel_title',
+        'views',
+        'likes',
+        'dislikes',
+        'comments',
+        'url',
+        'player',
+        'tags',
+        'locations',
+        'category',
+        'serie',
+        'game',
+        'published_at',
+        'updated_at'
+      ],
       where: whereClause,
       nest: true,
       include: [{
@@ -549,14 +609,14 @@ export const findAllAppearencesController = async (
       //   )`),
       //   'laughReactionsCount'
       // }
-      
-        {
-          model: Creator,
-          as: 'cast', 
-          required: true,
-          attributes: ['id', 'custom_url', 'name', 'profile_picture'], 
-          where: castWhereClause
-        }
+
+      {
+        model: Creator,
+        as: 'cast',
+        required: true,
+        attributes: ['id', 'custom_url', 'name', 'profile_picture'],
+        where: castWhereClause
+      }
       ],
       raw: true,
       limit, offset: skip, order: [sort]
@@ -662,6 +722,25 @@ export const findAllVideoGuestsController = async (
     // );
 
     const videos = await Video.findAndCountAll({
+      attributes: ['video_id', 'title',
+        'duration',
+        'duration_parsed',
+        'channel_id',
+        'channel_title',
+        'views',
+        'likes',
+        'dislikes',
+        'comments',
+        'url',
+        'player',
+        'tags',
+        'locations',
+        'category',
+        'serie',
+        'game',
+        'published_at',
+        'updated_at'
+      ],
       where: whereClause,
       nest: true,
       include: [{
@@ -676,14 +755,14 @@ export const findAllVideoGuestsController = async (
       //   )`),
       //   'laughReactionsCount'
       // }
-      
-        {
-          model: Creator,
-          as: 'cast', 
-          required: true,
-          attributes: ['id', 'custom_url', 'name', 'profile_picture'], 
-          where: castWhereClause
-        }
+
+      {
+        model: Creator,
+        as: 'cast',
+        required: true,
+        attributes: ['id', 'custom_url', 'name', 'profile_picture'],
+        where: castWhereClause
+      }
       ],
       raw: true,
       limit, offset: skip, order: [sort]
@@ -740,6 +819,25 @@ export const fetchVideoController = async (
     console.log(id);
     const video = await Video.findOne({
       where: { video_id: id },
+      attributes: ['video_id', 'title',
+        'duration',
+        'duration_parsed',
+        'channel_id',
+        'channel_title',
+        'views',
+        'likes',
+        'dislikes',
+        'comments',
+        'url',
+        'player',
+        'tags',
+        'locations',
+        'category',
+        'serie',
+        'game',
+        'published_at',
+        'updated_at'
+      ],
       include: [{
         model: Channel,
         as: 'channel', attributes: ['channel_id', 'custom_url',

@@ -76,7 +76,7 @@ const TopCreators = ({ channel_ids }) => {
               </Col>
             </Row>
 
-            <Card bordered={false} className="topCreators" bodyStyle={{ padding: 20 }}>
+            {/* <Card bordered={false} className="topCreators" bodyStyle={{ padding: 20 }}> */}
               <Row style={{ height: '380px', overflow: 'auto' }} justify="center">
                 <Col span={24}>
 
@@ -93,17 +93,17 @@ const TopCreators = ({ channel_ids }) => {
                         className="creatorCard"
                         onClick={() => handleClick(item.id)}>
 
-                        <Title level={5}>{item.name}</Title>
                         <Image alt={item.name}
                           style={{ height: '100%', borderRadius: '8px', objectFit: 'cover', padding: '0px' }}
                           src={item.profile_picture} width='100%' height='200px' preview={false} />
+                        <Title level={5} style={{color: 'black'}}>{item.name}</Title>
 
                       </List.Item>
                     )}
                   />
                 </Col>
               </Row>
-            </Card>
+            {/* </Card> */}
           </>
         )}
     </>
