@@ -54,6 +54,14 @@ export const findAllChannelsController = async (
     let sort = req.query.sort ? req.query.sort.split('%') : ['title', 'DESC'];
 
     let whereClause = {}
+    if (req.query.title) {
+      whereClause = {
+        title: {
+          [Op.iLike]: `%${req.query.title}%`
+        }
+      }
+    }
+
     if (req.query.channels) {
       // console.log(req.query.channels);
       var channelsArr = req.query.channels.split(',');
