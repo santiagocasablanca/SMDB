@@ -1,62 +1,51 @@
-import React, { useState, useEffect } from 'react';
-import { Card, List, Row, Col, Image, Divider, Popover, Avatar, Table, Typography, Space, Spin, Tooltip } from 'antd';
-import { LikeOutlined, YoutubeOutlined, CalendarOutlined, CommentOutlined, ClockCircleOutlined, VideoCameraOutlined, EyeOutlined, UserOutlined, FilterOutlined, ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
-import { LazyLoadImage } from 'react-lazy-load-image-component';
-import 'react-lazy-load-image-component/src/effects/blur.css';
-import { Skeleton } from 'antd';
+import { CommentOutlined, EyeOutlined, LikeOutlined } from '@ant-design/icons';
+import { Avatar, Col, Divider, Image, List, Popover, Row, Space, Spin, Typography } from 'antd';
 import insertCss from 'insert-css';
-import VideoDrawer from './VideoDrawer'
+import React, { useMemo, useState } from 'react';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 import { useNavigate } from 'react-router-dom';
-
-
-import variables from '../../sass/antd.module.scss';
 import useFormatter from '../../hooks/useFormatter';
-import { getVideoFn } from "../../services/videoApi.ts";
-import { getChannelFn } from "../../services/channelApi.ts";
-import ReactPlayer from 'react-player'
-
-
+import variables from '../../sass/antd.module.scss';
+import VideoDrawer from './VideoDrawer';
 
 const { Title, Text } = Typography;
-
-
 
 const VideoPreviewForHighlight = ({ _video, index }) => {
     const navigate = useNavigate();
 
-
     const { intToStringBigNumber, parseDate, parseDuration } = useFormatter();
-    const [isLoaded, setIsLoaded] = useState(false);
-    const [video, setVideo] = useState(_video);
-    const [channel, setChannel] = useState();
-    const [directedBy, setDirectedBy] = useState();
-    const [logo, setLogo] = useState();
+
+    const isLoaded = useMemo(() => _video !== undefined, [_video]);
+    const channel = useMemo(() => _video?.channel, [_video]);
+    const logo = useMemo(() => _video?.channel.logo_url, [_video]);
+    const directedBy = useMemo(() => _video?.directedBy, [_video]);
+    const formattedDate = useMemo(() => parseDate(_video?.published_at, "DD MMM YYYY"), [_video]);
+
     const [open, setOpen] = useState(false);
 
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        async function fetchData() {
-            setVideo(_video);
-                    setLogo(_video?.channel.logo_url);
-                    setDirectedBy(_video?.directedBy);
-                    setChannel(_video?.channel);
-                    setIsLoaded(true);
-            // await getVideoFn(_video.video_id).then(res => {
-            //     if (res.result) {
-            //         setVideo(res.result);
-            //         setLogo(res.result.channel.logo_url);
-            //         setDirectedBy(res.result.directedBy);
-            //         setChannel(res.result.channel);
-            //         setIsLoaded(true);
-            //     }
-            // })
-        }
-        fetchData();
-    }, [_video]);
+    //     async function fetchData() {
+    //         setVideo(_video);
+    //                 setLogo(_video?.channel.logo_url);
+    //                 setDirectedBy(_video?.directedBy);
+    //                 setChannel(_video?.channel);
+    //                 setIsLoaded(true);
+    //         // await getVideoFn(_video.video_id).then(res => {
+    //         //     if (res.result) {
+    //         //         setVideo(res.result);
+    //         //         setLogo(res.result.channel.logo_url);
+    //         //         setDirectedBy(res.result.directedBy);
+    //         //         setChannel(res.result.channel);
+    //         //         setIsLoaded(true);
+    //         //     }
+    //         // })
+    //     }
+    //     fetchData();
+    // }, [_video]);
 
     const showDrawer = () => {
-        console.log('show drawer')
         setOpen(true);
     };
 
@@ -65,12 +54,11 @@ const VideoPreviewForHighlight = ({ _video, index }) => {
     }
 
     const goToChannel = () => {
-        console.log('go to channel')
         const url = '/channel/' + _video.channel_id;
         // not necessary, kind of redudant at the moment. Params are set through useParams and useLocation (state)
         navigate(url, { state: { id: _video.channel_id } });
     }
-    
+
 
     insertCss(`
 
@@ -118,16 +106,16 @@ const VideoPreviewForHighlight = ({ _video, index }) => {
                     <Row>
                         <Col span={24}>
                             <div style={{ borderRadius: '8px', height: '270px' }}>
-                                <Image style={{ borderRadius: '8px', objectFit: 'cover' }} src={video.url} width='100%' height="100%" preview={false} onClick={() => showDrawer()} />
+                                <Image style={{ borderRadius: '8px', objectFit: 'cover' }} src={_video.url} width='100%' height="100%" preview={false} onClick={() => showDrawer()} />
                             </div>
                         </Col>
                     </Row>
                     <Row style={{ marginTop: '20px' }}>
                         <Col span={18}>
-                            <Title level={5} ellipsis={true}>{video.title}</Title>
+                            <Title level={5} ellipsis={true}>{_video.title}</Title>
                         </Col>
                         <Col span={6}>
-                            <Text style={{ float: 'right' }}>{parseDate(video.published_at, "DD MMM YYYY")}</Text>
+                            <Text style={{ float: 'right' }}>{formattedDate}</Text>
                         </Col>
                     </Row>
                     <Row>
@@ -137,14 +125,14 @@ const VideoPreviewForHighlight = ({ _video, index }) => {
                                     backgroundColor: '#f56a00',
                                 }} />
                                 {/* <Image src={video.channel?.logo_url}></Image> */}
-                                <Text>{video.channel_title}</Text>
+                                <Text>{_video.channel_title}</Text>
                             </Space>
                         </Col>
                         <Col span={4}>
                             <Space size="small" style={{ float: 'right' }}>
-                                <EyeOutlined />{intToStringBigNumber(video.views)}
-                                <LikeOutlined />{intToStringBigNumber(video.likes)}
-                                <CommentOutlined />{intToStringBigNumber(video.comments)}
+                                <EyeOutlined />{intToStringBigNumber(_video.views)}
+                                <LikeOutlined />{intToStringBigNumber(_video.likes)}
+                                <CommentOutlined />{intToStringBigNumber(_video.comments)}
                             </Space>
                         </Col>
                     </Row>
@@ -163,14 +151,14 @@ const VideoPreviewForHighlight = ({ _video, index }) => {
                                     </>) : ('')
                                 }
                                 {
-                                    video?.cast.length > 0 ? (
+                                    _video?.cast.length > 0 ? (
                                         <>
                                             <Divider></Divider>
                                             <Text strong>Cast</Text>
-                                            <Popover placement="bottom" title="Cast" content={castContent(video.cast)} trigger="click">
+                                            <Popover placement="bottom" title="Cast" content={castContent(_video.cast)} trigger="click">
 
                                                 <Avatar.Group maxCount={5} maxStyle={{ color: '#000000', backgroundColor: variables.primary }}>
-                                                    {video.cast.map(cast_creator => {
+                                                    {_video.cast.map(cast_creator => {
                                                         return (<Avatar key={"cast_" + cast_creator.id} size="small" src={cast_creator.profile_picture} />);
                                                     })}
                                                 </Avatar.Group>
@@ -185,7 +173,7 @@ const VideoPreviewForHighlight = ({ _video, index }) => {
 
 
                 {/* </Popover> */}
-                <VideoDrawer _video={video} _channel={channel} _open={open} childToParent={childToParent}></VideoDrawer>
+                <VideoDrawer _video={_video} _channel={channel} _open={open} childToParent={childToParent}></VideoDrawer>
             </>
             ) : (
                 <Spin />
@@ -195,13 +183,5 @@ const VideoPreviewForHighlight = ({ _video, index }) => {
         </>
     );
 }
-{/* <div>
-    <Space split={<Divider type="vertical" />} size="small" style={{ marginLeft: '5px' }}>
-        <p style={{ color: 'white', fontSize: '10px' }}><EyeOutlined /> {intToStringBigNumber(video.views)}</p>
-        <p style={{ color: 'white', fontSize: '10px' }}><LikeOutlined /> {intToStringBigNumber(video.likes)}</p>
-        <p style={{ color: 'white', fontSize: '10px' }}><CommentOutlined /> {intToStringBigNumber(video.comments)}</p>
-
-    </Space>
-</div> */}
 
 export default VideoPreviewForHighlight;

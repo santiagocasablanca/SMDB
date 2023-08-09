@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Card, Spin, Row, Col, Image, Select, Space, Avatar, Button, Popover, Tag, Typography, Modal, Form, Tooltip, Input, notification, Divider } from 'antd';
 import { CrownOutlined, GithubOutlined, LinkedinOutlined, MailOutlined } from '@ant-design/icons';
+import { Avatar, Card, Col, Divider, Row, Space, Spin, Typography } from 'antd';
 import insertCss from 'insert-css';
-import variables from '../sass/antd.module.scss';
+import React, { useEffect, useState } from 'react';
 import { AppLogo } from '../components';
+import variables from '../sass/antd.module.scss';
 
 
 

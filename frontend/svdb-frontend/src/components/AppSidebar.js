@@ -1,20 +1,10 @@
-import React, { useReducer } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import {
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  PlayCircleOutlined,
-  UserOutlined,
-  MobileOutlined,
-  HomeOutlined,
-  YoutubeOutlined,
-  VideoCameraOutlined,
-} from '@ant-design/icons';
-import { Button, Layout, Menu, theme, Drawer } from 'antd';
-import { useState } from 'react';
-import variables from '../sass/antd.module.scss'
-import insertCss from 'insert-css'
+import { HomeOutlined, MobileOutlined, PlayCircleOutlined, UserOutlined, VideoCameraOutlined, YoutubeOutlined } from '@ant-design/icons';
+import { Drawer, Layout, Menu } from 'antd';
+import insertCss from 'insert-css';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation } from "react-router-dom";
+import variables from '../sass/antd.module.scss';
 
 
 

@@ -1,13 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import { FilterOutlined } from '@ant-design/icons';
+import { Button, Col, Row, Space, Tooltip, Typography } from 'antd';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, List, Row, Col, Image, Table, Space, Avatar, Button, Popover, Tag, Typography, Modal, Form, Tooltip, Input, notification } from 'antd';
-import { LikeOutlined, YoutubeOutlined, CalendarOutlined, VideoCameraOutlined, EyeOutlined, NumberOutlined, FilterOutlined } from '@ant-design/icons';
-import insertCss from 'insert-css';
-import { getCreatorsFn, associateChannelIdsToCreatorFn } from "../services/creatorApi.ts";
-import { getVideosFn } from "../services/videoApi.ts";
-
-import variables from '../sass/antd.module.scss'
 import useFormatter from '../hooks/useFormatter';
+
 
 
 

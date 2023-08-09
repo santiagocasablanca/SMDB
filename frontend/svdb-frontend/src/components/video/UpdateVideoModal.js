@@ -1,15 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Card, List, Row, Col, Image, Table, Space, Avatar, Button, Popover, Tag, Typography, Modal, Form, Input, notification } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
-
-import insertCss from 'insert-css';
-import { getCreatorsFn } from "../../services/creatorApi.ts";
+import { Button, Form, Input, Modal, notification } from 'antd';
+import React, { useState } from 'react';
 import { updateVideoFn } from "../../services/videoApi.ts";
-import variables from '../../sass/antd.module.scss'
-import useFormatter from '../../hooks/useFormatter';
-import CreatorSelector from '../creator/CreatorSelector';
 import CastSelector from '../creator/CastSelector';
+import CreatorSelector from '../creator/CreatorSelector';
+
 
 const UpdateVideoModal = ({ video }) => {
     const [visible, setVisible] = useState(false);

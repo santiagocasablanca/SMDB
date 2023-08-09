@@ -1,14 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import ReactDOM from 'react-dom';
-import { Treemap, Heatmap, G2 } from '@ant-design/plots';
-import {
-  Card, Divider, Carousel, Select,
-  Row, Space,
-  Col, List, Statistic
-} from 'antd';
-import { getVideosFn, getTreeMapPlotForTagsFn, fetchVideoFrequencyFn } from "../services/videoApi.ts"
-import dayjs from "dayjs"
+import dayjs from "dayjs";
 import insertCss from 'insert-css';
+import React, { useEffect, useState } from 'react';
+import { fetchVideoFrequencyFn } from "../services/videoApi.ts";
 // import LoadingAnimation from './LoadingAnimation';
 
 var weekOfYear = require('dayjs/plugin/weekOfYear')

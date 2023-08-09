@@ -1,10 +1,8 @@
-import React from 'react'
-import { Layout, theme } from 'antd';
-import { useState } from 'react';
-import { AppContent, AppSidebar, AppFooter, AppHeader } from '../components/index'
-import { gray } from '@ant-design/colors';
+import { Layout } from 'antd';
+import React, { useState } from 'react';
+import { AppContent, AppFooter, AppHeader, AppSidebar } from '../components/index';
+import variables from '../sass/antd.module.scss';
 
-import variables from '../sass/antd.module.scss'
 
 
 const DefaultLayout = () => {

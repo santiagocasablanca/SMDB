@@ -1,21 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import ReactDOM from 'react-dom';
-import { Treemap, Heatmap, G2 } from '@ant-design/plots';
-import {
-  Card, Divider, Typography, Select,
-  Row, Space, Popover, Button,
-  Col, Avatar, Spin
-} from 'antd';
-import { fetchVideoUploadTimeFrequencyFn } from "../../services/videoApi.ts"
-import dayjs from "dayjs"
 import { FilterOutlined } from '@ant-design/icons';
-
-
+import { Heatmap } from '@ant-design/plots';
+import { Avatar, Button, Card, Col, Popover, Row, Select, Space, Spin, Typography } from 'antd';
+import dayjs from "dayjs";
+import insertCss from 'insert-css';
+import React, { useEffect, useState } from 'react';
 // import { LikeOutlined,StarOutlined,MessageOutlined, EyeOutlined, NumberOutlined } from '@ant-design/icons';
 import useFormatter from '../../hooks/useFormatter';
 import variables from '../../sass/antd.module.scss';
+import { fetchVideoUploadTimeFrequencyFn } from "../../services/videoApi.ts";
 
-import insertCss from 'insert-css';
+
+
 
 const { Title, Text } = Typography;
 const { Option } = Select;

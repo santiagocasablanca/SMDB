@@ -1,12 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Card, List, Row, Col, Image, Table, Space, Avatar, Button, Popover, Tag, Typography, Modal, Form, Input, notification } from 'antd';
-import { LikeOutlined, UserAddOutlined } from '@ant-design/icons';
+import { UserAddOutlined } from '@ant-design/icons';
+import { Button, Form, Input, Modal, notification } from 'antd';
+import React, { useState } from 'react';
+import { createAndAssociateChannelsFn } from "../../services/creatorApi.ts";
 
-import insertCss from 'insert-css';
-import { getCreatorsFn, createAndAssociateChannelsFn } from "../../services/creatorApi.ts";
-import variables from '../../sass/antd.module.scss'
-import useFormatter from '../../hooks/useFormatter';
 
 
 const AddCreatorModal = ({ }) => {

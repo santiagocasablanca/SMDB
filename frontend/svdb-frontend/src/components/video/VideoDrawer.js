@@ -1,21 +1,13 @@
-import React, { useState, useEffect } from 'react';
-
-import { Card, List, Row, Col, Divider, Avatar, Table, Typography, Space, Spin, Drawer, Button, Popover } from 'antd';
-import { LikeOutlined, YoutubeOutlined, CalendarOutlined, CommentOutlined, ClockCircleOutlined, VideoCameraOutlined, EyeOutlined, UserOutlined, FilterOutlined, ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
-
+import { CommentOutlined, EyeOutlined, LikeOutlined } from '@ant-design/icons';
+import { Avatar, Col, Drawer, List, Row, Space, Typography } from 'antd';
 import insertCss from 'insert-css';
-
-import variables from '../../sass/antd.module.scss';
+import React, { useEffect, useState } from 'react';
+import ReactPlayer from 'react-player';
+import { useNavigate } from 'react-router-dom';
 import useFormatter from '../../hooks/useFormatter';
-import ReactPlayer from 'react-player'
 import UpdateVideoModal from './UpdateVideoModal';
 
-
-
-const { Title, Text } = Typography;
-
-
+const { Text } = Typography;
 
 const VideoDrawer = ({ _video, _channel, _open, childToParent }) => {
     const navigate = useNavigate();

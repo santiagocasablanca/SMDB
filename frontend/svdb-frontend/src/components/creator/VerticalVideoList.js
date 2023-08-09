@@ -1,13 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Card, List, Image, Popover, Typography, Space, Tag, Spin, Divider } from 'antd';
-import {
-    LikeOutlined, CommentOutlined, EyeOutlined
-} from '@ant-design/icons';
-
-import VideoDrawer from '../video/VideoDrawer';
+import { CommentOutlined, EyeOutlined, LikeOutlined } from '@ant-design/icons';
+import { Card, Divider, Image, List, Popover, Space, Spin, Tag, Typography } from 'antd';
+import React, { useEffect, useState } from 'react';
 import useFormatter from '../../hooks/useFormatter';
-import insertCss from 'insert-css';
-import variables from '../../sass/antd.module.scss';
+import VideoDrawer from '../video/VideoDrawer';
+
 
 
 

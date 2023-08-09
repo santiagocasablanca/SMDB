@@ -1,16 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import ReactDOM from 'react-dom';
-import { Treemap,Heatmap, G2 } from '@ant-design/plots';
-import { Card,Divider, Carousel,
-  Row, Space,
-  Col, List, Statistic } from 'antd';
-import { getVideosFn, getTreeMapPlotForTagsFn, fetchVideoFrequencyFn } from "../services/videoApi.ts"
-import dayjs from "dayjs"
-import { LikeOutlined,StarOutlined,MessageOutlined, EyeOutlined, NumberOutlined } from '@ant-design/icons';
+import { EyeOutlined, LikeOutlined, MessageOutlined, NumberOutlined } from '@ant-design/icons';
+import { Treemap } from '@ant-design/plots';
+import { Card, Col, Divider, List, Row, Space } from 'antd';
+import dayjs from "dayjs";
+import insertCss from 'insert-css';
+import React, { useEffect, useState } from 'react';
+import { getTreeMapPlotForTagsFn, getVideosFn } from "../services/videoApi.ts";
+import ChannelTotalStats from "./ChannelTotalsStats";
 import FrequencyCard from "./FrequencyCard";
 import UploadTimeFrequencyCard from "./UploadTimeFrequencyCard";
-import ChannelTotalStats from "./ChannelTotalsStats";
-import insertCss from 'insert-css';
 
 
 var weekOfYear = require('dayjs/plugin/weekOfYear')

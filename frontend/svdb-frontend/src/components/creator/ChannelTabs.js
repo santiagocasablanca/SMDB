@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Card, List, Row, Col, Popover, Image, Typography, Tabs, Space } from 'antd';
-import CreatorChannel from './CreatorChannel'
+import { Image, Popover, Space, Tabs, Typography } from 'antd';
 import insertCss from 'insert-css';
-import { LikeOutlined, YoutubeOutlined, CalendarOutlined, VideoCameraOutlined, EyeOutlined, NumberOutlined, FilterOutlined } from '@ant-design/icons';
-
-import variables from '../../sass/antd.module.scss';
+import React, { useEffect, useState } from 'react';
 import useFormatter from '../../hooks/useFormatter';
+import CreatorChannel from './CreatorChannel';
+
 
 const { Title, Text } = Typography;
 

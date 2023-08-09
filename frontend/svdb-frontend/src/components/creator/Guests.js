@@ -1,16 +1,14 @@
-import { Col, Row, Card, Table, Tag, Button, Typography, Tooltip, Popover, Select, Space } from 'antd';
-import { green, presetDarkPalettes } from '@ant-design/colors';
-import { yellow } from '@ant-design/colors';
-import { React, useEffect, useState } from "react"
-import { getVideoGuestsFn } from "../../services/videoApi.ts"
-import VideographyEditPanel from './VideographyEditPanel'
-import dayjs from "dayjs"
-import insertCss from 'insert-css'
-import variables from '../../sass/antd.module.scss'
-import useFormatter from '../../hooks/useFormatter';
-import { LikeOutlined, YoutubeOutlined, CalendarOutlined, VideoCameraOutlined, EyeOutlined, UserOutlined, FilterOutlined } from '@ant-design/icons';
-import VideographyFilterPanel from './VideographyFilterPanel';
+import { YoutubeOutlined } from '@ant-design/icons';
+import { Col, Row, Space, Table, Tag, Typography } from 'antd';
+import dayjs from "dayjs";
+import insertCss from 'insert-css';
+import { React, useEffect, useState } from "react";
 import { useLocation } from 'react-router-dom';
+import useFormatter from '../../hooks/useFormatter';
+import variables from '../../sass/antd.module.scss';
+import { getVideoGuestsFn } from "../../services/videoApi.ts";
+import VideographyEditPanel from './VideographyEditPanel';
+import VideographyFilterPanel from './VideographyFilterPanel';
 
 // .ant-input {
 //   color: $coolLighterGray !important;

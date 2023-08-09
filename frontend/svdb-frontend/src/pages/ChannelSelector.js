@@ -1,12 +1,9 @@
 
-import { React, useEffect, useState } from "react"
-import { getChannelsFn } from "../services/channelApi.ts"
+import { Select } from 'antd';
+import { React, useEffect, useState } from "react";
 import { getCreatorsFn } from "../services/creatorApi.ts";
-import { fetchAllSeries, fetchAllTags } from "../services/videoApi.ts"
-import { Card, Space, Col, Row, Select } from 'antd';
 
 
-import dayjs from "dayjs"
 
 const ChannelSelector = ({ channels, onChange }) => {
   const [creators, setCreators] = useState([]);

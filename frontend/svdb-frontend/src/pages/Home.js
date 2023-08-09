@@ -1,26 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Card, Spin, Row, Col, Image, Select, Space, Avatar, Button, Popover, Tag, Typography, Modal, Carousel, List, Tooltip, Input, notification, Skeleton } from 'antd';
-import { LikeOutlined, YoutubeOutlined, CalendarOutlined, VideoCameraOutlined, EyeOutlined, NumberOutlined, FilterOutlined, HomeOutlined } from '@ant-design/icons';
+import { HomeOutlined } from '@ant-design/icons';
+import { Carousel, Col, Row, Space, Spin, Typography } from 'antd';
+import dayjs from 'dayjs';
 import insertCss from 'insert-css';
-import { getCreatorsFn } from "../services/creatorApi.ts";
+import React, { useEffect, useState } from 'react';
+import HorizontalVideoList from '../components/creator/HorizontalVideoList';
+import FrequencyCard from '../components/home/FrequencyCard';
+import TopCreators from '../components/home/TopCreators';
+import UploadTimeFrequencyCard from '../components/home/UploadTimeFrequencyCard';
+import HorizontalHighlightedList from '../components/video/HorizontalHighlightedList';
+import HorizontalShortsList from '../components/video/HorizontalShortsList';
+import VideoPreviewForHighlight from '../components/video/VideoPreviewForHighlight';
+import useFormatter from '../hooks/useFormatter';
+import variables from '../sass/antd.module.scss';
 import { getChannelsFn } from "../services/channelApi.ts";
 import { getVideosFn } from "../services/videoApi.ts";
-
-
-import variables from '../sass/antd.module.scss'
-import useFormatter from '../hooks/useFormatter';
-import HorizontalVideoList from '../components/creator/HorizontalVideoList'
-import StatisticsCards from '../components/creator/StatisticsCards'
-
-import FrequencyCard from '../components/home/FrequencyCard';
-import UploadTimeFrequencyCard from '../components/home/UploadTimeFrequencyCard';
-import TopCreators from '../components/home/TopCreators'
-import VideoPreviewForHighlight from '../components/video/VideoPreviewForHighlight';
-import HorizontalShortsList from '../components/video/HorizontalShortsList';
-import HorizontalHighlightedList from '../components/video/HorizontalHighlightedList';
-import dayjs from 'dayjs';
-
 
 
 const { Title, Text } = Typography;

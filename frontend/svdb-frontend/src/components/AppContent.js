@@ -1,9 +1,9 @@
-import React, { Suspense } from 'react'
-import { Navigate, Route, Routes } from 'react-router-dom'
-import { Layout, Menu, theme } from 'antd';
-import variables from '../sass/antd.module.scss'
+import { Layout } from 'antd';
+import React, { Suspense } from 'react';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import routes from '../routes';
+import variables from '../sass/antd.module.scss';
 
-import routes from '../routes'
 
 const { Content } = Layout;
 

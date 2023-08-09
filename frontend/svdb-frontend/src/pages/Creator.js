@@ -1,23 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { Card, List, Row, Col, Image, Typography, Space, Tabs } from 'antd';
+import { Col, Image, Row, Space, Tabs, Typography } from 'antd';
 import insertCss from 'insert-css';
-import ReactPlayer from 'react-player'
-import {
-  useParams, useLocation
-} from "react-router-dom";
-
-import { getCreatorFn, getCreatorsFn } from "../services/creatorApi.ts";
-import { getVideosFn } from "../services/videoApi.ts";
-
-import ChannelTabs from "../components/creator/ChannelTabs"
-import FrequencyCard from "./FrequencyCard";
-import UploadTimeFrequencyCard from "./UploadTimeFrequencyCard";
-import ChannelTotalStats from "./ChannelTotalsStats";
-import Videography from "../components/creator/Videography";
+import React, { useEffect, useState } from 'react';
+import { useParams } from "react-router-dom";
 import Appearences from "../components/creator/Appearences";
-import variables from '../sass/antd.module.scss';
+import ChannelTabs from "../components/creator/ChannelTabs";
+import Videography from "../components/creator/Videography";
 import useFormatter from '../hooks/useFormatter';
-import Guests from '../components/creator/Guests';
+import variables from '../sass/antd.module.scss';
+import { getCreatorFn } from "../services/creatorApi.ts";
+
+
 
 
 const { Title, Text } = Typography;

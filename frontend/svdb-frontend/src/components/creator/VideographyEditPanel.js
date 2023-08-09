@@ -1,12 +1,12 @@
-import { Row, Col, Typography, List, Avatar, Button, Popconfirm, Space, Card, Image, Descriptions, Form, Input, DatePicker, Select, Divider } from 'antd';
-import { React, useEffect, useState } from "react"
-import { getVideoFn } from "../../services/videoApi.ts"
-import ReactPlayer from 'react-player'
-import useFormatter from '../../hooks/useFormatter';
-import { LikeOutlined, YoutubeOutlined, CalendarOutlined, CommentOutlined, ClockCircleOutlined, VideoCameraOutlined, EyeOutlined, UserOutlined, FilterOutlined, ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
-import UpdateVideoModal from '../video/UpdateVideoModal';
+import { CalendarOutlined, CommentOutlined, EyeOutlined, LikeOutlined } from '@ant-design/icons';
+import { Avatar, Col, List, Row, Space, Typography } from 'antd';
 import insertCss from 'insert-css';
+import { React, useEffect, useState } from "react";
+import ReactPlayer from 'react-player';
 import { useNavigate } from 'react-router-dom';
+import useFormatter from '../../hooks/useFormatter';
+import { getVideoFn } from "../../services/videoApi.ts";
+import UpdateVideoModal from '../video/UpdateVideoModal';
 
 
 

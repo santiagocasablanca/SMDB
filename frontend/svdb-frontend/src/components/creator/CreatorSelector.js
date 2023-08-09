@@ -1,7 +1,7 @@
 
-import { React, useEffect, useState } from "react"
+import { Select } from 'antd';
+import { React, useEffect, useState } from "react";
 import { getCreatorsFn } from "../../services/creatorApi.ts";
-import { Card, List, Row, Col, Image, Select, Space, Avatar, Button, Popover, Tag, Typography, Modal, Form, Input, notification } from 'antd';
 
 
 const CreatorSelector = ({ _selectedCreators, onChange }) => {

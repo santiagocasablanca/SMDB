@@ -1,13 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Card, List, Row, Col, Image, Avatar, Table, Divider, Popover, Button, Typography, Space, Spin } from 'antd';
-import { LikeOutlined, YoutubeOutlined, CalendarOutlined, CommentOutlined, ClockCircleOutlined, VideoCameraOutlined, EyeOutlined, NumberOutlined, FilterOutlined, ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
-
-import insertCss from 'insert-css';
-import variables from '../../sass/antd.module.scss';
+import { Button, Col, List, Row, Spin, Typography } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import useFormatter from '../../hooks/useFormatter';
 import { getVideosFn } from "../../services/videoApi.ts";
 import ShortPreview from './ShortPreview';
-import { useNavigate } from 'react-router-dom';
+
 
 
 

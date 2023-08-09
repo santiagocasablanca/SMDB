@@ -1,16 +1,10 @@
-import React from 'react'
-
-import { AppLogo } from './index'
-import {
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  UploadOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-} from '@ant-design/icons';
+import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import { Button, Layout, Space, theme } from 'antd';
-import variables from '../sass/antd.module.scss'
-import insertCss from 'insert-css'
+import insertCss from 'insert-css';
+import React from 'react';
+import variables from '../sass/antd.module.scss';
+import { AppLogo } from './index';
+
 
 
 const { Header, Sider, Content } = Layout;

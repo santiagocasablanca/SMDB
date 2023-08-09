@@ -1,7 +1,6 @@
 
-import { React, useEffect, useState } from "react"
-import { getCreatorsFn } from "../../services/creatorApi.ts";
-import { Card, List, Row, Col, Image, Select, Space, Avatar, Button, Popover, Tag, Typography, Modal, Form, Input, notification } from 'antd';
+import { Button, Input, Select, Space } from 'antd';
+import { React, useEffect, useState } from "react";
 
 
 const SingleCastSelector = ({ _options, onChange }) => {

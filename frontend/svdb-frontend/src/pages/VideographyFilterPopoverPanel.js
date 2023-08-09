@@ -1,12 +1,9 @@
-import { Button, Popconfirm, Space, Card, Form, Input, DatePicker, Select, Collapse, Row, Col } from 'antd';
-import { React, useEffect, useState } from "react"
-import { getChannelsFn } from "../services/channelApi.ts"
-import { fetchAllSeries, fetchAllTags } from "../services/videoApi.ts"
-import ChannelSelector from './ChannelSelector'
-import variables from '../sass/antd.module.scss'
+import { Button, Col, Collapse, DatePicker, Form, Input, Row, Select, Space } from 'antd';
+import { React, useEffect, useState } from "react";
+import { getChannelsFn } from "../services/channelApi.ts";
+import { fetchAllSeries, fetchAllTags } from "../services/videoApi.ts";
 
 
-import dayjs from "dayjs"
 
 const VideographyFilterPopoverPanel = ({ filters, onChange }) => {
   const [searchClicked, setSearchClicked] = useState(false);

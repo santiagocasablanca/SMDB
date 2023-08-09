@@ -1,16 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import ReactDOM from 'react-dom';
-import { Treemap,Heatmap, G2 } from '@ant-design/plots';
-import { Card,Divider, Carousel, Select,
-  Row, Space,
-  Col, List, Statistic } from 'antd';
-import { fetchVideoUploadTimeFrequencyFn } from "../services/videoApi.ts"
-import dayjs from "dayjs"
-
-
+import { Heatmap } from '@ant-design/plots';
+import { Card, Col, Row, Select, Space } from 'antd';
+import dayjs from "dayjs";
 // import { LikeOutlined,StarOutlined,MessageOutlined, EyeOutlined, NumberOutlined } from '@ant-design/icons';
-
 import insertCss from 'insert-css';
+import React, { useEffect, useState } from 'react';
+import { fetchVideoUploadTimeFrequencyFn } from "../services/videoApi.ts";
+
+
 
 const { Option } = Select;
 

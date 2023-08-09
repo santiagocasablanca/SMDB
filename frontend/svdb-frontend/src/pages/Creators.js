@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Card, List, Row, Col, Image, Table, Space, Avatar, Button, Popover, Tag, Typography, Modal, Form, Tooltip, Input, notification } from 'antd';
-import { LikeOutlined, YoutubeOutlined, CalendarOutlined, VideoCameraOutlined, EyeOutlined, UserOutlined, FilterOutlined } from '@ant-design/icons';
-
+import { CalendarOutlined, EyeOutlined, FilterOutlined, UserOutlined, VideoCameraOutlined, YoutubeOutlined } from '@ant-design/icons';
+import { Avatar, Button, Card, Col, Form, Image, Input, List, Modal, notification, Popover, Row, Space, Table, Tag, Tooltip, Typography } from 'antd';
+import dayjs from "dayjs";
 import insertCss from 'insert-css';
-import { getCreatorsFn, associateChannelIdsToCreatorFn } from "../services/creatorApi.ts";
-import variables from '../sass/antd.module.scss'
-import useFormatter from '../hooks/useFormatter';
-import dayjs from "dayjs"
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AddCreatorModal from '../components/creator/AddCreatorModal';
+import useFormatter from '../hooks/useFormatter';
+import variables from '../sass/antd.module.scss';
+import { associateChannelIdsToCreatorFn, getCreatorsFn } from "../services/creatorApi.ts";
+
 
 const { Title } = Typography;
 

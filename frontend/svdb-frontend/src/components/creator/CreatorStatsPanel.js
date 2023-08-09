@@ -1,14 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Card, List, Row, Col, Image, Avatar, Table, Typography, Space, Descriptions, Divider, Spin, Progress, Popover, Tooltip } from 'antd';
-import {
-    LikeOutlined, BarsOutlined,
-    AppstoreOutlined, YoutubeOutlined, CalendarOutlined, CommentOutlined, ClockCircleOutlined, VideoCameraOutlined, EyeOutlined, NumberOutlined, FilterOutlined, ArrowUpOutlined, ArrowDownOutlined
-} from '@ant-design/icons';
-import { green, red } from '@ant-design/colors';
+import { ArrowDownOutlined, ArrowUpOutlined, CalendarOutlined, ClockCircleOutlined, CommentOutlined, EyeOutlined, LikeOutlined } from '@ant-design/icons';
+import { Avatar, Card, Col, Divider, Image, Popover, Row, Space, Spin, Table, Tooltip, Typography } from 'antd';
 import insertCss from 'insert-css';
-
-import variables from '../../sass/antd.module.scss';
+import React, { useEffect, useState } from 'react';
 import useFormatter from '../../hooks/useFormatter';
+import variables from '../../sass/antd.module.scss';
+
 
 const { Title, Text } = Typography;
 

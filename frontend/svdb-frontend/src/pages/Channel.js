@@ -1,17 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { Card, List, Row, Col, Image, Typography, Space, Tabs, Spin } from 'antd';
+import { Col, Image, Row, Space, Spin, Tabs, Typography } from 'antd';
 import insertCss from 'insert-css';
-import {
-  useParams, useLocation
-} from "react-router-dom";
-
+import React, { useEffect, useState } from 'react';
+import { useParams } from "react-router-dom";
+import ChannelOverviewTab from '../components/channel/ChannelOverviewTab';
+import Videography from "../components/creator/Videography";
+import useFormatter from '../hooks/useFormatter';
+import variables from '../sass/antd.module.scss';
 import { getChannelFn } from "../services/channelApi.ts";
 
-import ChannelTabs from "../components/channel/ChannelOverviewTab"
-import Videography from "../components/creator/Videography";
-import variables from '../sass/antd.module.scss';
-import useFormatter from '../hooks/useFormatter';
-import ChannelOverviewTab from '../components/channel/ChannelOverviewTab';
+
 
 
 const { Title, Text } = Typography;

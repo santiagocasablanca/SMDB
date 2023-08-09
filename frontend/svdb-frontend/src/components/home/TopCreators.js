@@ -1,17 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-
-import {
-  Card, Divider, Button, Select,
-  Row, Space, Popover,
-  Image,
-  Col, List, Typography, Spin
-} from 'antd';
-import { getTopCreatorsFn } from "../../services/creatorApi.ts"
+import { Col, Image, List, Row, Select, Spin, Typography } from 'antd';
 import insertCss from 'insert-css';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import useFormatter from '../../hooks/useFormatter';
-import variables from '../../sass/antd.module.scss';
-import { FilterOutlined } from '@ant-design/icons';
+import { getTopCreatorsFn } from "../../services/creatorApi.ts";
+
 
 
 const { Option } = Select;

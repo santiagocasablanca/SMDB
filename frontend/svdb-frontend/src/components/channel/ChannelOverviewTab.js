@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { Card, List, Tabs, Row, Col, Popover, Image, Typography, Avatar, Divider, Tooltip, Space, Spin } from 'antd';
+import { ArrowDownOutlined, ArrowUpOutlined, ClockCircleOutlined, CommentOutlined, EyeOutlined, LikeOutlined } from '@ant-design/icons';
+import { Avatar, Card, Col, Divider, Image, Popover, Row, Space, Spin, Tooltip, Typography } from 'antd';
 // import CreatorChannel from './CreatorChannel'
 import insertCss from 'insert-css';
-import { LikeOutlined, ArrowDownOutlined, ArrowUpOutlined, ClockCircleOutlined, EyeOutlined, CommentOutlined, FilterOutlined } from '@ant-design/icons';
-
-import { getVideosFn } from "../../services/videoApi.ts";
-import { getCreatorStatsFn } from "../../services/creatorApi.ts";
-
+import React, { useEffect, useState } from 'react';
+import useFormatter from '../../hooks/useFormatter';
 import variables from '../../sass/antd.module.scss';
-import StatisticsCards from '../creator/StatisticsCards'
-import HorizontalVideoList from '../creator/HorizontalVideoList'
+import { getCreatorStatsFn } from "../../services/creatorApi.ts";
+import { getVideosFn } from "../../services/videoApi.ts";
+import HorizontalVideoList from '../creator/HorizontalVideoList';
+import StatisticsCards from '../creator/StatisticsCards';
 import FrequencyCard from '../home/FrequencyCard';
 import UploadTimeFrequencyCard from '../home/UploadTimeFrequencyCard';
-import useFormatter from '../../hooks/useFormatter';
+
+
 // import TreeMapPlot from '../graphs/TreeMapPlot';
 
 const { Title, Text } = Typography;

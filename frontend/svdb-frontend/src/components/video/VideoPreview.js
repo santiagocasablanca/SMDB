@@ -1,31 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { Card, List, Row, Col, Image, Divider, Popover, Avatar, Table, Typography, Space, Spin } from 'antd';
-import { LikeOutlined, YoutubeOutlined, CalendarOutlined, CommentOutlined, ClockCircleOutlined, VideoCameraOutlined, EyeOutlined, NumberOutlined, FilterOutlined, ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
+import { CommentOutlined, EyeOutlined, LikeOutlined } from '@ant-design/icons';
+import { Avatar, Card, Divider, Image, Space, Spin } from 'antd';
+import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-import insertCss from 'insert-css';
-import VideoDrawer from './VideoDrawer'
-
-import variables from '../../sass/antd.module.scss';
 import useFormatter from '../../hooks/useFormatter';
-import { getVideoFn } from "../../services/videoApi.ts";
-import ReactPlayer from 'react-player'
-
-
-
-const { Title, Text } = Typography;
-
+import VideoDrawer from './VideoDrawer';
 
 
 const VideoPreview = ({ _video }) => {
     const navigate = useNavigate();
 
     const { intToStringBigNumber, parseDate, parseDuration } = useFormatter();
-    const [isLoaded, setIsLoaded] = useState(false);
-    const [video, setVideo] = useState(_video);
-    const [channel, setChannel] = useState();
-    const [logo, setLogo] = useState();
+    const channel = useMemo(() => _video?.channel, [_video]);
+    const logo = useMemo(() => _video?.channel.logo_url, [_video]);
+    const formattedDate = useMemo(() => parseDate(_video?.published_at, "DD MMM YYYY"), [_video]);
     const [open, setOpen] = useState(false);
+    const isLoaded = useMemo(() => _video !== undefined, [_video]);
 
     const showDrawer = () => {
         setOpen(true);
@@ -41,24 +30,6 @@ const VideoPreview = ({ _video }) => {
         navigate(url, { state: { id: _video.channel_id } });
     }
 
-
-    useEffect(() => {
-        async function fetchData() {
-            setVideo(_video);
-            setLogo(_video?.channel.logo_url);
-            setChannel(_video?.channel);
-            setIsLoaded(true);
-            // await getVideoFn(_video.video_id).then(res => {
-            //     if (res.result) {
-            //         setVideo(res.result);
-            //         setLogo(res.result.channel.logo_url);
-            //         setChannel(res.result.channel);
-            //         setIsLoaded(true);
-            //     }
-            // })
-        }
-        fetchData();
-    }, [_video]);
     // 480 x 270
     return (
         <> {isLoaded ?
@@ -67,25 +38,24 @@ const VideoPreview = ({ _video }) => {
                     style={{ width: '220px', fontSize: '12px' }}
                     onClick={showDrawer}
                     bodyStyle={{ padding: 0, cursor: 'pointer' }}>
-                    {/* <Popover content={video.title} placement="top" onClick={showDrawer}> */}
 
-                    <Image style={{ borderRadius: '8px', objectFit: 'cover' }} src={video.url} width='218px' height='168px' preview={false} />
-                    <p style={{ color: 'white', fontSize: '10px', margin: '0px 5px' }}>{video.title}</p>
+                    <Image style={{ borderRadius: '8px', objectFit: 'cover' }} src={_video.url} width='218px' height='168px' preview={false} />
+                    <p style={{ color: 'white', fontSize: '10px', margin: '0px 5px' }}>{_video.title}</p>
                     <div>
                         <Space split={<Divider type="vertical" />} size="small" style={{ marginLeft: '5px' }}>
-                            <p style={{ color: 'white', fontSize: '10px' }}><EyeOutlined /> {intToStringBigNumber(video.views)}</p>
-                            <p style={{ color: 'white', fontSize: '10px' }}><LikeOutlined /> {intToStringBigNumber(video.likes)}</p>
-                            <p style={{ color: 'white', fontSize: '10px' }}><CommentOutlined /> {intToStringBigNumber(video.comments)}</p>
+                            <p style={{ color: 'white', fontSize: '10px' }}><EyeOutlined /> {intToStringBigNumber(_video.views)}</p>
+                            <p style={{ color: 'white', fontSize: '10px' }}><LikeOutlined /> {intToStringBigNumber(_video.likes)}</p>
+                            <p style={{ color: 'white', fontSize: '10px' }}><CommentOutlined /> {intToStringBigNumber(_video.comments)}</p>
 
                         </Space>
                     </div>
                     <Avatar src={logo} onClick={goToChannel} style={{
                         backgroundColor: '#f56a00', top: '5px', position: 'absolute', left: '5px'
                     }} />
-                    <p style={{ color: 'white', fontSize: '10px', top: '0px', position: 'absolute', right: '5px' }}>{parseDate(video.published_at, "DD MMM YYYY")}</p>
+                    <p style={{ color: 'white', fontSize: '10px', top: '0px', position: 'absolute', right: '5px' }}>{formattedDate}</p>
                     {/* </Popover> */}
                 </Card>
-                <VideoDrawer _video={video} _channel={channel} _open={open} childToParent={childToParent}></VideoDrawer>
+                <VideoDrawer _video={_video} _channel={channel} _open={open} childToParent={childToParent}></VideoDrawer>
             </>
             ) : (
                 <Spin />

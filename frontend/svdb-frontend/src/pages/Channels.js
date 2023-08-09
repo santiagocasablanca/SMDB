@@ -1,15 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Card, List, Row, Col, Image, Table, Space, Avatar, Button, Popover, Tag, Typography, Modal, Form, Tooltip, Input, notification } from 'antd';
-import { LikeOutlined, YoutubeOutlined, CalendarOutlined, VideoCameraOutlined, EyeOutlined, UserOutlined, FilterOutlined, ReloadOutlined } from '@ant-design/icons';
-
+import { ReloadOutlined, UserOutlined } from '@ant-design/icons';
+import { Button, Card, Col, Image, Input, List, Row, Space, Typography } from 'antd';
 import insertCss from 'insert-css';
-
+import React, { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import useFormatter from '../hooks/useFormatter';
+import variables from '../sass/antd.module.scss';
 import { getChannelsFn } from "../services/channelApi.ts";
 
-import variables from '../sass/antd.module.scss';
-import useFormatter from '../hooks/useFormatter';
-import dayjs from "dayjs";
+
+
 
 const { Title } = Typography;
 const { Search } = Input;

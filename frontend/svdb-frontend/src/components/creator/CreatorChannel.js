@@ -1,22 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { Card, List, Row, Col, Image, Avatar, Table, Typography, Space, Statistic, Segmented, Spin } from 'antd';
-import {
-    LikeOutlined, BarsOutlined,
-    AppstoreOutlined, YoutubeOutlined, CalendarOutlined, CommentOutlined, ClockCircleOutlined, VideoCameraOutlined, EyeOutlined, NumberOutlined, FilterOutlined, ArrowUpOutlined, ArrowDownOutlined
-} from '@ant-design/icons';
-
+import { Col, Row, Spin, Typography } from 'antd';
 import insertCss from 'insert-css';
-import CreatorStatsPanel from './CreatorStatsPanel'
-import HorizontalVideoList from './HorizontalVideoList'
-import StatisticsCards from './StatisticsCards'
-
-import variables from '../../sass/antd.module.scss';
+import React, { useEffect, useState } from 'react';
 import useFormatter from '../../hooks/useFormatter';
-import { getVideosFn } from "../../services/videoApi.ts";
-import ReactPlayer from 'react-player'
 import { getCreatorStatsFn } from "../../services/creatorApi.ts";
+import { getVideosFn } from "../../services/videoApi.ts";
 import CreatorFrequencyCard from './CreatorFrequencyCard';
+import CreatorStatsPanel from './CreatorStatsPanel';
 import CreatorUploadTimeFrequencyCard from './CreatorUploadTimeFrequencyCard';
+import HorizontalVideoList from './HorizontalVideoList';
+import StatisticsCards from './StatisticsCards';
+
+
 
 
 

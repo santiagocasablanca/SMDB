@@ -1,10 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import ReactDOM from 'react-dom';
-import { Treemap, Heatmap, G2 } from '@ant-design/plots';
+import { EyeOutlined, LikeOutlined, MessageOutlined } from '@ant-design/icons';
+import { Card, Col, Row, Statistic } from 'antd';
+import React, { useEffect, useState } from 'react';
 import { fetchVideosChannelStatsFn } from "../services/videoApi.ts";
-import dayjs from "dayjs";
-import { LikeOutlined, MessageOutlined, EyeOutlined } from '@ant-design/icons';
-import { Card, Space, Col, Row, Statistic } from 'antd';
 
 
 const ChannelTotalsStats = () => {

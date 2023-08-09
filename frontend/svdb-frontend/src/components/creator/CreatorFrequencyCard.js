@@ -1,18 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import ReactDOM from 'react-dom';
-import { Treemap, Heatmap, G2 } from '@ant-design/plots';
-import {
-  Card, Divider, Carousel, Select,
-  Row, Space, Popover,
-  Avatar,
-  Col, List, Typography, Spin
-} from 'antd';
-import { getVideosFn, getTreeMapPlotForTagsFn, fetchVideoFrequencyFn } from "../../services/videoApi.ts"
-import dayjs from "dayjs"
+import { G2, Heatmap } from '@ant-design/plots';
+import { Avatar, Card, Col, Popover, Row, Select, Space, Spin, Typography } from 'antd';
+import dayjs from "dayjs";
 import insertCss from 'insert-css';
+import React, { useEffect, useState } from 'react';
 // import LoadingAnimation from './LoadingAnimation';
 import useFormatter from '../../hooks/useFormatter';
 import variables from '../../sass/antd.module.scss';
+import { fetchVideoFrequencyFn, getVideosFn } from "../../services/videoApi.ts";
 
 
 
