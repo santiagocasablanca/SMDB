@@ -148,7 +148,7 @@ const AboutPage = () => {
                 <Paragraph
                   ellipsis={
                     {
-                      rows: 6,
+                      rows: 4,
                       expandable: true,
                       symbol: 'more',
                     }
@@ -202,8 +202,29 @@ const AboutPage = () => {
                   </p>
                   <Link href="https://github.com/santiagocasablanca/SMDB"><GithubOutlined /> Visit the Project Github</Link>
                   <br></br>
+                  <br></br>
+                  <Divider orientation="left">Deployment and current DB size</Divider>
+                  
+                  <Paragraph ellipsis={
+                    {
+                      rows: 2,
+                      expandable: true,
+                      symbol: 'more',
+                    }
+                  }>
+                  The deployment process for the project utilizes GitHub Actions for continuous integration and deployment (CI/CD). 
+                  Triggered by pushes to the main branch, the workflow automates backend and frontend image building and tagging through Docker Hub authentication using GitHub secrets. 
+                  These Dockerized images are subsequently pushed to Docker Hub, ensuring a streamlined process that swiftly delivers updates.
+                  </Paragraph>
                   <Text>Hosted at <Link href="https://contabo.com/">Contabo</Link> (Cloud VPS S => 4 vCPU Cores | 8 GB RAM)</Text>
                   <br></br>
+                  <Text>Database Statistics:</Text>
+                  <ul>
+                    <li>47 Creators</li>
+                    <li>75 Channels</li>
+                    <li>Over 68000 Videos</li>
+                  </ul>
+                  {/* <br></br> */}
                   <Divider orientation="left">Project Inspirations</Divider>
                   <ul>
                     <li><a href="https://mattw.io/youtube-metadata/">https://mattw.io/youtube-metadata/</a></li>
