@@ -45,14 +45,14 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/api/healthchecker", (req: Request, res: Response) => {
+app.get("/v1/healthchecker", (req: Request, res: Response) => {
   res.status(200).json({
     status: "success",
     message: "Build CRUD API with Node.js and Sequelize",
   });
 });
 
-app.get("/api/jobs/latest/run", (req: Request, res: Response) => {
+app.get("/v1/jobs/latest/run", (req: Request, res: Response) => {
   youtubeService.fetchLatestStatisticsForAllChannels();
   res.status(200).json({
     status: "success",
@@ -60,7 +60,7 @@ app.get("/api/jobs/latest/run", (req: Request, res: Response) => {
   });
 });
 
-app.get("/api/jobs/tags/run", (req: Request, res: Response) => {
+app.get("/v1/jobs/tags/run", (req: Request, res: Response) => {
   videoMetaService.associateTagsToVideos();
 
   res.status(200).json({
@@ -69,7 +69,7 @@ app.get("/api/jobs/tags/run", (req: Request, res: Response) => {
   });
 });
 
-app.use("/api/", noteRouter);
+app.use("/v1/", noteRouter);
 
 app.all("*", (req: Request, res: Response) => {
   res.status(404).json({
