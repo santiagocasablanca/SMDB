@@ -202,6 +202,7 @@ const AboutPage = () => {
                   </p>
                   <Link href="https://github.com/santiagocasablanca/SMDB"><GithubOutlined /> Visit the Project Github</Link>
                   <br></br>
+                  <Text>Hosted at <Link href="https://contabo.com/">Contabo</Link> (Cloud VPS S => 4 vCPU Cores | 8 GB RAM)</Text>
                   <br></br>
                   <Divider orientation="left">Project Inspirations</Divider>
                   <ul>

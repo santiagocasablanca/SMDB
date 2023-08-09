@@ -10,7 +10,6 @@ import UploadTimeFrequencyCard from '../components/home/UploadTimeFrequencyCard'
 import HorizontalHighlightedList from '../components/video/HorizontalHighlightedList';
 import HorizontalShortsList from '../components/video/HorizontalShortsList';
 import VideoPreviewForHighlight from '../components/video/VideoPreviewForHighlight';
-import useFormatter from '../hooks/useFormatter';
 import variables from '../sass/antd.module.scss';
 import { getChannelsFn } from "../services/channelApi.ts";
 import { getVideosFn } from "../services/videoApi.ts";
@@ -19,20 +18,12 @@ import { getVideosFn } from "../services/videoApi.ts";
 const { Title, Text } = Typography;
 
 const HomePage = () => {
-  // const navigate = useNavigate();
-  const [isAdmin, setIsAdmin] = useState(false);
-
   const [isLoaded, setIsLoaded] = useState(false);
-  const { intToStringBigNumber, parseDate, parseDuration } = useFormatter();
-  const [creators, setCreators] = useState([]);
   const [channels, setChannels] = useState([]);
-  const [selectedChannels, setSelectedChannels] = useState();
   const [top10videos, setTop10videos] = useState([]);
   const [topChannelIds, setTopChannelIds] = useState([]);
-  const [mostRecentVideos, setMostRecentVideos] = useState([]);
 
   const [filters, setFilters] = useState({ channels: [], published_atRange: [] });
-
 
   const [paramsTop10, setParamsTop10] = useState({ sort: "views%desc" });
   const [paramsRecent, setParamsRecent] = useState({ sort: "published_at%desc" });
@@ -52,7 +43,7 @@ const HomePage = () => {
       let _paramsTop10 = new URLSearchParams();
       _paramsTop10.append("sort", "views%desc")
       _paramsTop10.append("publishedAtRange", range)
-      getVideosFn(1, 10, _paramsTop10)
+      await getVideosFn(1, 10, _paramsTop10)
         .then((result) => {
           setTop10videos(result.videos);
           setTopChannelIds(result.videos.map(video => { return video.channel_id; }));
@@ -60,7 +51,7 @@ const HomePage = () => {
 
       let params = new URLSearchParams();
       params.limit = 100;
-      getChannelsFn(params).then((result) => {
+      await getChannelsFn(params).then((result) => {
         const _channels = result.results.map(it => {
           return {
             label: it.title,
@@ -72,10 +63,10 @@ const HomePage = () => {
         setFilters({ channels: _channels });
         // setSelectedChannels(_channels.map(it => { return it.channel_id; }))
 
+        setIsLoaded(true);
       });
 
 
-      setIsLoaded(true);
     }
     fetchData();
   }, []);
@@ -142,10 +133,6 @@ const HomePage = () => {
   }
   `
   );
-  const handleHomeChannelChange = (channel) => {
-    console.log('handeling ', channel)
-    // setSelectedChannels(channel);
-  };
 
   const HeaderPanel = ({ title, creators }) => {
     useEffect(() => {
@@ -241,10 +228,14 @@ const HomePage = () => {
                 </Row>
               </Col>
             </Row>
-            
+
           </div>
         </>
-      ) : (<Spin />)
+      ) : (
+        <Row justify="center">
+          <Spin />
+        </Row>
+      )
     }
   </>);
 };
