@@ -711,7 +711,7 @@ export const findAllVideoGuestsController = async (
       whereClause['duration_parsed'] = { [Sequelize.Op.gt]: ['69'] };
     }
 
-    console.log(whereClause);
+    // console.log(whereClause);
 
     // await sequelize.query(
     //   'SELECT * FROM videos WHERE id = CAST($1 AS int)',
@@ -743,10 +743,11 @@ export const findAllVideoGuestsController = async (
       ],
       where: whereClause,
       nest: true,
-      include: [{
-        model: Creator,
-        as: 'directedBy', attributes: ['id', 'custom_url', 'name', 'profile_picture']
-      },
+      include: [
+      //   {
+      //   model: Creator,
+      //   as: 'directedBy', attributes: ['id', 'custom_url', 'name', 'profile_picture']
+      // },
       // {
       //   sequelize.literal(`(
       //     INNER JOIN ( "video_creator" AS "cast") 
@@ -765,10 +766,10 @@ export const findAllVideoGuestsController = async (
       }
       ],
       raw: true,
-      limit, offset: skip, order: [sort]
+      order: [sort]
     });
-
-    console.log(videos.rows);
+    // limit, offset: skip, 
+    // console.log(videos.rows);
     // Create an empty object to store the grouped data
     const groupedData = [];
     const castIdToIndex = {};  // Mapping of cast IDs to array indexes
