@@ -8,15 +8,8 @@ import variables from '../sass/antd.module.scss';
 
 
 
-
-const { Header, Sider, Content } = Layout;
-
 const AppSidebar = ({ collapsed, childToParent }) => {
   const location = useLocation();
-  const dispatch = useDispatch()
-  const unfoldable = useSelector((state) => state.sidebarUnfoldable)
-  const sidebarShow = useSelector((state) => state.sidebarShow)
-
 
   const sideStyle = {
     background: variables.richBlack,

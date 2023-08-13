@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import Appearences from "../components/creator/Appearences";
 import ChannelTabs from "../components/creator/ChannelTabs";
 import Videography from "../components/creator/Videography";
+import Guests from "../components/channel/Guests";
 import useFormatter from '../hooks/useFormatter';
 import variables from '../sass/antd.module.scss';
 import { getCreatorFn } from "../services/creatorApi.ts";
@@ -326,7 +327,7 @@ const CreatorPage = () => {
                       label: 'Shorts', key: '_shorts', children: <><Videography title="Shorts" _filters={shortsFilters} /></>
                     },
                     { label: 'Appearences', key: '_appearences', children: <><Appearences title="Appearences" _filters={appearencesFilters} /> </> },
-                    // { label: 'Guests', key: '_guests', children: <><Guests title="Guests" _filters={guestsFilters} /> </> }
+                    { label: 'Guests', key: '_guests', children: <><Guests title="Guests" _filters={guestsFilters} /> </> }
 
 
                       // { label: 'Series', key: '_series', children: <><Videography /></> }, { label: 'Games', key: '_games' }, { label: 'Appearences', key: '_appearences' }, 

@@ -1,14 +1,14 @@
 import { YoutubeOutlined } from '@ant-design/icons';
-import { Col, Row, Space, Table, Tag, Typography } from 'antd';
+import { Col, Row, Space, Table, Tag, Typography, Image } from 'antd';
 import dayjs from "dayjs";
 import insertCss from 'insert-css';
 import { React, useEffect, useState } from "react";
 import { useLocation } from 'react-router-dom';
 import useFormatter from '../../hooks/useFormatter';
 import variables from '../../sass/antd.module.scss';
-import { getAppearencesFn } from "../../services/videoApi.ts";
-import VideographyEditPanel from './VideographyEditPanel';
-import VideographyFilterPanel from './VideographyFilterPanel';
+import { getVideoGuestsFn } from "../../services/videoApi.ts";
+import VideographyEditPanel from '../creator/VideographyEditPanel';
+import VideographyFilterPanel from '../creator/VideographyFilterPanel';
 
 // .ant-input {
 //   color: $coolLighterGray !important;
@@ -17,7 +17,7 @@ import VideographyFilterPanel from './VideographyFilterPanel';
 
 const { Title } = Typography;
 
-const Appearences = ({ title, _filters }) => {
+const Guests = ({ title, _filters }) => {
 
   const { intToStringBigNumber, parseDate, parseDuration, displayVideoDurationFromSeconds, humanizeDurationFromSeconds, displayVideoDurationFromSecondsWithLegend } = useFormatter();
   const location = useLocation();
@@ -64,6 +64,11 @@ const Appearences = ({ title, _filters }) => {
   .mb {
     margin-bottom: 30px;
   }
+
+  .radius {
+    border-radius: 50%;
+  }
+
   
   @media (max-width: 600px) {
   }
@@ -80,9 +85,29 @@ const Appearences = ({ title, _filters }) => {
   const [columnFilter, setColumnFilter] = useState([])
   const [columnSorter, setColumnSorter] = useState(null)
   const [itemsPerPage, setItemsPerPage] = useState(10)
+  const [creators, setCreators] = useState([])
   const [videos, setVideos] = useState([])
   const [records, setRecords] = useState([])
   const [details, setDetails] = useState([])
+
+  const creatorColumns = [
+    {
+      key: 'profile_picture',
+      dataIndex: 'profile_picture',
+      width: '5%',
+      render: (url) => <Image className="radius" src={url} />,
+      sorter: true
+    },
+    {
+      key: 'name',
+      dataIndex: 'name',
+      title: 'Name',
+      width: '80%',
+      ellipsis: true,
+    },
+    { key: 'guest_count', title: 'Count', dataIndex: 'guest_count', width: '15%', align: 'right'}
+  ]
+
   const columns = [
     {
       key: 'channel_title',
@@ -198,10 +223,10 @@ const Appearences = ({ title, _filters }) => {
           params.append(property, myFilters[property]);
       }
       // console.log(myFilters);
-      await getAppearencesFn(offset, itemsPerPage, params)
+      await getVideoGuestsFn(offset, itemsPerPage, params)
         .then((result) => {
-          setRecords(result.results)
-          result.results ? setVideos(result.videos) : setVideos([])
+          setRecords(result.count)
+          result.results ? setCreators(result.results) : setCreators([])
         })
     }
     fetchData();
@@ -222,10 +247,10 @@ const Appearences = ({ title, _filters }) => {
         params.append(property, _filters[property]);
     }
 
-    getAppearencesFn(offset, pagination.pageSize, params)
+    getVideoGuestsFn(offset, pagination.pageSize, params)
       .then((result) => {
         setRecords(result.results)
-        result.results ? setVideos(result.videos) : setVideos([])
+        result.results ? setCreators(result.results) : setCreators([])
       })
   };
   const filterStr = '';
@@ -263,10 +288,10 @@ const Appearences = ({ title, _filters }) => {
           params.append(property, newFilters[property]);
       }
 
-      getAppearencesFn(offset, itemsPerPage, params)
+      getVideoGuestsFn(offset, itemsPerPage, params)
         .then((result) => {
           setRecords(result.results)
-          result.results ? setVideos(result.videos) : setVideos([])
+          result.results ? setCreators(result.results) : setCreators([])
         })
 
     }
@@ -301,11 +326,11 @@ const Appearences = ({ title, _filters }) => {
           <Col span="24" className="gutter-row">
             {/* <Card> */}
             <div className="table-container">
-              <Table columns={columns} dataSource={videos}
+              <Table columns={creatorColumns} dataSource={creators}
                 scroll={{ x: 1460, y: 900 }}
                 // header={() => 'Results'}
                 onChange={onChange}
-                rowKey={(record) => record.video_id}
+                rowKey={(record) => record.id}
                 // rowSelection={rowSelection}
                 expandable={{
                   expandedRowRender: (record) => <VideographyEditPanel _video={record}></VideographyEditPanel>,
@@ -348,10 +373,9 @@ const Appearences = ({ title, _filters }) => {
             {/* </Card> */}
           </Col>
         </Row>
-        <br></br>
       </div>
     </>
   )
 }
 
-export default Appearences;
+export default Guests;

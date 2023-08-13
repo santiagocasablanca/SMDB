@@ -7,7 +7,7 @@ import { AppLogo } from './index';
 
 
 
-const { Header, Sider, Content } = Layout;
+const { Header } = Layout;
 // import { logo } from '../assets/images/sidemenpluslogo.png'
 
 const AppHeader = ({ collapsed, childToParent }) => {
@@ -23,10 +23,6 @@ const AppHeader = ({ collapsed, childToParent }) => {
     }
   }
   `);
-
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
 
   const headerStyle = {
     // padding: "0 100px",

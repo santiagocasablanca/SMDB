@@ -15,7 +15,7 @@ const VideographyFilterPanel = ({ filters, onChange }) => {
     fetchSeries();
     fetchChannels();
     fetchTags();
-  }, []);
+  }, [filters]);
 
   const fetchChannels = () => {
     let params = new URLSearchParams();
@@ -69,8 +69,6 @@ const VideographyFilterPanel = ({ filters, onChange }) => {
   }
 
   const handleSearchClick = () => {
-    console.log('search clicked videographyFilter');
-    console.log(series);
     setSearchClicked(true);
     onChange({
       channels: filters.channels,
@@ -94,9 +92,9 @@ const VideographyFilterPanel = ({ filters, onChange }) => {
     onChange({ channels: e });
   };
 
-  const handleLocationsChange = (e) => {
-    onChange({ locations: e });
-  };
+  // const handleLocationsChange = (e) => {
+  //   onChange({ locations: e });
+  // };
   const handleSeriesChange = (e) => {
     onChange({ series: e });
   };
@@ -120,10 +118,10 @@ const VideographyFilterPanel = ({ filters, onChange }) => {
 
   const { RangePicker } = DatePicker;
 
-  const handleFilter = (event) => {
-    event.preventDefault();
-    // Implement your filter logic here
-  };
+  // const handleFilter = (event) => {
+  //   event.preventDefault();
+  //   // Implement your filter logic here
+  // };
 
   const [form] = Form.useForm();
   const { Panel } = Collapse;

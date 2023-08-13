@@ -1,5 +1,5 @@
 import axios from "axios";
-import { IVideo, IVideoResponse, IVideosResponse } from "./types";
+import { IVideoResponse, IVideosResponse } from "./types";
 
 
 const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:8005/api/";

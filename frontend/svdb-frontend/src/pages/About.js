@@ -224,6 +224,8 @@ const AboutPage = () => {
                     <li>75 Channels</li>
                     <li>Over 68000 Videos</li>
                   </ul>
+                  <br></br>
+                  <Text>Special thanks to <Avatar src="https://avatars.githubusercontent.com/u/8502778?v=4"/> <Link href="https://github.com/danilomagalhaes">Danilo Magalhães</Link> for the help on the configuration of the infrastructure!</Text>
                   {/* <br></br> */}
                   <Divider orientation="left">Project Inspirations</Divider>
                   <ul>

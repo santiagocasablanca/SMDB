@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from "react-router-dom";
 import ChannelOverviewTab from '../components/channel/ChannelOverviewTab';
 import Videography from "../components/creator/Videography";
+import Guests from "../components/channel/Guests";
 import useFormatter from '../hooks/useFormatter';
 import variables from '../sass/antd.module.scss';
 import { getChannelFn } from "../services/channelApi.ts";
@@ -19,6 +20,7 @@ const ChannelPage = () => {
   const { id } = useParams();
   const [isFetched, setIsFetched] = useState(false);
   const [channel, setChannel] = useState();
+  const [creators, setCreators] = useState([]);
   // const {state} = useLocation();
   const { intToStringBigNumber, parseDate, parseDuration } = useFormatter();
 
@@ -32,9 +34,19 @@ const ChannelPage = () => {
     await getChannelFn(id).then((res) => {
       if (res.result) {
         setChannel(res.result);
+        setCreators(res.result.creators);
         console.log(res.result);
-        setIsFetched(true);      }
+        setIsFetched(true);      
+      }
     });
+  }
+
+  const guestsFilters = {
+    channels: [id],
+    notInCastMember: creators?.map(it => {return it.id}),
+    onlyShorts: false,
+    excludeShorts: true,
+    search: true
   }
 
 
@@ -298,6 +310,7 @@ const ChannelPage = () => {
                     {
                       label: 'Shorts', key: '_shorts', children: <><Videography title="Shorts" _filters={shortsFilters} /></>
                     },
+                    { label: 'Guests', key: '_guests', children: <><Guests title="Guests" _filters={guestsFilters} /> </> }
 
                       // { label: 'Series', key: '_series', children: <><Videography /></> }, { label: 'Games', key: '_games' }, { label: 'Appearences', key: '_appearences' },
                     ]}

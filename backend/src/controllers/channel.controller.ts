@@ -38,7 +38,7 @@ export const fetchChannelController = async (
       message: error.message,
     });
   }
-};  
+};
 
 export const findAllChannelsController = async (
   req: Request<any, any, any, ChannelsSearchReqQuery>,
@@ -87,6 +87,57 @@ export const findAllChannelsController = async (
       status: "success",
       count: channels.count,
       results: channels.rows,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: error.message,
+    });
+  }
+};
+
+
+export const findAllGuestsController = async (
+  req: Request<any, any, any, ChannelsSearchReqQuery>,
+  res: Response
+) => {
+  try {
+    let channel_Ids;
+    if (req.query.channels) {
+      console.log(req.query.channels);
+      var channelsArr = req.query.channels.split(',');
+
+      channel_Ids = channelsArr
+    }
+    const records = await sequelize.query("SELECT c.id, c.name, c.profile_picture, COUNT(DISTINCT _cast.video_id) AS guest_count " +
+      " FROM creator c " +
+      " JOIN video_Creator _cast ON c.id = _cast.creator_id " +
+      " WHERE _cast.video_id IN (" +
+      "        SELECT video_id" +
+      "        FROM video _video" +
+      "        WHERE channel_id in (:channel_Ids) " +
+      "    )" +
+      "    AND c.id NOT IN (" +
+      "        SELECT creator_id" +
+      "        FROM channel_creator" +
+      "        WHERE channel_id in (:channel_Ids)" +
+      "    )" +
+      "    GROUP BY" +
+      "    c.id, c.name ",
+      {
+        replacements: { channel_Ids: channel_Ids },
+        // bind: { initial: '2010-05-23 23:00:00.000 +00:00', final: '2023-06-23 23:00:00.000 +00:00', orderBy: 'likes desc' },
+        type: QueryTypes.SELECT,
+        logging: console.log,
+        raw: true,
+
+      }
+    );
+
+    res.status(200).json({
+      status: "success",
+      results: records,
+      count: records.length,
     });
   } catch (error) {
     res.status(500).json({

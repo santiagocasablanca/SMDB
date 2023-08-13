@@ -1,23 +1,24 @@
 import { YoutubeOutlined } from '@ant-design/icons';
-import { Col, Row, Space, Table, Tag, Typography } from 'antd';
+import { Col, Row, Space, Table, Tag, Typography, Image } from 'antd';
 import dayjs from "dayjs";
 import insertCss from 'insert-css';
 import { React, useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import useFormatter from '../../hooks/useFormatter';
 import variables from '../../sass/antd.module.scss';
 import { getVideoGuestsFn } from "../../services/videoApi.ts";
-import VideographyEditPanel from './VideographyEditPanel';
-import VideographyFilterPanel from './VideographyFilterPanel';
+import CreatorGuestsTable from './CreatorGuestsTable';
 
 // .ant-input {
 //   color: $coolLighterGray !important;
 // } 
 
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 const Guests = ({ title, _filters }) => {
+  const navigate = useNavigate();
 
   const { intToStringBigNumber, parseDate, parseDuration, displayVideoDurationFromSeconds, humanizeDurationFromSeconds, displayVideoDurationFromSecondsWithLegend } = useFormatter();
   const location = useLocation();
@@ -64,105 +65,51 @@ const Guests = ({ title, _filters }) => {
   .mb {
     margin-bottom: 30px;
   }
+
+  .radius {
+    border-radius: 50%;
+  }
+
   
   @media (max-width: 600px) {
   }
   `);
-  // .videographyBodyContainer {
-  //   margin: 0 20px;
-  // }
-  // .creatorVideographyHeader {
-  //   margin: 10px 0px auto;
-  // }
-
 
   const [activePage, setActivePage] = useState(1)
   const [columnFilter, setColumnFilter] = useState([])
   const [columnSorter, setColumnSorter] = useState(null)
   const [itemsPerPage, setItemsPerPage] = useState(10)
-  const [videos, setVideos] = useState([])
+  const [creators, setCreators] = useState([])
   const [records, setRecords] = useState([])
-  const [details, setDetails] = useState([])
-  const columns = [
+
+  const handleClickCreator = (id) => {
+    console.log(id);
+    const url = '/creator/' + id;
+    // not necessary, kind of redudant at the moment. Params are set through useParams and useLocation (state)
+    navigate(url, { state: { id: id } });
+  }
+
+  const creatorColumns = [
     {
-      key: 'channel_title',
-      dataIndex: 'channel_title',
-      title: 'Channel',
-      width: '10%',
-      ellipsis: true,
-    },
-    {
-      key: 'title',
-      dataIndex: 'title',
-      title: 'Title',
-      width: '30%',
+      key: "profile_picture",
+      dataIndex: "creator_info",
+      width: '5%',
+      render: (creatorInfo) => <Image className="radius" src={creatorInfo.profile_picture} preview={false} onClick={() => handleClickCreator(creatorInfo.id)} />,
       sorter: true
     },
-    { key: 'duration_parsed', title: 'Duration', dataIndex: 'duration_parsed', width: '8%', align: 'right', sorter: true, render: (text) => <p>{displayVideoDurationFromSecondsWithLegend(text)}</p> },
     {
-      key: 'serie',
-      dataIndex: 'serie',
-      width: '10%',
-      title: "Series",
-      render: (series) => (
-        ((series != '' & series != null) ?
-          <span>
-            <Tag color={variables.sdmnPink} key={series}> {series} </Tag>
-          </span>
-          : '')
-      ),
+      key: "name",
+      dataIndex: "creator_info",
+      title: 'Name',
+      // width: '80%',
+      render: (creatorInfo) => <Text onClick={() => handleClickCreator(creatorInfo.id)}>{creatorInfo.name}</Text>,
+      // render: (url) => JSON.stringify(url),
+      ellipsis: true,
     },
-    { key: 'published_at', title: 'Published At', dataIndex: 'published_at', width: '10%', sorter: true, render: (text) => <p>{dayjs(text).format("DD MMM YYYY")}</p> },
-    { key: 'views', title: 'Views', dataIndex: 'views', width: '8%', align: 'right', sorter: true, render: (text) => <p>{intToStringBigNumber(text)}</p> },
-    { key: 'likes', title: 'Likes', dataIndex: 'likes', width: '8%', align: 'right', sorter: true, render: (text) => <p>{intToStringBigNumber(text)}</p> },
-    { key: 'comments', title: 'Comments', dataIndex: 'comments', width: '8%', align: 'right', sorter: true, render: (text) => <p>{intToStringBigNumber(text)}</p> },
-    {
-      key: 'tags',
-      width: '10%',
-      title: "Tags",
-      dataIndex: 'tags',
-      render: (tags) => (
-        (
-          Array.isArray(tags) ?
-            <span>
-              {tags.map((tag) => {
-                // let color = tag.length > 5 ? variables.sdmnYellow : 'green';
-                return (
-                  <Tag color={variables.sdmnBlack} key={tag}>
-                    {tag}
-                  </Tag>
-                );
-              })}
-            </span> : ''
-        )
-      ),
-    },
-    // {
-    //   key: 'locations',
-    //   width: '10%',
-    //   title: "Locations",
-    // },
-    // {
-    //   key: 'cast',
-    //   title: "Cast",
-    //   dataIndex: 'cast',
-    //   render: (tags) => (
-    //     <span>
-    //       {tags.map((tag) => {
-    //         let color = tag.length > 5 ? 'geekblue' : 'green';
-    //         // if (tag === 'loser') {
-    //         //   color = 'volcano';
-    //         // }
-    //         return (
-    //           <Tag color={color} key={tag}>
-    //             {tag}
-    //           </Tag>
-    //         );
-    //       })}
-    //     </span>
-    //   ),
-    // },
-  ]
+    { key: 'guest_count', title: 'Count', dataIndex: 'videos', 
+    // width: '15%', 
+    align: 'right', render: (videos) => <Text>{videos.length} videos </Text> }
+  ];
 
 
   useEffect(() => {
@@ -200,8 +147,8 @@ const Guests = ({ title, _filters }) => {
       // console.log(myFilters);
       await getVideoGuestsFn(offset, itemsPerPage, params)
         .then((result) => {
-          setRecords(result.results)
-          result.results ? setVideos(result.videos) : setVideos([])
+          setRecords(result.count)
+          result.results ? setCreators(result.results) : setCreators([])
         })
     }
     fetchData();
@@ -225,7 +172,7 @@ const Guests = ({ title, _filters }) => {
     getVideoGuestsFn(offset, pagination.pageSize, params)
       .then((result) => {
         setRecords(result.results)
-        result.results ? setVideos(result.videos) : setVideos([])
+        result.results ? setCreators(result.results) : setCreators([])
       })
   };
   const filterStr = '';
@@ -239,10 +186,11 @@ const Guests = ({ title, _filters }) => {
   const [expandedRowKeys, setExpandedRowKeys] = useState([]);
 
   const handleExpand = (expanded, record) => {
+    // console.log('xpanding: ', record);
     if (expanded) {
-      setExpandedRowKeys([...expandedRowKeys, record.video_id]);
+      setExpandedRowKeys([...expandedRowKeys, record.creator_info['id']]);
     } else {
-      setExpandedRowKeys(expandedRowKeys.filter((key) => key !== record.video_id));
+      setExpandedRowKeys(expandedRowKeys.filter((key) => key !== record.creator_info['id']));
     }
   };
 
@@ -266,7 +214,7 @@ const Guests = ({ title, _filters }) => {
       getVideoGuestsFn(offset, itemsPerPage, params)
         .then((result) => {
           setRecords(result.results)
-          result.results ? setVideos(result.videos) : setVideos([])
+          result.results ? setCreators(result.results) : setCreators([])
         })
 
     }
@@ -274,6 +222,8 @@ const Guests = ({ title, _filters }) => {
     console.log('just for be sure')
     setMyFilters({ ...myFilters, ...newFilters });
   };
+
+  
 
 
   return (
@@ -284,9 +234,9 @@ const Guests = ({ title, _filters }) => {
           <Col span="24">
             <Title level={3}><Space><YoutubeOutlined /> {title ? title : 'Videography'}</Space></Title>
           </Col>
-          <Col span="24">
+          {/* <Col span="24">
             <VideographyFilterPanel filters={myFilters} onChange={handleFilterChange} />
-          </Col>
+          </Col> */}
         </Row>
         {/* 
         <Row span="24" gutter={16}>
@@ -301,14 +251,14 @@ const Guests = ({ title, _filters }) => {
           <Col span="24" className="gutter-row">
             {/* <Card> */}
             <div className="table-container">
-              <Table columns={columns} dataSource={videos}
+              <Table columns={creatorColumns} dataSource={creators}
                 scroll={{ x: 1460, y: 900 }}
                 // header={() => 'Results'}
-                onChange={onChange}
-                rowKey={(record) => record.video_id}
+                // onChange={onChange}
+                rowKey={(record) => record.creator_info['id']}
                 // rowSelection={rowSelection}
                 expandable={{
-                  expandedRowRender: (record) => <VideographyEditPanel _video={record}></VideographyEditPanel>,
+                  expandedRowRender: (record) => <CreatorGuestsTable data={record.videos}></CreatorGuestsTable>,
                   rowExpandable: (record) => record.title !== 'Not Expandable',
                   expandedRowKeys: expandedRowKeys,
                   onExpand: handleExpand
@@ -348,6 +298,7 @@ const Guests = ({ title, _filters }) => {
             {/* </Card> */}
           </Col>
         </Row>
+        <br></br>
       </div>
     </>
   )

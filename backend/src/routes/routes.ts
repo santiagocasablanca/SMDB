@@ -15,7 +15,7 @@ import {
   findAllAppearencesController
 } from "../controllers/video.controller";
 
-import { fetchChannelController, findAllChannelsController, createChannelController } from "../controllers/channel.controller";
+import { fetchChannelController, findAllChannelsController, createChannelController, findAllGuestsController } from "../controllers/channel.controller";
 import { findAllCreatorsController, fetchCreatorController, fetchCreatorStatsController, findTopCreatorsController, createCreatorController } from "../controllers/creator.controller";
 
 const router = express.Router();
@@ -48,6 +48,8 @@ router
   router
   .route("/guests/")
   .get(findAllVideoGuestsController);
+  // findAllGuestsController
+  // .get(findAllVideoGuestsController);
 
 router
   .route("/videos/:id")

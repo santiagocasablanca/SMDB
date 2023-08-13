@@ -769,11 +769,29 @@ export const findAllVideoGuestsController = async (
     });
 
     console.log(videos.rows);
+    // Create an empty object to store the grouped data
+    const groupedData = [];
+    const castIdToIndex = {};  // Mapping of cast IDs to array indexes
+    
+    // Iterate through the videos in the data
+    videos.rows.forEach(video => {
+      const castId = video.cast.id;
+    
+      // If the cast member is not already in the array, add them with an empty array
+      if (!castIdToIndex.hasOwnProperty(castId)) {
+        const newIndex = groupedData.push({ creator_info: video.cast, videos: [] }) - 1;
+        castIdToIndex[castId] = newIndex;
+      }
+    
+      // Push the video details to the cast member's array using the index
+      const castIndex = castIdToIndex[castId];
+      groupedData[castIndex].videos.push(video);
+    });
 
     res.status(200).json({
       status: "success",
-      results: videos.count,
-      videos: videos.rows,
+      count: groupedData.length,
+      results: groupedData,
     });
   } catch (error: any) {
     res.status(500).json({

@@ -1,5 +1,5 @@
 import { HomeOutlined } from '@ant-design/icons';
-import { Carousel, Col, Row, Space, Spin, Typography } from 'antd';
+import { Carousel, Col, Row, Space, Spin, Typography, Segmented } from 'antd';
 import dayjs from 'dayjs';
 import insertCss from 'insert-css';
 import React, { useEffect, useState } from 'react';
@@ -134,30 +134,31 @@ const HomePage = () => {
   `
   );
 
+  
+
   const HeaderPanel = ({ title, creators }) => {
     useEffect(() => {
     }, []);
 
-    const content = (
-      <p>{creators.length}</p>
-    );
-
+    
     return (
       <Row className="homeHeaderPanel">
-        <Col span="22">
+        <Col span="24">
           <Title level={3}><Space><HomeOutlined /> {title}</Space></Title>
         </Col>
-        <Col span="2">
-          {/* TODO */}
-          {/* <Popover content={content}>
-            <Text italic>information</Text> 
-          </Popover>*/}
-        </Col>
+        {/* <Col span="3">
+        <Segmented options={['Week', 'Month', 'Year']} value={value} onChange={setValue} />
+        </Col> */}
       </Row>
     );
   };
+  
+  const [value, setValue] = useState('Week');
 
-  const HighlightedVideos = ({ title, videos }) => {
+  // const onChangeSegmentedValue
+
+  const HighlightedVideos = ({ title, videos, segmentedValue, onChangeSegmentedValue }) => {
+    
     return (
       <>
         <Row><Col span={24}><Title style={{ color: 'black' }} level={5}>{title}</Title></Col></Row>
@@ -186,7 +187,7 @@ const HomePage = () => {
               <Col span={24} md={24} lg={12} xl={12}>
                 <Row gutter={12}>
                   <Col span={24}>
-                    <HighlightedVideos title="Highlighted" videos={top10videos}></HighlightedVideos>
+                    <HighlightedVideos title="Highlighted" videos={top10videos} segmentedValue={value} onChangeSegmentedValue={setValue}></HighlightedVideos>
                   </Col>
                 </Row>
               </Col>
