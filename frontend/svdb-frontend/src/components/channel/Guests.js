@@ -70,6 +70,12 @@ const Guests = ({ title, _filters }) => {
     border-radius: 50%;
   }
 
+  .videos-column-container {
+    overflow-x: auto;
+    height: 82px;
+    display: flex; 
+  }
+
   
   @media (max-width: 600px) {
   }
@@ -95,21 +101,49 @@ const Guests = ({ title, _filters }) => {
       dataIndex: "creator_info",
       width: '5%',
       render: (creatorInfo) => <Image className="radius" src={creatorInfo.profile_picture} preview={false} onClick={() => handleClickCreator(creatorInfo.id)} />,
-      sorter: true
     },
     {
       key: "name",
       dataIndex: "creator_info",
       title: 'Name',
-      // width: '80%',
+      width: '20%',
       render: (creatorInfo) => <Text onClick={() => handleClickCreator(creatorInfo.id)}>{creatorInfo.name}</Text>,
       // render: (url) => JSON.stringify(url),
+      sorter: true,
       ellipsis: true,
+      // onFilter: (value, record) => record.name.indexOf(value) === 0,
+      // sorter: (a, b) => a.name.length - b.name.length,
+      sorter: (a, b) => a.creator_info.name.length - b.creator_info.name.length,
+      onFilter: (value, record) => record.creator_info.name.indexOf(value) === 0,
+
+      // sortDirections: ['descend'],
     },
-    { key: 'guest_count', title: 'Count', dataIndex: 'videos', 
-    // width: '15%', 
-    align: 'right', render: (videos) => <Text>{videos.length} videos </Text> }
+    {
+      key: 'guest_count', title: 'Count', dataIndex: 'videos',
+      width: '8%', 
+      sorter: true,
+      align: 'right', render: (videos) => <Text>{videos.length} videos </Text>,
+      defaultSortOrder: 'descend',
+      sorter: (a, b) => a.videos.length - b.videos.length,
+    },
+    {
+      key: "videos",
+      dataIndex: "videos",
+      // width: '%',
+      render: (videos) => (<RenderVideosColumn videos={videos} />)
+    },
   ];
+
+  const RenderVideosColumn = ({ videos }) => {
+
+    return (
+      <div className="videos-column-container">
+        {videos?.map((video) => (
+          <Image style={{ borderRadius: '8px', objectFit: 'cover' }} width={150} height={82} src={video.url} preview={false} key={video.video_id} />
+        ))}
+      </div>
+    );
+  }
 
 
   useEffect(() => {
@@ -148,6 +182,13 @@ const Guests = ({ title, _filters }) => {
       await getVideoGuestsFn(offset, itemsPerPage, params)
         .then((result) => {
           setRecords(result.count)
+          result.results.sort((a, b) => {
+            const videosCountA = a.videos.length;
+            const videosCountB = b.videos.length;
+
+            // Compare in descending order
+            return videosCountB - videosCountA;
+          });
           result.results ? setCreators(result.results) : setCreators([])
         })
     }
@@ -155,27 +196,7 @@ const Guests = ({ title, _filters }) => {
   }, [_filters, location.search, activePage, itemsPerPage])
   // columnFilter, columnSorter
 
-  const onChange = (pagination, filters, sorter, extra) => {
-    const offset = pagination.current;//itemsPerPage * activePage - itemsPerPage
-    let params = new URLSearchParams()
 
-    if (sorter.hasOwnProperty("column") && sorter.order !== undefined) {
-      let tempSortOrder = sorter.order == 'ascend' ? 'asc' : 'desc';
-      params.append('sort', `${sorter.field}%${tempSortOrder}`);
-    }
-
-    for (const property in _filters) {
-      if (typeof _filters[property] === 'boolean' || (_filters[property] && _filters[property] != '' && _filters[property].length > 0))
-        params.append(property, _filters[property]);
-    }
-
-    getVideoGuestsFn(offset, pagination.pageSize, params)
-      .then((result) => {
-        setRecords(result.results)
-        result.results ? setCreators(result.results) : setCreators([])
-      })
-  };
-  const filterStr = '';
 
   const isRowExpanded = (record) => expandedRowKeys.includes(record.video_id);
 
@@ -223,7 +244,7 @@ const Guests = ({ title, _filters }) => {
     setMyFilters({ ...myFilters, ...newFilters });
   };
 
-  
+
 
 
   return (
