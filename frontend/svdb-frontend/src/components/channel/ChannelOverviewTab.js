@@ -20,7 +20,7 @@ const { Title, Text } = Typography;
 
 const ChannelOverviewTab = ({ _channel }) => {
 
-    const { intToStringBigNumber, parseDate, parseDuration, humanizeDurationFromSeconds, displayDurationFromSeconds, displayVideoDurationFromSeconds } = useFormatter();
+    const { intToStringBigNumber, parseDate, parseDuration, humanizeDurationFromSeconds, parseDateToFromNow, displayDurationFromSeconds, displayVideoDurationFromSeconds } = useFormatter();
     const [isLoaded, setIsLoaded] = useState(false);
     const [isLast5Loaded, setIsLast5Loaded] = useState(false);
 
@@ -55,6 +55,13 @@ const ChannelOverviewTab = ({ _channel }) => {
             width: 88px !important;
             height: 88px !important;
         }
+
+        .last5videoPreview {
+            width: 300px;
+            display: flex; 
+            flex-direction: column;
+            align-items: center;
+          }
 
         .popupBanner {
             background-color: #222;
@@ -426,7 +433,7 @@ const ChannelOverviewTab = ({ _channel }) => {
 
                     <Space.Compact direction="vertical">
                         <p style={{ marginTop: '3px', marginBottom: '-1px' }}>Last 5</p>
-                        <Last5VideosComponent _stats={last5}></Last5VideosComponent>
+                        <Last5VideosComponent stats={stats} last5={last5} icon={icon}></Last5VideosComponent>
                     </Space.Compact>
                 </Space>
             );
@@ -542,11 +549,9 @@ const ChannelOverviewTab = ({ _channel }) => {
             </>
         );
     };
-
-    const Last5VideosComponent = ({ _stats }) => {
-        const [stats, setStats] = useState(_stats);
-        useEffect(() => {
-        }, [_stats]);
+    
+    
+    const Last5VideosComponent = ({ stats, last5, icon }) => {
 
         const getColor = (value) => {
             if (value < 0.9) return '#ff4d4f';
@@ -561,40 +566,48 @@ const ChannelOverviewTab = ({ _channel }) => {
         }
 
         // TODO implement this -> videoPreview?
+        const ratioTooltip = (index) => (<Text>{last5[index]?.videoValue} / {stats?.avg} </Text>);
+
         const content = (index) => (
-            <Space>
-                <Image src={stats[index]?.video.url} width='100%' height='150px' preview={false}></Image>
-                <p>{stats[index]?.videoValue}</p>
-                <p>{parseDate(stats[index]?.video.published_at)}</p>
-            </Space>
+            <div className="last5videoPreview">
+                <Text strong ellipsis={true}>{last5[index].video.title}</Text>
+                {/* <br></br> */}
+                <Image style={{ borderRadius: '8px', objectFit: 'cover' }} src={last5[index].video.url} height='150px' width="265px" preview={false}></Image>
+                {/* <br></br> */}
+                <Space>
+                    <div style={{ width: '15px' }}>
+                        {icon}
+                    </div>
+                    <Text>{last5[index].videoValue}</Text>
+                    <Divider/>
+                    <Tooltip title={ratioTooltip(index)} placement="top"><Text style={{ color: getColor(last5[index].value) }}>{(last5[index].value * 100).toFixed(2)}%</Text></Tooltip>
+                    <Divider/>
+                    <Text type="secondary">{parseDateToFromNow(last5[index].video.published_at)}</Text>
+                </Space>
+
+            </div>
         );
 
 
         return (
             <>
-                {isLast5Loaded ?
-                    <>
-                        <Space gutter={2}>
-                            <Popover content={content(4)} placement="top">
-                                <Avatar icon={getIcon(stats[4]?.value)} style={{ backgroundColor: getColor(stats[4]?.value) }} shape="square" size="small" />
-                            </Popover>
-                            <Popover content={content(3)} placement="top">
-                                <Avatar icon={getIcon(stats[3]?.value)} style={{ backgroundColor: getColor(stats[3]?.value) }} shape="square" size="small" />
-                            </Popover>
-                            <Popover content={content(2)} placement="top">
-                                <Avatar icon={getIcon(stats[2]?.value)} style={{ backgroundColor: getColor(stats[2]?.value) }} shape="square" size="small" />
-                            </Popover>
-                            <Popover content={content(1)} placement="top">
-                                <Avatar icon={getIcon(stats[1]?.value)} style={{ backgroundColor: getColor(stats[1]?.value) }} shape="square" size="small" />
-                            </Popover>
-                            <Popover content={content(0)} placement="top">
-                                <Avatar icon={getIcon(stats[0]?.value)} style={{ backgroundColor: getColor(stats[0]?.value) }} shape="square" size="small" />
-                            </Popover>
-                        </Space>
-                    </>
-                    :
-                    <Spin />
-                }
+                <Space gutter={2}>
+                    <Popover content={content(4)} placement="top">
+                        <Avatar icon={getIcon(last5[4].value)} style={{ backgroundColor: getColor(last5[4].value) }} shape="square" size="small" />
+                    </Popover>
+                    <Popover content={content(3)} placement="top">
+                        <Avatar icon={getIcon(last5[3].value)} style={{ backgroundColor: getColor(last5[3].value) }} shape="square" size="small" />
+                    </Popover>
+                    <Popover content={content(2)} placement="top">
+                        <Avatar icon={getIcon(last5[2].value)} style={{ backgroundColor: getColor(last5[2].value) }} shape="square" size="small" />
+                    </Popover>
+                    <Popover content={content(1)} placement="top">
+                        <Avatar icon={getIcon(last5[1].value)} style={{ backgroundColor: getColor(last5[1].value) }} shape="square" size="small" />
+                    </Popover>
+                    <Popover content={content(0)} placement="top">
+                        <Avatar icon={getIcon(last5[0].value)} style={{ backgroundColor: getColor(last5[0].value) }} shape="square" size="small" />
+                    </Popover>
+                </Space>
             </>
         );
     }

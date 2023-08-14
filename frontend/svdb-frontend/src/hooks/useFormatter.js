@@ -37,6 +37,13 @@ const useFormatter = () => {
     []
   );
 
+  const parseDateToFromNow = useMemo(
+    () => {
+      return (date) => dayjs(date).fromNow();
+    },
+    []
+  );
+
   const parseDate = useMemo(
     () => {
       return (date, format = 'DD MMM YYYY HH:mm:ss') => dayjs(date).format(format);
@@ -94,7 +101,7 @@ const useFormatter = () => {
     []
   )
 
-  return { intToStringBigNumber, parseDate, parseDuration, humanizeDurationFromSeconds, displayDurationFromSeconds, displayVideoDurationFromSecondsWithLegend, displayVideoDurationFromSeconds };
+  return { intToStringBigNumber, parseDateToFromNow, parseDate, parseDuration, humanizeDurationFromSeconds, displayDurationFromSeconds, displayVideoDurationFromSecondsWithLegend, displayVideoDurationFromSeconds };
 };
 
 export default useFormatter;
