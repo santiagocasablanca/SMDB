@@ -17,20 +17,20 @@ if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 const youtubeService = new YoutubeService();
 const videoMetaService = new VideoMetaService();
 
-// cron.schedule('00 10 * * *', () => {
-//   console.log('Running fetchStatisticsForAllChannels');
-//   youtubeService.fetchStatisticsForAllChannels();
-// })
+cron.schedule('00 10 * * *', () => {
+  console.log('Running fetchStatisticsForAllChannels');
+  youtubeService.fetchStatisticsForAllChannels();
+})
 
 // cron.schedule('40 00 * * *', () => {
 //   console.log('Fetch latest video and channel statistics Job');
 //   youtubeService.fetchLatestStatisticsForAllChannels();
 // })
 
-// cron.schedule('00 09 * * *', () => {
-//   console.log("Associate Tags to Videos Job ");
-//   videoMetaService.associateTagsToVideos();
-// })
+cron.schedule('00 09 * * *', () => {
+  console.log("Associate Tags to Videos Job ");
+  videoMetaService.associateTagsToVideos();
+})
 
 const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN ? process.env.CLIENT_ORIGIN : 'http://localhost:3000';
 app.use(

@@ -188,13 +188,14 @@ const Videography = ({ _filters }) => {
 
   // TODO missing setting filters in order to make it clear on the UI what are the applied filters based on the redirected location
   useEffect(() => {
+    console.log('here again')
     let params = new URLSearchParams();
     if (location.state && location.state?.filter) {
       Object.keys(location.state?.filter).forEach((key) => {
         params.append(key, location.state?.filter[key])
       })
     }
-    console.log(params);
+    console.log(JSON.stringify(params));
 
     const offset = activePage;//itemsPerPage * activePage - itemsPerPage
     Object.keys(columnFilter).forEach((key) => {
@@ -217,8 +218,13 @@ const Videography = ({ _filters }) => {
 
 
   const onChange = (pagination, filters, sorter, extra) => {
-    const offset = pagination.current;//itemsPerPage * activePage - itemsPerPage
     let params = new URLSearchParams()
+    if (location.state && location.state?.filter) {
+      Object.keys(location.state?.filter).forEach((key) => {
+        params.append(key, location.state?.filter[key])
+      })
+    }
+    const offset = pagination.current;//itemsPerPage * activePage - itemsPerPage
 
     if (sorter.hasOwnProperty("column") && sorter.order !== undefined) {
       let tempSortOrder = sorter.order == 'ascend' ? 'asc' : 'desc';
@@ -229,6 +235,8 @@ const Videography = ({ _filters }) => {
       if (typeof myFilters[property] === 'boolean' || (myFilters[property] && myFilters[property] != '' && myFilters[property].length > 0))
         params.append(property, myFilters[property]);
     }
+    console.log(JSON.stringify(params));
+    console.log(_filters, myFilters)
 
     getVideosFn(offset, pagination.pageSize, params)
       .then((result) => {

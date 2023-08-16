@@ -214,8 +214,14 @@ const Shorts = ({ _filters }) => {
 
 
   const onChange = (pagination, filters, sorter, extra) => {
-    const offset = pagination.current;//itemsPerPage * activePage - itemsPerPage
     let params = new URLSearchParams()
+    if (location.state && location.state?.filter) {
+      Object.keys(location.state?.filter).forEach((key) => {
+        params.append(key, location.state?.filter[key])
+      })
+    }
+    const offset = pagination.current;//itemsPerPage * activePage - itemsPerPage
+
 
     if (sorter.hasOwnProperty("column") && sorter.order !== undefined) {
       let tempSortOrder = sorter.order == 'ascend' ? 'asc' : 'desc';

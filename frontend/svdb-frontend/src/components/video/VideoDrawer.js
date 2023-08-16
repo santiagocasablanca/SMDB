@@ -1,11 +1,12 @@
 import { CommentOutlined, EyeOutlined, LikeOutlined } from '@ant-design/icons';
-import { Avatar, Col, Drawer, List, Row, Space, Typography } from 'antd';
+import { Avatar, Col, Drawer, List, Row, Space, Tag, Typography } from 'antd';
 import insertCss from 'insert-css';
 import React, { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 import { useNavigate } from 'react-router-dom';
 import useFormatter from '../../hooks/useFormatter';
 import UpdateVideoModal from './UpdateVideoModal';
+// import VideoRate from './VideoRate';
 
 const { Text } = Typography;
 
@@ -57,8 +58,16 @@ const VideoDrawer = ({ _video, _channel, _open, childToParent }) => {
 
         .showPointer:hover {
             cursor: pointer;
-          }
+        }
 
+        @media (max-width: 1480px) {
+            .videoDrawerContainer {
+                padding: 0 10px 0 10px;
+            }
+            .videoContainer {
+                height: 450px;
+            }
+        }
 
         @media (max-width: 900px) {
             .videoDrawerContainer {
@@ -76,6 +85,15 @@ const VideoDrawer = ({ _video, _channel, _open, childToParent }) => {
         }
     `);
 
+    const getLabelFromValue = (desiredValue) => {
+        const foundElement = video?.cast.find((item) => item.id === desiredValue);
+        if (foundElement) {
+            return foundElement.name;
+        } else {
+            return null;
+        }
+    }
+
 
     return (
         <> {
@@ -83,7 +101,7 @@ const VideoDrawer = ({ _video, _channel, _open, childToParent }) => {
                 <Drawer title={title}
                     placement="bottom"
                     width={500}
-                    height="80%"
+                    height="95%"
                     onClose={onClose}
                     open={open}
                     extra={
@@ -104,6 +122,8 @@ const VideoDrawer = ({ _video, _channel, _open, childToParent }) => {
                                         </div>
                                     </Col>
                                     <Col span={24}>
+                                        {/* <Space style={{ float: 'left' }}><VideoRate _video={_video}></VideoRate></Space> */}
+
                                         <Space size="small" style={{ float: 'right', color: 'white' }}>
                                             <EyeOutlined />{intToStringBigNumber(video.views)}
                                             <LikeOutlined />{intToStringBigNumber(video.likes)}
@@ -137,6 +157,23 @@ const VideoDrawer = ({ _video, _channel, _open, childToParent }) => {
                                         </List>
                                     </Col>
                                     <Col span={24}>
+                                        {/* <Space size={[0, 8]} wrap>
+                                            {video?.cast.map((tag, index) => {
+                                                return (
+
+                                                    <Tag
+                                                        key={index}
+                                                        closable={false}
+                                                        style={{
+                                                            userSelect: 'none',
+                                                        }}
+                                                    >
+                                                        <span><Avatar src={tag.profile_picture}/> {tag.name} <Text type="secondary"> as {tag.video_creator.role}</Text> </span>
+
+                                                    </Tag>
+                                                )
+                                            })}
+                                        </Space> */}
                                         <List
                                             header={<Text strong style={{ marginLeft: '20px' }}>Cast</Text>}
                                             size="small"

@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import useFormatter from '../../hooks/useFormatter';
 import variables from '../../sass/antd.module.scss';
 import VideoDrawer from './VideoDrawer';
+// import VideoRate from './VideoRate';
 
 const { Title, Text } = Typography;
 
@@ -102,7 +103,6 @@ const VideoPreviewForHighlight = ({ _video, index }) => {
             (<>
                 {/* <Popover content={video.title} placement="top" onClick={showDrawer}> */}
                 <div className="videoPreviewForHighlight">
-
                     <Row>
                         <Col span={24}>
                             <div style={{ borderRadius: '8px', height: '270px' }}>
@@ -136,6 +136,11 @@ const VideoPreviewForHighlight = ({ _video, index }) => {
                             </Space>
                         </Col>
                     </Row>
+                    {/* <Row>
+                        <Col span={24}>
+                            <Space style={{ float: 'right' }}><VideoRate _video={_video}></VideoRate></Space>
+                        </Col>
+                    </Row> */}
                     <Row>
                         <Col span={24}>
                             <Space style={{ float: 'right' }}>
