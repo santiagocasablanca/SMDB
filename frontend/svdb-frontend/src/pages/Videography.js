@@ -9,6 +9,7 @@ import variables from '../sass/antd.module.scss';
 import { getVideosFn } from "../services/videoApi.ts";
 import VideographyEditPanel from './VideographyEditPanel';
 import VideographyFilterPanel from './VideographyFilterPanel';
+import VideoRate from '../components/video/VideoRate';
 
 // .ant-input {
 //   color: $coolLighterGray !important;
@@ -95,6 +96,10 @@ const Videography = ({ _filters }) => {
   }
   `);
 
+  const getVideoById = (id) => {
+    return videos.find(it => it.video_id === id);
+  }
+
 
   const [activePage, setActivePage] = useState(1)
   const [columnFilter, setColumnFilter] = useState([])
@@ -110,6 +115,18 @@ const Videography = ({ _filters }) => {
       title: 'Channel',
       width: '10%',
       ellipsis: true,
+    },
+    {
+      key: 'rating',
+      dataIndex: 'video_id',
+      title: 'Rating',
+      width: '5%',
+      render: (video_id) => (
+        (
+          <span>
+            <VideoRate _video={getVideoById(video_id)} small={true} />
+          </span>)
+      ),
     },
     {
       key: 'title',
@@ -188,14 +205,14 @@ const Videography = ({ _filters }) => {
 
   // TODO missing setting filters in order to make it clear on the UI what are the applied filters based on the redirected location
   useEffect(() => {
-    console.log('here again')
+    // console.log('here again')
     let params = new URLSearchParams();
     if (location.state && location.state?.filter) {
       Object.keys(location.state?.filter).forEach((key) => {
         params.append(key, location.state?.filter[key])
       })
     }
-    console.log(JSON.stringify(params));
+    // console.log(JSON.stringify(params));
 
     const offset = activePage;//itemsPerPage * activePage - itemsPerPage
     Object.keys(columnFilter).forEach((key) => {
@@ -278,7 +295,7 @@ const Videography = ({ _filters }) => {
         if (typeof newFilters[property] === 'boolean' || (newFilters[property] && newFilters[property] != '' && newFilters[property].length > 0))
           params.append(property, newFilters[property]);
       }
-    
+
       getVideosFn(offset, itemsPerPage, params)
         .then((result) => {
           setRecords(result.results)

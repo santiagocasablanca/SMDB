@@ -11,3 +11,36 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.statsFormulaContainer {
+  width: 550px;
+  height: 450px;
+  overflow-y: auto;
+}
+
+.statsFormulaContainer >
+  table, tr, td {
+      width: 550px;
+      font-size: 13px;
+      padding: 2px;
+  }
+
+
+@media (max-width: 600px) {
+  .titleStatsFormulaContainer {
+    width: 320px;
+  }
+  .statsFormulaContainer {
+      width: 320px;
+      height: 335px;
+  }
+
+  .statsFormulaContainer >
+      table, tr, td {
+          width: 320px;
+          font-size: 12px;
+          padding: 2px;
+          
+  }
+
+}

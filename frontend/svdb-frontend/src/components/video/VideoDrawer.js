@@ -6,7 +6,7 @@ import ReactPlayer from 'react-player';
 import { useNavigate } from 'react-router-dom';
 import useFormatter from '../../hooks/useFormatter';
 import UpdateVideoModal from './UpdateVideoModal';
-// import VideoRate from './VideoRate';
+import VideoRate from './VideoRate';
 
 const { Text } = Typography;
 
@@ -122,7 +122,6 @@ const VideoDrawer = ({ _video, _channel, _open, childToParent }) => {
                                         </div>
                                     </Col>
                                     <Col span={24}>
-                                        {/* <Space style={{ float: 'left' }}><VideoRate _video={_video}></VideoRate></Space> */}
 
                                         <Space size="small" style={{ float: 'right', color: 'white' }}>
                                             <EyeOutlined />{intToStringBigNumber(video.views)}
@@ -138,6 +137,10 @@ const VideoDrawer = ({ _video, _channel, _open, childToParent }) => {
                                     height: "550px",
                                     overflow: "auto"
                                 }}>
+                                    <Col span={24}>
+                                        <Space style={{ float: 'right' }}><VideoRate _video={_video}></VideoRate></Space>
+
+                                    </Col>
                                     <Col span={24}>
                                         <List
                                             header={<Text strong style={{ marginLeft: '20px' }}>Directed by</Text>}

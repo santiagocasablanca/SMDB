@@ -4,7 +4,7 @@ import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useFormatter from '../../hooks/useFormatter';
 import VideoDrawer from './VideoDrawer';
-
+import VideoRate from './VideoRate';
 
 const VideoPreview = ({ _video }) => {
     const navigate = useNavigate();
@@ -30,7 +30,7 @@ const VideoPreview = ({ _video }) => {
         navigate(url, { state: { id: _video.channel_id } });
     }
 
-    // 480 x 270
+    // 480 x 270  top: '0px', position: 'absolute', right: '5px'
     return (
         <> {isLoaded ?
             (<>
@@ -41,6 +41,13 @@ const VideoPreview = ({ _video }) => {
 
                     <Image style={{ borderRadius: '8px', objectFit: 'cover' }} src={_video.url} width='218px' height='168px' preview={false} />
                     <p style={{ color: 'white', fontSize: '10px', margin: '0px 5px' }}>{_video.title}</p>
+                    <div style={{ color: 'white', fontSize: '10px', top: '3px', position: 'absolute', right: '5px' }}>
+                        <Space>
+                            <p style={{ color: 'white', fontSize: '10px' }}>{formattedDate}</p>
+                            <Divider type="vertical" />
+                            <VideoRate _video={_video} />
+                        </Space>
+                    </div>
                     <div>
                         <Space split={<Divider type="vertical" />} size="small" style={{ marginLeft: '5px' }}>
                             <p style={{ color: 'white', fontSize: '10px' }}><EyeOutlined /> {intToStringBigNumber(_video.views)}</p>
@@ -52,7 +59,6 @@ const VideoPreview = ({ _video }) => {
                     <Avatar src={logo} onClick={goToChannel} style={{
                         backgroundColor: '#f56a00', top: '5px', position: 'absolute', left: '5px'
                     }} />
-                    <p style={{ color: 'white', fontSize: '10px', top: '0px', position: 'absolute', right: '5px' }}>{formattedDate}</p>
                     {/* </Popover> */}
                 </Card>
                 <VideoDrawer _video={_video} _channel={channel} _open={open} childToParent={childToParent}></VideoDrawer>

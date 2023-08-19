@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import useFormatter from '../../hooks/useFormatter';
 import { getVideosFn } from "../../services/videoApi.ts";
 import VideoDrawer from './VideoDrawer';
-
+import VideoRate from './VideoRate';
 
 
 
@@ -107,7 +107,8 @@ const HorizontalHighlightedList = ({ title, filter }) => {
                             <Space split={<Divider type="vertical" />} size="small">
                                 <p style={{ color: 'white', fontSize: '12px' }}><EyeOutlined /> {intToStringBigNumber(video.views)}</p>
                                 <p style={{ color: 'white', fontSize: '12px' }}><LikeOutlined /> {intToStringBigNumber(video.likes)}</p>
-
+                                {/* <Divider type="vertical" /> */}
+                                <VideoRate _video={video} />
                             </Space>
                         </div>
                         <Avatar src={logo} onClick={goToChannel} style={{

@@ -1,131 +1,276 @@
-import { YoutubeOutlined, EyeOutlined, LikeOutlined } from '@ant-design/icons';
-import { Avatar, Card, Divider, Typography, Space, Spin, Rate, Popover } from 'antd';
+import { YoutubeOutlined, EyeOutlined, CommentOutlined, LikeOutlined, StarFilled, StarTwoTone } from '@ant-design/icons';
+import { Avatar, Card, Divider, Typography, Space, Spin, Rate, Popover, Row, Col } from 'antd';
 import React, { useMemo, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useFormatter from '../../hooks/useFormatter';
 import insertCss from 'insert-css';
-import Paragraph from 'antd/es/typography/Paragraph';
+import { getChannelStatsFn } from '../../services/cacheApi.ts';
 
-const { Title, Text } = Typography;
+const { Title, Text, Paragraph } = Typography;
 
 
 /**
  * 
  * THIS IS A MESS. REFACTOR IT TO INCLUDE MORE FACTORS AND TO MAKE THE FORMULA ACTUALLY MAKE SENSE
  */
-const VideoRate = ({ _video }) => {
+const VideoRate = ({ _video, small }) => {
     const navigate = useNavigate();
 
-    const { intToStringBigNumber, parseDate, parseDuration } = useFormatter();
+    const { intToStringBigNumber, parseDate, parseDuration, parseDateToFromNow } = useFormatter();
     const channel = useMemo(() => _video?.channel, [_video]);
     const [rating, setRating] = useState();
-    const [isLoaded, setIsLoaded] = useState(() => _video !== undefined, [_video]);
+    const [channelStats, setChannelStats] = useState();
 
-    const weights = {
-        video_views: 5,
-        video_likes: 3,
-        channel_subs: 2,
-        channel_most_views: 1,
-        channel_most_liked: 1,
-        avg_channel_views: 1,
-        avg_channel_likes: 1,
-        recent_video_bonus: 3, // Extra points for recent videos
-        recent_bonus: 5.5, // Extra points for recent videos
+    const [isLoaded, setIsLoaded] = useState(false);
 
-    };
-
-
+    useEffect(() => {
+        // console.log('1 effect', _video, channelStats, rating)
+        setIsLoaded(false);
+        // console.log(channelStats);
+        async function fetchStats() {
+            // console.log(_video?.channel);
+            const stats = await getChannelStatsFn(_video?.channel.channel_id);
+            // console.log(stats);
+            setChannelStats(stats);
+        }
+        fetchStats();
+    }, [_video])
 
 
     useEffect(() => {
-
+        // console.log('2 effect ', channelStats, rating)
         async function calculateVideoRating() {
-            console.log(_video);
-            const video_views = parseFloat(_video.views);
-            const video_likes = parseFloat(_video.likes);
-            const channel_subs = parseFloat(channel.subs);
-            // const channel_most_views = parseFloat(video.creator_info.most_views);
-            // const channel_most_liked = parseFloat(video.creator_info.most_liked);
-            // const avg_channel_views = parseFloat(video.creator_info.avg_views);
-            // const avg_channel_likes = parseFloat(video.creator_info.avg_likes);
+            // console.log(_video);
+            if (_video !== undefined && channelStats !== undefined) {
+                // console.log(_video.views, _video.likes, _video.comments );
+                // console.log(_video.channel?.subs);
+                const video_views = parseFloat(_video.views);
+                const video_likes = parseFloat(_video.likes);
+                const video_comments = parseFloat(_video.comments);
+                const channel_subs = parseFloat(_video.channel?.subs);
+                const channel_most_views = parseFloat(channelStats?.views.most);
+                const channel_most_liked = parseFloat(channelStats?.likes.most);
+                const avg_channel_views = parseFloat(channelStats?.views.avg);
+                const avg_channel_likes = parseFloat(channelStats?.likes.avg);
+                const avg_channel_comments = parseFloat(channelStats?.comments.avg);
+                const channel_most_commented = parseFloat(channelStats?.comments.most);
+                // console.log(video_views,
+                //     video_likes,
+                //     video_comments,
+                //     channel_subs,
+                //     channel_most_views,
+                //     channel_most_liked,
+                //     avg_channel_views,
+                //     avg_channel_likes,
+                //     avg_channel_comments,
+                //     channel_most_commented);
 
-            // Calculate the recent video bonus based on the published date
-            const publishedDate = new Date(_video.published_at);
-            const currentDate = new Date();
-            const timeDifferenceInDays = (currentDate - publishedDate) / (1000 * 3600 * 24);
-            const isRecent5 = timeDifferenceInDays <= 5 ? 2 : 0; // 1 for recent videos, 0 otherwise
-            const isRecent10 = timeDifferenceInDays <= 10 ? 1 : 0;
-            const isRecent15 = timeDifferenceInDays <= 15 ? 2 : 0;
-            const isRecent30 = timeDifferenceInDays <= 15 ? 2 : 0;
-            const isRecent60 = timeDifferenceInDays <= 60 ? 1 : 0;
-            
-            const recent_video_bonus = 1 / (timeDifferenceInDays + 1);//timeDifferenceInDays <= 45 ? 1 : 0; // 1 for recent videos, 0 otherwise
+                // Calculate the recent video bonus based on the published date
+                const publishedDate = new Date(_video.published_at);
+                const currentDate = new Date();
+                const timeDifferenceInDays = (currentDate - publishedDate) / (1000 * 3600 * 24);
+                const isRecent5 = timeDifferenceInDays <= 5 ? 1 : 0; // 1 for recent videos, 0 otherwise
+                const isRecent10 = timeDifferenceInDays <= 10 ? 1 : 0;
+                const isRecent15 = timeDifferenceInDays <= 15 ? 1 : 0;
+                const isRecent30 = timeDifferenceInDays <= 30 ? 1 : 0;
+                const isRecent60 = timeDifferenceInDays <= 60 ? 1 : 0;
 
-            // Calculate the overall rating based on the formula
-            const rating =
-                (video_views / channel_subs) * 8 + ///* weights.video_views +
-                (video_likes / video_views) * 8 +
-                // (video_views / channel_most_views) * weights.channel_most_views +
-                // (video_views / avg_channel_views) * weights.avg_channel_views +
-                (video_likes / channel_subs) * 8 + // * weights.video_likes +
-                // (video_likes / channel_most_liked) * weights.channel_most_liked +
-                // (video_likes / avg_channel_likes) * weights.avg_channel_likes +
-                isRecent5 + isRecent10 + isRecent15 + isRecent30 + isRecent60;
+                // const recent_video_bonus = 1 / (timeDifferenceInDays + 1);//timeDifferenceInDays <= 45 ? 1 : 0; // 1 for recent videos, 0 otherwise
+
+                // Calculate the overall rating based on the formula
+                const rating =
+                    (((video_views / channel_subs) * 0.5 +
+                        (video_views / channel_most_views) * 0.1 +
+                        (video_views / avg_channel_views) * 0.4)
+                        * 5 +
+                        ((video_likes / video_views) * 0.3 +
+                            (video_likes / channel_subs) * 0.3 +
+                            (video_likes / channel_most_liked) * 0.1 +
+                            (video_likes / avg_channel_likes) * 0.3)
+                        * 4 + // 
+                        ((video_comments / channel_most_commented) * 0.2 +
+                            (video_comments / avg_channel_comments) * 0.8)
+                        * 1) +
+                    isRecent5 + isRecent10 + isRecent15 + isRecent30 + isRecent60;
 
 
-            // const normalizedRating = Math.round((((rating - minValue) / (maxValue - minValue)) * 10));
-            // const normalizedRating = Math.round((rating / (weights.video_views + weights.video_likes + weights.recent_bonus) * 10));
-            const normalizedRating = Math.round(rating); //(weights.video_views +   weights.video_likes + weights.recent_bonus);
-            console.log(video_views / channel_subs)
-           
 
-            setRating(normalizedRating);
+                // const normalizedRating = Math.round((((rating - minValue) / (maxValue - minValue)) * 10));
+                // const normalizedRating = Math.round((rating / (weights.video_views + weights.video_likes + weights.recent_bonus) * 10));
+                const normalizedRating = (rating) > 10 ? 10 : Math.round(rating); //(weights.video_views +   weights.video_likes + weights.recent_bonus);
+                // console.log(_video, channel_subs, isRecent10)
+                // console.log(normalizedRating, rating.toFixed(2))
+
+                setRating(normalizedRating);
+                setIsLoaded(true);
+            }
         }
         calculateVideoRating();
 
-    }, [_video]);
+    }, [channelStats]);
 
-    insertCss(`
-    
-   .ant-rate-star .ant-rate-star-full > span {
-        color: #d8bd14 !important;
+    // insertCss(`
+
+    // .statsFormulaContainer {
+    //     width: 550px;
+    //     height: 400px;
+    //     overflow-y: auto;
+    // }
+
+    // .statsFormulaContainer >
+    //     table, tr, td {
+    //         width: 550px;
+    //         font-size: 13px;
+    //         padding: 2px;
+    //     }
+
+
+    //   @media (max-width: 600px) {
+    //     .statsFormulaContainer {
+    //         width: 320px;
+    //     }
+
+    //     .statsFormulaContainer >
+    //         table, tr, td {
+    //             width: 320px;
+    //             font-size: 12px;
+    //             padding: 2px;
+
+    //     }
+
+    // }
+
+    // `);
+
+    const getColor = (value) => {
+        if (value < 1) return '#ff4d4f';
+        // if (value > 0.9 && value < 1) return;
+        if (value >= 1) return '#52c41a';
     }
-    `);
 
 
-    // Calculate the rating for a video based on KPIs
-    const calculateVideoRating = (video) => {
+    // rowspan="2" .toFixed(2)
+    const title = (
+        <div className="titleStatsFormulaContainer">
+            <Row>
+                <Col span={4}>
+                    <Title level={5}>Stats</Title>
+                </Col>
+                <Col span={20}>
+                    <Space style={{ float: 'right' }}>
+                        <div><StarFilled style={{ fontSize: small ? '13px' : '18px', color: '#FDDF01' }} /> <Text strong style={{ fontSize: small ? '13px' : '15px' }}>{rating}</Text>
+                            <Text style={{ fontSize: small ? '11px' : '13px' }}>/10</Text>
+                        </div>
+                        <Divider type="vertical" ></Divider>
 
-    };
+                        <YoutubeOutlined /><Text>{intToStringBigNumber(channel?.subs)} subs</Text>
+                        <Divider type="vertical" ></Divider>
+                        <Text>{parseDateToFromNow(_video?.published_at)}</Text>
+                    </Space>
+                </Col>
+            </Row>
 
+        </div>
+    );
 
     const formula = (
-        <>
-            <Title level={5}>Formula</Title>
-            <Space size="small" style={{ float: 'right' }}>
-                <EyeOutlined /><Text>{intToStringBigNumber(_video.views)} views</Text>
-                <LikeOutlined /><Text>{intToStringBigNumber(_video.likes)} likes</Text>
-                <YoutubeOutlined /><Text>{intToStringBigNumber(channel.subs)} subscribers</Text>
-            </Space>
-            <Text strong>(Video Views to Subscribers Ratio * 0.5) + </Text>
-            {/* <Text> Video views are divided by the channel's subscriber count, giving an indication of viewer engagement relative to the channel's audience size.</Text> */}
-            {/* <br></br> */}
-            <Text strong>(Video Likes to Subscribers Ratio * 0.3) + </Text>
-            {/* <Text> Video likes are divided by the channel's subscriber count, reflecting viewer appreciation in relation to the channel's following.</Text> */}
-            <Text strong>(Recent Video Bonus * 0.1)</Text>
+        <div className="statsFormulaContainer">
+            <Row justify="center">
+                <Col span={24} justify="center">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th style={{ width: '10%' }} rowSpan={4}><EyeOutlined /><br /> {intToStringBigNumber(_video?.views)} <br /> Views <br />
+
+                                    <p style={{ fontSize: '10px', color: 'whitesmoke' }}>(weight: 0.5)</p>
+                                </th>
+                                {/* <th>Ratio</th>
+                            <th>Description</th>
+                            <th>Value</th> */}
+                            </tr>
+                            <tr>
+                                <td style={{ width: '40%' }}>Views/Subs<br /><p style={{ float: 'left', fontSize: '10px', color: 'whitesmoke' }}>(weight: 0.5)</p></td>
+                                <td style={{ width: '20%' }}>{intToStringBigNumber(_video?.views)} / {intToStringBigNumber(_video?.channel?.subs)}</td>
+                                <td style={{ width: '20%' }}><Text style={{ float: 'right', color: getColor((_video?.views / channel?.subs)) }}>{Math.round((_video?.views / channel?.subs) * 100)} %</Text></td>
+                            </tr>
+                            <tr>
+                                <td>Views/Avg Views p/ video<br /><p style={{ float: 'left', fontSize: '10px', color: 'whitesmoke' }}>(weight: 0.4)</p></td>
+                                <td>{intToStringBigNumber(_video?.views)} / {intToStringBigNumber(channelStats?.views.avg)}</td>
+                                <td><Text style={{ float: 'right', color: getColor((_video?.views / channelStats?.views.avg)) }}>{Math.round((_video?.views / channelStats?.views.avg) * 100)} %</Text></td>
+                            </tr>
+                            <tr>
+                                <td>Views/Most Viewed Video <br /> <p style={{ float: 'left', fontSize: '10px', color: 'whitesmoke' }}>(weight: 0.1)</p></td>
+                                <td>{intToStringBigNumber(_video?.views)} / {intToStringBigNumber(channelStats?.views.most)}</td>
+                                <td><Text style={{ float: 'right', color: getColor((_video?.views / channelStats?.views.most)) }}>{Math.round((_video?.views / channelStats?.views.most) * 100)} %</Text></td>
+                            </tr>
+                            {/* <tr>
+                            <td>Views/World's Avg</td>
+                            <td></td>
+                            <td></td>
+                        </tr> */}
+                            <tr style={{ borderTop: '1px solid white' }}>
+                                <th rowSpan={5}><LikeOutlined /> <br />{intToStringBigNumber(_video?.likes)} <br /> Likes <br />
+                                    <p style={{ fontSize: '10px', color: 'whitesmoke' }}>(weight: 0.3)</p></th>
+                            </tr>
+                            <tr>
+                                <td>Likes/Views <br /> <p style={{ float: 'left', fontSize: '10px', color: 'whitesmoke' }}>(weight: 0.3)</p></td>
+                                <td>{intToStringBigNumber(_video?.likes)} / {intToStringBigNumber(_video?.views)}</td>
+                                <td><Text style={{ float: 'right', color: getColor((_video?.likes / _video?.views)) }}>{Math.round((_video?.likes / _video?.views) * 100)} %</Text></td>
+                            </tr>
+                            <tr>
+                                <td>Likes/Subs <br /> <p style={{ float: 'left', fontSize: '10px', color: 'whitesmoke' }}>(weight: 0.3)</p></td>
+                                <td>{intToStringBigNumber(_video?.likes)} / {intToStringBigNumber(_video?.channel?.subs)}</td>
+                                <td><Text style={{ float: 'right', color: getColor((_video?.likes / channel?.subs)) }}>{Math.round((_video?.likes / _video?.channel?.subs) * 100)} %</Text></td>
+                            </tr>
+                            <tr>
+                                <td>Likes/Avg Likes p/ video<br /> <p style={{ float: 'left', fontSize: '10px', color: 'whitesmoke' }}>(weight: 0.3)</p></td>
+                                <td>{intToStringBigNumber(_video?.likes)} / {intToStringBigNumber(channelStats?.likes.avg)}</td>
+                                <td><Text style={{ float: 'right', color: getColor((_video?.likes / channelStats?.likes.avg)) }}>{Math.round((_video?.likes / channelStats?.likes.avg) * 100)} %</Text></td>
+                            </tr>
+                            <tr>
+                                <td>Likes/Most Likes Video <br /> <p style={{ float: 'left', fontSize: '10px', color: 'whitesmoke' }}>(weight: 0.1)</p></td>
+                                <td>{intToStringBigNumber(_video?.likes)} / {intToStringBigNumber(channelStats?.likes.most)}</td>
+                                <td><Text style={{ float: 'right', color: getColor((_video?.likes / channelStats?.likes.most)) }}>{Math.round((_video?.likes / channelStats?.likes.most) * 100)} %</Text></td>
+                            </tr>
+                            <tr style={{ borderTop: '1px solid white' }}>
+                                <th rowSpan={5}><CommentOutlined /> <br />{intToStringBigNumber(_video?.comments)} <br /> Comments <br />
+                                    <p style={{ fontSize: '10px', color: 'whitesmoke' }}>(weight: 0.1)</p></th>
+                            </tr>
+                            <tr>
+                                <td>Comments/Avg Comments p/ video<br /> <p style={{ float: 'left', fontSize: '10px', color: 'whitesmoke' }}>(weight: 0.8)</p></td>
+                                <td>{intToStringBigNumber(_video?.comments)} / {intToStringBigNumber(channelStats?.comments.avg)}</td>
+                                <td><Text style={{ float: 'right', color: getColor((_video?.comments / channelStats?.comments.avg)) }}>{Math.round((_video?.comments / channelStats?.comments.avg) * 100)} %</Text></td>
+                            </tr>
+                            <tr>
+                                <td>Comments/Most Commented Video <br /> <p style={{ float: 'left', fontSize: '10px', color: 'whitesmoke' }}>(weight: 0.2)</p></td>
+                                <td>{intToStringBigNumber(_video?.comments)} / {intToStringBigNumber(channelStats?.comments.most)}</td>
+                                <td><Text style={{ float: 'right', color: getColor((_video?.comments / channelStats?.likes.most)) }}>{Math.round((_video?.comments / channelStats?.comments.most) * 100)} %</Text></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </Col>
+            </Row>
             <br></br>
-            <Text type="secondary"> This factor adjusts the rating based on how recently the video was published.
-                The code calculates the time difference in days between the current date and the video's publication date.
-                The bonus is inversely proportional to the time difference, favoring recent videos.</Text>
-        </>
+            <Row>
+                <Col span={24}>
+                    <Text strong>Note: </Text>
+                    <br></br>
+                    <Paragraph ellipsis={{ rows: 2, expandable: true, symbol: 'more' }}>
+                        This formula adjusts the rating based on how recently the video was published, by calculating the time difference in days between the current date and the video's publication date.
+                        The bonus is inversely proportional to the time difference, favoring recent videos.
+                    </Paragraph>
+                </Col>
+            </Row>
+        </div>
     );
 
     // 480 x 270—  value={rating}
     return (
         <> {isLoaded ?
             (
-                <Popover content={formula}>
-                    <Rate allowHalf value={rating} disabled count={10} />
+                <Popover title={title} content={formula} placement="bottomRight">
+                    <StarFilled style={{ fontSize: small ? '13px' : '18px', color: '#FDDF01' }} /> <Text strong style={{ fontSize: small ? '13px' : '15px' }}>{rating}</Text>
+                    <Text style={{ fontSize: small ? '11px' : '13px' }}>/10</Text>
                 </Popover>
             ) : (
                 <Spin />
@@ -133,6 +278,6 @@ const VideoRate = ({ _video }) => {
         }
         </>
     );
-    // {/* <Text strong>{rating}</Text><Text type="secondary">/10</Text> */}
 }
+
 export default VideoRate;

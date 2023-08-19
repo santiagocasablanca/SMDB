@@ -9,6 +9,7 @@ import variables from '../../sass/antd.module.scss';
 import { getVideosFn } from "../../services/videoApi.ts";
 import VideographyEditPanel from './VideographyEditPanel';
 import VideographyFilterPanel from './VideographyFilterPanel';
+import VideoRate from '../video/VideoRate';
 
 // .ant-input {
 //   color: $coolLighterGray !important;
@@ -75,6 +76,10 @@ const Videography = ({ title, _filters }) => {
   //   margin: 10px 0px auto;
   // }
 
+  const getVideoById = (id) => {
+    return videos.find(it => it.video_id === id);
+  }
+
 
   const [activePage, setActivePage] = useState(1)
   const [columnFilter, setColumnFilter] = useState([])
@@ -90,6 +95,18 @@ const Videography = ({ title, _filters }) => {
       title: 'Channel',
       width: '10%',
       ellipsis: true,
+    },
+    {
+      key: 'rating',
+      dataIndex: 'video_id',
+      title: 'Rating',
+      width: '5%',
+      render: (video_id) => (
+        (
+          <span>
+            <VideoRate _video={getVideoById(video_id)} small={true} />
+          </span>)
+      ),
     },
     {
       key: 'title',

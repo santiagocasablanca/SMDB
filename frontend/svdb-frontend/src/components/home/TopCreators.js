@@ -22,7 +22,7 @@ const TopCreators = ({ channel_ids }) => {
 
 
     async function fetchData() {
-      console.log(channel_ids);
+      // console.log(channel_ids);
       if (channel_ids !== null && channel_ids.length > 0) {
 
         let params = new URLSearchParams();
@@ -70,7 +70,7 @@ const TopCreators = ({ channel_ids }) => {
             </Row>
 
             {/* <Card bordered={false} className="topCreators" bodyStyle={{ padding: 20 }}> */}
-              <Row style={{ height: '380px', overflow: 'auto' }} justify="center">
+              <Row style={{ height: '415px', overflow: 'auto' }} justify="center">
                 <Col span={24}>
 
                   <List

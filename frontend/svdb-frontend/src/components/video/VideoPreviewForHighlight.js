@@ -1,13 +1,13 @@
-import { CommentOutlined, EyeOutlined, LikeOutlined } from '@ant-design/icons';
+import { CommentOutlined, YoutubeOutlined, EyeOutlined, LikeOutlined } from '@ant-design/icons';
 import { Avatar, Col, Divider, Image, List, Popover, Row, Space, Spin, Typography } from 'antd';
 import insertCss from 'insert-css';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import { useNavigate } from 'react-router-dom';
 import useFormatter from '../../hooks/useFormatter';
 import variables from '../../sass/antd.module.scss';
 import VideoDrawer from './VideoDrawer';
-// import VideoRate from './VideoRate';
+import VideoRate from './VideoRate';
 
 const { Title, Text } = Typography;
 
@@ -18,6 +18,7 @@ const VideoPreviewForHighlight = ({ _video, index }) => {
 
     const isLoaded = useMemo(() => _video !== undefined, [_video]);
     const channel = useMemo(() => _video?.channel, [_video]);
+    // const channelStats = useMemo(async () => await getChannelStatsFn(_video?.channel?.channel_id), [channel]);
     const logo = useMemo(() => _video?.channel.logo_url, [_video]);
     const directedBy = useMemo(() => _video?.directedBy, [_video]);
     const formattedDate = useMemo(() => parseDate(_video?.published_at, "DD MMM YYYY"), [_video]);
@@ -25,26 +26,7 @@ const VideoPreviewForHighlight = ({ _video, index }) => {
     const [open, setOpen] = useState(false);
 
 
-    // useEffect(() => {
 
-    //     async function fetchData() {
-    //         setVideo(_video);
-    //                 setLogo(_video?.channel.logo_url);
-    //                 setDirectedBy(_video?.directedBy);
-    //                 setChannel(_video?.channel);
-    //                 setIsLoaded(true);
-    //         // await getVideoFn(_video.video_id).then(res => {
-    //         //     if (res.result) {
-    //         //         setVideo(res.result);
-    //         //         setLogo(res.result.channel.logo_url);
-    //         //         setDirectedBy(res.result.directedBy);
-    //         //         setChannel(res.result.channel);
-    //         //         setIsLoaded(true);
-    //         //     }
-    //         // })
-    //     }
-    //     fetchData();
-    // }, [_video]);
 
     const showDrawer = () => {
         setOpen(true);
@@ -125,10 +107,17 @@ const VideoPreviewForHighlight = ({ _video, index }) => {
                                     backgroundColor: '#f56a00',
                                 }} />
                                 {/* <Image src={video.channel?.logo_url}></Image> */}
-                                <Text>{_video.channel_title}</Text>
+                                {/* */}
+                                <Text strong>{_video.channel_title}</Text>
+                                <Text style={{ fontSize: '12px' }}>{intToStringBigNumber(channel?.subs)} subscribers</Text>
                             </Space>
                         </Col>
                         <Col span={4}>
+                            <div style={{ float: 'right' }}><VideoRate _video={_video}></VideoRate></div>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col span={24}>
                             <Space size="small" style={{ float: 'right' }}>
                                 <EyeOutlined />{intToStringBigNumber(_video.views)}
                                 <LikeOutlined />{intToStringBigNumber(_video.likes)}
@@ -136,11 +125,7 @@ const VideoPreviewForHighlight = ({ _video, index }) => {
                             </Space>
                         </Col>
                     </Row>
-                    {/* <Row>
-                        <Col span={24}>
-                            <Space style={{ float: 'right' }}><VideoRate _video={_video}></VideoRate></Space>
-                        </Col>
-                    </Row> */}
+
                     <Row>
                         <Col span={24}>
                             <Space style={{ float: 'right' }}>
