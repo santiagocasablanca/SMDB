@@ -418,7 +418,7 @@ export const findAllVideosController = async (
     if (req.query.title) {
       const searchTitle = req.query.title.toLowerCase();
       const lowerTitleCol = Sequelize.fn('lower', Sequelize.col('title'));
-      whereClause['title'] = Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('title')), 'LIKE', '%' + searchTitle + '%');
+      whereClause['video.title'] = Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('video.title')), 'LIKE', '%' + searchTitle + '%');
     }
 
     if (req.query.publishedAtRange) {
@@ -546,7 +546,7 @@ export const findAllAppearencesController = async (
     if (req.query.title) {
       const searchTitle = req.query.title.toLowerCase();
       const lowerTitleCol = Sequelize.fn('lower', Sequelize.col('title'));
-      whereClause['title'] = Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('title')), 'LIKE', '%' + searchTitle + '%');
+      whereClause['video.title'] = Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('video.title')), 'LIKE', '%' + searchTitle + '%');
     }
 
     if (req.query.publishedAtRange) {
@@ -692,7 +692,7 @@ export const findAllVideoGuestsController = async (
     if (req.query.title) {
       const searchTitle = req.query.title.toLowerCase();
       const lowerTitleCol = Sequelize.fn('lower', Sequelize.col('title'));
-      whereClause['title'] = Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('title')), 'LIKE', '%' + searchTitle + '%');
+      whereClause['video.title'] = Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('video.title')), 'LIKE', '%' + searchTitle + '%');
     }
 
     if (req.query.publishedAtRange) {

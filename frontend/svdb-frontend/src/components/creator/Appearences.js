@@ -284,9 +284,9 @@ const Appearences = ({ title, _filters }) => {
           <Col span="24">
             <Title level={3}><Space><YoutubeOutlined /> {title ? title : 'Videography'}</Space></Title>
           </Col>
-          <Col span="24">
+          {/* <Col span="24">
             <VideographyFilterPanel filters={myFilters} onChange={handleFilterChange} />
-          </Col>
+          </Col> */}
         </Row>
         {/* 
         <Row span="24" gutter={16}>
