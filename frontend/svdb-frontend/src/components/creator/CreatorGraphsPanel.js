@@ -64,7 +64,7 @@ const CreatorGraphsPanel = ({ title, _channels }) => {
                     <UploadTimeFrequencyCard _channels={channels}></UploadTimeFrequencyCard>
                 </Col>
                 <Col span={24} md={24} lg={12} xl={12}>
-                    <CastRose title="Guests" filter={{ channels: _channels.map(it => { return it.channel_id; }) }} />
+                    <CastRose title="Appearences" filter={{ channels: _channels.map(it => { return it.channel_id; }) }} />
                 </Col>
             </Row>
             <br></br>
