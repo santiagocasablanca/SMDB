@@ -17,7 +17,7 @@ export const updateVideoController = async (
   try {
     const id = req.params['id'];
     const videoService = new VideoService();
-    const video = await videoService.update(id, req.body.tags, req.body.series, req.body.directedBy, req.body.cast);
+    const video = await videoService.update(id, req.body.tags, req.body.series, req.body.directedBy, req.body.cast, req.body.game);
 
     res.status(200).json({
       status: "success",
@@ -78,7 +78,7 @@ export const findMostLikedSSGroupedBySeries = async (
       publishedAtSearchFinal = dayjs(rangeDate[1]).format("YYYY-MM-DD");
     } else {
       publishedAtSearchInitial = '2010-05-23 23:00:00.000 +00:00';
-      publishedAtSearchFinal = '2023-06-23 23:00:00.000 +00:00';
+      publishedAtSearchFinal = new Date();
     }
 
     if (req.query.channels) {
@@ -111,6 +111,176 @@ export const findMostLikedSSGroupedBySeries = async (
     });
   }
 }
+
+export const findGroupedByGame = async (
+  req: Request<any, any, any, VideosSearchReqQuery>,
+  res: Response
+) => {
+  try {
+    let publishedAtSearchInitial;
+    let publishedAtSearchFinal;
+    let channel_Ids;
+    let sort = req.query.sort ? req.query.sort.split('%') : ['views', 'DESC'];
+    if (req.query.publishedAtRange) {
+      let rangeDate = req.query.publishedAtRange.split(',');
+      publishedAtSearchInitial = dayjs(rangeDate[0]).format("YYYY-MM-DD");
+      publishedAtSearchFinal = dayjs(rangeDate[1]).format("YYYY-MM-DD");
+    } else {
+      publishedAtSearchInitial = '2010-05-23 23:00:00.000 +00:00';
+      publishedAtSearchFinal = new Date();
+    }
+
+    if (req.query.channels) {
+      console.log(req.query.channels);
+      var channelsArr = req.query.channels.split(',');
+
+      channel_Ids = channelsArr
+    }
+
+    const records = await sequelize.query("select game, count(*) as videos, sum(views) as views, sum(likes) as likes, sum(comments) as comments" +
+      " from video v where channel_id IN (:channelIds) and game is not null and published_at BETWEEN (:initial) AND (:final) GROUP By v.game order by (:orderBy) ",
+      {
+        replacements: { channelIds: channel_Ids, initial: publishedAtSearchInitial, final: publishedAtSearchFinal, orderBy: sort },
+        // bind: { initial: '2010-05-23 23:00:00.000 +00:00', final: '2023-06-23 23:00:00.000 +00:00', orderBy: 'likes desc' },
+        type: QueryTypes.SELECT,
+        logging: console.log,
+        raw: true,
+
+      }
+    );
+    console.log(JSON.stringify(records));
+    res.status(200).json({
+      status: "success",
+      results: records,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      status: "error",
+      message: error.message,
+    });
+  }
+}
+
+export const findGroupedByTags = async (
+  req: Request<any, any, any, VideosSearchReqQuery>,
+  res: Response
+) => {
+  try {
+    console.log(req.query);
+    let publishedAtSearchInitial;
+
+    let publishedAtSearchFinal;
+    let channel_Ids;
+    let sort = req.query.sort ? req.query.sort.split('%') : ['views', 'DESC'];
+    if (req.query.publishedAtRange) {
+      let rangeDate = req.query.publishedAtRange.split(',');
+      publishedAtSearchInitial = dayjs(rangeDate[0]).format("YYYY-MM-DD");
+      publishedAtSearchFinal = dayjs(rangeDate[1]).format("YYYY-MM-DD");
+    } else {
+      publishedAtSearchInitial = '2010-05-23 23:00:00.000 +00:00';
+      publishedAtSearchFinal = new Date();
+    }
+
+    if (req.query.channels) {
+      console.log(req.query.channels);
+      var channelsArr = req.query.channels.split(',');
+
+      channel_Ids = channelsArr
+    }
+
+    const query = "SELECT tag, COUNT(*) as videos, SUM(views) as views, SUM(likes) as likes, SUM(comments) as comments "
+      + "FROM ("
+      + "    SELECT channel_id, jsonb_array_elements_text(tags) AS tag, views, likes, comments "
+      + "    FROM video"
+      + "    WHERE channel_id IN (:channelIds)"
+      + "        AND tags IS NOT NULL"
+      + "        AND published_at BETWEEN (:initial) AND (:final) "
+      + ") AS unnested "
+      + "GROUP BY tag "
+      + "ORDER BY (:orderBy) ";
+
+    const oldQuery = "select tag, count(*) as videos, sum(views) as views, sum(likes) as likes, sum(comments) as comments" +
+      " from video v JOIN unnest(tags) AS tag ON true where channel_id IN (:channelIds) and tags is not null and published_at BETWEEN (:initial) AND (:final) GROUP By tag order by (:orderBy) ";
+
+    const records = await sequelize.query(query,
+      {
+        replacements: { channelIds: channel_Ids, initial: publishedAtSearchInitial, final: publishedAtSearchFinal, orderBy: sort },
+        // bind: { initial: '2010-05-23 23:00:00.000 +00:00', final: '2023-06-23 23:00:00.000 +00:00', orderBy: 'likes desc' },
+        type: QueryTypes.SELECT,
+        logging: console.log,
+        raw: true,
+
+      }
+    );
+
+    console.log(JSON.stringify(records));
+
+    res.status(200).json({
+      status: "success",
+      results: records,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      status: "error",
+      message: error.message,
+    });
+  }
+}
+
+
+export const fetchGroupedByCast = async (
+  req: Request<any, any, any, VideosSearchReqQuery>,
+  res: Response
+) => {
+  try {
+    console.log(req.query);
+    let publishedAtSearchInitial;
+    let publishedAtSearchFinal;
+    let channel_Ids;
+    if (req.query.publishedAtRange) {
+      let rangeDate = req.query.publishedAtRange.split(',');
+      publishedAtSearchInitial = dayjs(rangeDate[0]).format("YYYY-MM-DD");
+      publishedAtSearchFinal = dayjs(rangeDate[1]).format("YYYY-MM-DD");
+    } else {
+      publishedAtSearchInitial = '2010-05-23 23:00:00.000 +00:00';
+      publishedAtSearchFinal = new Date();
+    }
+
+    if (req.query.channels) {
+      var channelsArr = req.query.channels.split(',');
+
+      channel_Ids = channelsArr
+    }
+
+    const query = "SELECT vc.creator_id, c.name AS creator_name, COUNT(*) AS videos, SUM(v.views) AS views, SUM(v.likes) AS likes, SUM(v.comments) AS comments " +
+      "FROM public.video_creator vc JOIN public.video v ON vc.video_id = v.video_id JOIN public.creator c ON vc.creator_id = c.id " +
+      " WHERE v.channel_id IN (:channelIds) and v.published_at BETWEEN (:initial) AND (:final) " +
+      " GROUP BY vc.creator_id, c.name ORDER BY videos DESC";
+
+    const records = await sequelize.query(query,
+      {
+        replacements: { channelIds: channel_Ids, initial: publishedAtSearchInitial, final: publishedAtSearchFinal},
+        type: QueryTypes.SELECT,
+        logging: console.log,
+        raw: true,
+
+      }
+    );
+
+    console.log(JSON.stringify(records));
+
+    res.status(200).json({
+      status: "success",
+      results: records,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      status: "error",
+      message: error.message,
+    });
+  }
+}
+
 
 export const fetchAllSeries = async (
   req: Request,
@@ -409,6 +579,12 @@ export const findAllVideosController = async (
       whereClause['serie'] = { [Op.or]: seriessArr };
     }
 
+    if (req.query.games) {
+      var gamesArr = req.query.games.split(',');
+
+      whereClause['game'] = { [Op.or]: gamesArr };
+    }
+
     if (req.query.tags) {
       var tagsArr = req.query.tags.split(',');
 
@@ -692,7 +868,7 @@ export const findAllVideoGuestsController = async (
     if (req.query.title) {
       const searchTitle = req.query.title.toLowerCase();
       const lowerTitleCol = Sequelize.fn('lower', Sequelize.col('title'));
-      whereClause['video.title'] = Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('video.title')), 'LIKE', '%' + searchTitle + '%');
+      whereClause['video.title'] = Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('title')), 'LIKE', '%' + searchTitle + '%');
     }
 
     if (req.query.publishedAtRange) {
@@ -744,26 +920,26 @@ export const findAllVideoGuestsController = async (
       where: whereClause,
       nest: true,
       include: [
-      //   {
-      //   model: Creator,
-      //   as: 'directedBy', attributes: ['id', 'custom_url', 'name', 'profile_picture']
-      // },
-      // {
-      //   sequelize.literal(`(
-      //     INNER JOIN ( "video_creator" AS "cast") 
-      //       ON "video"."video_id" = "cast"."video_id" 
-      //       AND "cast"."creator_id" IN ('23ecdddf-ae37-4af4-82a4-d72e572b2072') 
-      //   )`),
-      //   'laughReactionsCount'
-      // }
+        //   {
+        //   model: Creator,
+        //   as: 'directedBy', attributes: ['id', 'custom_url', 'name', 'profile_picture']
+        // },
+        // {
+        //   sequelize.literal(`(
+        //     INNER JOIN ( "video_creator" AS "cast") 
+        //       ON "video"."video_id" = "cast"."video_id" 
+        //       AND "cast"."creator_id" IN ('23ecdddf-ae37-4af4-82a4-d72e572b2072') 
+        //   )`),
+        //   'laughReactionsCount'
+        // }
 
-      {
-        model: Creator,
-        as: 'cast',
-        required: true,
-        attributes: ['id', 'custom_url', 'name', 'profile_picture'],
-        where: castWhereClause
-      }
+        {
+          model: Creator,
+          as: 'cast',
+          required: true,
+          attributes: ['id', 'custom_url', 'name', 'profile_picture'],
+          where: castWhereClause
+        }
       ],
       raw: true,
       order: [sort]
@@ -773,17 +949,17 @@ export const findAllVideoGuestsController = async (
     // Create an empty object to store the grouped data
     const groupedData = [];
     const castIdToIndex = {};  // Mapping of cast IDs to array indexes
-    
+
     // Iterate through the videos in the data
     videos.rows.forEach(video => {
       const castId = video.cast.id;
-    
+
       // If the cast member is not already in the array, add them with an empty array
       if (!castIdToIndex.hasOwnProperty(castId)) {
         const newIndex = groupedData.push({ creator_info: video.cast, videos: [] }) - 1;
         castIdToIndex[castId] = newIndex;
       }
-    
+
       // Push the video details to the cast member's array using the index
       const castIndex = castIdToIndex[castId];
       groupedData[castIndex].videos.push(video);

@@ -12,7 +12,10 @@ import {
   fetchAllTags,
   fetchVideoController,
   findAllVideoGuestsController,
-  findAllAppearencesController
+  findAllAppearencesController,
+  findGroupedByGame,
+  fetchGroupedByCast,
+  findGroupedByTags
 } from "../controllers/video.controller";
 
 import { fetchChannelController, findAllChannelsController, createChannelController, findAllGuestsController } from "../controllers/channel.controller";
@@ -67,6 +70,19 @@ router
 router
   .route("/findMostLikedSSGroupedBySeries/")
   .get(findMostLikedSSGroupedBySeries);
+
+router
+  .route("/findGroupedByGame/")
+  .get(findGroupedByGame);
+
+router
+  .route("/findGroupedByTags/")
+  .get(findGroupedByTags);
+
+router
+  .route("/fetchGroupedByCast/")
+  .get(fetchGroupedByCast);
+
 
 router
   .route("/fetchVideoFrequency/")

@@ -10,14 +10,10 @@ import { getVideoGuestsFn } from "../../services/videoApi.ts";
 import VideographyEditPanel from '../creator/VideographyEditPanel';
 import VideographyFilterPanel from '../creator/VideographyFilterPanel';
 
-// .ant-input {
-//   color: $coolLighterGray !important;
-// } 
-
 
 const { Title } = Typography;
 
-const Guests = ({ title, _filters }) => {
+const Series = ({ title, _filters }) => {
 
   const { intToStringBigNumber, parseDate, parseDuration, displayVideoDurationFromSeconds, humanizeDurationFromSeconds, displayVideoDurationFromSecondsWithLegend } = useFormatter();
   const location = useLocation();
@@ -378,4 +374,4 @@ const Guests = ({ title, _filters }) => {
   )
 }
 
-export default Guests;
+export default Series;

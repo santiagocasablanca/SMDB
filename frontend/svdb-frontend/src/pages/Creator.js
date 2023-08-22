@@ -9,7 +9,7 @@ import Guests from "../components/channel/Guests";
 import useFormatter from '../hooks/useFormatter';
 import variables from '../sass/antd.module.scss';
 import { getCreatorFn } from "../services/creatorApi.ts";
-
+import CreatorGraphsPanel from "../components/creator/CreatorGraphsPanel";
 
 
 
@@ -321,7 +321,7 @@ const CreatorPage = () => {
                         </Col>
                       </Row></>
                     },
-                    // { label: 'Graphs', key: '_graphs', children: <><CreatorGraphsPanel _filters={filters} /></> },
+                    { label: 'Graphs', key: '_graphs', children: <><CreatorGraphsPanel title="Graphs" _channels={creator.channels} /></> },
                     { label: 'Videography', key: '_videography', children: <><Videography _filters={filters} /></> },
                     {
                       label: 'Shorts', key: '_shorts', children: <><Videography title="Shorts" _filters={shortsFilters} /></>

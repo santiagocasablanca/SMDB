@@ -116,6 +116,23 @@ const Videography = ({ title, _filters }) => {
       sorter: true
     },
     { key: 'duration_parsed', title: 'Duration', dataIndex: 'duration_parsed', width: '8%', align: 'right', sorter: true, render: (text) => <p>{displayVideoDurationFromSecondsWithLegend(text)}</p> },
+    { key: 'published_at', title: 'Published At', dataIndex: 'published_at', width: '10%', sorter: true, render: (text) => <p>{dayjs(text).format("DD MMM YYYY")}</p> },
+    { key: 'views', title: 'Views', dataIndex: 'views', width: '8%', align: 'right', sorter: true, render: (text) => <p>{intToStringBigNumber(text)}</p> },
+    { key: 'likes', title: 'Likes', dataIndex: 'likes', width: '8%', align: 'right', sorter: true, render: (text) => <p>{intToStringBigNumber(text)}</p> },
+    { key: 'comments', title: 'Comments', dataIndex: 'comments', width: '8%', align: 'right', sorter: true, render: (text) => <p>{intToStringBigNumber(text)}</p> },
+    {
+      key: 'game',
+      dataIndex: 'game',
+      width: '10%',
+      title: "Game",
+      render: (game) => (
+        ((game != '' & game != null) ?
+          <span>
+            <Tag color={variables.sdmnLightBlue}  key={game}> {game} </Tag>
+          </span>
+          : '')
+      ),
+    },
     {
       key: 'serie',
       dataIndex: 'serie',
@@ -124,15 +141,11 @@ const Videography = ({ title, _filters }) => {
       render: (series) => (
         ((series != '' & series != null) ?
           <span>
-            <Tag color={variables.sdmnPink} key={series}> {series} </Tag>
+            <Tag color={variables.sdmnPink} key={series}>{series}</Tag>
           </span>
           : '')
       ),
     },
-    { key: 'published_at', title: 'Published At', dataIndex: 'published_at', width: '10%', sorter: true, render: (text) => <p>{dayjs(text).format("DD MMM YYYY")}</p> },
-    { key: 'views', title: 'Views', dataIndex: 'views', width: '8%', align: 'right', sorter: true, render: (text) => <p>{intToStringBigNumber(text)}</p> },
-    { key: 'likes', title: 'Likes', dataIndex: 'likes', width: '8%', align: 'right', sorter: true, render: (text) => <p>{intToStringBigNumber(text)}</p> },
-    { key: 'comments', title: 'Comments', dataIndex: 'comments', width: '8%', align: 'right', sorter: true, render: (text) => <p>{intToStringBigNumber(text)}</p> },
     {
       key: 'tags',
       width: '10%',

@@ -1,22 +1,29 @@
 import { EditOutlined } from '@ant-design/icons';
-import { Button, Form, Input, Modal, notification } from 'antd';
+import { Button, Form, Input, Modal, notification, Select } from 'antd';
 import React, { useState } from 'react';
 import { updateVideoFn } from "../../services/videoApi.ts";
 import CastSelector from '../creator/CastSelector';
 import CreatorSelector from '../creator/CreatorSelector';
-
+import TagsAdd from './TagsAdd';
 
 const UpdateVideoModal = ({ video }) => {
     const [visible, setVisible] = useState(false);
     const [directorIds, setDirectorIds] = useState();
     const [cast, setCast] = useState();
+    const [tags, setTags] = useState();
+    const [series, setSeries] = useState();
+    const [game, setGame] = useState();
 
     const [form] = Form.useForm();
 
     const showModal = () => {
         console.log('video: ', video);
         setDirectorIds(video?.directedBy?.map(creator => creator.id) || []);
-        setCast(video?.cast?.map(creator => {return {creator:creator.video_creator.creator_id, role: creator.video_creator.role}}) || []);
+        setCast(video?.cast?.map(creator => { return { creator: creator.video_creator.creator_id, role: creator.video_creator.role } }) || []);
+        setTags(video?.tags || []);
+        setSeries(video?.serie || []);
+        setGame(video?.game || []);
+
         console.log(directorIds);
         setVisible(true);
     };
@@ -26,10 +33,9 @@ const UpdateVideoModal = ({ video }) => {
     };
 
     const onFinish = (values) => {
-        console.log(video);
-        console.log(directorIds, cast);
+        console.log(values);
         // const director_ids = values.directors.split(',').map((id) => id.trim());
-        updateVideoFn(values.apiKey, video.video_id, { directedBy: directorIds, cast: cast });
+        updateVideoFn(values.apiKey, video.video_id, { directedBy: directorIds, cast: cast, game: game, series: series, tags: tags });
         // Close the modal
         setVisible(false);
 
@@ -50,6 +56,24 @@ const UpdateVideoModal = ({ video }) => {
         setCast(values);
         form.setFieldsValue({ cast: values });
     }
+
+    const handleTags = (values) => {
+        console.log('handling tags, ' + values);
+        setTags(values);
+        form.setFieldsValue({ tags: values });
+    }
+
+    const handleGame = (values) => {
+        console.log('handling game, ' + JSON.stringify(values));
+        setGame(values);
+        form.setFieldsValue({ game: values });
+    }
+
+    const handleSeries = (values) => {
+        console.log('handling series, ' + JSON.stringify(values));
+        setSeries(values);
+        form.setFieldsValue({ gseriesame: values });
+    }      
 
     return (
         <>
@@ -86,6 +110,30 @@ const UpdateVideoModal = ({ video }) => {
                             { required: false, message: 'Please enter at least one creator' },
                         ]}>
                         <CastSelector onChange={handleCast} _selectedCast={cast} />
+                    </Form.Item>
+                    <Form.Item
+                        name="tags"
+                        label="Tags"
+                        rules={[
+                            { required: false, message: 'Please enter at least one tag' },
+                        ]}>
+                        <TagsAdd _tags={tags} onChange={handleTags}/>
+                    </Form.Item>
+                    <Form.Item
+                        label="Game"
+                        name="game"
+                        rules={[
+                            { required: false, message: 'Please enter at least one gamee' },
+                        ]}>
+                        <TagsAdd _tags={game} onChange={handleGame}/>
+                    </Form.Item>
+                    <Form.Item
+                        label="Series"
+                        name="series"
+                        rules={[
+                            { required: false, message: 'Please enter at least one series' },
+                        ]}>
+                        <TagsAdd _tags={series} onChange={handleSeries}/>
                     </Form.Item>
 
                     <Form.Item>

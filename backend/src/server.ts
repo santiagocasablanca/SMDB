@@ -69,6 +69,15 @@ app.get("/v1/jobs/tags/run", (req: Request, res: Response) => {
   });
 });
 
+app.get("/v1/jobs/tags/games/run", (req: Request, res: Response) => {
+  videoMetaService.associateGameTagsToVideos();
+
+  res.status(200).json({
+    status: "success",
+    message: "Running in backbgound!",
+  });
+});
+
 app.use("/v1/", noteRouter);
 
 app.all("*", (req: Request, res: Response) => {

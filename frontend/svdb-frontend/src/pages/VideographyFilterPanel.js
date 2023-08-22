@@ -2,6 +2,10 @@ import { Button, Col, Collapse, DatePicker, Form, Input, Row, Select, Space } fr
 import { React, useEffect, useState } from "react";
 import { getChannelsFn } from "../services/channelApi.ts";
 import { fetchAllSeries, fetchAllTags } from "../services/videoApi.ts";
+import { TagsEnum, SeriesEnum, GamesEnum } from '../services/enums.ts';
+
+
+const { Option } = Select;
 
 const VideographyFilterPanel = ({ filters, onChange }) => {
   const [searchClicked, setSearchClicked] = useState(false);
@@ -10,11 +14,13 @@ const VideographyFilterPanel = ({ filters, onChange }) => {
   const [options, setOptions] = useState([]);
   const [series, setSeries] = useState([]);
   const [tags, setTags] = useState([]);
+  const [games, setGames] = useState([]);
 
   useEffect(() => {
     fetchSeries();
     fetchChannels();
     fetchTags();
+    fetchGames();
   }, [filters]);
 
   const fetchChannels = () => {
@@ -22,7 +28,7 @@ const VideographyFilterPanel = ({ filters, onChange }) => {
     if (filters.channels)
       params.append("channels", filters.channels)
 
-    getChannelsFn(1, 50, params)
+     getChannelsFn(1, 50, params)
       .then((result) => {
         const temp = []
         result.results.forEach((item) => {
@@ -39,33 +45,37 @@ const VideographyFilterPanel = ({ filters, onChange }) => {
   }
 
   const fetchSeries = () => {
-    fetchAllSeries()
-      .then((result) => {
-        const temp = []
-        result.results.forEach((item) => {
-          temp.push({
-            label: item.serie,
-            value: item.serie,
-          });
-        })
-
-        setSeries(temp);
-      })
+    const temp = []
+    Object.keys(SeriesEnum).map(key => {
+      temp.push({
+        label: SeriesEnum[key],
+        value: SeriesEnum[key],
+      });
+    });
+    setSeries(temp);
   }
 
   const fetchTags = () => {
-    fetchAllTags()
-      .then((result) => {
-        const temp = []
-        result.results.forEach((item) => {
-          // console.log(item)
-          temp.push({
-            label: item,
-            value: item,
-          });
-        })
-        setTags(temp);
-      })
+    const temp = []
+    Object.keys(TagsEnum).map(key => {
+      temp.push({
+        label: TagsEnum[key],
+        value: TagsEnum[key],
+      });
+    });
+    setTags(temp);
+  }
+
+
+  const fetchGames = () => {
+    const temp = []
+    Object.keys(GamesEnum).map(key => {
+      temp.push({
+        label: GamesEnum[key],
+        value: GamesEnum[key],
+      });
+    });
+    setGames(temp);
   }
 
   const handleSearchClick = () => {
@@ -77,6 +87,7 @@ const VideographyFilterPanel = ({ filters, onChange }) => {
 
       locations: filters.locations,
       series: filters.series,
+      games: filters.games,
       tags: filters.tags,
       cast: filters.cast,
       search: true
@@ -97,6 +108,10 @@ const VideographyFilterPanel = ({ filters, onChange }) => {
   // };
   const handleSeriesChange = (e) => {
     onChange({ series: e });
+  };
+
+  const handleGamesChange = (e) => {
+    onChange({ games: e });
   };
 
   const handleTagsChange = (e) => {
@@ -128,8 +143,20 @@ const VideographyFilterPanel = ({ filters, onChange }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const handleReset = () => {
     form.resetFields();
-    // Reset table filters and trigger update
-    console.log('Filters reset');
+
+    setSearchClicked(true);
+    onChange({
+      channels: [],
+      title: '',
+      publishedAtRange: [],
+
+      locations: null,
+      series: null,
+      tags: null,
+      games: null,
+      cast: null,
+      search: true
+    });
   };
 
   const toggleFilters = () => {
@@ -195,7 +222,9 @@ const VideographyFilterPanel = ({ filters, onChange }) => {
           <Row>
             <Col xs={24} sm={24} md={12} lg={12} xl={8}>
               {/* Published At< */}
-              <Form.Item label="Published At">
+              <Form.Item
+                name="publishedAt"
+                label="Published At">
                 <RangePicker
                   // value={publishedAtRange}
                   style={{ width: '95%' }}
@@ -206,7 +235,7 @@ const VideographyFilterPanel = ({ filters, onChange }) => {
 
 
             <Col xs={24} sm={24} md={12} lg={12} xl={8}>
-              {/* Series */}
+              {/* tags  options={tags} */}
               <Form.Item
                 name="select-tags"
                 label="Tags">
@@ -214,12 +243,38 @@ const VideographyFilterPanel = ({ filters, onChange }) => {
                   allowClear
                   value={filters.tags}
                   onChange={handleTagsChange}
-                  options={tags}>
+                  options={tags}
+                >
                 </Select>
+                {/* {Object.values(TagsEnum).map((tag) => (
+                    <Option key={tag} value={tag}>
+                      {tag}
+                    </Option>
+                  ))} */}
               </Form.Item>
             </Col>
-            
-              {/* Locations */}
+
+            <Col xs={24} sm={24} md={12} lg={12} xl={8}>
+              {/* tags  options={tags} */}
+              <Form.Item
+                name="select-game"
+                label="Game">
+                <Select mode="multiple" style={{ width: '95%' }} placeholder="Game"
+                  allowClear
+                  value={filters.games}
+                  onChange={handleGamesChange}
+                  options={games}
+                >
+                </Select>
+                {/* {Object.values(TagsEnum).map((tag) => (
+                    <Option key={tag} value={tag}>
+                      {tag}
+                    </Option>
+                  ))} */}
+              </Form.Item>
+            </Col>
+
+            {/* Locations */}
             {/* <Col xs={8} sm={8} md={8} lg={8} xl={8}>
               <Form.Item
                 name="select-locations"

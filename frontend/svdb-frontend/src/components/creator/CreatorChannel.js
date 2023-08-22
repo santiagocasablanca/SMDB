@@ -6,17 +6,13 @@ import { getCreatorStatsFn } from "../../services/creatorApi.ts";
 import { getVideosFn } from "../../services/videoApi.ts";
 import CreatorFrequencyCard from './CreatorFrequencyCard';
 import CreatorStatsPanel from './CreatorStatsPanel';
-import CreatorUploadTimeFrequencyCard from './CreatorUploadTimeFrequencyCard';
+import HorizontalHighlightedList from '../video/HorizontalHighlightedList';
 import HorizontalVideoList from './HorizontalVideoList';
 import StatisticsCards from './StatisticsCards';
-
-
-
+import FrequencyCard from '../home/FrequencyCard';
 
 
 const { Title, Text } = Typography;
-
-
 
 const CreatorChannel = ({ creator, channel }) => {
 
@@ -59,7 +55,7 @@ const CreatorChannel = ({ creator, channel }) => {
         let paramsTop10 = new URLSearchParams();
         paramsTop10.append("sort", "views%desc")
         paramsTop10.append("channels", creatorChannels);
-    
+
         setParamsTop10({
             sort: "views%desc",
             channels: creatorChannels
@@ -74,7 +70,7 @@ const CreatorChannel = ({ creator, channel }) => {
         paramsRecent.append("sort", "published_at%desc")
         paramsRecent.append("channels", creatorChannels);
         setParamsRecent({
-            sort: "published_at%desc", 
+            sort: "published_at%desc",
             channels: creatorChannels
         });
         await getVideosFn(1, 10, paramsRecent)
@@ -288,12 +284,20 @@ const CreatorChannel = ({ creator, channel }) => {
                     <br></br>
                     <Row gutter={[16, 16]} className="hide-on-small-screen">
                         <Col span={24} xl={24}>
-                            <CreatorFrequencyCard _channels={isAllChannels ? creator.channels : [channel]}></CreatorFrequencyCard>
+                            <FrequencyCard _channels={isAllChannels ? creator.channels : [channel]} />
+                            {/* <CreatorFrequencyCard _channels={isAllChannels ? creator.channels : [channel]}></CreatorFrequencyCard> */}
+                        </Col>
+                    </Row>
+                    <br></br>
+                    <Row>
+                        <Col span={24}>
+                            <HorizontalHighlightedList title="Most Recent" filter={paramsRecent} />
                         </Col>
                     </Row>
                     <br></br>
 
-                    <Row gutter={[16, 16]}>
+
+                    {/* <Row gutter={[16, 16]}>
                         <Col span={24} xl={12}>
                             <Row gutter={16}>
                                 <Col span={24}>
@@ -307,7 +311,7 @@ const CreatorChannel = ({ creator, channel }) => {
                             <CreatorUploadTimeFrequencyCard _channels={isAllChannels ? creator.channels : [channel]}></CreatorUploadTimeFrequencyCard>
                         </Col>
                     </Row>
-                    <br></br>
+                    <br></br> */}
                 </>
             ) : (
                 <Spin />

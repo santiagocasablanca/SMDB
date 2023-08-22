@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from "react-router-dom";
 import ChannelOverviewTab from '../components/channel/ChannelOverviewTab';
 import Videography from "../components/creator/Videography";
+import CreatorGraphsPanel from "../components/creator/CreatorGraphsPanel";
 import Guests from "../components/channel/Guests";
 import useFormatter from '../hooks/useFormatter';
 import variables from '../sass/antd.module.scss';
@@ -306,6 +307,7 @@ const ChannelPage = () => {
                       </Row></>
                     },
                     // { label: 'Graphs', key: '_graphs', children: <><CreatorGraphsPanel _filters={filters} /></> },
+                    { label: 'Graphs', key: '_graphs', children: <><CreatorGraphsPanel title="Graphs" _channels={[channel]} /></> },
                     { label: 'Videography', key: '_videography', children: <><Videography _filters={filters} /></> },
                     {
                       label: 'Shorts', key: '_shorts', children: <><Videography title="Shorts" _filters={shortsFilters} /></>

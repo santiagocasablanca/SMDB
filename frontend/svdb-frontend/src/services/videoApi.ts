@@ -25,6 +25,33 @@ export const getTreeMapPlotForTagsFn = async (params) => {
   return response.data;
 };
 
+export const findGroupedByGameFn = async (params) => {
+  // findMostLikedSSGroupedBySeries
+  const req = `findGroupedByGame?${params}`;
+  const response = await videoApi.get<IVideosResponse>(
+    req
+  );
+  return response.data;
+};
+
+export const findGroupedByCastFn = async (params) => {
+  // findMostLikedSSGroupedBySeries
+  const req = `fetchGroupedByCast?${params}`;
+  const response = await videoApi.get<IVideosResponse>(
+    req
+  );
+  return response.data;
+};
+
+export const findGroupedByTagsFn = async (params) => {
+  // findMostLikedSSGroupedBySeries
+  const req = `findGroupedByTags?${params}`;
+  const response = await videoApi.get<IVideosResponse>(
+    req
+  );
+  return response.data;
+};
+
  //
  export const fetchVideoFrequencyFn = async (params) => {
   // fetchVideoFrequency

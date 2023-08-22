@@ -1,10 +1,11 @@
 import { CommentOutlined, EyeOutlined, LikeOutlined } from '@ant-design/icons';
-import { Avatar, Col, Drawer, List, Row, Space, Tag, Typography } from 'antd';
+import { Avatar, Col, Drawer, List, Row, Space, Tag, Typography, Divider } from 'antd';
 import insertCss from 'insert-css';
 import React, { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 import { useNavigate } from 'react-router-dom';
 import useFormatter from '../../hooks/useFormatter';
+import variables from '../../sass/antd.module.scss';
 import UpdateVideoModal from './UpdateVideoModal';
 import VideoRate from './VideoRate';
 
@@ -114,7 +115,7 @@ const VideoDrawer = ({ _video, _channel, _open, childToParent }) => {
                     }>
                     <div className="videoDrawerContainer">
                         <Row gutter={[8, 12]}>
-                            <Col span={24} md={24} lg={16} xl={18}>
+                            <Col span={24} md={24} lg={14} xl={16}>
                                 <Row gutter={[8, 12]}>
                                     <Col span={24}>
                                         <div className="videoContainer">
@@ -132,13 +133,66 @@ const VideoDrawer = ({ _video, _channel, _open, childToParent }) => {
                                 </Row>
                             </Col>
 
-                            <Col span={24} md={24} lg={8} xl={6}>
+                            <Col span={24} md={24} lg={10} xl={8}>
                                 <Row style={{
                                     height: "550px",
                                     overflow: "auto"
                                 }}>
                                     <Col span={24}>
-                                        <Space style={{ float: 'right' }}><VideoRate _video={_video}></VideoRate></Space>
+                                        <Space style={{ float: 'right' }} nowrap>
+                                            <Space size={[0, 6]} wrap>
+                                                {_video.tags && _video.tags?.map((tag, index) => {
+                                                    return (
+                                                        <Tag
+                                                            key={tag}
+                                                            closable={false}
+                                                            style={{
+                                                                userSelect: 'none',
+                                                            }}>
+                                                            <span>
+                                                                {tag}
+                                                            </span>
+                                                        </Tag>
+                                                    )
+                                                })
+                                                }
+                                                {_video.serie && [_video.serie]?.map((tag, index) => {
+                                                    return (
+                                                        <Tag
+                                                            key={tag}
+                                                            color={variables.sdmnPink}
+                                                            closable={false}
+                                                            style={{
+                                                                userSelect: 'none',
+                                                            }}>
+                                                            <span>
+                                                                {tag}
+                                                            </span>
+                                                        </Tag>
+                                                    )
+                                                })
+                                                }
+                                                {_video.game && [_video.game]?.map((tag, index) => {
+                                                    return (
+                                                        <Tag
+                                                            key={tag}
+                                                            color={variables.sdmnLightBlue}
+                                                            closable={false}
+                                                            style={{
+                                                                userSelect: 'none',
+                                                            }}>
+                                                            <span>
+                                                                {tag}
+                                                            </span>
+                                                        </Tag>
+                                                    )
+                                                })
+                                                }
+                                            </Space>
+                                            <Divider type="vertical"></Divider>
+                                            <VideoRate _video={_video}></VideoRate>
+                                        </Space>
+                                        {/* <Space style={{ float: 'right' }}></Space> */}
 
                                     </Col>
                                     <Col span={24}>

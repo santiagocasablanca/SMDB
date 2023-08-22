@@ -54,11 +54,24 @@ const seriesCategories = [
     { category: 'Deal Or Not a Deal', keywords: ['Deal Or Not a Deal'] },
     { category: 'Meme Olympics', keywords: ['meme olympics'] },
     { category: 'Brutally Rate', keywords: ['brutally rate'] },
-    
+
     { category: 'Weirdest Restaurants', keywords: ['weirdest restaurants'] },
     { category: 'Ultimate Bachelor', keywords: ['ultimate bachelor'] },
     { category: 'Got Talent', keywords: ['got talent'] },
     { category: '7 Star VS 1 Star Hotel', keywords: ['7 stars vs 1 star'] },
+];
+
+const gamesCategories = [
+    { category: 'Among Us', keywords: ['among us'] },
+    { category: 'GTA 5', keywords: ['gta'] },
+    { category: 'Minecraft', keywords: ['minecraft'] },
+    { category: 'Fall Guys', keywords: ['fall guys'] },
+    { category: 'FIFA', keywords: ['fifa'] },
+    { category: 'Brewpub Simulator', keywords: ['Brewpub Simulator'] },
+    { category: 'F1 23', keywords: ['F1 23'] },
+    { category: 'Car For Sale Simulator 2023', keywords: ['Car For Sale Simulator 2023'] },
+    { category: 'Subnautica: Below Zero', keywords: ['Subnautica: Below Zero'] },
+
 ];
 
 // Define your tag categories and associated keywords
@@ -76,8 +89,8 @@ const tagCategories = [
     { category: 'Roast', keywords: ['roast'] },
     { category: 'Challenge', keywords: ['challenge'] },
     { category: 'Hide & Seek', keywords: ['hide', 'seek'] },
-    { category: 'Among Us', keywords: ['among'] },
-    { category: 'Gaming', keywords: ['game', 'play', 'GTA', 'among', 'minecraft', 'fifa', 'fall guys', 'gartic phone'] },
+    { category: 'Among Us', keywords: ['among us'] },
+    { category: 'Gaming', keywords: ['game', 'play', 'GTA', 'among us', 'minecraft', 'fifa', 'fall guys', 'gartic phone'] },
     { category: 'In Real Life', keywords: ['in real life'] },
     { category: 'Sidemen Vs', keywords: ['sidemen vs'] },
     { category: 'Christmas Day', keywords: ['christmas day'] },
@@ -106,7 +119,7 @@ const tagCategories = [
     { category: 'FIFA', keywords: ['fifa'] },
     { category: 'Hot vs Cold', keywords: ['hot vs cold'] },
 
-    { category: 'I Survived', keywords: ['I Survived',"Minecraft", "HARDCORE"] },
+    { category: 'I Survived', keywords: ['I Survived', "Minecraft", "HARDCORE"] },
     { category: 'Who Wants to be a Millionaire', keywords: ['Who wants to bee a millionaire'] },
     { category: 'W2S "CANCELLED" MOMENTS', keywords: ['W2S "CANCELLED" MOMENTS'] },
     { category: 'Its Only Money', keywords: ['Only Money'] },
@@ -116,7 +129,7 @@ const tagCategories = [
     { category: 'Deal Or Not a Deal', keywords: ['Deal Or Not a Deal'] },
     { category: 'Meme Olympics', keywords: ['meme olympics'] },
     { category: 'Brutally Rate', keywords: ['brutally rate'] },
-    
+
     { category: 'Weirdest Restaurants', keywords: ['weirdest restaurants'] },
     { category: 'Ultimate Bachelor', keywords: ['ultimate bachelor'] },
     { category: 'Got Talent', keywords: ['got talent'] },
@@ -124,8 +137,9 @@ const tagCategories = [
 
     { category: 'Brewpub Simulator', keywords: ['Brewpub Simulator'] },
     { category: 'GUESS WHO', keywords: ['GUESS WHO'] },
-    { category: 'F1 23 My Team', keywords: ['F1 23 My Team'] },
+    { category: 'F1 23', keywords: ['F1 23'] },
     { category: 'Car For Sale Simulator 2023', keywords: ['Car For Sale Simulator 2023'] },
+    { category: 'Subnautica: Below Zero', keywords: ['Subnautica: Below Zero'] }
     // Add more categories and keywords as needed
     // 
     // 
@@ -183,37 +197,78 @@ class VideoMetaService {
         return false;
     }
 
-
-    // Function to associate tags for all videos
     async associateTagsToVideos() {
         try {
             // Retrieve all videos from the database
-            const videos = await Video.findAll({where: {
-                tags: {
-                    [Op.or]: [{[Op.eq]: []}, {[Op.is]: null}]
-                } 
-            }});
+            const videos = await Video.findAll({
+                where: {
+                    tags: {
+                        [Op.or]: [{ [Op.eq]: [] }, { [Op.is]: null }]
+                    }
+                }
+            });
 
             // Process each video and associate a tag
             for (const video of videos) {
                 const associatedTag = this.determineTags(video.title);
                 let seriesTag = null;
-                
+                let gamesTag = null;
+
                 if (video.channel_title == 'SidemenReacts') {
                     associatedTag.push('React');
-                } else if (video.channel_title == 'Sidemen') {
+                }
+                if (video.channel_title == 'Sidemen') {
                     seriesCategories.forEach((category) => {
-                        
+
                         if (associatedTag.includes(category.category)) {
                             seriesTag = (category.category);
                         }
                     })
+                } else {
+                    gamesCategories.forEach((category) => {
+                        if (associatedTag.includes(category.category)) {
+                            gamesTag = (category.category);
+                        }
+                    })
                 }
+
                 
-                console.log(associatedTag);
-                console.log(seriesTag);
                 // Update the video record with the associated tag
-                await video.update({ tags: associatedTag, serie: seriesTag });
+                await video.update({ tags: associatedTag, serie: seriesTag, game: gamesTag });
+            }
+            console.log('Tags associated successfully!');
+        } catch (error) {
+            console.error('Error associating tags:', error);
+        }
+    }
+
+
+    // Function to associate tags for all videos
+    async associateGameTagsToVideos() {
+        try {
+            // Retrieve all videos from the database
+            const videos = await Video.findAll({
+                where: {
+                    game: {
+                        [Op.or]: [{ [Op.eq]: [] }, { [Op.is]: null }]
+                    }
+                }
+            });
+
+            // Process each video and associate a tag
+            for (const video of videos) {
+                const associatedTag = this.determineTags(video.title);
+ 
+                let gamesTag = null;
+
+                gamesCategories.forEach((category) => {
+
+                    if (associatedTag.includes(category.category)) {
+                        gamesTag = (category.category);
+                    }
+                });
+                // Update the video record with the associated tag
+                await video.update({ game: gamesTag });
             }
             console.log('Tags associated successfully!');
         } catch (error) {

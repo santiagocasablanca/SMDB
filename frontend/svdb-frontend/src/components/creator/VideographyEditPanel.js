@@ -89,7 +89,7 @@ const VideographyEditPanel = ({ _video, onChange }) => {
     // </div>
     <div className="editVideoContainer">
       <Row gutter={[8, 12]}>
-        <Col span={24} md={24} lg={16} xl={18}>
+        <Col span={24} md={24} lg={14} xl={16}>
           <Row gutter={[8, 12]}>
             <Col span={24}>
               <div className="videoDimensions">
@@ -100,7 +100,7 @@ const VideographyEditPanel = ({ _video, onChange }) => {
           </Row>
         </Col>
 
-        <Col span={24} md={24} lg={8} xl={6}>
+        <Col span={24} md={24} lg={10} xl={8}>
           <Row style={{
             height: "550px",
             overflow: "auto"

@@ -3,6 +3,7 @@ import { Avatar, Card, Col, Divider, Image, Popover, Row, Space, Spin, Tooltip, 
 // import CreatorChannel from './CreatorChannel'
 import insertCss from 'insert-css';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import useFormatter from '../../hooks/useFormatter';
 import variables from '../../sass/antd.module.scss';
 import { getCreatorStatsFn } from "../../services/creatorApi.ts";
@@ -10,6 +11,7 @@ import { getVideosFn } from "../../services/videoApi.ts";
 import HorizontalVideoList from '../creator/HorizontalVideoList';
 import StatisticsCards from '../creator/StatisticsCards';
 import FrequencyCard from '../home/FrequencyCard';
+import HorizontalHighlightedList from '../video/HorizontalHighlightedList';
 import UploadTimeFrequencyCard from '../home/UploadTimeFrequencyCard';
 
 
@@ -19,7 +21,7 @@ const { Title, Text } = Typography;
 
 
 const ChannelOverviewTab = ({ _channel }) => {
-
+    const navigate = useNavigate();
     const { intToStringBigNumber, parseDate, parseDuration, humanizeDurationFromSeconds, parseDateToFromNow, displayDurationFromSeconds, displayVideoDurationFromSeconds } = useFormatter();
     const [isLoaded, setIsLoaded] = useState(false);
     const [isLast5Loaded, setIsLast5Loaded] = useState(false);
@@ -40,6 +42,12 @@ const ChannelOverviewTab = ({ _channel }) => {
         channel_id: "",
         subs: {}, views: {}, videos: {}, likes: {}, comments: {}, avg: {}, duration: {}
     }]);
+
+    const goToCreator = (id) => {
+        const url = '/creator/' + id;
+        // not necessary, kind of redudant at the moment. Params are set through useParams and useLocation (state)
+        navigate(url, { state: { id: id } });
+    }
 
     // width: 215px;
     insertCss(`
@@ -459,7 +467,7 @@ const ChannelOverviewTab = ({ _channel }) => {
                 <div style={{ overflowX: 'auto' }}>
                     <div style={{ display: 'inline-flex', flexWrap: 'nowrap', padding: '5px 10px' }}>
                         {_creators.map((creator, index) => (
-                            <div key={"channelElem" + index} style={{ marginRight: '10px', width: '160px' }}>
+                            <div key={"channelElem" + index} style={{ marginRight: '10px', width: '160px', cursor: 'pointer' }} onClick={() => goToCreator(creator.id)}>
 
                                 <Text><Avatar src={creator.profile_picture} key={"avatar_channel_s" + index} /> {creator.name}</Text>
                             </div>
@@ -647,8 +655,14 @@ const ChannelOverviewTab = ({ _channel }) => {
                         </Col>
                     </Row>
                     <br></br>
+                    <Row>
+                        <Col span={24}>
+                            <HorizontalHighlightedList title="Most Recent" filter={paramsRecent} />
+                        </Col>
+                    </Row>
+                    <br></br>
 
-                    <Row gutter={[16, 16]}>
+                    {/* <Row gutter={[16, 16]}>
                         <Col span={24} xl={12}>
                             <Row gutter={16}>
                                 <Col span={24}>
@@ -662,7 +676,7 @@ const ChannelOverviewTab = ({ _channel }) => {
                             <UploadTimeFrequencyCard _channels={[channel]}></UploadTimeFrequencyCard>
                         </Col>
                     </Row>
-                    <br></br>
+                    <br></br> */}
 
                     {/* <Row>
                         <Col span={24} xl={12}>

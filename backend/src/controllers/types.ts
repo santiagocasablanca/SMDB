@@ -16,6 +16,7 @@ export type VideosReqQuery = {
   castMember?: string,
   notInCastMember?: string,
   tags?: string,
+  games?: string, 
   excludeShorts?: string,
   onlyShorts?: string,
   publishedAtRange?: string

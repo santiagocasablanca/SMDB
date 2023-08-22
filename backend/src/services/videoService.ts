@@ -12,14 +12,17 @@ const { v4: uuidv4 } = require('uuid');
 class VideoService {
 
     // TODO redo
-    async update(videoId: string, tags: [], series: [], directedBy: [], cast: []) {
+    async update(videoId: string, tags: [], series: string, directedBy: [], cast: [], game: string) {
         console.log('Updating video: ', videoId);
         const updateBody = {};
         if (tags && tags.length > 0) {
             updateBody['tags'] = tags;
         }
-        if (series && series.length > 0) {
-            updateBody['series'] = series;
+        if (series) {
+            updateBody['serie'] = series;
+        }
+        if (game) {
+            updateBody['game'] = game;
         }
         let transaction;
 

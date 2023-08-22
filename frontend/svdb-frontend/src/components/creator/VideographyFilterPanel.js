@@ -2,6 +2,9 @@ import { Button, Col, Collapse, DatePicker, Form, Input, Row, Select, Space } fr
 import { React, useEffect, useState } from "react";
 import { getChannelsFn } from "../../services/channelApi.ts";
 import { fetchAllSeries, fetchAllTags } from "../../services/videoApi.ts";
+import { TagsEnum, SeriesEnum } from '../../services/enums.ts';
+
+const { Option } = Select;
 
 const VideographyFilterPanel = ({ filters, onChange }) => {
   const [searchClicked, setSearchClicked] = useState(false);
@@ -14,7 +17,7 @@ const VideographyFilterPanel = ({ filters, onChange }) => {
   useEffect(() => {
     fetchSeries();
     fetchChannels();
-    fetchTags();
+    // fetchTags();
   }, []);
 
   const fetchChannels = () => {
@@ -39,34 +42,28 @@ const VideographyFilterPanel = ({ filters, onChange }) => {
   }
 
   const fetchSeries = () => {
-    fetchAllSeries()
-      .then((result) => {
-        const temp = []
-        result.results.forEach((item) => {
-          temp.push({
-            label: item.serie,
-            value: item.serie,
-          });
-        })
-
+    const temp = []
+    Object.keys(SeriesEnum).map(key => {
+      temp.push({
+        label: SeriesEnum[key],
+        value: SeriesEnum[key],
+      });
+    });
         setSeries(temp);
-      })
   }
 
   const fetchTags = () => {
-    fetchAllTags()
-      .then((result) => {
-        const temp = []
-        result.results.forEach((item) => {
-          // console.log(item)
-          temp.push({
-            label: item,
-            value: item,
-          });
-        })
-        setTags(temp);
-      })
+    const temp = []
+    Object.keys(TagsEnum).map(key => {
+      temp.push({
+        label: TagsEnum[key],
+        value: TagsEnum[key],
+      });
+    });
+    setTags(temp);
   }
+
+  
 
   const handleSearchClick = () => {
     console.log('search clicked videographyFilter');
@@ -216,12 +213,17 @@ const VideographyFilterPanel = ({ filters, onChange }) => {
                   allowClear
                   value={filters.tags}
                   onChange={handleTagsChange}
-                  options={tags}>
+                  >
+                  {Object.values(TagsEnum).map((tag) => (
+                    <Option key={tag} value={tag}>
+                      {tag}
+                    </Option>
+                  ))}
                 </Select>
               </Form.Item>
             </Col>
-            
-              {/* Locations */}
+
+            {/* Locations */}
             {/* <Col xs={8} sm={8} md={8} lg={8} xl={8}>
               <Form.Item
                 name="select-locations"
