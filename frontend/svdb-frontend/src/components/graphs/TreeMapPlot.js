@@ -93,7 +93,14 @@ const TreeMapPlot = ({ title, filter }) => {
     const config = {
         data: mostViewedSeries,
         colorField: 'name',
-
+        legend: {
+            position: 'bottom',
+            pageNavigator: {
+                marker: {
+                    style: { fill: 'white' }
+                }
+            }
+        },
         tooltip: {
             follow: true,
             enterable: true,
@@ -122,6 +129,14 @@ const TreeMapPlot = ({ title, filter }) => {
     const configLikedSeries = {
         data: mostLikedSeries,
         colorField: 'name',
+        legend: {
+            position: 'bottom',
+            pageNavigator: {
+                marker: {
+                    style: { fill: 'white' }
+                }
+            }
+        },
         tooltip: {
             follow: true,
             enterable: true,

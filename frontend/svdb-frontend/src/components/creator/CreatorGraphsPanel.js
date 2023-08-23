@@ -10,6 +10,7 @@ import FrequencyCard from "../home/FrequencyCard";
 import TreeMapPlot from "../graphs/TreeMapPlot";
 import CastRose from "../graphs/CastRose";
 import UploadTimeFrequencyCard from '../home/UploadTimeFrequencyCard';
+import CastScatterPlot from '../graphs/CastScatterPlot';
 
 // .ant-input {
 //   color: $coolLighterGray !important;
@@ -32,23 +33,6 @@ const CreatorGraphsPanel = ({ title, _channels }) => {
         }
     `);
 
-    useEffect(() => {
-        asyncFetch();
-    }, []);
-
-    const asyncFetch = async () => {
-        // await getCreatorFn(id).then((res) => {
-        //   if (res.result) {
-        //     setCreator(res.result);
-        //     setIsFetched(true);
-        //     setChannelIds(res.result.channels.map(channel => { return channel.channel_id }));
-        //   }
-        // });
-    }
-
-
-
-
     return (
         <>
             <Row className="graphsTitle">
@@ -64,7 +48,8 @@ const CreatorGraphsPanel = ({ title, _channels }) => {
                     <UploadTimeFrequencyCard _channels={channels}></UploadTimeFrequencyCard>
                 </Col>
                 <Col span={24} md={24} lg={12} xl={12}>
-                    <CastRose title="Appearences" filter={{ channels: _channels.map(it => { return it.channel_id; }) }} />
+                    <CastScatterPlot title={_channels?.length > 1 ? 'Appearences on the channels' : 'Appearences on the channel'}  filter={{ channels: _channels.map(it => { return it.channel_id; }) }} />
+                    {/* <CastRose title="Appearences" filter={{ channels: _channels.map(it => { return it.channel_id; }) }} /> */}
                 </Col>
             </Row>
             <br></br>

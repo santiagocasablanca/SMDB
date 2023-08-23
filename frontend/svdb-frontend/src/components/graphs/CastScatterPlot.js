@@ -1,6 +1,7 @@
 import { Rose } from '@ant-design/plots';
 import React, { useState, useEffect } from 'react';
 import { Card, List, Row, Col, Image, Avatar, Table, Divider, Popover, Button, Typography, Space, Spin, Empty } from 'antd';
+import { Scatter } from '@ant-design/plots';
 
 import insertCss from 'insert-css';
 import variables from '../../sass/antd.module.scss';
@@ -8,21 +9,13 @@ import useFormatter from '../../hooks/useFormatter';
 import { findGroupedByCastFn } from "../../services/videoApi.ts";
 import { useNavigate } from 'react-router-dom';
 
-
 const { Title, Text } = Typography;
 
-
-
-
-const CastRose = ({ title, filter }) => {
-    const navigate = useNavigate();
-
+const CastScatterPlot = ({ title, filter }) => {
+    const [data, setData] = useState([]);
     const { intToStringBigNumber, parseDate, parseDuration } = useFormatter();
     const [isLoaded, setIsLoaded] = useState(false);
-    const [data, setData] = useState([]);
     const [refreshKey, setRefreshKey] = useState(0);
-
-
 
     useEffect(() => {
 
@@ -40,13 +33,14 @@ const CastRose = ({ title, filter }) => {
                             value: item.videos ? parseInt(item.videos) : 0, // Assuming the likes property holds the value
                             // Additional properties can be added here if needed
                             likes: item.likes,
-                            views: item.views,
+                            views: parseInt(item.views),
                             comments: item.comments,
                             totalVideos: item.videos
                         };
                     });
 
                     setData(transformedData);
+                    // setLikedSeriesData(transformedLikedData);
                     setIsLoaded(true);
 
                     console.log("finished fetching");
@@ -72,19 +66,25 @@ const CastRose = ({ title, filter }) => {
       }
     
     `);
-
+    // style={{ color: "white", paddingBottom: "2px" }}
     const config = {
+        appendPadding: 10,
         data,
         height: 450,
-        xField: 'name',
+        xField: 'views',
         yField: 'value',
-        seriesField: 'name',
-        colorField: 'name',
-        radius: 0.9,
+        legend: {
+            position: 'right',
+            pageNavigator: {
+                marker: {
+                    style: { fill: 'white' }
+                }
+            }
+        },
         tooltip: {
             follow: true,
             enterable: true,
-            offset: 5,
+            offset: 1,
             customContent: (value, items) => {
                 if (!items || items.length <= 0) return;
                 const { data: itemData } = items[0];
@@ -99,24 +99,41 @@ const CastRose = ({ title, filter }) => {
                 );
             },
         },
-        legend: {
-            position: 'bottom',
-            pageNavigator: {
-                marker: {
-                    style: { fill: 'white' }
-                }
-            }
+        colorField: 'name',
+        sizeField: 'views',
+        // size: 2,
+        size: [4, 30],
+        shape: 'circle',
+        pointStyle: {
+            fillOpacity: 0.8,
+            stroke: '#bbb',
         },
-        label: {
-            offset: 10,
-        },
-        interactions: [
-            {
-                type: 'element-active',
+        yAxis: {
+            nice: true,
+            min: 0,
+            max: Math.max(...data?.map(obj => obj.value)) + 2,
+            line: {
+                style: {
+                    stroke: '#aaa',
+                },
             },
-        ],
+        },
+        xAxis: {
+            min: 0,
+            grid: {
+                line: {
+                    style: {
+                        stroke: '#eee',
+                    },
+                },
+            },
+            line: {
+                style: {
+                    stroke: '#aaa',
+                },
+            },
+        },
     };
-
 
     return (
         <>
@@ -128,7 +145,7 @@ const CastRose = ({ title, filter }) => {
             <Card bordered={false} size="small">
                 {isLoaded ? (
                     data.length > 0 ? (
-                        <Rose {...config} />
+                        <Scatter {...config} />
                     ) : (
                             <Empty description="No data available" />
                             // <Text>No data available.</Text>
@@ -139,7 +156,7 @@ const CastRose = ({ title, filter }) => {
             </Card>
         </>
     );
-}
 
-export default CastRose;
+};
 
+export default CastScatterPlot;
