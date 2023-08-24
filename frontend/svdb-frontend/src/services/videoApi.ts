@@ -43,6 +43,15 @@ export const findGroupedByCastFn = async (params) => {
   return response.data;
 };
 
+export const fetchStatsGroupedByYearFn = async (params) => {
+  // findMostLikedSSGroupedBySeries
+  const req = `fetchStatsGroupedByYear?${params}`;
+  const response = await videoApi.get<IVideosResponse>(
+    req
+  );
+  return response.data;
+};
+
 export const findGroupedByTagsFn = async (params) => {
   // findMostLikedSSGroupedBySeries
   const req = `findGroupedByTags?${params}`;

@@ -15,6 +15,7 @@ import {
   findAllAppearencesController,
   findGroupedByGame,
   fetchGroupedByCast,
+  fetchStatsGroupedByYear,
   findGroupedByTags
 } from "../controllers/video.controller";
 
@@ -66,6 +67,9 @@ router
 router
   .route("/fetchAllTags/")
   .get(fetchAllTags);
+router
+  .route("/fetchStatsGroupedByYear/")
+  .get(fetchStatsGroupedByYear);
 
 router
   .route("/findMostLikedSSGroupedBySeries/")

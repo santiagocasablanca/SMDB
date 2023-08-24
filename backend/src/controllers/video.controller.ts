@@ -344,15 +344,6 @@ export const fetchVideoFrequency = async (
 
     let excludeShorts = req.query.excludeShorts ? req.query.excludeShorts : true;
 
-
-    //     SELECT
-    //   DATE(v."publishedAt") AS day, COUNT(*) AS frequency, SUM(views) AS total_views, SUM(likes) AS total_likes, SUM(comments) AS total_comments
-    // FROM
-    //   videos v
-    // GROUP BY
-    //   DATE(v."publishedAt")
-    // ORDER BY 
-    //  day
     let sort = req.query.sort ? req.query.sort.split('%') : ['day', 'ASC'];
     let whereClause = {}
     if (req.query.channels) {
@@ -389,6 +380,62 @@ export const fetchVideoFrequency = async (
         [sequelize.fn("SUM", sequelize.col('likes')), "likes"],
         [sequelize.fn("SUM", sequelize.col('comments')), "comments"],
       ], where: whereClause, group: 'day', order: [sort]
+    });
+
+    res.status(200).json({
+      status: "success",
+      results: records,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      status: "error",
+      message: error.message,
+    });
+  }
+}
+
+export const fetchStatsGroupedByYear = async (
+  req: Request<any, any, any, VideosSearchReqQuery>,
+  res: Response
+) => {
+  try {
+
+
+    let excludeShorts = req.query.excludeShorts ? req.query.excludeShorts : true;
+
+    let sort = req.query.sort ? req.query.sort.split('%') : ['year', 'ASC'];
+    let whereClause = {}
+    if (req.query.channels) {
+      var channelsArr = req.query.channels.split(',');
+
+      whereClause = {
+        channel_id: {
+          [Op.or]: channelsArr
+        }
+      }
+    }
+
+    if (excludeShorts) {
+      whereClause['duration_parsed'] = { [Sequelize.Op.gt]: ['69'] };
+    } else {
+
+    }
+
+    // console.log(JSON.stringify(whereClause));
+    const records = await Video.findAll({
+      attributes: [
+        [sequelize.literal("EXTRACT(YEAR FROM video.published_at)"), 'year'],
+        [sequelize.fn("COUNT", sequelize.col('*')), "frequency"],
+        [sequelize.fn("SUM", sequelize.col('views')), "views"],
+        [sequelize.fn("MAX", sequelize.col('views')), "max_views"],
+        [sequelize.fn("AVG", sequelize.col('views')), "avg_views"],
+        [sequelize.fn("SUM", sequelize.col('likes')), "likes"],
+        [sequelize.fn("MAX", sequelize.col('likes')), "max_likes"],
+        [sequelize.fn("AVG", sequelize.col('likes')), "avg_likes"],
+        [sequelize.fn("SUM", sequelize.col('comments')), "comments"],
+        [sequelize.fn("MAX", sequelize.col('comments')), "max_comments"],
+        [sequelize.fn("AVG", sequelize.col('comments')), "avg_comments"],
+      ], where: whereClause, group: 'year', order: [sort]
     });
 
     res.status(200).json({

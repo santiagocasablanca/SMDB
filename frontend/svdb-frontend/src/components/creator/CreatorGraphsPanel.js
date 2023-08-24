@@ -11,6 +11,7 @@ import TreeMapPlot from "../graphs/TreeMapPlot";
 import CastRose from "../graphs/CastRose";
 import UploadTimeFrequencyCard from '../home/UploadTimeFrequencyCard';
 import CastScatterPlot from '../graphs/CastScatterPlot';
+import StatsGroupedByYearColumns from '../graphs/StatsGroupedByYearColumns';
 
 // .ant-input {
 //   color: $coolLighterGray !important;
@@ -53,9 +54,17 @@ const CreatorGraphsPanel = ({ title, _channels }) => {
                 </Col>
             </Row>
             <br></br>
+            
             <Row gutter={[16, 16]}>
                 <Col span={24} xl={24}>
                     <TreeMapPlot title="Videos Grouped by Tags" filter={{ channels: _channels.map(it => { return it.channel_id; }), sort: "views%desc" }} />
+                </Col>
+            </Row>
+            <br></br>
+
+            <Row gutter={[16, 16]}>
+                <Col span={24} xl={24}>
+                    <StatsGroupedByYearColumns title={_channels?.length > 1 ? 'Creator Stats by Year' : 'Channel Stats by Year'} filter={{ channels: _channels.map(it => { return it.channel_id; }) }} />
                 </Col>
             </Row>
             <br></br>

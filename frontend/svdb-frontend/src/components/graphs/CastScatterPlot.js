@@ -1,4 +1,3 @@
-import { Rose } from '@ant-design/plots';
 import React, { useState, useEffect } from 'react';
 import { Card, List, Row, Col, Image, Avatar, Table, Divider, Popover, Button, Typography, Space, Spin, Empty } from 'antd';
 import { Scatter } from '@ant-design/plots';
