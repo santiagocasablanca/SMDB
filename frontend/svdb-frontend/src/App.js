@@ -5,15 +5,6 @@ import { ConfigProvider, theme } from 'antd';
 import 'antd/dist/reset.css';
 import variables from './sass/antd.module.scss';
 
-import ReactGA from 'react-ga';
-
-ReactGA.initialize('G-0JZGGBE7TY', {
-  debug: true,
-  titleCase: false,
-  siteSpeedSampleRate: 100
-});
-
-
 
 const loading = (
   <div className="pt-3 text-center">
@@ -34,11 +25,8 @@ const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'))
 
 
 class App extends Component {
-  
-  render() {
-    console.log('Init ReactGA: ', window.location.pathname + window.location.search);
-    ReactGA.pageview(window.location.pathname + window.location.search);
 
+  render() {
     // darkAlgorithm
     // defaultAlgorithm
     // background: variables.bg
@@ -51,7 +39,7 @@ class App extends Component {
 
             colorLinkActive: variables.primary,
             colorLinkHover: variables.primary,
-            
+
 
           },
         }}

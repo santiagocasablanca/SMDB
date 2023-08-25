@@ -7,9 +7,13 @@ import noteRouter from "./routes/routes";
 const YoutubeService = require('./services/youtubeService');
 const VideoMetaService = require('./services/videoMetaService');
 
+import visitorTrackerMiddleware from './middlewares/visitorTracker'; // Adjust the import
+
+
 import { db, sequelize } from "./util/db";
 
 const app = express();
+app.use(visitorTrackerMiddleware);
 
 app.use(express.json({ limit: "10kb" }));
 if (process.env.NODE_ENV === "development") app.use(morgan("dev"));

@@ -14,15 +14,14 @@ const About = React.lazy(() => import('./pages/About'))
 // const Typography = React.lazy(() => import('./views/theme/typography/Typography'))
 
 
-
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/home', name: 'Home', element: Home },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
-  { path: '/creator/:id', name: 'Creator', element: Creator},
+  { path: '/creator/:id', name: 'Creator', element: Creator },
   { path: '/creators', name: 'Creators', element: Creators },
   { path: '/channels', name: 'Channels', element: Channels },
-  { path: '/channel/:id', name: 'Channel', element: Channel},
+  { path: '/channel/:id', name: 'Channel', element: Channel },
   { path: '/videography', name: 'Videography', element: Videography },
   { path: '/shorts', name: 'Shorts', element: Shorts },
   { path: '/about', name: 'About', element: About },

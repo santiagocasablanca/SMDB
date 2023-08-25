@@ -1,5 +1,5 @@
 import { ArrowDownOutlined, ArrowUpOutlined, ClockCircleOutlined, CommentOutlined, EyeOutlined, LikeOutlined } from '@ant-design/icons';
-import { Avatar, Card, Col, Divider, Image, Popover, Row, Space, Spin, Tooltip, Typography } from 'antd';
+import { Avatar, Card, Col, Divider, Image, Popover, Row, Space, Spin, Tooltip, Typography, Statistic } from 'antd';
 // import CreatorChannel from './CreatorChannel'
 import insertCss from 'insert-css';
 import React, { useEffect, useState } from 'react';
@@ -11,8 +11,9 @@ import { getVideosFn } from "../../services/videoApi.ts";
 import HorizontalVideoList from '../creator/HorizontalVideoList';
 import StatisticsCards from '../creator/StatisticsCards';
 import FrequencyCard from '../home/FrequencyCard';
+// import VideoDrawer from '../video/VideoDrawer';
 import HorizontalHighlightedList from '../video/HorizontalHighlightedList';
-import UploadTimeFrequencyCard from '../home/UploadTimeFrequencyCard';
+// import UploadTimeFrequencyCard from '../home/UploadTimeFrequencyCard';
 
 
 // import TreeMapPlot from '../graphs/TreeMapPlot';
@@ -29,6 +30,7 @@ const ChannelOverviewTab = ({ _channel }) => {
     const [channel, setChannel] = useState(_channel);
     const [mostRecentVideos, setMostRecentVideos] = useState([]);
     const [last5VideosStats, setLast5VideoStats] = useState({ views: [], likes: [], comments: [], duration: [] });
+    // const [lastVideo, setLastVideo] = useState();
 
     const [paramsTop10, setParamsTop10] = useState();
     const [paramsRecent, setParamsRecent] = useState();
@@ -557,8 +559,8 @@ const ChannelOverviewTab = ({ _channel }) => {
             </>
         );
     };
-    
-    
+
+
     const Last5VideosComponent = ({ stats, last5, icon }) => {
 
         const getColor = (value) => {
@@ -587,9 +589,9 @@ const ChannelOverviewTab = ({ _channel }) => {
                         {icon}
                     </div>
                     <Text>{last5[index].videoValue}</Text>
-                    <Divider/>
+                    <Divider />
                     <Tooltip title={ratioTooltip(index)} placement="top"><Text style={{ color: getColor(last5[index].value) }}>{(last5[index].value * 100).toFixed(2)}%</Text></Tooltip>
-                    <Divider/>
+                    <Divider />
                     <Text type="secondary">{parseDateToFromNow(last5[index].video.published_at)}</Text>
                 </Space>
 
@@ -620,6 +622,14 @@ const ChannelOverviewTab = ({ _channel }) => {
         );
     }
 
+    const [open, setOpen] = useState(false);
+    const showDrawer = () => {
+        setOpen(true);
+    };
+
+    const childToParent = (childdata) => {
+        setOpen(childdata);
+    }
 
     return (
         <>
@@ -639,6 +649,37 @@ const ChannelOverviewTab = ({ _channel }) => {
                             {/* <CreatorStatsPanel creator={creator} channel={channel} stats={stats} channelsStats={channelsStats} mostRecentVideos={mostRecentVideos} isAllChannels={isAllChannels}></CreatorStatsPanel> */}
                         </Col>
                         <Col span={24} xl={12}>
+                            <Row gutter={16}>
+                                <Col span={24}>
+                                    <Title style={{ color: 'black' }} level={5}>Last Video</Title>
+                                    {/* <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', gap: '9px' }}> */}
+                                    <Space>
+
+                                        <Card bordered={false} style={{ minWidth: '220px' }}>
+                                            <Statistic
+                                                title="Last Video was published "
+                                                value={parseDateToFromNow(mostRecentVideos[0]?.published_at)}
+                                            />
+                                        </Card>
+                                        {/* <Card bordered={false} style={{ minWidth: '200px' }}> */}
+                                        {/* <Image style={{ borderRadius: '8px', objectFit: 'cover' }} onClick={showDrawer} src={mostRecentVideos[0]?.url} width='240px' height='112px' preview={false} /> */}
+                                        {/* <VideoDrawer _video={mostRecentVideos[0]} _channel={mostRecentVideos[0]?.channel} _open={open} childToParent={childToParent}></VideoDrawer> */}
+                                        {/* <span style={{ maxWidth: '100px' }}> */}
+                                        {/* <Space.Compact direction="vertical">
+                                            <Text style={{ color: 'black', width: 200 }} strong
+                                                ellipsis={{
+                                                            tooltip: mostRecentVideos[0]?.title,
+                                                        }}>{mostRecentVideos[0]?.title}</Text>
+                                            <Text style={{ color: 'gray' }}>{parseDate(mostRecentVideos[0]?.published_at)}</Text>
+
+                                        </Space.Compact> */}
+                                        {/* </span> */}
+                                        {/* </Card> */}
+                                    </Space>
+                                    {/* </div> */}
+                                </Col>
+                            </Row>
+                            <br></br>
                             <Row gutter={16}>
                                 <Col span={24}>
                                     <HorizontalVideoList title="Most Recent" filter={paramsRecent} />
