@@ -11,7 +11,9 @@ import { Provider } from 'react-redux'
 import store from './store';
 import { fetchAndCacheAllData } from './services/cacheApi.ts'; // Import your channelService
 
+import ReactGA from 'react-ga';
 
+ReactGA.initialize('G-0JZGGBE7TY');
 
 
 async function fetchAndCacheData() {
@@ -23,6 +25,7 @@ async function fetchAndCacheData() {
 }
 
 fetchAndCacheData().then(() => {
+  ReactGA.pageview(window.location.pathname + window.location.search);
   createRoot(document.getElementById('root')).render(
     <Provider store={store}>
       <App />

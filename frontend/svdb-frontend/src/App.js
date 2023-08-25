@@ -3,7 +3,7 @@ import { HashRouter, Route, Routes } from 'react-router-dom'
 import { ConfigProvider, theme } from 'antd';
 
 import 'antd/dist/reset.css';
-import variables from './sass/antd.module.scss'
+import variables from './sass/antd.module.scss';
 
 
 
@@ -26,6 +26,7 @@ const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'))
 
 
 class App extends Component {
+  
   render() {
 
     // darkAlgorithm
