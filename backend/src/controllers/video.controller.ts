@@ -421,6 +421,34 @@ export const fetchStatsGroupedByYear = async (
 
     }
 
+// I know, lazy implementation, but if it works...
+    if(req.query.groupByChannel){
+      const records = await Video.findAll({
+        attributes: [
+          [sequelize.literal("EXTRACT(YEAR FROM video.published_at)"), 'year'],
+          'channel_title', 
+          [sequelize.fn("COUNT", sequelize.col('*')), "frequency"],
+          [sequelize.fn("SUM", sequelize.col('views')), "views"],
+          [sequelize.fn("MAX", sequelize.col('views')), "max_views"],
+          [sequelize.fn("AVG", sequelize.col('views')), "avg_views"],
+          [sequelize.fn("SUM", sequelize.col('likes')), "likes"],
+          [sequelize.fn("MAX", sequelize.col('likes')), "max_likes"],
+          [sequelize.fn("AVG", sequelize.col('likes')), "avg_likes"],
+          [sequelize.fn("SUM", sequelize.col('comments')), "comments"],
+          [sequelize.fn("MAX", sequelize.col('comments')), "max_comments"],
+          [sequelize.fn("AVG", sequelize.col('comments')), "avg_comments"],
+        ], where: whereClause, group: ['year', 'channel_title'], order: [sort]
+      });
+
+      console.log('/n/n HERE:::', records);
+  
+      return res.status(200).json({
+        status: "success",
+        results: records,
+      });
+    } 
+    
+
     // console.log(JSON.stringify(whereClause));
     const records = await Video.findAll({
       attributes: [

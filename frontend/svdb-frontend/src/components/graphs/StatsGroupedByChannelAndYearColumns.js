@@ -10,7 +10,7 @@ import { Column } from '@ant-design/plots';
 
 const { Title } = Typography;
 
-const StatsGroupedByYearColumns = ({ title, filter }) => {
+const StatsGroupedByChannelAndYearColumns = ({ title, filter }) => {
     const [data, setData] = useState([]);
     const { intToStringBigNumber, parseDate, parseDuration } = useFormatter();
     const [isLoaded, setIsLoaded] = useState(false);
@@ -23,7 +23,7 @@ const StatsGroupedByYearColumns = ({ title, filter }) => {
 
             let params = new URLSearchParams();
             params.append("channels", filter.channels);
-            // params.append("groupByChannel", false);
+            params.append("groupByChannel", true);
             fetchStatsGroupedByYearFn(params)
                 .then((result) => {
                     const groupedData = [];
@@ -33,6 +33,7 @@ const StatsGroupedByYearColumns = ({ title, filter }) => {
                         groupedData.push({
                             year: item.year,
                             attribute: 'Total Views',
+                            channel_title: item.channel_title,
                             value: parseInt(item.views),
                             sum: parseInt(item.views),
                             frequency: parseInt(item.frequency),
@@ -40,6 +41,7 @@ const StatsGroupedByYearColumns = ({ title, filter }) => {
                         groupedData.push({
                             year: item.year,
                             attribute: 'Max Views',
+                            channel_title: item.channel_title,
                             value: parseInt(item.max_views),
                             sum: parseInt(item.views),
                             frequency: parseInt(item.frequency),
@@ -47,6 +49,7 @@ const StatsGroupedByYearColumns = ({ title, filter }) => {
                         groupedData.push({
                             year: item.year,
                             attribute: 'Avg Views',
+                            channel_title: item.channel_title,
                             value: parseInt(item.avg_views),
                             sum: parseInt(item.views),
                             frequency: parseInt(item.frequency),
@@ -54,6 +57,7 @@ const StatsGroupedByYearColumns = ({ title, filter }) => {
                         groupedData.push({
                             year: item.year,
                             attribute: 'Total Likes',
+                            channel_title: item.channel_title,
                             value: parseInt(item.likes),
                             sum: parseInt(item.likes),
                             frequency: parseInt(item.frequency),
@@ -61,6 +65,7 @@ const StatsGroupedByYearColumns = ({ title, filter }) => {
                         groupedData.push({
                             year: item.year,
                             attribute: 'Max Likes',
+                            channel_title: item.channel_title,
                             value: parseInt(item.max_likes),
                             sum: parseInt(item.likes),
                             frequency: parseInt(item.frequency),
@@ -68,6 +73,7 @@ const StatsGroupedByYearColumns = ({ title, filter }) => {
                         groupedData.push({
                             year: item.year,
                             attribute: 'Avg Likes',
+                            channel_title: item.channel_title,
                             value: parseInt(item.avg_likes),
                             sum: parseInt(item.likes),
                             frequency: parseInt(item.frequency),
@@ -75,6 +81,7 @@ const StatsGroupedByYearColumns = ({ title, filter }) => {
                         groupedData.push({
                             year: item.year,
                             attribute: 'Total Comments',
+                            channel_title: item.channel_title,
                             value: parseInt(item.comments),
                             sum: parseInt(item.comments),
                             frequency: parseInt(item.frequency),
@@ -82,6 +89,7 @@ const StatsGroupedByYearColumns = ({ title, filter }) => {
                         groupedData.push({
                             year: item.year,
                             attribute: 'Max Comments',
+                            channel_title: item.channel_title,
                             value: parseInt(item.max_comments),
                             sum: parseInt(item.comments),
                             frequency: parseInt(item.frequency),
@@ -89,6 +97,7 @@ const StatsGroupedByYearColumns = ({ title, filter }) => {
                         groupedData.push({
                             year: item.year,
                             attribute: 'Avg Comments',
+                            channel_title: item.channel_title,
                             value: parseInt(item.avg_comments),
                             sum: parseInt(item.comments),
                             frequency: parseInt(item.frequency),
@@ -96,20 +105,7 @@ const StatsGroupedByYearColumns = ({ title, filter }) => {
 
                         return groupedData;
 
-                        // return {
-                        //     year: item.year, // Assuming the title property holds the name
-                        //     value: item.frequency ? parseInt(item.frequency) : 0, // Assuming the likes property holds the value
-                        //     // Additional properties can be added here if needed
-                        //     views: parseInt(item.views),
-                        //     avg_views: parseInt(item.avg_views),
-                        //     max_views: parseInt(item.max_views),
-                        //     likes: parseInt(item.likes),
-                        //     avg_likes: parseInt(item.avg_likes),
-                        //     max_likes: parseInt(item.lmax_ikes),
-                        //     comments: parseInt(item.comments),
-                        //     avg_comments: parseInt(item.avg_comments),
-                        //     max_comments: parseInt(item.max_comments)
-                        // };
+                        
                     });
 
 
@@ -147,12 +143,13 @@ const StatsGroupedByYearColumns = ({ title, filter }) => {
         xField: 'year',
         yField: 'value',
         isGroup: true,
-        // isStack: true,
-        seriesField: 'attribute',
+        isStack: true,
+        stackField: 'channel_title',
         groupField: 'attribute',
-        columnStyle: {
-            radius: [20, 20, 0, 0],
-        },
+        seriesField: 'attribute',
+        // columnStyle: {
+        //     radius: [20, 20, 0, 0],
+        // },
         tooltip: {
             customContent: (title, items) => {
                 // console.log(JSON.stringify(data));
@@ -228,4 +225,4 @@ const StatsGroupedByYearColumns = ({ title, filter }) => {
 
 }
 
-export default StatsGroupedByYearColumns;
+export default StatsGroupedByChannelAndYearColumns;

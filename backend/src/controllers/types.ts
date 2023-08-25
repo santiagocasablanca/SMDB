@@ -19,6 +19,7 @@ export type VideosReqQuery = {
   games?: string, 
   excludeShorts?: string,
   onlyShorts?: string,
+  groupByChannel?: string,
   publishedAtRange?: string
 }
 
