@@ -36,6 +36,7 @@ const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'))
 class App extends Component {
   
   render() {
+    console.log('Init ReactGA: ', window.location.pathname + window.location.search);
     ReactGA.pageview(window.location.pathname + window.location.search);
 
     // darkAlgorithm
