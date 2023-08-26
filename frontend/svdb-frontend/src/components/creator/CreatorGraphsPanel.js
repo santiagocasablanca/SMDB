@@ -15,6 +15,7 @@ import StatsGroupedByYearColumns from '../graphs/StatsGroupedByYearColumns';
 import StatsGroupedByChannelAndYearColumns from '../graphs/StatsGroupedByChannelAndYearColumns';
 import ChannelTagRadar from '../graphs/ChannelTagRadar';
 import ChannelTagRadarForViews from '../graphs/ChannelTagRadarForViews';
+import StatsGroupedByDurationBar from '../graphs/StatsGroupedByDurationBar';
 
 // .ant-input {
 //   color: $coolLighterGray !important;
@@ -100,13 +101,14 @@ const CreatorGraphsPanel = ({ title, _channels }) => {
 
 
 
-            {/* <Row gutter={[16, 16]}>
+            <Row gutter={[16, 16]}>
                 <Col span={24} xl={24}>
-                    <StatsGroupedByChannelAndYearColumns title={_channels?.length > 1 ? 'Creator Stats by Year' : 'Channel Stats by Year'} filter={{ channels: _channels.map(it => { return it.channel_id; }), groupByChannel: true }} />
+                    <StatsGroupedByDurationBar title={'Videos grouped by Duration'} filter={{ channels: _channels.map(it => { return it.channel_id; })}} />
+                    {/* <StatsGroupedByChannelAndYearColumns title={_channels?.length > 1 ? 'Creator Stats by Year' : 'Channel Stats by Year'} filter={{ channels: _channels.map(it => { return it.channel_id; }), groupByChannel: true }} /> */}
                 </Col>
             </Row>
             <br></br>
-             */}
+            
             {/* fetchGroupedByCast */}
             <Row gutter={[16, 16]} className="hide-on-small-screen">
                 <Col span={24} xl={24}>

@@ -35,7 +35,6 @@ export const findGroupedByGameFn = async (params) => {
 };
 
 export const findGroupedByCastFn = async (params) => {
-  // findMostLikedSSGroupedBySeries
   const req = `fetchGroupedByCast?${params}`;
   const response = await videoApi.get<IVideosResponse>(
     req
@@ -44,13 +43,21 @@ export const findGroupedByCastFn = async (params) => {
 };
 
 export const fetchStatsGroupedByYearFn = async (params) => {
-  // findMostLikedSSGroupedBySeries
   const req = `fetchStatsGroupedByYear?${params}`;
   const response = await videoApi.get<IVideosResponse>(
     req
   );
   return response.data;
 };
+
+export const fetchStatsGroupedByDurationRangeFn = async (params) => {
+  const req = `fetchStatsGroupedByDurationRange?${params}`;
+  const response = await videoApi.get<IVideosResponse>(
+    req
+  );
+  return response.data;
+};
+
 
 export const findGroupedByTagsFn = async (params) => {
   // findMostLikedSSGroupedBySeries

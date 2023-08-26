@@ -16,6 +16,7 @@ import {
   findGroupedByGame,
   fetchGroupedByCast,
   fetchStatsGroupedByYear,
+  fetchStatsGroupedByDurationRange,
   findGroupedByTags
 } from "../controllers/video.controller";
 
@@ -99,5 +100,9 @@ router
   .route("/fetchVideosChannelStats/")
   .get(fetchVideosChannelStats);
 
+router
+  .route("/fetchStatsGroupedByDurationRange/")
+  .get(fetchStatsGroupedByDurationRange);
+  
 
 export default router;
