@@ -161,6 +161,7 @@ const StatsGroupedByDurationBar = ({ title, filter }) => {
 
     const config = {
         data,
+        height: 450,
         xField: 'value',
         yField: 'durationGroup',
         isGroup: true,

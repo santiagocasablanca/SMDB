@@ -1,4 +1,4 @@
-import { Col, Row, Spin, Typography } from 'antd';
+import { Col, Row, Spin, Typography, Card } from 'antd';
 import insertCss from 'insert-css';
 import React, { useEffect, useState } from 'react';
 import useFormatter from '../../hooks/useFormatter';
@@ -10,13 +10,15 @@ import HorizontalHighlightedList from '../video/HorizontalHighlightedList';
 import HorizontalVideoList from './HorizontalVideoList';
 import StatisticsCards from './StatisticsCards';
 import FrequencyCard from '../home/FrequencyCard';
+import SubGoalBullet from '../graphs/SubGoalBullet';
+import Statistic from 'antd/es/statistic/Statistic';
 
 
 const { Title, Text } = Typography;
 
 const CreatorChannel = ({ creator, channel }) => {
 
-    const { intToStringBigNumber, parseDate, parseDuration, humanizeDurationFromSeconds, displayDurationFromSeconds, displayVideoDurationFromSeconds } = useFormatter();
+    const { intToStringBigNumber, parseDate, parseDuration, humanizeDurationFromSeconds, parseDateToFromNow, displayDurationFromSeconds, displayVideoDurationFromSeconds } = useFormatter();
     const [channels, setChannels] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
     const [isAllChannels, setIsAllChannels] = useState(true);
@@ -266,6 +268,34 @@ const CreatorChannel = ({ creator, channel }) => {
                             <CreatorStatsPanel creator={creator} channel={channel} stats={stats} channelsStats={channelsStats} mostRecentVideos={mostRecentVideos} isAllChannels={isAllChannels}></CreatorStatsPanel>
                         </Col>
                         <Col span={24} xl={12}>
+                            <Row gutter={16}>
+                                <Col span={24}>
+                                    {/* <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', gap: '9px' }}> */}
+                                    <Row gutter={4}>
+                                        <Col span={9}>
+                                            <Title style={{ color: 'black' }} level={5}>Last Video</Title>
+
+                                            <Card bordered={false} style={{ height: '117px' }}>
+                                                <Statistic
+                                                    title="Last Video was published "
+                                                    value={parseDateToFromNow(mostRecentVideos[0]?.published_at)}
+                                                />
+                                            </Card>
+                                        </Col>
+
+                                        <Col span={15}>
+                                            <Title style={{ color: 'black' }} level={5}>Next Goals</Title>
+                                            {/* style={{ width: '100%', height: '112px' }} */}
+                                            <Card bordered={false} bodyStyle={{ padding: '19px' }}>
+                                                <SubGoalBullet channel={isAllChannels ? {subs: stats['subs'].value, videos: stats['videos'].value, views: stats['views'].value} : channel} />
+                                            </Card>
+                                        </Col>
+
+                                    </Row>
+                                    {/* </div> */}
+                                </Col>
+                            </Row>
+                            <br></br>
                             <Row gutter={16}>
                                 <Col span={24}>
                                     <HorizontalVideoList title="Most Recent" filter={paramsRecent} />

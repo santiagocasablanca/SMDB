@@ -13,6 +13,7 @@ import StatisticsCards from '../creator/StatisticsCards';
 import FrequencyCard from '../home/FrequencyCard';
 // import VideoDrawer from '../video/VideoDrawer';
 import HorizontalHighlightedList from '../video/HorizontalHighlightedList';
+import SubGoalBullet from '../graphs/SubGoalBullet';
 // import UploadTimeFrequencyCard from '../home/UploadTimeFrequencyCard';
 
 
@@ -651,31 +652,28 @@ const ChannelOverviewTab = ({ _channel }) => {
                         <Col span={24} xl={12}>
                             <Row gutter={16}>
                                 <Col span={24}>
-                                    <Title style={{ color: 'black' }} level={5}>Last Video</Title>
                                     {/* <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', gap: '9px' }}> */}
-                                    <Space>
+                                    <Row gutter={4}>
+                                        <Col span={9}>
+                                            <Title style={{ color: 'black' }} level={5}>Last Video</Title>
 
-                                        <Card bordered={false} style={{ minWidth: '220px' }}>
-                                            <Statistic
-                                                title="Last Video was published "
-                                                value={parseDateToFromNow(mostRecentVideos[0]?.published_at)}
-                                            />
-                                        </Card>
-                                        {/* <Card bordered={false} style={{ minWidth: '200px' }}> */}
-                                        {/* <Image style={{ borderRadius: '8px', objectFit: 'cover' }} onClick={showDrawer} src={mostRecentVideos[0]?.url} width='240px' height='112px' preview={false} /> */}
-                                        {/* <VideoDrawer _video={mostRecentVideos[0]} _channel={mostRecentVideos[0]?.channel} _open={open} childToParent={childToParent}></VideoDrawer> */}
-                                        {/* <span style={{ maxWidth: '100px' }}> */}
-                                        {/* <Space.Compact direction="vertical">
-                                            <Text style={{ color: 'black', width: 200 }} strong
-                                                ellipsis={{
-                                                            tooltip: mostRecentVideos[0]?.title,
-                                                        }}>{mostRecentVideos[0]?.title}</Text>
-                                            <Text style={{ color: 'gray' }}>{parseDate(mostRecentVideos[0]?.published_at)}</Text>
+                                            <Card bordered={false} style={{ height: '117px' }}>
+                                                <Statistic
+                                                    title="Last Video was published "
+                                                    value={parseDateToFromNow(mostRecentVideos[0]?.published_at)}
+                                                />
+                                            </Card>
+                                        </Col>
 
-                                        </Space.Compact> */}
-                                        {/* </span> */}
-                                        {/* </Card> */}
-                                    </Space>
+                                        <Col span={15}>
+                                            <Title style={{ color: 'black' }} level={5}>Next Goals</Title>
+                                            {/* style={{ width: '100%', height: '112px' }} */}
+                                            <Card bordered={false} bodyStyle={{ padding: '19px' }}>
+                                                <SubGoalBullet channel={_channel} />
+                                            </Card>
+                                        </Col>
+                                       
+                                    </Row>
                                     {/* </div> */}
                                 </Col>
                             </Row>
@@ -689,6 +687,11 @@ const ChannelOverviewTab = ({ _channel }) => {
                             </Row>
                         </Col>
                     </Row>
+                    {/* <Row>
+                        <Col span={24} xl={12}>
+                            <SubGoalBullet channel={_channel} />
+                        </Col>
+                    </Row> */}
                     <br></br>
                     <Row gutter={[16, 16]} className="hide-on-small-screen">
                         <Col span={24} xl={24}>
