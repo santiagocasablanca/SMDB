@@ -1,4 +1,4 @@
-import { CalendarOutlined, EyeOutlined, FilterOutlined, UserOutlined, VideoCameraOutlined, YoutubeOutlined } from '@ant-design/icons';
+import { CalendarOutlined, EyeOutlined, FilterOutlined, UserOutlined, VideoCameraOutlined, YoutubeOutlined, EditOutlined } from '@ant-design/icons';
 import { Avatar, Button, Card, Col, Form, Image, Input, List, Modal, notification, Popover, Row, Space, Table, Tag, Tooltip, Typography } from 'antd';
 import dayjs from "dayjs";
 import insertCss from 'insert-css';
@@ -352,7 +352,7 @@ const CreatorPage = () => {
       // Replace the console.log statement with your own logic.
       console.log('Submitted Channel IDs:', values.channelIds);
       const channel_ids = values.channelIds.split(',').map((id) => id.trim());
-      associateChannelIdsToCreatorFn({ creator_id: creator.id, channel_ids: channel_ids })
+      associateChannelIdsToCreatorFn(values.apiKey, { creator_id: creator.id, channel_ids: channel_ids })
 
       // Close the modal
       setVisible(false);
@@ -366,7 +366,8 @@ const CreatorPage = () => {
 
     return (
       <>
-        <Button onClick={showModal}>Associate Channels</Button>
+        {/* <Button onClick={showModal}></Button> */}
+        <Button type="text" onClick={showModal} icon={<EditOutlined />} />
         <Modal
           title="Associate Channels"
           visible={visible}
@@ -374,6 +375,16 @@ const CreatorPage = () => {
           footer={null}
         >
           <Form onFinish={onFinish}>
+            <Form.Item
+              name="apiKey"
+              label="Api Key"
+              rules={[
+                { required: true, message: 'Please enter the api key' },
+              ]}>
+              <Input
+                placeholder="Enter the Api Key"
+              />
+            </Form.Item>
             <Form.Item
               name="channelIds"
               label="Channel IDs"
@@ -428,8 +439,9 @@ const CreatorPage = () => {
               style={{ width: '100%', maxWidth: '450px' }}
               bodyStyle={{ padding: 0 }}
               actions={[
-                (item.channels.length > 0 ? (<SeeChannelsButton channels={item.channels}></SeeChannelsButton>) : (isAdmin ? <CreatorModal creator={item} /> : 'not')),
-                <VideoCameraOutlined key="ellipsis" />,
+                (item.channels.length > 0 ? (<SeeChannelsButton channels={item.channels}></SeeChannelsButton>) : null),
+                <CreatorModal creator={item} />,
+                // <VideoCameraOutlined key="ellipsis" />,
               ]}
               cover={
                 // <div style={{height: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>

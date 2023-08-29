@@ -57,7 +57,7 @@ export const createAndAssociateChannelsFn = async (apiKey, params) => {
 
 };
 
-export const associateChannelIdsToCreatorFn = async (params) => {
-  const response = await api.post('channels/', params);
+export const associateChannelIdsToCreatorFn = async (apiKey, params) => {
+  const response = await api.post('channels/', params, {headers: {'X-API-KEY': apiKey}});
   return response.data;
 };

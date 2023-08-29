@@ -27,7 +27,7 @@ const router = express.Router();
 
 router.route("/channels/")
   .get(findAllChannelsController)
-  .post(createChannelController);
+  .post(apiKeyAuth, createChannelController);
 router.route("/channels/:id")
   .get(fetchChannelController);
   
