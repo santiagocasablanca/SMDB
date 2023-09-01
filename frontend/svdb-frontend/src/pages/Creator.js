@@ -30,7 +30,7 @@ const CreatorPage = () => {
 
   useEffect(() => {
     asyncFetch();
-  }, []);
+  }, [id]);
 
   const asyncFetch = async () => {
     await getCreatorFn(id).then((res) => {

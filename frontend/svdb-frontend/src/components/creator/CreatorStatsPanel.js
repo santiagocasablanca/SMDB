@@ -17,7 +17,7 @@ const CreatorStatsPanel = ({ creator, channel, stats, channelsStats, mostRecentV
     const [last5VideosStats, setLast5VideoStats] = useState({ views: [], likes: [], comments: [], duration: [] });
 
     useEffect(() => {
-        console.log(channelsStats);
+        // console.log(channelsStats);
         if (mostRecentVideos !== null) {
             const tempViews = [];
             const tempLikes = [];

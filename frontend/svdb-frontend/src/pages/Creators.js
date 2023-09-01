@@ -370,7 +370,7 @@ const CreatorPage = () => {
         <Button type="text" onClick={showModal} icon={<EditOutlined />} />
         <Modal
           title="Associate Channels"
-          visible={visible}
+          open={visible}
           onCancel={handleCancel}
           footer={null}
         >

@@ -49,7 +49,7 @@ const SubGoalBullet = ({ channel }) => {
         if (num === undefined || num === null) return 0;
         const numericString = num.toString().replace(/[^0-9.]/g, '');
         const parsedNum = parseFloat(numericString).toFixed(0);
-        console.log(parsedNum);
+        // console.log(parsedNum);
         if (parsedNum < 1000) {
             return 1000;
         }
@@ -92,17 +92,13 @@ const SubGoalBullet = ({ channel }) => {
         } else {
             return 0;
         }
-
-        const value = Math.ceil((parsedNum / si[index].v) / 100) * 100;
-        console.log(value * si[index].v);
-        return value * si[index].v;
     }
 
     const getTargetBasedOnSubs = (num) => {
         if (num === undefined || num === null) return 0;
         const numericString = num.toString().replace(/[^0-9.]/g, '');
         const parsedNum = parseFloat(numericString).toFixed(0);
-        console.log(parsedNum);
+        // console.log(parsedNum);
         if (parsedNum < 500) {
             return parseFloat(500);
         } else if (parsedNum < 1000) {

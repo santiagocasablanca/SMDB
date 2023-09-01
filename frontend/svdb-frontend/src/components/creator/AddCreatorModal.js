@@ -34,7 +34,7 @@ const AddCreatorModal = ({ }) => {
             <Button onClick={showModal} icon={<UserAddOutlined />} />
             <Modal
                 title="Add new Creator and Associate Channels Ids"
-                visible={visible}
+                open={visible}
                 onCancel={handleCancel}
                 footer={null}>
                 {/* name	custom_url	profile_picture	banner_picture */}

@@ -40,7 +40,7 @@ const CreatorChannel = ({ creator, channel }) => {
             setIsAllChannels(false);
         }
         fetchChannels();
-    }, []);
+    }, [creator, channel]);
 
     const fetchChannels = async () => {
         let creatorChannels = [];

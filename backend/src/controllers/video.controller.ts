@@ -68,7 +68,7 @@ export const findMostLikedSSGroupedBySeries = async (
   try {
     let publishedAtSearchInitial;
 
-    console.log(req.query);
+    // console.log(req.query);
     let publishedAtSearchFinal;
     let channel_Ids;
     let sort = req.query.sort ? req.query.sort.split('%') : ['views', 'DESC'];
@@ -82,7 +82,7 @@ export const findMostLikedSSGroupedBySeries = async (
     }
 
     if (req.query.channels) {
-      console.log(req.query.channels);
+      // console.log(req.query.channels);
       var channelsArr = req.query.channels.split(',');
 
       channel_Ids = channelsArr
@@ -99,7 +99,7 @@ export const findMostLikedSSGroupedBySeries = async (
 
       }
     );
-    // console.log(JSON.stringify(records));
+    // // console.log(JSON.stringify(records));
     res.status(200).json({
       status: "success",
       results: records,
@@ -131,7 +131,7 @@ export const findGroupedByGame = async (
     }
 
     if (req.query.channels) {
-      console.log(req.query.channels);
+      // console.log(req.query.channels);
       var channelsArr = req.query.channels.split(',');
 
       channel_Ids = channelsArr
@@ -148,7 +148,7 @@ export const findGroupedByGame = async (
 
       }
     );
-    console.log(JSON.stringify(records));
+    // console.log(JSON.stringify(records));
     res.status(200).json({
       status: "success",
       results: records,
@@ -166,7 +166,7 @@ export const findGroupedByTags = async (
   res: Response
 ) => {
   try {
-    console.log(req.query);
+    // console.log(req.query);
     let publishedAtSearchInitial;
 
     let publishedAtSearchFinal;
@@ -182,7 +182,7 @@ export const findGroupedByTags = async (
     }
 
     if (req.query.channels) {
-      console.log(req.query.channels);
+      // console.log(req.query.channels);
       var channelsArr = req.query.channels.split(',');
 
       channel_Ids = channelsArr
@@ -213,7 +213,7 @@ export const findGroupedByTags = async (
       }
     );
 
-    console.log(JSON.stringify(records));
+    // console.log(JSON.stringify(records));
 
     res.status(200).json({
       status: "success",
@@ -233,7 +233,7 @@ export const fetchGroupedByCast = async (
   res: Response
 ) => {
   try {
-    console.log(req.query);
+    // console.log(req.query);
     let publishedAtSearchInitial;
     let publishedAtSearchFinal;
     let channel_Ids;
@@ -267,7 +267,7 @@ export const fetchGroupedByCast = async (
       }
     );
 
-    console.log(JSON.stringify(records));
+    // console.log(JSON.stringify(records));
 
     res.status(200).json({
       status: "success",
@@ -295,7 +295,7 @@ export const fetchAllSeries = async (
         raw: true,
       }
     );
-    // console.log(JSON.stringify(records));
+    // // console.log(JSON.stringify(records));
     res.status(200).json({
       status: "success",
       results: records,
@@ -322,7 +322,7 @@ export const fetchAllTags = async (
     // Convert the Set back to an array
     const allTags = Array.from(uniqueTagsSet);
 
-    // console.log(JSON.stringify(records));
+    // // console.log(JSON.stringify(records));
     res.status(200).json({
       status: "success",
       results: allTags,
@@ -347,7 +347,7 @@ export const fetchVideoFrequency = async (
     let sort = req.query.sort ? req.query.sort.split('%') : ['day', 'ASC'];
     let whereClause = {}
     if (req.query.channels) {
-      console.log(req.query.channels);
+      // console.log(req.query.channels);
       var channelsArr = req.query.channels.split(',');
 
       whereClause = {
@@ -371,7 +371,7 @@ export const fetchVideoFrequency = async (
 
     }
 
-    // console.log(JSON.stringify(whereClause));
+    // // console.log(JSON.stringify(whereClause));
     const records = await Video.findAll({
       attributes: [
         [sequelize.fn("DATE", sequelize.col('published_at')), "day"],
@@ -440,7 +440,7 @@ export const fetchStatsGroupedByYear = async (
         ], where: whereClause, group: ['year', 'channel_title'], order: [sort]
       });
 
-      console.log('/n/n HERE:::', records);
+      // console.log('/n/n HERE:::', records);
 
       return res.status(200).json({
         status: "success",
@@ -449,7 +449,7 @@ export const fetchStatsGroupedByYear = async (
     }
 
 
-    // console.log(JSON.stringify(whereClause));
+    // // console.log(JSON.stringify(whereClause));
     const records = await Video.findAll({
       attributes: [
         [sequelize.literal("EXTRACT(YEAR FROM video.published_at)"), 'year'],
@@ -561,7 +561,7 @@ export const fetchVideosChannelStats = async (
 
     let whereClause = {}
     if (req.query.channels) {
-      console.log(req.query.channels);
+      // // console.log(req.query.channels);
       var channelsArr = req.query.channels.split(',');
 
       whereClause = {
@@ -585,7 +585,7 @@ export const fetchVideosChannelStats = async (
 
     }
 
-    console.log(JSON.stringify(whereClause));
+    // // console.log(JSON.stringify(whereClause));
     const records = await Video.findAll({
       attributes: [
         // [sequelize.literal("video.\"channel_id\""), 'channel'],
@@ -633,7 +633,7 @@ export const fetchVideoUploadTimeFrequency = async (
     // week_day, upload_hour;
     let whereClause = {}
     if (req.query.channels) {
-      console.log(req.query.channels);
+      // // console.log(req.query.channels);
       var channelsArr = req.query.channels.split(',');
 
       whereClause = {
@@ -657,7 +657,7 @@ export const fetchVideoUploadTimeFrequency = async (
 
     }
 
-    console.log(JSON.stringify(whereClause));
+    // console.log(JSON.stringify(whereClause));
     const records = await Video.findAll({
       attributes: [
         [sequelize.literal("EXTRACT(DOW FROM video.published_at)"), 'week_day'],
@@ -693,7 +693,7 @@ export const findAllVideosController = async (
     const limit = req.query.limit || 10;
     const skip = (page - 1) * limit;
 
-    console.log(req.query)
+    // console.log(req.query)
     //sort 
     let sort = req.query.sort ? req.query.sort.split('%') : ['published_at', 'DESC'];
 
@@ -759,7 +759,7 @@ export const findAllVideosController = async (
       whereClause['duration_parsed'] = { [Sequelize.Op.gt]: ['69'] };
     }
 
-    // console.log(whereClause);
+    // // console.log(whereClause);
 
     const videos = await Video.findAndCountAll({
       attributes: ['video_id', 'title',
@@ -826,7 +826,7 @@ export const findAllAppearencesController = async (
     const limit = req.query.limit || 10;
     const skip = (page - 1) * limit;
 
-    console.log(req.query)
+    // console.log(req.query)
     //sort 
     let sort = req.query.sort ? req.query.sort.split('%') : ['published_at', 'DESC'];
 
@@ -887,7 +887,7 @@ export const findAllAppearencesController = async (
       whereClause['duration_parsed'] = { [Sequelize.Op.gt]: ['69'] };
     }
 
-    console.log(whereClause);
+    // console.log(whereClause);
 
     // await sequelize.query(
     //   'SELECT * FROM videos WHERE id = CAST($1 AS int)',
@@ -966,7 +966,7 @@ export const findAllVideoGuestsController = async (
     const limit = req.query.limit || 10;
     const skip = (page - 1) * limit;
 
-    console.log(req.query)
+    // console.log(req.query)
     //sort 
     let sort = req.query.sort ? req.query.sort.split('%') : ['published_at', 'DESC'];
 
@@ -1033,7 +1033,7 @@ export const findAllVideoGuestsController = async (
       whereClause['duration_parsed'] = { [Sequelize.Op.gt]: ['69'] };
     }
 
-    // console.log(whereClause);
+    // // console.log(whereClause);
 
     // await sequelize.query(
     //   'SELECT * FROM videos WHERE id = CAST($1 AS int)',
@@ -1091,7 +1091,7 @@ export const findAllVideoGuestsController = async (
       order: [sort]
     });
     // limit, offset: skip, 
-    // console.log(videos.rows);
+    // // console.log(videos.rows);
     // Create an empty object to store the grouped data
     const groupedData = [];
     const castIdToIndex = {};  // Mapping of cast IDs to array indexes
@@ -1157,7 +1157,7 @@ export const fetchVideoController = async (
 ) => {
   try {
     const id = req.params['id'];
-    console.log(id);
+    // console.log(id);
     const video = await Video.findOne({
       where: { video_id: id },
       attributes: ['video_id', 'title',

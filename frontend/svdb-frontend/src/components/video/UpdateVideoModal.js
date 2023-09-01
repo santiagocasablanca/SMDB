@@ -5,12 +5,14 @@ import { updateVideoFn } from "../../services/videoApi.ts";
 import CastSelector from '../creator/CastSelector';
 import CreatorSelector from '../creator/CreatorSelector';
 import TagsAdd from './TagsAdd';
+import Locations from './Locations';
+import SeriesOrGameAdd from './SeriesOrGameAdd';
 
 const UpdateVideoModal = ({ video }) => {
     const [visible, setVisible] = useState(false);
     const [directorIds, setDirectorIds] = useState();
     const [cast, setCast] = useState();
-    const [tags, setTags] = useState();
+    const [tags, setTags] = useState([]);
     const [series, setSeries] = useState();
     const [game, setGame] = useState();
 
@@ -20,11 +22,11 @@ const UpdateVideoModal = ({ video }) => {
         console.log('video: ', video);
         setDirectorIds(video?.directedBy?.map(creator => creator.id) || []);
         setCast(video?.cast?.map(creator => { return { creator: creator.video_creator.creator_id, role: creator.video_creator.role } }) || []);
-        setTags(video?.tags || []);
-        setSeries(video?.serie || []);
-        setGame(video?.game || []);
+        setTags(video?.tags);
+        setSeries(video?.serie);
+        setGame(video?.game);
 
-        console.log(directorIds);
+        console.log(video?.tags);
         setVisible(true);
     };
 
@@ -125,7 +127,7 @@ const UpdateVideoModal = ({ video }) => {
                         rules={[
                             { required: false, message: 'Please enter at least one gamee' },
                         ]}>
-                        <TagsAdd _tags={game} onChange={handleGame}/>
+                        <SeriesOrGameAdd _tag={game} onChange={handleGame}/>
                     </Form.Item>
                     <Form.Item
                         label="Series"
@@ -133,8 +135,17 @@ const UpdateVideoModal = ({ video }) => {
                         rules={[
                             { required: false, message: 'Please enter at least one series' },
                         ]}>
-                        <TagsAdd _tags={series} onChange={handleSeries}/>
+                        <SeriesOrGameAdd _tag={series} onChange={handleSeries}/>
                     </Form.Item>
+
+                    {/* <Form.Item
+                        label="Locations"
+                        name="locations"
+                        rules={[
+                            { required: false, message: 'Please enter at least one location' },
+                        ]}>
+                            <Locations video={{video}}/> 
+                    </Form.Item> */}
 
                     <Form.Item>
                         <Button type="primary" htmlType="submit">Submit</Button>

@@ -8,6 +8,7 @@ import useFormatter from '../../hooks/useFormatter';
 import variables from '../../sass/antd.module.scss';
 import UpdateVideoModal from './UpdateVideoModal';
 import VideoRate from './VideoRate';
+import Locations from './Locations';
 
 const { Text } = Typography;
 
@@ -139,12 +140,13 @@ const VideoDrawer = ({ _video, _channel, _open, childToParent }) => {
                                     overflow: "auto"
                                 }}>
                                     <Col span={24}>
-                                        <Space style={{ float: 'right' }} nowrap>
+                                        <Space style={{ float: 'right' }} >
+                                            {/* <MapLocations /> */}
                                             <Space size={[0, 6]} wrap>
                                                 {_video.tags && _video.tags?.map((tag, index) => {
                                                     return (
                                                         <Tag
-                                                            key={tag}
+                                                            key={tag + 'tags'}
                                                             closable={false}
                                                             style={{
                                                                 userSelect: 'none',
@@ -159,7 +161,7 @@ const VideoDrawer = ({ _video, _channel, _open, childToParent }) => {
                                                 {_video.serie && [_video.serie]?.map((tag, index) => {
                                                     return (
                                                         <Tag
-                                                            key={tag}
+                                                            key={tag + 'series'}
                                                             color={variables.sdmnPink}
                                                             closable={false}
                                                             style={{
@@ -175,7 +177,7 @@ const VideoDrawer = ({ _video, _channel, _open, childToParent }) => {
                                                 {_video.game && [_video.game]?.map((tag, index) => {
                                                     return (
                                                         <Tag
-                                                            key={tag}
+                                                            key={tag + 'game'}
                                                             color={variables.sdmnLightBlue}
                                                             closable={false}
                                                             style={{
@@ -195,6 +197,11 @@ const VideoDrawer = ({ _video, _channel, _open, childToParent }) => {
                                         {/* <Space style={{ float: 'right' }}></Space> */}
 
                                     </Col>
+                                    { _video?.locations ?
+                                        <Col span={24}>
+                                            <Locations video={_video} />
+                                        </Col> : null
+                                    }
                                     <Col span={24}>
                                         <List
                                             header={<Text strong style={{ marginLeft: '20px' }}>Directed by</Text>}

@@ -13,16 +13,20 @@ class VideoService {
 
     // TODO redo
     async update(videoId: string, tags: [], series: string, directedBy: [], cast: [], game: string) {
-        console.log('Updating video: ', videoId);
+        console.log('Updating video: ', videoId, tags, series, directedBy, game);
         const updateBody = {};
         if (tags && tags.length > 0) {
             updateBody['tags'] = tags;
         }
         if (series) {
             updateBody['serie'] = series;
+        } else if(series === "") {
+            updateBody['serie'] = null;
         }
         if (game) {
             updateBody['game'] = game;
+        } else if(game === "") {
+            updateBody['game'] = null;
         }
         let transaction;
 

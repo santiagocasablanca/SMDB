@@ -2,9 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import { Space, Input, Tag, Tooltip, theme } from 'antd';
 
-const TagsAdd = ({ _tags, onChange }) => {
+const TagsAdd = ({_locations, onChange}) => {
   const { token } = theme.useToken();
-  const [tags, setTags] = useState([]);
+  const [locations, setLocations] = useState(_locations || []);
   const [inputVisible, setInputVisible] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [editInputIndex, setEditInputIndex] = useState(-1);
@@ -12,26 +12,27 @@ const TagsAdd = ({ _tags, onChange }) => {
   const inputRef = useRef(null);
   const editInputRef = useRef(null);
 
-  useEffect(() => {
-    console.log(_tags);
-    setTags(_tags ? _tags : []);
-  }, [_tags]);
+  const newLocation = useState({
+    title:'',
+    zoom:14,
+    color: "#FFA500",
+    coords:'',
+    modalTitle: ''
+  });
 
   useEffect(() => {
     if (inputVisible) {
       inputRef.current?.focus();
     }
   }, [inputVisible]);
-  
   useEffect(() => {
     editInputRef.current?.focus();
   }, [editInputValue]);
-
   const handleClose = (removedTag) => {
     const newTags = tags.filter((tag) => tag !== removedTag);
     console.log(newTags);
     setTags(newTags);
-    onChange(newTags);
+    onChange([...newTags, newTags]);
   };
   const showInput = () => {
     setInputVisible(true);
@@ -51,7 +52,6 @@ const TagsAdd = ({ _tags, onChange }) => {
     setEditInputValue(e.target.value);
   };
   const handleEditInputConfirm = () => {
-    console.log([...tags]);
     const newTags = [...tags];
     newTags[editInputIndex] = editInputValue;
     setTags(newTags);
@@ -73,12 +73,12 @@ const TagsAdd = ({ _tags, onChange }) => {
   return (
     <Space size={[0, 8]} wrap>
       <Space size={[0, 8]} wrap>
-        {tags && tags.map((tag, index) => {
+        {tags && [tags]?.map((tag, index) => {
           if (editInputIndex === index) {
             return (
               <Input
                 ref={editInputRef}
-                key={tag+'-TAG-'+index}
+                key={tag}
                 size="small"
                 style={tagInputStyle}
                 value={editInputValue}
@@ -91,7 +91,7 @@ const TagsAdd = ({ _tags, onChange }) => {
           const isLongTag = tag.length > 20;
           const tagElem = (
             <Tag
-              key={tag+'-TAG'}
+              key={tag+'addTag'}
               closable={true}
               style={{
                 userSelect: 'none',
@@ -100,9 +100,11 @@ const TagsAdd = ({ _tags, onChange }) => {
             >
               <span
                 onDoubleClick={(e) => {
-                  setEditInputIndex(index);
-                  setEditInputValue(tag);
-                  e.preventDefault();
+                  if (index !== 0) {
+                    setEditInputIndex(index);
+                    setEditInputValue(tag);
+                    e.preventDefault();
+                  }
                 }}
               >
                 {isLongTag ? `${tag.slice(0, 20)}...` : tag}
@@ -114,8 +116,8 @@ const TagsAdd = ({ _tags, onChange }) => {
               {tagElem}
             </Tooltip>
           ) : (
-              tagElem
-            );
+            tagElem
+          );
         })}
         {inputVisible ? (
           <Input
@@ -129,10 +131,10 @@ const TagsAdd = ({ _tags, onChange }) => {
             onPressEnter={handleInputConfirm}
           />
         ) : (
-            <Tag style={tagPlusStyle} onClick={showInput}>
-              <PlusOutlined /> New Tag
+          <Tag style={tagPlusStyle} onClick={showInput}>
+            <PlusOutlined /> New Tag
           </Tag>
-          )}
+        )}
       </Space>
     </Space>
   );

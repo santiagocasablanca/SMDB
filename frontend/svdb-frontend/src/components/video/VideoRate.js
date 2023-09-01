@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import useFormatter from '../../hooks/useFormatter';
 import insertCss from 'insert-css';
 import { getChannelStatsFn } from '../../services/cacheApi.ts';
+import useDeepCompareEffect from 'use-deep-compare-effect';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -23,37 +24,30 @@ const VideoRate = ({ _video, small }) => {
 
     const [isLoaded, setIsLoaded] = useState(false);
 
-    useEffect(() => {
+
+    useDeepCompareEffect(() => {
         // console.log('1 effect', _video, channelStats, rating)
-        setIsLoaded(false);
         // console.log(channelStats);
         async function fetchStats() {
+            setIsLoaded(false);
             // console.log(_video?.channel);
             const stats = await getChannelStatsFn(_video?.channel.channel_id);
             // console.log(stats);
             setChannelStats(stats);
-        }
-        fetchStats();
-    }, [_video])
 
-
-    useEffect(() => {
-        // console.log('2 effect ', channelStats, rating)
-        async function calculateVideoRating() {
-            // console.log(_video);
-            if (_video !== undefined && channelStats !== undefined) {
+            if (_video !== undefined && stats !== undefined) {
                 // console.log(_video.views, _video.likes, _video.comments );
                 // console.log(_video.channel?.subs);
                 const video_views = parseFloat(_video.views);
                 const video_likes = parseFloat(_video.likes);
                 const video_comments = parseFloat(_video.comments);
                 const channel_subs = parseFloat(_video.channel?.subs);
-                const channel_most_views = parseFloat(channelStats?.views.most);
-                const channel_most_liked = parseFloat(channelStats?.likes.most);
-                const avg_channel_views = parseFloat(channelStats?.views.avg);
-                const avg_channel_likes = parseFloat(channelStats?.likes.avg);
-                const avg_channel_comments = parseFloat(channelStats?.comments.avg);
-                const channel_most_commented = parseFloat(channelStats?.comments.most);
+                const channel_most_views = parseFloat(stats?.views.most);
+                const channel_most_liked = parseFloat(stats?.likes.most);
+                const avg_channel_views = parseFloat(stats?.views.avg);
+                const avg_channel_likes = parseFloat(stats?.likes.avg);
+                const avg_channel_comments = parseFloat(stats?.comments.avg);
+                const channel_most_commented = parseFloat(stats?.comments.most);
                 // console.log(video_views,
                 //     video_likes,
                 //     video_comments,
@@ -105,9 +99,81 @@ const VideoRate = ({ _video, small }) => {
                 setIsLoaded(true);
             }
         }
-        calculateVideoRating();
+        fetchStats();
+    }, [_video])
 
-    }, [channelStats]);
+
+    // useEffect(() => {
+    //     // console.log('2 effect ', channelStats, rating)
+    //     async function calculateVideoRating() {
+    //         // console.log(_video);
+    //         if (_video !== undefined && channelStats !== undefined) {
+    //             // console.log(_video.views, _video.likes, _video.comments );
+    //             // console.log(_video.channel?.subs);
+    //             const video_views = parseFloat(_video.views);
+    //             const video_likes = parseFloat(_video.likes);
+    //             const video_comments = parseFloat(_video.comments);
+    //             const channel_subs = parseFloat(_video.channel?.subs);
+    //             const channel_most_views = parseFloat(channelStats?.views.most);
+    //             const channel_most_liked = parseFloat(channelStats?.likes.most);
+    //             const avg_channel_views = parseFloat(channelStats?.views.avg);
+    //             const avg_channel_likes = parseFloat(channelStats?.likes.avg);
+    //             const avg_channel_comments = parseFloat(channelStats?.comments.avg);
+    //             const channel_most_commented = parseFloat(channelStats?.comments.most);
+    //             // console.log(video_views,
+    //             //     video_likes,
+    //             //     video_comments,
+    //             //     channel_subs,
+    //             //     channel_most_views,
+    //             //     channel_most_liked,
+    //             //     avg_channel_views,
+    //             //     avg_channel_likes,
+    //             //     avg_channel_comments,
+    //             //     channel_most_commented);
+
+    //             // Calculate the recent video bonus based on the published date
+    //             const publishedDate = new Date(_video.published_at);
+    //             const currentDate = new Date();
+    //             const timeDifferenceInDays = (currentDate - publishedDate) / (1000 * 3600 * 24);
+    //             const isRecent5 = timeDifferenceInDays <= 5 ? 1 : 0; // 1 for recent videos, 0 otherwise
+    //             const isRecent10 = timeDifferenceInDays <= 10 ? 1 : 0;
+    //             const isRecent15 = timeDifferenceInDays <= 15 ? 1 : 0;
+    //             const isRecent30 = timeDifferenceInDays <= 30 ? 1 : 0;
+    //             const isRecent60 = timeDifferenceInDays <= 60 ? 1 : 0;
+
+    //             // const recent_video_bonus = 1 / (timeDifferenceInDays + 1);//timeDifferenceInDays <= 45 ? 1 : 0; // 1 for recent videos, 0 otherwise
+
+    //             // Calculate the overall rating based on the formula
+    //             const rating =
+    //                 (((video_views / channel_subs) * 0.5 +
+    //                     (video_views / channel_most_views) * 0.1 +
+    //                     (video_views / avg_channel_views) * 0.4)
+    //                     * 5 +
+    //                     ((video_likes / video_views) * 0.3 +
+    //                         (video_likes / channel_subs) * 0.3 +
+    //                         (video_likes / channel_most_liked) * 0.1 +
+    //                         (video_likes / avg_channel_likes) * 0.3)
+    //                     * 4 + // 
+    //                     ((video_comments / channel_most_commented) * 0.2 +
+    //                         (video_comments / avg_channel_comments) * 0.8)
+    //                     * 1) +
+    //                 isRecent5 + isRecent10 + isRecent15 + isRecent30 + isRecent60;
+
+
+
+    //             // const normalizedRating = Math.round((((rating - minValue) / (maxValue - minValue)) * 10));
+    //             // const normalizedRating = Math.round((rating / (weights.video_views + weights.video_likes + weights.recent_bonus) * 10));
+    //             const normalizedRating = (rating) > 10 ? 10 : Math.round(rating); //(weights.video_views +   weights.video_likes + weights.recent_bonus);
+    //             // console.log(_video, channel_subs, isRecent10)
+    //             // console.log(normalizedRating, rating.toFixed(2))
+
+    //             setRating(normalizedRating);
+    //             setIsLoaded(true);
+    //         }
+    //     }
+    //     calculateVideoRating();
+
+    // }, [channelStats]);
 
     // insertCss(`
 

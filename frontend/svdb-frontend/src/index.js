@@ -1,6 +1,6 @@
 import 'react-app-polyfill/stable'
 import 'core-js'
-import React from 'react'
+import React, { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client'
 import App from './App'
 import './index.scss'; // Import the Less file
@@ -27,9 +27,11 @@ async function fetchAndCacheData() {
 fetchAndCacheData().then(() => {
   // ReactGA.pageview(window.location.pathname + window.location.search);
   createRoot(document.getElementById('root')).render(
-    <Provider store={store}>
-      <App />
-    </Provider>,
+    <StrictMode>
+      <Provider store={store}>
+        <App />
+      </Provider>,
+    </StrictMode>
   )
 });
 
