@@ -1,9 +1,12 @@
 # SVDB
 Sidemen Video Database
 
+Visit here: https://svdb.ddns.net/#/home/
+
 STILL UNDER CONSTRUCTION
 
-This is a proof of concept for a youtube IMDb similar web application, using Sidemen and other youtubers that often collaborate within the scene as Creators.
+This is a proof of concept for a youtube IMDb inspired web application, using Sidemen and other youtubers that often collaborate within the scene as Creators.
+
 It uses a traditional sql model for storing the Channel and Video data fetched from Youtube using the Youtube Api, having 'introduced' the concept/table of Creator in order to represent multiple Channels owned by one Creator and simultaneously Channels owned by multiple Creators.
 
 The tables Channel_Stats and Video_Stats are used for keeping (the evolution of the channel/video) stats over time.
