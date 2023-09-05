@@ -3,13 +3,12 @@ import { Request, Response } from "express";
 const { Sequelize, QueryTypes } = require('sequelize');
 const Op = Sequelize.Op;
 import { db, sequelize } from "../util/db";
-import { SearchReqQuery } from "./types";
+import { VideosReqQuery } from "./types";
 const VideoStats = db.videoStats;
 
-type VideoReqQuery = SearchReqQuery;
 
 export const findAllVideoStatsController = async (
-  req: Request<{}, {}, {}, VideoReqQuery>,
+  req: Request<{}, {}, {}, VideosReqQuery>,
   res: Response
 ) => {
   try {

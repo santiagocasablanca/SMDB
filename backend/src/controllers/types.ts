@@ -12,6 +12,7 @@ export type ChannelsReqQuery = {
 
 export type VideosReqQuery = {
   channels?: string,
+  video_ids?: string,
   excludedChannels?: string,
   castMember?: string,
   notInCastMember?: string,
