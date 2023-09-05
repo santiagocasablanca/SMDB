@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 
-
+const { Sequelize, QueryTypes } = require('sequelize');
+const Op = Sequelize.Op;
 import { db, sequelize } from "../util/db";
 import { SearchReqQuery } from "./types";
 const VideoStats = db.videoStats;
@@ -12,50 +13,38 @@ export const findAllVideoStatsController = async (
   res: Response
 ) => {
   try {
-    console.log('IM HERE');
-    const page = req.query.page || 1;
-    const limit = req.query.limit || 10;
-    const skip = (page - 1) * limit;
+    let whereClause = {}
 
-    //sort 
-    let sort = req.query.sort ? req.query.sort.split('%') : ['publishedAt', 'DESC'];
-   
-    console.log(sort[0], sort[1]);
-    
-    const videos = await VideoStats.findAndCountAll({ limit, offset: skip, order: [sort] });
+    if (req.query.video_ids) {
+      var videosArr = req.query.video_ids.split(',');
+
+      whereClause['video_id'] = { [Op.or]: videosArr };
+    }
+
+    if (req.query.channels) {
+      var channelsArr = req.query.channels.split(',');
+
+      whereClause['channel_id'] = { [Op.or]: channelsArr };
+    }
+
+
+    const videos = await VideoStats.findAll({
+      attributes: [
+        'video_id',
+        [sequelize.fn("DATE", sequelize.col('fetched_at')), "fetched_date"],
+        [sequelize.fn("MAX", sequelize.col('views')), "views"],
+        [sequelize.fn("MAX", sequelize.col('likes')), "likes"],
+        [sequelize.fn("MAX", sequelize.col('comments')), "comments"],
+      ], where: whereClause, group: ['video_id', "fetched_date"], order: [['fetched_date', 'asc']],
+      raw: true,
+    });
+
     // console.log(videos);
 
     res.status(200).json({
       status: "success",
-      results: videos.count,
-      videos: videos.rows,
+      results: videos,
     });
-  } catch (error: any) {
-    res.status(500).json({
-      status: "error",
-      message: error.message,
-    });
-  }
-};
-
-export const deleteVideoStatsController = async (
-  req: Request,
-  res: Response
-) => {
-  try {
-    const result = await VideoStats.destroy({
-      where: { id: req.params.videoId },
-      force: true,
-    });
-
-    if (result === 0) {
-      return res.status(404).json({
-        status: "fail",
-        message: "Video with that ID not found",
-      });
-    }
-
-    res.status(204).json();
   } catch (error: any) {
     res.status(500).json({
       status: "error",

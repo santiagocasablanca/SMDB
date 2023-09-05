@@ -13,6 +13,8 @@ import VideoPreviewForHighlight from '../components/video/VideoPreviewForHighlig
 import variables from '../sass/antd.module.scss';
 import { getChannelsFn } from "../services/channelApi.ts";
 import { getVideosFn } from "../services/videoApi.ts";
+import { AppIntro } from '../components';
+import LatestVideosGrowthLine from '../components/graphs/LatestVideosGrowthLine';
 
 
 const { Title, Text } = Typography;
@@ -21,6 +23,7 @@ const HomePage = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [channels, setChannels] = useState([]);
   const [top10videos, setTop10videos] = useState([]);
+  // const [top10videoIds, setTop10videoIds] = useState([]);
   const [topChannelIds, setTopChannelIds] = useState([]);
 
   const [filters, setFilters] = useState({ channels: [], published_atRange: [] });
@@ -46,6 +49,7 @@ const HomePage = () => {
       await getVideosFn(1, 10, _paramsTop10)
         .then((result) => {
           setTop10videos(result.videos);
+          // setTop10videoIds(result.videos.map(video => { return video.video_id; }));
           setTopChannelIds(result.videos.map(video => { return video.channel_id; }));
         })
 
@@ -134,13 +138,13 @@ const HomePage = () => {
   `
   );
 
-  
+
 
   const HeaderPanel = ({ title, creators }) => {
     useEffect(() => {
     }, []);
 
-    
+
     return (
       <Row className="homeHeaderPanel">
         <Col span="24">
@@ -152,13 +156,13 @@ const HomePage = () => {
       </Row>
     );
   };
-  
+
   const [value, setValue] = useState('Week');
 
   // const onChangeSegmentedValue
 
   const HighlightedVideos = ({ title, videos, segmentedValue, onChangeSegmentedValue }) => {
-    
+
     return (
       <>
         <Row><Col span={24}><Title style={{ color: 'black' }} level={5}>{title}</Title></Col></Row>
@@ -182,7 +186,6 @@ const HomePage = () => {
       (
         <>
           <div className="homeContainer">
-
             <Row gutter={[16, 16]}>
               <Col span={24} md={24} lg={12} xl={12}>
                 <Row gutter={12}>
@@ -196,9 +199,31 @@ const HomePage = () => {
               </Col>
             </Row>
             <br></br>
+            <Row gutter={[16, 16]}>
+              <Col span={24}>
+                {/* <AppIntro /> */}
+                <LatestVideosGrowthLine title="Highlighted videos growth" filter={{videos: top10videos}} />
+              </Col>
+            </Row>
+            <br></br>
             <Row>
               <Col span={24}>
                 <HorizontalHighlightedList title="Most Recent" filter={paramsRecent} />
+              </Col>
+            </Row>
+            <br></br>
+            <Row gutter={[16, 16]}>
+              <Col span={24} md={24} lg={12} xl={8}>
+                <UploadTimeFrequencyCard _channels={channels}></UploadTimeFrequencyCard>
+              </Col>
+              <Col span={24} md={24} lg={12} xl={16}>
+                <Row gutter={16}>
+                  <Col span={24}>
+                    <HorizontalVideoList title="Most Viewed" filter={paramsTop10} />
+
+                    <HorizontalVideoList title="Most Liked" filter={paramsTop10Liked} />
+                  </Col>
+                </Row>
               </Col>
             </Row>
             <br></br>
@@ -215,20 +240,7 @@ const HomePage = () => {
             </Row>
 
             <br></br>
-            <Row gutter={[16, 16]}>
-              <Col span={24} md={24} lg={12} xl={8}>
-                <UploadTimeFrequencyCard _channels={channels}></UploadTimeFrequencyCard>
-              </Col>
-              <Col span={24} md={24} lg={12} xl={16}>
-                <Row gutter={16}>
-                  <Col span={24}>
-                    <HorizontalVideoList title="Most Viewed" filter={paramsTop10} />
-
-                    <HorizontalVideoList title="Most Liked" filter={paramsTop10Liked} />
-                  </Col>
-                </Row>
-              </Col>
-            </Row>
+            
 
           </div>
         </>

@@ -22,6 +22,7 @@ import {
 
 import { fetchChannelController, findAllChannelsController, createChannelController, findAllGuestsController } from "../controllers/channel.controller";
 import { findAllCreatorsController, fetchCreatorController, fetchCreatorStatsController, findTopCreatorsController, createCreatorController } from "../controllers/creator.controller";
+import { findAllVideoStatsController } from "../controllers/videoStats.controller";
 
 const router = express.Router();
 
@@ -61,6 +62,11 @@ router
   .get(fetchVideoController)
   .patch(apiKeyAuth, updateVideoController);
   // .delete(deleteVideoController);
+
+router
+  .route("/videoStats/")
+  .get(findAllVideoStatsController);
+  
 
 router
   .route("/fetchAllSeries/")

@@ -1,4 +1,4 @@
-import { Typography, Row, Col, Space } from 'antd';
+import { Typography, Row, Col, Space, Spin } from 'antd';
 import { YoutubeOutlined } from '@ant-design/icons';
 
 import insertCss from 'insert-css';
@@ -17,6 +17,7 @@ import ChannelTagRadar from '../graphs/ChannelTagRadar';
 import ChannelTagRadarForViews from '../graphs/ChannelTagRadarForViews';
 import StatsGroupedByDurationBar from '../graphs/StatsGroupedByDurationBar';
 import SubGoalBullet from '../graphs/SubGoalBullet';
+import LatestVideosGrowthLine from '../graphs/LatestVideosGrowthLine';
 
 // .ant-input {
 //   color: $coolLighterGray !important;
@@ -30,6 +31,21 @@ const CreatorGraphsPanel = ({ title, _channels }) => {
     const { intToStringBigNumber, parseDate, parseDuration, displayVideoDurationFromSeconds, humanizeDurationFromSeconds, displayVideoDurationFromSecondsWithLegend } = useFormatter();
 
     const [channels, setChannels] = useState(_channels);
+    const [top10videos, setTop10videos] = useState([]);
+
+
+    useEffect(() => {
+        async function fetchData() {
+            let _paramsTop10 = new URLSearchParams();
+            _paramsTop10.append("channels", _channels.map(it => { return it.channel_id; }))
+            _paramsTop10.append("sort", "views%desc")
+            await getVideosFn(1, 10, _paramsTop10)
+                .then((result) => {
+                    setTop10videos(result.videos);
+                })
+        }
+        fetchData();
+    }, [title]);
 
     insertCss(`
     .graphsTitle h3 {
@@ -49,6 +65,7 @@ const CreatorGraphsPanel = ({ title, _channels }) => {
             <VideographyFilterPanel filters={myFilters} onChange={handleFilterChange} />
           </Col> */}
             </Row>
+
             <Row gutter={[16, 16]}>
                 <Col span={24} md={24} lg={24} xl={24}>
                     <CastScatterPlot title={_channels?.length > 1 ? 'Appearences on the channels' : 'Appearences on the channel'} filter={{ channels: _channels.map(it => { return it.channel_id; }) }} />
@@ -111,6 +128,17 @@ const CreatorGraphsPanel = ({ title, _channels }) => {
             <Row gutter={[16, 16]} className="hide-on-small-screen">
                 <Col span={24} xl={24}>
                     <FrequencyCard _channels={_channels}></FrequencyCard>
+                </Col>
+            </Row>
+            <br></br>
+            <Row gutter={[16, 16]}>
+                <Col span={24}>
+                    {/* <AppIntro /> */}
+                    {
+                        top10videos?.length > 0 ?
+                            <LatestVideosGrowthLine title="Top Videos Growth" filter={{ videos: top10videos }} />
+                            : <Spin />
+                    }
                 </Col>
             </Row>
             <br></br>

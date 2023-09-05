@@ -29,7 +29,7 @@ const ChannelTagRadarForViews = ({ title, filter, options }) => {
                     const groupedData = [];
                     // Transform the fetched data into the required format
                     const transformedData = result.results.map((item) => {
-                        console.log(item);
+                        // console.log(item);
                         return {
                             year: item.year,
                             attribute: 'Total Views',
@@ -45,7 +45,7 @@ const ChannelTagRadarForViews = ({ title, filter, options }) => {
                     setData(transformedData);
                     setIsLoaded(true);
 
-                    console.log("finished fetching");
+                    // console.log("finished fetching");
                 });
         }
         fetchData();

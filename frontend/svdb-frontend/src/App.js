@@ -1,15 +1,23 @@
 import React, { Component, Suspense } from 'react'
 import { HashRouter, Route, Routes } from 'react-router-dom'
 import { ConfigProvider, theme } from 'antd';
+import { Spin, Row } from 'antd';
+
 
 import 'antd/dist/reset.css';
 import variables from './sass/antd.module.scss';
+import { AppIntro } from './components/index';
 
 
 const loading = (
-  <div className="pt-3 text-center">
-    <div className="sk-spinner sk-spinner-pulse"></div>
-  </div>
+  // <AppIntro />
+  <Row justify="center">
+    <Spin />
+  </Row>
+
+  // <div className="pt-3 text-center">
+  //   <div className="sk-spinner sk-spinner-pulse"></div>
+  // </div>
 )
 
 // Containers
@@ -31,6 +39,7 @@ class App extends Component {
     // defaultAlgorithm
     // background: variables.bg
     return (
+
       <ConfigProvider
         theme={{
           algorithm: theme.darkAlgorithm,

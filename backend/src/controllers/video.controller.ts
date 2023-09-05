@@ -1150,7 +1150,6 @@ export const deleteVideoController = async (
   }
 };
 
-
 export const fetchVideoController = async (
   req: Request<{}, {}, {}>,
   res: Response

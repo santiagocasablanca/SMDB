@@ -134,7 +134,7 @@ const StatsGroupedByDurationBar = ({ title, filter }) => {
                     setData(groupedData);
                     setIsLoaded(true);
 
-                    console.log("finished fetching");
+                    // console.log("finished fetching");
                 });
         }
         fetchData();

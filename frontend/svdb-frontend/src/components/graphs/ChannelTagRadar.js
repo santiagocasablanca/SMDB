@@ -113,7 +113,7 @@ const ChannelTagRadar = ({ title, filter, options }) => {
                     setData(groupedData);
                     setIsLoaded(true);
 
-                    console.log("finished fetching");
+                    // console.log("finished fetching");
                 });
         }
         fetchData();

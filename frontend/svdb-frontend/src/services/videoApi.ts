@@ -58,6 +58,15 @@ export const fetchStatsGroupedByDurationRangeFn = async (params) => {
   return response.data;
 };
 
+export const fetchVideoStatsFn = async (params) => {
+  const req = `videoStats/?${params}`;
+  const response = await videoApi.get<IVideosResponse>(
+    req
+  );
+  return response.data;
+};
+
+
 
 export const findGroupedByTagsFn = async (params) => {
   // findMostLikedSSGroupedBySeries
