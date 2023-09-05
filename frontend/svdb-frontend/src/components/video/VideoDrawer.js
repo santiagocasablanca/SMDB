@@ -1,5 +1,5 @@
-import { CommentOutlined, EyeOutlined, LikeOutlined } from '@ant-design/icons';
-import { Avatar, Col, Drawer, List, Row, Space, Tag, Typography, Divider } from 'antd';
+import { CommentOutlined, EyeOutlined, LikeOutlined, LineChartOutlined } from '@ant-design/icons';
+import { Avatar, Col, Drawer, List, Row, Space, Tag, Typography, Divider, Popover } from 'antd';
 import insertCss from 'insert-css';
 import React, { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
@@ -9,6 +9,7 @@ import variables from '../../sass/antd.module.scss';
 import UpdateVideoModal from './UpdateVideoModal';
 import VideoRate from './VideoRate';
 import Locations from './Locations';
+import LatestVideosGrowthLine from '../graphs/LatestVideosGrowthLine';
 
 const { Text } = Typography;
 
@@ -143,6 +144,9 @@ const VideoDrawer = ({ _video, _channel, _open, childToParent }) => {
                                         <Space style={{ float: 'right' }} >
                                             {/* <MapLocations /> */}
                                             <Space size={[0, 6]} wrap>
+                                                <Popover title="Views Growth" content={<div style={{ width: '600px' }}><LatestVideosGrowthLine title="" filter={{ videos: [_video] }} /></div>}>
+                                                    <Tag icon={<LineChartOutlined />} color="geekblue" key="growthPlot" closable={false}>Views Growth</Tag>
+                                                </Popover>
                                                 {_video.tags && _video.tags?.map((tag, index) => {
                                                     return (
                                                         <Tag
@@ -197,7 +201,7 @@ const VideoDrawer = ({ _video, _channel, _open, childToParent }) => {
                                         {/* <Space style={{ float: 'right' }}></Space> */}
 
                                     </Col>
-                                    { _video?.locations ?
+                                    {_video?.locations ?
                                         <Col span={24}>
                                             <Locations video={_video} />
                                         </Col> : null
