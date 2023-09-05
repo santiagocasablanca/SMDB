@@ -186,6 +186,7 @@ const HomePage = () => {
       (
         <>
           <div className="homeContainer">
+
             <Row gutter={[16, 16]}>
               <Col span={24} md={24} lg={12} xl={12}>
                 <Row gutter={12}>
@@ -199,19 +200,20 @@ const HomePage = () => {
               </Col>
             </Row>
             <br></br>
-            <Row gutter={[16, 16]}>
-              <Col span={24}>
-                {/* <AppIntro /> */}
-                <LatestVideosGrowthLine title="Highlighted videos growth" filter={{videos: top10videos}} />
-              </Col>
-            </Row>
-            <br></br>
             <Row>
               <Col span={24}>
                 <HorizontalHighlightedList title="Most Recent" filter={paramsRecent} />
               </Col>
             </Row>
             <br></br>
+            <Row gutter={[16, 16]}>
+              <Col span={24}>
+                {/* <AppIntro /> */}
+                <LatestVideosGrowthLine title="Highlighted Videos Views Growth" filter={{ videos: top10videos }} />
+              </Col>
+            </Row>
+            <br></br>
+
             <Row gutter={[16, 16]}>
               <Col span={24} md={24} lg={12} xl={8}>
                 <UploadTimeFrequencyCard _channels={channels}></UploadTimeFrequencyCard>
@@ -240,7 +242,7 @@ const HomePage = () => {
             </Row>
 
             <br></br>
-            
+
 
           </div>
         </>
