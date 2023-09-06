@@ -108,7 +108,7 @@ const HorizontalHighlightedList = ({ title, filter }) => {
                             <Space split={<Divider type="vertical" />} size="small">
                                 <p style={{ color: 'white', fontSize: '12px' }}><EyeOutlined /> {intToStringBigNumber(video.views)}</p>
                                 <p style={{ color: 'white', fontSize: '12px' }}><LikeOutlined /> {intToStringBigNumber(video.likes)}</p>
-                                <p style={{ color: 'white', fontSize: '12px' }}><Popover title={video.title} content={<div style={{ width: '600px' }}><VideoGrowthLine _video={video} /></div>}>
+                                <p style={{ color: 'white', fontSize: '12px' }}><Popover title={video.title} content={<VideoGrowthLine _video={video} />}>
                                     <LineChartOutlined />
                                 </Popover></p>
                                 {/* <Divider type="vertical" /> */}

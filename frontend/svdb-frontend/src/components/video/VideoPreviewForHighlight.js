@@ -126,7 +126,7 @@ const VideoPreviewForHighlight = ({ _video, index }) => {
                                 <EyeOutlined />{intToStringBigNumber(_video.views)}
                                 <LikeOutlined />{intToStringBigNumber(_video.likes)}
                                 <CommentOutlined />{intToStringBigNumber(_video.comments)}
-                                <Popover title="Views Growth" content={<div style={{ width: '600px' }}><VideoGrowthLine _video={_video} /></div>}>
+                                <Popover title="Views Growth" content={<VideoGrowthLine _video={_video}/>}>
                                     <LineChartOutlined />
                                 </Popover>
                             </Space>

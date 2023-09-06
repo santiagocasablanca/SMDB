@@ -195,7 +195,7 @@ const VideoDrawer = ({ _video, _channel, _open, childToParent }) => {
                                                 }
                                             </Space>
                                             <Divider type="vertical"></Divider>
-                                            <Popover title={_video.title} content={<div style={{ width: '600px' }} trigger="click"><VideoGrowthLine _video={_video} /></div>}>
+                                            <Popover title={_video.title} content={<VideoGrowthLine _video={_video} />}>
                                                 <span style={{ color: 'white', fontSize: '16px' }}><LineChartOutlined /></span>
                                             </Popover>
                                             <Divider type="vertical"></Divider>

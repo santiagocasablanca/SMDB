@@ -101,7 +101,7 @@ const VideographyEditPanel = ({ _video, onChange }) => {
                   <EyeOutlined />{intToStringBigNumber(video.views)}
                   <LikeOutlined />{intToStringBigNumber(video.likes)}
                   <CommentOutlined />{intToStringBigNumber(video.comments)}
-                  <Popover title={_video.title} content={<div style={{ width: '600px' }} trigger="click"><VideoGrowthLine _video={video} /></div>}>
+                  <Popover title={_video.title} trigger="click" content={<VideoGrowthLine _video={video} />}>
                     <span style={{ color: 'white', fontSize: '16px' }}><LineChartOutlined /></span>
                   </Popover>
                 </Space>

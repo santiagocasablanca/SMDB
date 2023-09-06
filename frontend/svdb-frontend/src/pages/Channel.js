@@ -9,6 +9,7 @@ import Guests from "../components/channel/Guests";
 import useFormatter from '../hooks/useFormatter';
 import variables from '../sass/antd.module.scss';
 import { getChannelFn } from "../services/channelApi.ts";
+import VideographyOnCards from './VideographyOnCards';
 
 
 
@@ -309,6 +310,7 @@ const ChannelPage = () => {
                     // { label: 'Graphs', key: '_graphs', children: <><CreatorGraphsPanel _filters={filters} /></> },
                     { label: 'Graphs', key: '_graphs', children: <><CreatorGraphsPanel title="Graphs" _channels={[channel]} /></> },
                     { label: 'Videography', key: '_videography', children: <><Videography _filters={filters} /></> },
+                    // { label: 'Videography2', key: '_videography2', children: <><VideographyOnCards _filters={filters} /></> },
                     {
                       label: 'Shorts', key: '_shorts', children: <><Videography title="Shorts" _filters={shortsFilters} /></>
                     },

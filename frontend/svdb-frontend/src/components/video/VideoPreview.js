@@ -54,7 +54,7 @@ const VideoPreview = ({ _video }) => {
                             <p style={{ color: 'white', fontSize: '10px' }}><EyeOutlined /> {intToStringBigNumber(_video.views)}</p>
                             <p style={{ color: 'white', fontSize: '10px' }}><LikeOutlined /> {intToStringBigNumber(_video.likes)}</p>
                             <p style={{ color: 'white', fontSize: '10px' }}><CommentOutlined /> {intToStringBigNumber(_video.comments)}</p>
-                            <p style={{ color: 'white', fontSize: '10px' }}><Popover title="Views Growth" content={<div style={{ width: '600px' }}><VideoGrowthLine _video={_video} /></div>}>
+                            <p style={{ color: 'white', fontSize: '10px' }}><Popover title="Views Growth" content={<VideoGrowthLine _video={_video} />}>
                                 <LineChartOutlined />
                             </Popover></p>
                         </Space>
@@ -73,5 +73,6 @@ const VideoPreview = ({ _video }) => {
         </>
     );
 }
+// style={{ width: '600px' }}
 
 export default VideoPreview;

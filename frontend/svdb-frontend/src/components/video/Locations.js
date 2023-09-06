@@ -16,7 +16,7 @@ const Locations = ({ video }) => {
 
 
     useEffect(() => {
-        console.log(video?.locations);
+        // console.log(video?.locations);
         setLocations(video?.locations);
         setLoaded(true);
 

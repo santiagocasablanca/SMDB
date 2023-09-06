@@ -47,19 +47,19 @@ const VideoGrowthLine = ({ _video }) => {
 
                 });
 
-                
+
             }).then((cont) => {
                 console.log(cont);
                 // const stats = await getChannelStatsFn(_video?.channel.channel_id);
                 // console.log(stats);
-                
+
                 // if (_video !== undefined && stats !== undefined) {
                 //     _data.push({
                 //         category: 'Avg Comments',
                 //         value: parseFloat(stats?.comments.avg),
                 //         fetched_at: video_stat.fetched_date
                 //     });
-                    
+
                 //     const avg_channel_views = parseFloat(stats?.views.avg);
                 //     const avg_channel_likes = parseFloat(stats?.likes.avg);
                 //     const avg_channel_comments =parseFloat(stats?.comments.avg) ;
@@ -72,20 +72,19 @@ const VideoGrowthLine = ({ _video }) => {
 
     insertCss(`
 
-    .container{
-        padding: 16px 0px;
-        width: 160px;
-        display: flex;
-        flex-direction: column;
-      }
-      .tooltip-item{
-        margin-top: 12px;
-        display: flex;
-        width: 100%;
-        justify-content: space-between;
-      }
+    .videoGrowthLineContainer {
+        width: 600px;
+    }
+
+      @media (max-width: 600px) {
+        .videoGrowthLineContainer {
+            width: 320px;
+        }
+    }
+
     
     `);
+
 
     const config = {
         data,
@@ -126,7 +125,9 @@ const VideoGrowthLine = ({ _video }) => {
             <Card bordered={false} size="small">
                 {isLoaded ? (
                     data.length > 0 ? (
-                        <Line {...config} />
+                        <div className="videoGrowthLineContainer">
+                            <Line {...config} />
+                        </div>
                     ) : (
                             <Empty description="No data available" />
                             // <Text>No data available.</Text>
