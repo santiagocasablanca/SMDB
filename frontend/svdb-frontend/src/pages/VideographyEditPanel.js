@@ -1,11 +1,12 @@
-import { CalendarOutlined, CommentOutlined, EyeOutlined, LikeOutlined } from '@ant-design/icons';
-import { Avatar, Col, List, Row, Space, Typography } from 'antd';
+import { CalendarOutlined, CommentOutlined, EyeOutlined, LikeOutlined, LineChartOutlined } from '@ant-design/icons';
+import { Avatar, Col, List, Row, Space, Typography, Popover } from 'antd';
 import insertCss from 'insert-css';
 import { React, useEffect, useState } from "react";
 import ReactPlayer from 'react-player';
 import UpdateVideoModal from '../components/video/UpdateVideoModal';
 import useFormatter from '../hooks/useFormatter';
 import { getVideoFn } from "../services/videoApi.ts";
+import VideoGrowthLine from '../components/graphs/VideoGrowthLine';
 
 
 
@@ -92,13 +93,16 @@ const VideographyEditPanel = ({ _video, onChange }) => {
             <Col span={24}>
               <Space.Compact direction="vertical" style={{ float: 'right', color: 'white' }}>
                 <Space size="small" style={{ float: 'right' }}>
-                  <UpdateVideoModal video={ video } />
+                  <UpdateVideoModal video={video} />
                   <CalendarOutlined /> <Text type="secondary" style={{ float: 'right' }}>  {parseDate(video.published_at)}</Text>
                 </Space>
                 <Space size="small" style={{ float: 'right' }}>
                   <EyeOutlined />{intToStringBigNumber(video.views)}
                   <LikeOutlined />{intToStringBigNumber(video.likes)}
                   <CommentOutlined />{intToStringBigNumber(video.comments)}
+                  <Popover title={_video.title} content={<div style={{ width: '600px' }} trigger="click"><VideoGrowthLine _video={video} /></div>}>
+                    <span style={{ color: 'white', fontSize: '16px' }}><LineChartOutlined /></span>
+                  </Popover>
                 </Space>
 
               </Space.Compact>
