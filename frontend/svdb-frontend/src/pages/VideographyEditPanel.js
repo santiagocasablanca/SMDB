@@ -7,6 +7,7 @@ import UpdateVideoModal from '../components/video/UpdateVideoModal';
 import useFormatter from '../hooks/useFormatter';
 import { getVideoFn } from "../services/videoApi.ts";
 import VideoGrowthLine from '../components/graphs/VideoGrowthLine';
+import Locations from '../components/video/Locations';
 
 
 
@@ -107,6 +108,11 @@ const VideographyEditPanel = ({ _video, onChange }) => {
 
               </Space.Compact>
             </Col>
+            {video?.locations ?
+              <Col span={24}>
+                <Locations video={video} />
+              </Col> : null
+            }
             {/* <Col className="gutter-row" span={24}>
               <Descriptions  layout="horizontal" extra={<Button type="primary">Edit</Button>}>
                 <Descriptions.Item label="Duration">{parseDuration(video.duration)}</Descriptions.Item>

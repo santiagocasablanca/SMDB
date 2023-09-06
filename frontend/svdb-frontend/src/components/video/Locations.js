@@ -85,16 +85,16 @@ const Locations = ({ video }) => {
                         onCancel={handleCancelAll}
                         footer={null}>
 
-                        <Map height={500} width={700} defaultCenter={[36.5310301, -4.9085383]} zoom={4} onBoundsChanged={({ center, zoom }) => {
+                        <Map height={500} width={700} defaultCenter={[51.4873439,0.0335215]} zoom={3} onBoundsChanged={({ center, zoom }) => {
                             // setCenter(center)
                             setZoom(zoom)
                         }} >
                             <ZoomControl />
                             {loaded && locations && Object.keys(locations).map(key => {
-                                console.log(locations);
-                                console.log(key);
+                                // console.log(locations);
+                                // console.log(key);
                                 const _locations = locations[key];
-                                console.log(_locations)
+                                // console.log(_locations)
                                 return _locations.map(location => {
                                     return (
                                         <Marker width={50} color={location.color} anchor={location.coords} />
