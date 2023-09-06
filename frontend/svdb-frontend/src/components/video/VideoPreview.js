@@ -1,10 +1,11 @@
-import { CommentOutlined, EyeOutlined, LikeOutlined } from '@ant-design/icons';
-import { Avatar, Card, Divider, Image, Space, Spin } from 'antd';
+import { CommentOutlined, EyeOutlined, LikeOutlined, LineChartOutlined } from '@ant-design/icons';
+import { Avatar, Card, Divider, Image, Space, Spin, Popover } from 'antd';
 import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useFormatter from '../../hooks/useFormatter';
 import VideoDrawer from './VideoDrawer';
 import VideoRate from './VideoRate';
+import VideoGrowthLine from '../graphs/VideoGrowthLine';
 
 const VideoPreview = ({ _video }) => {
     const navigate = useNavigate();
@@ -53,7 +54,9 @@ const VideoPreview = ({ _video }) => {
                             <p style={{ color: 'white', fontSize: '10px' }}><EyeOutlined /> {intToStringBigNumber(_video.views)}</p>
                             <p style={{ color: 'white', fontSize: '10px' }}><LikeOutlined /> {intToStringBigNumber(_video.likes)}</p>
                             <p style={{ color: 'white', fontSize: '10px' }}><CommentOutlined /> {intToStringBigNumber(_video.comments)}</p>
-
+                            <p style={{ color: 'white', fontSize: '10px' }}><Popover title="Views Growth" content={<div style={{ width: '600px' }}><VideoGrowthLine _video={_video} /></div>}>
+                                <LineChartOutlined />
+                            </Popover></p>
                         </Space>
                     </div>
                     <Avatar src={logo} onClick={goToChannel} style={{

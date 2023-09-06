@@ -10,6 +10,7 @@ import UpdateVideoModal from './UpdateVideoModal';
 import VideoRate from './VideoRate';
 import Locations from './Locations';
 import LatestVideosGrowthLine from '../graphs/LatestVideosGrowthLine';
+import VideoGrowthLine from '../graphs/VideoGrowthLine';
 
 const { Text } = Typography;
 
@@ -144,9 +145,7 @@ const VideoDrawer = ({ _video, _channel, _open, childToParent }) => {
                                         <Space style={{ float: 'right' }} >
                                             {/* <MapLocations /> */}
                                             <Space size={[0, 6]} wrap>
-                                                <Popover title="Views Growth" content={<div style={{ width: '600px' }}><LatestVideosGrowthLine title="" filter={{ videos: [_video] }} /></div>}>
-                                                    <Tag icon={<LineChartOutlined />} color="geekblue" key="growthPlot" closable={false}>Views Growth</Tag>
-                                                </Popover>
+
                                                 {_video.tags && _video.tags?.map((tag, index) => {
                                                     return (
                                                         <Tag
@@ -195,6 +194,10 @@ const VideoDrawer = ({ _video, _channel, _open, childToParent }) => {
                                                 })
                                                 }
                                             </Space>
+                                            <Divider type="vertical"></Divider>
+                                            <Popover title={_video.title} content={<div style={{ width: '600px' }} trigger="click"><VideoGrowthLine _video={_video} /></div>}>
+                                                <span style={{ color: 'white', fontSize: '16px' }}><LineChartOutlined /></span>
+                                            </Popover>
                                             <Divider type="vertical"></Divider>
                                             <VideoRate _video={_video}></VideoRate>
                                         </Space>

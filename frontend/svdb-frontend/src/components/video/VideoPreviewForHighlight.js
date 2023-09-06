@@ -1,5 +1,5 @@
-import { CommentOutlined, YoutubeOutlined, EyeOutlined, LikeOutlined } from '@ant-design/icons';
-import { Avatar, Col, Divider, Image, List, Popover, Row, Space, Spin, Typography } from 'antd';
+import { CommentOutlined, YoutubeOutlined, EyeOutlined, LikeOutlined, LineChartOutlined } from '@ant-design/icons';
+import { Avatar, Col, Divider, Image, List, Popover, Row, Space, Spin, Typography, Tag } from 'antd';
 import insertCss from 'insert-css';
 import React, { useMemo, useState, useEffect } from 'react';
 import 'react-lazy-load-image-component/src/effects/blur.css';
@@ -8,6 +8,8 @@ import useFormatter from '../../hooks/useFormatter';
 import variables from '../../sass/antd.module.scss';
 import VideoDrawer from './VideoDrawer';
 import VideoRate from './VideoRate';
+import LatestVideosGrowthLine from '../graphs/LatestVideosGrowthLine';
+import VideoGrowthLine from '../graphs/VideoGrowthLine';
 
 const { Title, Text } = Typography;
 
@@ -113,7 +115,9 @@ const VideoPreviewForHighlight = ({ _video, index }) => {
                             </Space>
                         </Col>
                         <Col span={4}>
-                            <div style={{ float: 'right' }}><VideoRate _video={_video}></VideoRate></div>
+                            <div style={{ float: 'right' }}>
+                                <VideoRate _video={_video} />
+                            </div>
                         </Col>
                     </Row>
                     <Row>
@@ -122,6 +126,9 @@ const VideoPreviewForHighlight = ({ _video, index }) => {
                                 <EyeOutlined />{intToStringBigNumber(_video.views)}
                                 <LikeOutlined />{intToStringBigNumber(_video.likes)}
                                 <CommentOutlined />{intToStringBigNumber(_video.comments)}
+                                <Popover title="Views Growth" content={<div style={{ width: '600px' }}><VideoGrowthLine _video={_video} /></div>}>
+                                    <LineChartOutlined />
+                                </Popover>
                             </Space>
                         </Col>
                     </Row>

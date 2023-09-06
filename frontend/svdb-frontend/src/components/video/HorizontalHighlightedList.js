@@ -1,5 +1,5 @@
-import { EyeOutlined, LikeOutlined } from '@ant-design/icons';
-import { Avatar, Button, Card, Col, Divider, Image, List, Row, Space, Spin, Typography } from 'antd';
+import { EyeOutlined, LikeOutlined, LineChartOutlined } from '@ant-design/icons';
+import { Avatar, Button, Card, Col, Divider, Image, List, Row, Space, Spin, Typography, Popover } from 'antd';
 import insertCss from 'insert-css';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -7,6 +7,7 @@ import useFormatter from '../../hooks/useFormatter';
 import { getVideosFn } from "../../services/videoApi.ts";
 import VideoDrawer from './VideoDrawer';
 import VideoRate from './VideoRate';
+import VideoGrowthLine from '../graphs/VideoGrowthLine';
 
 
 
@@ -107,6 +108,9 @@ const HorizontalHighlightedList = ({ title, filter }) => {
                             <Space split={<Divider type="vertical" />} size="small">
                                 <p style={{ color: 'white', fontSize: '12px' }}><EyeOutlined /> {intToStringBigNumber(video.views)}</p>
                                 <p style={{ color: 'white', fontSize: '12px' }}><LikeOutlined /> {intToStringBigNumber(video.likes)}</p>
+                                <p style={{ color: 'white', fontSize: '12px' }}><Popover title={video.title} content={<div style={{ width: '600px' }}><VideoGrowthLine _video={video} /></div>}>
+                                    <LineChartOutlined />
+                                </Popover></p>
                                 {/* <Divider type="vertical" /> */}
                                 <VideoRate _video={video} />
                             </Space>

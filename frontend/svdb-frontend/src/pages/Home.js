@@ -208,10 +208,29 @@ const HomePage = () => {
             <br></br>
             <Row gutter={[16, 16]}>
               <Col span={24}>
-                {/* <AppIntro /> */}
-                <LatestVideosGrowthLine title="Highlighted Videos Views Growth" filter={{ videos: top10videos }} />
+                <LatestVideosGrowthLine title="Highlighted Videos Growth" filter={{ videos: top10videos }} />
               </Col>
             </Row>
+            <br></br>
+            <Row>
+              <Col span={24}>
+                <HorizontalShortsList title="Most Recent Shorts" filter={shortsParamsRecent} />
+              </Col>
+            </Row>
+
+            <br></br>
+            <Row gutter={[16, 16]} className="hide-on-small-screen">
+              <Col span={24} xl={24}>
+                <FrequencyCard _channels={channels}></FrequencyCard>
+              </Col>
+            </Row>
+            {/* <br></br>
+            <Row gutter={[16, 16]}>
+              <Col span={24}>
+                <LatestVideosGrowthLine title="Latest Videos Growth" filter={{ videos: top10videos }} />
+              </Col>
+            </Row> */}
+
             <br></br>
 
             <Row gutter={[16, 16]}>
@@ -228,20 +247,9 @@ const HomePage = () => {
                 </Row>
               </Col>
             </Row>
+            
             <br></br>
-            <Row gutter={[16, 16]} className="hide-on-small-screen">
-              <Col span={24} xl={24}>
-                <FrequencyCard _channels={channels}></FrequencyCard>
-              </Col>
-            </Row>
-            <br></br>
-            <Row>
-              <Col span={24}>
-                <HorizontalShortsList title="Most Recent Shorts" filter={shortsParamsRecent} />
-              </Col>
-            </Row>
-
-            <br></br>
+            
 
 
           </div>

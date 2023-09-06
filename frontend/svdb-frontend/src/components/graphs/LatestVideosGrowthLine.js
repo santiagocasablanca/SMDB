@@ -74,7 +74,7 @@ const LatestVideosGrowthLine = ({ title, filter }) => {
             tickCount: 5,
         },
         slider: {
-            start: 0.1,
+            start: 0,
             end: 1,
             style: { fill: 'white' }
         },
