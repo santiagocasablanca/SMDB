@@ -415,19 +415,19 @@ const CreatorStatsPanel = ({ creator, channel, stats, channelsStats, mostRecentV
 
         const content = (index) => (
             <div className="last5videoPreview">
-                <Text strong ellipsis={true}>{last5[index].video.title}</Text>
+                <Text strong ellipsis={true}>{last5[index]?.video.title}</Text>
                 {/* <br></br> */}
-                <Image style={{ borderRadius: '8px', objectFit: 'cover' }} src={last5[index].video.url} height='150px' width="265px" preview={false}></Image>
+                <Image style={{ borderRadius: '8px', objectFit: 'cover' }} src={last5[index]?.video.url} height='150px' width="265px" preview={false}></Image>
                 {/* <br></br> */}
                 <Space>
                     <div style={{ width: '15px' }}>
                         {icon}
                     </div>
-                    <Text>{last5[index].videoValue}</Text>
+                    <Text>{last5[index]?.videoValue}</Text>
                     <Divider/>
-                    <Tooltip title={ratioTooltip(index)} placement="top"><Text style={{ color: getColor(last5[index].value) }}>{(last5[index].value * 100).toFixed(2)}%</Text></Tooltip>
+                    <Tooltip title={ratioTooltip(index)} placement="top"><Text style={{ color: getColor(last5[index]?.value) }}>{(last5[index]?.value * 100).toFixed(2)}%</Text></Tooltip>
                     <Divider/>
-                    <Text type="secondary">{parseDateToFromNow(last5[index].video.published_at)}</Text>
+                    <Text type="secondary">{parseDateToFromNow(last5[index]?.video.published_at)}</Text>
                 </Space>
 
             </div>
@@ -438,19 +438,19 @@ const CreatorStatsPanel = ({ creator, channel, stats, channelsStats, mostRecentV
             <>
                 <Space gutter={2}>
                     <Popover content={content(4)} placement="top">
-                        <Avatar icon={getIcon(last5[4].value)} style={{ backgroundColor: getColor(last5[4].value) }} shape="square" size="small" />
+                        <Avatar icon={getIcon(last5[4]?.value)} style={{ backgroundColor: getColor(last5[4]?.value) }} shape="square" size="small" />
                     </Popover>
                     <Popover content={content(3)} placement="top">
-                        <Avatar icon={getIcon(last5[3].value)} style={{ backgroundColor: getColor(last5[3].value) }} shape="square" size="small" />
+                        <Avatar icon={getIcon(last5[3]?.value)} style={{ backgroundColor: getColor(last5[3]?.value) }} shape="square" size="small" />
                     </Popover>
                     <Popover content={content(2)} placement="top">
-                        <Avatar icon={getIcon(last5[2].value)} style={{ backgroundColor: getColor(last5[2].value) }} shape="square" size="small" />
+                        <Avatar icon={getIcon(last5[2]?.value)} style={{ backgroundColor: getColor(last5[2]?.value) }} shape="square" size="small" />
                     </Popover>
                     <Popover content={content(1)} placement="top">
-                        <Avatar icon={getIcon(last5[1].value)} style={{ backgroundColor: getColor(last5[1].value) }} shape="square" size="small" />
+                        <Avatar icon={getIcon(last5[1]?.value)} style={{ backgroundColor: getColor(last5[1]?.value) }} shape="square" size="small" />
                     </Popover>
                     <Popover content={content(0)} placement="top">
-                        <Avatar icon={getIcon(last5[0].value)} style={{ backgroundColor: getColor(last5[0].value) }} shape="square" size="small" />
+                        <Avatar icon={getIcon(last5[0]?.value)} style={{ backgroundColor: getColor(last5[0]?.value) }} shape="square" size="small" />
                     </Popover>
                 </Space>
             </>

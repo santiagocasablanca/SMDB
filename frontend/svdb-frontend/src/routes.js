@@ -11,6 +11,7 @@ const Videography = React.lazy(() => import('./pages/Videography'))
 const VideoPage = React.lazy(() => import('./pages/VideoPage'))
 const Shorts = React.lazy(() => import('./pages/Shorts'))
 const About = React.lazy(() => import('./pages/About'))
+const Videography2 = React.lazy(() => import('./pages/VideographyOnCards'))
 // const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
 // const Typography = React.lazy(() => import('./views/theme/typography/Typography'))
 
@@ -24,6 +25,7 @@ const routes = [
   { path: '/channels', name: 'Channels', element: Channels },
   { path: '/channel/:id', name: 'Channel', element: Channel },
   { path: '/videography', name: 'Videography', element: Videography },
+  { path: '/videography2', name: 'Videography2', element: Videography2 },
   { path: '/video/:id', name: 'Video', element: VideoPage },
   { path: '/shorts', name: 'Shorts', element: Shorts },
   { path: '/about', name: 'About', element: About },

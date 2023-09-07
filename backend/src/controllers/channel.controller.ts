@@ -28,10 +28,18 @@ export const fetchChannelController = async (
       }]
     })
 
-    res.status(200).json({
-      status: "success",
-      result: channel,
-    });
+    if(channel) {
+      res.status(200).json({
+        status: "success",
+        result: channel,
+      });
+    } else {
+      res.status(404).json({
+        status: "error",
+        result: 'Channel not found',
+      });
+    }
+
   } catch (error) {
     res.status(500).json({
       status: "error",

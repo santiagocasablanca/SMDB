@@ -105,7 +105,7 @@ const VideographyOnCards = ({ _filters }) => {
 
   insertCss(`
   .videolistBodyContainer {
-    margin: 10px 0px auto;
+    margin: 10px 100px auto;
   }
 
   .headerPanel {
@@ -118,12 +118,12 @@ const VideographyOnCards = ({ _filters }) => {
   }
 
   .videos-list {
-    padding: 10px;
+    padding: 0px;
   }
 
   @media (max-width: 600px) {
     .videolistBodyContainer {
-      margin: 0 0px;
+      margin: 0 10px;
     }
     .headerPanel {
       margin: 10px 0px auto;

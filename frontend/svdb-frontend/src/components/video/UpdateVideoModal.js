@@ -8,13 +8,15 @@ import TagsAdd from './TagsAdd';
 import Locations from './Locations';
 import SeriesOrGameAdd from './SeriesOrGameAdd';
 
-const UpdateVideoModal = ({ video }) => {
+const UpdateVideoModal = ({ video, _icon, _color, big }) => {
     const [visible, setVisible] = useState(false);
     const [directorIds, setDirectorIds] = useState();
     const [cast, setCast] = useState();
     const [tags, setTags] = useState([]);
     const [series, setSeries] = useState();
     const [game, setGame] = useState();
+
+
 
     const [form] = Form.useForm();
 
@@ -75,11 +77,21 @@ const UpdateVideoModal = ({ video }) => {
         console.log('handling series, ' + JSON.stringify(values));
         setSeries(values);
         form.setFieldsValue({ gseriesame: values });
-    }      
+    }
+
+    const customIconStyle = {
+        fontSize: big ? '24px': '16px',
+        color: _color ? _color : 'white',   // Adjust the color
+      };
 
     return (
         <>
-            <Button type="text" onClick={showModal} icon={<EditOutlined />} />
+            {/* <Button type="text" onDoubleClick={showModal} icon={_icon ? _icon : <EditOutlined style={{width: big ? '24px': '16px'}} />} style={{color: _color ? _color : 'white', cursor: 'default'}}/> */}
+
+            {React.cloneElement(_icon ? _icon : <EditOutlined/>, {
+                style: customIconStyle 
+            })}
+
             <Modal
                 title="Update Video Information"
                 open={visible}
@@ -119,7 +131,7 @@ const UpdateVideoModal = ({ video }) => {
                         rules={[
                             { required: false, message: 'Please enter at least one tag' },
                         ]}>
-                        <TagsAdd _tags={tags} onChange={handleTags}/>
+                        <TagsAdd _tags={tags} onChange={handleTags} />
                     </Form.Item>
                     <Form.Item
                         label="Game"
@@ -127,7 +139,7 @@ const UpdateVideoModal = ({ video }) => {
                         rules={[
                             { required: false, message: 'Please enter at least one gamee' },
                         ]}>
-                        <SeriesOrGameAdd _tag={game} onChange={handleGame}/>
+                        <SeriesOrGameAdd _tag={game} onChange={handleGame} />
                     </Form.Item>
                     <Form.Item
                         label="Series"
@@ -135,7 +147,7 @@ const UpdateVideoModal = ({ video }) => {
                         rules={[
                             { required: false, message: 'Please enter at least one series' },
                         ]}>
-                        <SeriesOrGameAdd _tag={series} onChange={handleSeries}/>
+                        <SeriesOrGameAdd _tag={series} onChange={handleSeries} />
                     </Form.Item>
 
                     {/* <Form.Item

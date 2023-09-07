@@ -13,6 +13,7 @@ import VideoRate from '../components/video/VideoRate';
 import VideoGrowthLine from '../components/graphs/VideoGrowthLine';
 import ReactPlayer from 'react-player';
 import Locations from '../components/video/Locations';
+import UpdateVideoModal from '../components/video/UpdateVideoModal';
 import { getVideoFn } from "../services/videoApi.ts";
 
 
@@ -30,7 +31,7 @@ const VideoPage = () => {
 
   useEffect(() => {
     asyncFetch();
-  }, [IDBCursor]);
+  }, [id]);
 
   const asyncFetch = async () => {
     await getVideoFn(id).then((res) => {
@@ -98,13 +99,13 @@ const VideoPage = () => {
     navigate(url, { state: { id: id } });
   }
 
-
+{/* <YoutubeOutlined />  */}
   return (<>
     {isFetched && video ?
       <div className="videoBodyContainer">
         <Row className="headerPanel">
           <Col span={24} md={24} lg={18} xl={20}>
-            <Title level={3}><Space><YoutubeOutlined /> {video?.title}</Space></Title>
+            <Title level={3}><Space><UpdateVideoModal video={video} _icon={<YoutubeOutlined />} _color="black" big={true} />{video?.title}</Space></Title>
 
           </Col>
           <Col span={24} md={24} lg={6} xl={4}>
