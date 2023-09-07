@@ -30,7 +30,7 @@ fetchAndCacheData().then(() => {
     <StrictMode>
       <Provider store={store}>
         <App />
-      </Provider>,
+      </Provider>
     </StrictMode>
   )
 });

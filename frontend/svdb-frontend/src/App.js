@@ -10,14 +10,9 @@ import { AppIntro } from './components/index';
 
 
 const loading = (
-  // <AppIntro />
   <Row justify="center">
     <Spin />
   </Row>
-
-  // <div className="pt-3 text-center">
-  //   <div className="sk-spinner sk-spinner-pulse"></div>
-  // </div>
 )
 
 // Containers
