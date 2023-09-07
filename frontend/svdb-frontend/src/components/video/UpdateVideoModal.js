@@ -89,7 +89,8 @@ const UpdateVideoModal = ({ video, _icon, _color, big }) => {
             {/* <Button type="text" onDoubleClick={showModal} icon={_icon ? _icon : <EditOutlined style={{width: big ? '24px': '16px'}} />} style={{color: _color ? _color : 'white', cursor: 'default'}}/> */}
 
             {React.cloneElement(_icon ? _icon : <EditOutlined/>, {
-                style: customIconStyle 
+                style: customIconStyle ,
+                onDoubleClick: showModal
             })}
 
             <Modal

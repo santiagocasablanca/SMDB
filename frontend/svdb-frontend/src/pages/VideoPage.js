@@ -43,7 +43,9 @@ const VideoPage = () => {
       }
     });
   }
-
+  // width: 100%; /* Adjust the width as needed */
+  // white-space: nowrap;
+  // text-overflow: ellipsis;
   insertCss(`
   .videoBodyContainer {
     padding: 10px 80px 0px 80px;
@@ -52,14 +54,41 @@ const VideoPage = () => {
   .headerPanel {
     padding-top: 10px;
     color: `+ variables.sdmnYellow + `;
+   
   }
 
   .headerPanel h3 {
     color: `+ variables.sdmnBlack + `;
   }
 
+  .divider {
+    margin: 0px 10px;
+  }
+
 .videoContainer {
-    height: 550px;
+    height: 600px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.infoStatsComponent {
+  float: right; 
+  background-color: black;
+  opacity: 0.9;
+  border-radius: 8px;
+  padding: 5px;
+  margin-bottom: 8px;
+  margin-top: 12px;
+}
+
+.infoStatsComponent span {
+  color: white; 
+  font-size: 13px;
+}
+
+.evenMoreInfoComponent{
+  height: 414px;
+  overflow: auto
 }
 
 .showPointer:hover {
@@ -71,8 +100,13 @@ const VideoPage = () => {
         padding: 0 20px 0 20px;
     }
     .videoContainer {
-        height: 450px;
+        height: 600px;
     }
+
+    .divider {
+      margin: 0px 6px;
+    }
+
 }
 
 @media (max-width: 900px) {
@@ -88,6 +122,22 @@ const VideoPage = () => {
     .videoContainer {
         height: 240px;
     }
+
+    .divider {
+      margin: 0px 4px;
+    }
+
+    .infoStatsComponent  {
+      margin-top: 0px;
+      margin-bottom: 0px;
+    }
+    .infoStatsComponent span {
+      font-size: 10px;
+    }
+
+    .evenMoreInfoComponent{
+      height: 250px;
+    }
 }
 
   `)
@@ -99,157 +149,182 @@ const VideoPage = () => {
     navigate(url, { state: { id: id } });
   }
 
-{/* <YoutubeOutlined />  */}
+  {/* <YoutubeOutlined />  */ }
   return (<>
     {isFetched && video ?
       <div className="videoBodyContainer">
-        <Row className="headerPanel">
-          <Col span={24} md={24} lg={18} xl={20}>
-            <Title level={3}><Space><UpdateVideoModal video={video} _icon={<YoutubeOutlined />} _color="black" big={true} />{video?.title}</Space></Title>
-
-          </Col>
-          <Col span={24} md={24} lg={6} xl={4}>
-            <span style={{ float: 'right', backgroundColor: 'black', opacity: '0.9', borderRadius: '8px', padding: '5px' }}>
-              <span style={{ color: 'white', fontSize: '13px' }}>{parseDate(video?.published_at, "DD MMM YYYY")}</span>
-              <Divider type="vertical"></Divider>
-              <Popover title={video.title} content={<VideoGrowthLine _video={video} />}>
-                <span style={{ fontSize: '16px', color: 'white' }}><LineChartOutlined /></span>
-              </Popover>
-              <Divider type="vertical"></Divider>
-              <VideoRate _video={video}></VideoRate>
-            </span>
-            {/* <VideographyFilterPanel filters={myFilters} onChange={handleFilterChange} /> */}
-          </Col>
-        </Row>
-
         <Row gutter={[8, 12]}>
-          <Col span={24} md={24} lg={14} xl={16}>
+          <Col span={24} md={24} lg={24} xl={16}>
             <Row gutter={[8, 12]}>
+              <Col span={24}>
+                <Title level={3} className="headerPanel" style={{ color: 'black' }}>
+                  <Space>
+                    <UpdateVideoModal video={video} _icon={<YoutubeOutlined />} _color="black" big={true} /> {video?.title}
+                  </Space>
+                </Title>
+              </Col>
               <Col span={24}>
                 <div className="videoContainer">
                   <ReactPlayer url={video.player.embedHtml} width='100%' height="100%"></ReactPlayer>
                 </div>
               </Col>
-              <Col span={24}>
-                <Space size="small" style={{ float: 'right' }}>
-                  <EyeOutlined />{intToStringBigNumber(video.views)}
-                  <LikeOutlined />{intToStringBigNumber(video.likes)}
-                  <CommentOutlined />{intToStringBigNumber(video.comments)}
-                </Space>
-              </Col>
             </Row>
           </Col>
 
-          <Col span={24} md={24} lg={10} xl={8}>
-            <Card>
-              <Row style={{
-                height: "550px",
-                overflow: "auto"
-              }}>
-                <Col span={24}>
-                  <Space style={{ float: 'right' }} >
-                    {/* <MapLocations /> */}
-                    <Space size={[0, 6]} wrap>
+          <Col span={24} md={24} lg={24} xl={8}>
+            <Row gutter={[8, 12]}>
+              <Col span={24}>
+                <div className="infoStatsComponent">
+                  <span>{parseDate(video?.published_at, "DD MMM YYYY")}</span>
+                  <Divider type="vertical" className="divider"></Divider>
+                  <span><EyeOutlined /> {intToStringBigNumber(video.views)}</span>
+                  <Divider type="vertical" className="divider"></Divider>
+                  <span><LikeOutlined /> {intToStringBigNumber(video.likes)}</span>
+                  <Divider type="vertical" className="divider"></Divider>
+                  <span><CommentOutlined /> {intToStringBigNumber(video.comments)}</span>
+                  <Divider type="vertical" className="divider"></Divider>
+                  <Popover title={video.title} content={<VideoGrowthLine _video={video} />} placement="bottomRight">
+                    <span style={{ fontSize: '16px', color: 'white' }}><LineChartOutlined style={{ fontSize: '16px' }} /></span>
+                  </Popover>
+                  <Divider type="vertical"></Divider>
+                  <VideoRate _video={video}></VideoRate>
+                </div>
+              </Col>
+              <Col span={24}>
+                <Card bodyStyle={{ padding: '10px', paddingTop: '25px' }}>
+                <Row gutter={[8, 10]}>
+                  {video?.serie ?
+                    <Col span={24}>
+                      <Space>
+                        <Text strong style={{ marginLeft: '20px' }}>Series </Text>
+                        <Space size={[0, 6]} wrap>
+                          {video.serie && [video.serie]?.map((tag, index) => {
+                            return (
+                              <Tag
+                                key={tag + 'series'}
+                                color={variables.sdmnPink}
+                                closable={false}
+                                style={{
+                                  userSelect: 'none',
+                                }}>
+                                <span>
+                                  {tag}
+                                </span>
+                              </Tag>
+                            )
+                          })
+                          }
+                        </Space>
+                      </Space>
 
-                      {video.tags && video.tags?.map((tag, index) => {
-                        return (
-                          <Tag
-                            key={tag + 'tags'}
-                            closable={false}
-                            style={{
-                              userSelect: 'none',
-                            }}>
-                            <span>
-                              {tag}
-                            </span>
-                          </Tag>
-                        )
-                      })
-                      }
-                      {video.serie && [video.serie]?.map((tag, index) => {
-                        return (
-                          <Tag
-                            key={tag + 'series'}
-                            color={variables.sdmnPink}
-                            closable={false}
-                            style={{
-                              userSelect: 'none',
-                            }}>
-                            <span>
-                              {tag}
-                            </span>
-                          </Tag>
-                        )
-                      })
-                      }
-                      {video.game && [video.game]?.map((tag, index) => {
-                        return (
-                          <Tag
-                            key={tag + 'game'}
-                            color={variables.sdmnLightBlue}
-                            closable={false}
-                            style={{
-                              userSelect: 'none',
-                            }}>
-                            <span>
-                              {tag}
-                            </span>
-                          </Tag>
-                        )
-                      })
-                      }
-                    </Space>
-                  </Space>
+                    </Col> : null
+                  }
+                  {video?.game ?
+                    <Col span={24}>
+                      <Space>
+                        <Text strong style={{ marginLeft: '20px' }}>Game </Text>
+                        <Space size={[0, 6]} wrap>
+                          {video.game && [video.game]?.map((tag, index) => {
+                            return (
+                              <Tag
+                                key={tag + 'game'}
+                                color={variables.sdmnLightBlue}
+                                closable={false}
+                                style={{
+                                  userSelect: 'none',
+                                }}>
+                                <span>
+                                  {tag}
+                                </span>
+                              </Tag>
+                            )
+                          })
+                          }
+                        </Space>
+                      </Space>
 
-                </Col>
-                {video?.locations ?
-                  <Col span={24}>
-                    <Locations video={video} />
-                  </Col> : null
-                }
-                <Col span={24}>
-                  <List
-                    header={<Text strong style={{ marginLeft: '20px' }}>Directed by</Text>}
-                    size="small"
-                    itemLayout="vertical"
-                    dataSource={video?.directedBy}
-                    //   style={{ width: '100%' }}
-                    renderItem={(creator, index) => (
-                      <List.Item key={creator.id} onClick={() => goToCreator(creator.id)} className="showPointer">
-                        <List.Item.Meta
-                          avatar={<Avatar key={"drawerDirector" + index} src={creator.profile_picture} />}
-                          title={creator.name}
+                    </Col> : null
+                  }
+                  {/* <br></br> */}
+                  {video?.locations ?
+                    <Col span={24}>
+                      <Locations video={video} />
+                    </Col> : null
+                  }
+                  </Row>
+                  <Row gutter={[8, 10]}>
+                    <Col span={24}>
+                      <List
+                        header={<Text strong style={{ marginLeft: '20px' }}>Directed by</Text>}
+                        size="small"
+                        itemLayout="horizontal"
+                        dataSource={video?.directedBy}
+                        //   style={{ width: '100%' }}
+                        renderItem={(creator, index) => (
+                          <List.Item key={creator.id} onClick={() => goToCreator(creator.id)} className="showPointer">
+                            <List.Item.Meta
+                              avatar={<Avatar key={"drawerDirector" + index} src={creator.profile_picture} />}
+                              title={creator.name}
 
-                        />
-                      </List.Item>
-                    )} >
-                  </List>
-                </Col>
-                <Col span={24}>
-                  <List
-                    header={<Text strong style={{ marginLeft: '20px' }}>Cast</Text>}
-                    size="small"
-                    itemLayout="vertical"
-                    dataSource={video?.cast}
-                    renderItem={(creator, index) => (
-                      <List.Item key={creator.id} onClick={() => goToCreator(creator.id)} className="showPointer">
-                        <List.Item.Meta
-                          avatar={<Avatar key={"draweCast" + index} src={creator.profile_picture} />}
-                          title={<><Text>{creator.name}</Text> <Text italic type="secondary"> as {creator.video_creator.role}</Text></>}
+                            />
+                          </List.Item>
+                        )} >
+                      </List>
+                    </Col>
+                    </Row>
+                    <Row className="evenMoreInfoComponent"
+                    gutter={[8, 10]}>
+                    <Col span={24}>
+                      <List
+                        header={<Text strong style={{ marginLeft: '20px' }}>Cast</Text>}
+                        size="small"
+                        itemLayout="horizontal"
+                        dataSource={video?.cast}
+                        renderItem={(creator, index) => (
+                          <List.Item key={creator.id} onClick={() => goToCreator(creator.id)} className="showPointer">
+                            <List.Item.Meta
+                              avatar={<Avatar key={"draweCast" + index} src={creator.profile_picture} />}
+                              title={<><Text>{creator.name}</Text> <Text italic type="secondary"> as {creator.video_creator.role}</Text></>}
 
-                        />
-                      </List.Item>
-                    )} >
-                  </List>
-                </Col>
-              </Row>
-            </Card>
+                            />
+                          </List.Item>
+                        )} >
+                      </List>
+                    </Col>
+                    {video?.tags ?
+                      <Col span={24}>
+                        <Space>
+                          <Text strong style={{ marginLeft: '20px' }}>Tags </Text>
+                          <Space size={[0, 6]} wrap>
+                            {video.tags && video.tags?.map((tag, index) => {
+                              return (
+                                <Tag
+                                  key={tag + 'tags'}
+                                  closable={false}
+                                  style={{
+                                    userSelect: 'none',
+                                  }}>
+                                  <span>
+                                    {tag}
+                                  </span>
+                                </Tag>
+                              )
+                            })
+                            }
+                          </Space>
+                        </Space>
+
+                      </Col> : null
+                    }
+                  </Row>
+                </Card>
+              </Col>
+
+            </Row>
           </Col>
         </Row>
-
-
+        <br></br>
       </div>
-
       : <Spin />
     }
   </>);
