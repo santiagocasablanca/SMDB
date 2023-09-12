@@ -12,7 +12,7 @@ import HorizontalShortsList from '../components/video/HorizontalShortsList';
 import VideoPreviewForHighlight from '../components/video/VideoPreviewForHighlight';
 import variables from '../sass/antd.module.scss';
 import { getChannelsFn } from "../services/channelApi.ts";
-import { getVideosFn } from "../services/videoApi.ts";
+import { getVideosFn, getHighlightedVideosFn } from "../services/videoApi.ts";
 import { AppIntro } from '../components';
 import LatestVideosGrowthLine from '../components/graphs/LatestVideosGrowthLine';
 
@@ -46,7 +46,7 @@ const HomePage = () => {
       let _paramsTop10 = new URLSearchParams();
       _paramsTop10.append("sort", "views%desc")
       _paramsTop10.append("publishedAtRange", range)
-      await getVideosFn(1, 10, _paramsTop10)
+      await getHighlightedVideosFn(1, 10, _paramsTop10)
         .then((result) => {
           setTop10videos(result.videos);
           // setTop10videoIds(result.videos.map(video => { return video.video_id; }));

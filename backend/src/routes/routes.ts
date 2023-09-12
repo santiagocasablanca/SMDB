@@ -17,6 +17,7 @@ import {
   fetchGroupedByCast,
   fetchStatsGroupedByYear,
   fetchStatsGroupedByDurationRange,
+  findHighlightedVideosController,
   findGroupedByTags
 } from "../controllers/video.controller";
 
@@ -47,6 +48,10 @@ router.route("/creator/fetchStats")
 router
   .route("/videos/")
   .get(findAllVideosController);
+router
+  .route("/videos/highlighted/")
+  .get(findHighlightedVideosController);
+
 router
   .route("/appearences/")
   .get(findAllAppearencesController);

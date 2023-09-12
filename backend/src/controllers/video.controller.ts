@@ -684,6 +684,133 @@ export const fetchVideoUploadTimeFrequency = async (
   }
 }
 
+export const findHighlightedVideosController = async (
+  req: Request<{}, {}, {}, VideosSearchReqQuery & { series?: string, title?: string }>,
+  res: Response
+) => {
+  try {
+    const page = 1;
+    const limit = 10;
+    const skip = (page - 1) * limit;
+
+    // console.log(req.query)
+    //sort 
+    let sort = ['published_at', 'DESC'];
+
+    let excludeShorts =  'true';
+
+    let whereClause = {}
+
+    if (req.query.channels) {
+      var channelsArr = req.query.channels.split(',');
+
+      whereClause['channel_id'] = { [Op.or]: channelsArr };
+    }
+
+    if (req.query.excludedChannels) {
+      var channelsArr = req.query.excludedChannels.split(',');
+
+      whereClause['channel_id'] = { [Op.notIn]: channelsArr };
+    }
+
+    if (req.query.castMember) {
+      var creatorArr = req.query.castMember.split(',');
+
+      whereClause['channel_id'] = { [Op.notIn]: channelsArr };
+    }
+
+    if (req.query.series) {
+      var seriessArr = req.query.series.split(',');
+
+      whereClause['serie'] = { [Op.or]: seriessArr };
+    }
+
+    if (req.query.games) {
+      var gamesArr = req.query.games.split(',');
+
+      whereClause['game'] = { [Op.or]: gamesArr };
+    }
+
+    if (req.query.tags) {
+      var tagsArr = req.query.tags.split(',');
+
+      whereClause['tags'] = { [Op.contains]: tagsArr };
+    }
+
+    if (req.query.publishedAtRange) {
+      let rangeDate = req.query.publishedAtRange.split(',');
+      const publishedAtSearchInitial = dayjs(rangeDate[0]).format("YYYY-MM-DD");
+      const publishedAtSearchFinal = dayjs(rangeDate[1]).format("YYYY-MM-DD");
+      whereClause['published_at'] = { [Sequelize.Op.between]: [publishedAtSearchInitial, publishedAtSearchFinal] };
+
+    }
+
+    if (req.query.onlyShorts === 'true') {
+      whereClause['duration_parsed'] = { [Sequelize.Op.lt]: ['69'] };
+    }
+
+    if (excludeShorts === 'true') {
+      whereClause['duration_parsed'] = { [Sequelize.Op.gt]: ['69'] };
+    }
+
+    // // console.log(whereClause);
+
+    const videos = await Video.findAll({
+      attributes: ['video_id', 'title',
+        'duration',
+        'duration_parsed',
+        'channel_id',
+        'channel_title',
+        'views',
+        'likes',
+        'dislikes',
+        'comments',
+        'url',
+        'player',
+        'tags',
+        'locations',
+        'category',
+        'serie',
+        'game',
+        'published_at',
+        'updated_at'
+      ], where: whereClause,
+      include: [{
+        model: Channel,
+        as: 'channel', attributes: ['channel_id', 'custom_url',
+          'title',
+          'subs',
+          'videos',
+          'views',
+          'likes',
+          'comments',
+          'logo_url',]
+      },
+      {
+        model: Creator,
+        as: 'directedBy', attributes: ['id', 'custom_url', 'name', 'profile_picture']
+      },
+      {
+        model: Creator,
+        as: 'cast',
+        attributes: ['id', 'custom_url', 'name', 'profile_picture'],
+      }],
+      limit, offset: skip, order: [sort]
+    });
+
+    res.status(200).json({
+      status: "success",
+      results: videos.count,
+      videos: videos.rows,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      status: "error",
+      message: error.message,
+    });
+  }
+};
+
 export const findAllVideosController = async (
   req: Request<{}, {}, {}, VideosSearchReqQuery & { series?: string, title?: string }>,
   res: Response

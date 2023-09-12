@@ -115,6 +115,15 @@ export const getVideosFn = async (page = 1, limit = 30, params) => {
   return response.data;
 };
 
+export const getHighlightedVideosFn = async (page = 1, limit = 30, params) => {
+  const req = `videos/highlighted?page=${page}&limit=${limit}&${params}`;
+  // if(params) req.concat(`&${params}`);
+  const response = await videoApi.get<IVideosResponse>(
+    req
+  );
+  return response.data;
+};
+
 export const getAppearencesFn = async (page = 1, limit = 30, params) => {
   const req = `appearences?page=${page}&limit=${limit}&${params}`;
   // if(params) req.concat(`&${params}`);
