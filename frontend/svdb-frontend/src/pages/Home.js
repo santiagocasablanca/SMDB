@@ -48,6 +48,7 @@ const HomePage = () => {
       _paramsTop10.append("publishedAtRange", range)
       await getHighlightedVideosFn(1, 10, _paramsTop10)
         .then((result) => {
+          console.log(result);
           setTop10videos(result.videos);
           // setTop10videoIds(result.videos.map(video => { return video.video_id; }));
           setTopChannelIds(result.videos.map(video => { return video.channel_id; }));

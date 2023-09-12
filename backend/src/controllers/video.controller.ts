@@ -800,8 +800,7 @@ export const findHighlightedVideosController = async (
 
     res.status(200).json({
       status: "success",
-      results: videos.count,
-      videos: videos.rows,
+      videos: videos,
     });
   } catch (error: any) {
     res.status(500).json({
