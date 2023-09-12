@@ -27,11 +27,11 @@ async function fetchAndCacheData() {
 fetchAndCacheData().then(() => {
   // ReactGA.pageview(window.location.pathname + window.location.search);
   createRoot(document.getElementById('root')).render(
-    <StrictMode>
+    // <StrictMode>
       <Provider store={store}>
         <App />
       </Provider>
-    </StrictMode>
+    // </StrictMode>
   )
 });
 

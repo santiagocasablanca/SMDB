@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useFormatter from '../../hooks/useFormatter';
 import { getVideosFn } from "../../services/videoApi.ts";
-import VideoDrawer from './VideoDrawer';
+// import VideoDrawer from './VideoDrawer';
 import VideoRate from './VideoRate';
 import VideoGrowthLine from '../graphs/VideoGrowthLine';
 
@@ -88,12 +88,19 @@ const HorizontalHighlightedList = ({ title, filter }) => {
             navigate(url, { state: { id: video.channel_id } });
         }
 
+        const handleClickVideo = (id) => {
+            console.log(id);
+            const url = '/video/' + id;
+            // not necessary, kind of redudant at the moment. Params are set through useParams and useLocation (state)
+            navigate(url, { state: { id: id } });
+          }
+
         return (
             <> {isLoaded ?
                 (<>
                     <Card
                         style={{ width: '336px', fontSize: '12px' }}
-                        onClick={showDrawer}
+                        onClick={() => handleClickVideo(video.video_id)}
                         cover={
                             <Image style={{ borderRadius: '8px', objectFit: 'cover' }} src={video.url} width='336px' height='189px' preview={false} />
                         }
@@ -121,7 +128,7 @@ const HorizontalHighlightedList = ({ title, filter }) => {
                         <p style={{ color: 'white', fontSize: '10px', top: '0px', position: 'absolute', right: '5px' }}>{parseDate(video.published_at, "DD MMM YYYY")}</p>
 
                     </Card>
-                    <VideoDrawer _video={video} _channel={channel} _open={open} childToParent={childToParent}></VideoDrawer>
+                    {/* <VideoDrawer _video={video} _channel={channel} _open={open} childToParent={childToParent}></VideoDrawer> */}
                 </>
                 ) : (
                     <Spin />
@@ -130,6 +137,8 @@ const HorizontalHighlightedList = ({ title, filter }) => {
             </>
         );
     };
+
+  
 
     return (
         <> {isLoaded ?

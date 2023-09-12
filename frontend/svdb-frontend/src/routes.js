@@ -7,11 +7,11 @@ const Creator = React.lazy(() => import('./pages/Creator'))
 const Creators = React.lazy(() => import('./pages/Creators'))
 const Channels = React.lazy(() => import('./pages/Channels'))
 const Channel = React.lazy(() => import('./pages/Channel'))
-const Videography = React.lazy(() => import('./pages/Videography'))
+const DeprecatedVideography = React.lazy(() => import('./pages/Videography'))
 const VideoPage = React.lazy(() => import('./pages/VideoPage'))
 const Shorts = React.lazy(() => import('./pages/Shorts'))
 const About = React.lazy(() => import('./pages/About'))
-const Videography2 = React.lazy(() => import('./pages/VideographyOnCards'))
+const Videography = React.lazy(() => import('./components/videography/VideographyPage'))
 // const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
 // const Typography = React.lazy(() => import('./views/theme/typography/Typography'))
 
@@ -24,8 +24,8 @@ const routes = [
   { path: '/creators', name: 'Creators', element: Creators },
   { path: '/channels', name: 'Channels', element: Channels },
   { path: '/channel/:id', name: 'Channel', element: Channel },
+  { path: '/videography2', name: 'Videography2', element: DeprecatedVideography },
   { path: '/videography', name: 'Videography', element: Videography },
-  { path: '/videography2', name: 'Videography2', element: Videography2 },
   { path: '/video/:id', name: 'Video', element: VideoPage },
   { path: '/shorts', name: 'Shorts', element: Shorts },
   { path: '/about', name: 'About', element: About },

@@ -7,11 +7,11 @@ import { Button, Card, Col, Image, Input, List, Row, Space, Typography, Divider,
 import insertCss from 'insert-css';
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
-import useFormatter from '../hooks/useFormatter';
-import variables from '../sass/antd.module.scss';
-import { getVideosFn } from "../services/videoApi.ts";
-import VideoRate from '../components/video/VideoRate';
-import VideoGrowthLine from '../components/graphs/VideoGrowthLine';
+import useFormatter from '../../hooks/useFormatter';
+import variables from '../../sass/antd.module.scss';
+import { getVideosFn } from "../../services/videoApi.ts";
+import VideoRate from '../video/VideoRate';
+import VideoGrowthLine from '../graphs/VideoGrowthLine';
 import VideographyFilterPopoverPanel from './VideographyFilterPopoverPanel';
 
 
@@ -20,85 +20,17 @@ import VideographyFilterPopoverPanel from './VideographyFilterPopoverPanel';
 const { Title } = Typography;
 const { Search } = Input;
 
-const VideographyOnCards = () => {
+const VideographyOnCards = ({fetchedData, initLoading, isLoading, hasMore, loadMore}) => {
   const navigate = useNavigate();
   const location = useLocation();
-  let [searchParams, setSearchParams] = useSearchParams();
 
   const loadMoreRef = useRef(null);
-  const observerRef = useRef(null);
-
-  const [initLoading, setInitLoading] = useState(true);
-  const [loading, setLoading] = useState(false);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
-  const [fetchedData, setFetchedData] = useState([]);
-  // const [filters, setFilters] = useState(parseFiltersFromURLSearchParams(searchParams));
-
   const { intToStringBigNumber, parseDate, parseDuration } = useFormatter();
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
 
-  const [open, setOpen] = useState(false);
-
-
-
-
-  const showFilter = () => {
-    setOpen(true);
-  };
-
-  const childToParent = (childdata) => {
-    console.log('childdata: ', childdata);
-    setFetchedData([]);
-    setIsLoading(false);
-    setHasMore(true);
-    console.log(searchParams, childdata)
-    Object.keys(childdata).forEach((key) => {
-      addOrUpdateAttribute(searchParams, key, childdata[key]);
-    });
-    console.log(searchParams, childdata);
-    asyncFetch(1);
-
-
-    setOpen(false);
-  }
-
-  const defaultFilters = {
-    title: '',
-    channels: [],
-    excludedChannels: [],
-    castMember: [],
-    published_atRange: [],
-    tags: [],
-    locations: '',
-    series: [],
-    search: false, // Set this to false by default
-    category: '',
-    onlyShorts: false,
-    excludeShorts: true,
-    date: null,
-    sort: ''
-  };
-  const [myFilters, setMyFilters] = useState(defaultFilters);
-
-  useEffect(() => {
-    console.log('here ', initLoading, location, searchParams);
-    if (initLoading) {
-      setInitLoading(false);
-
-      if (location.state && location.state?.filter) {
-        Object.keys(location.state?.filter).forEach((key) => {
-          addOrUpdateAttribute(searchParams, key, location.state?.filter[key]);
-        })
-      }
-      asyncFetch(1);
-    }
-  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
-      console.log("handleScroll", isLoading, hasMore, window.innerHeight + window.scrollY, document.documentElement.scrollHeight);
+      // console.log("handleScroll", isLoading, hasMore, window.innerHeight + window.scrollY, document.documentElement.scrollHeight);
       if (
         window.innerHeight + window.scrollY >=
         document.documentElement.scrollHeight - 100 &&
@@ -115,43 +47,18 @@ const VideographyOnCards = () => {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [isLoading, hasMore]);
+  }, [fetchedData, isLoading, hasMore]);
 
   const onLoadMore = () => {
-    asyncFetch(page + 1);
+    // call parent
+    loadMore(true);
   };
 
-  const asyncFetch = async (pageNumber, title = null) => {
-    try {
-      if (isLoading || !hasMore) {
-        return;
-      }
-
-
-      if (title !== null) {
-        addOrUpdateAttribute(searchParams, 'title', title);
-      }
-
-      setIsLoading(true);
-      const result = await getVideosFn(pageNumber, 24, searchParams);
-
-      if (result.videos && result.videos.length > 0) {
-        setFetchedData((prevData) => [...prevData, ...result.videos]);
-        setPage(pageNumber);
-      } else {
-        setHasMore(false);
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    } finally {
-      setIsLoading(false);
-      setIsLoadingMore(false); // Reset loading more state
-    }
-  };
+  
 
   insertCss(`
   .videolistBodyContainer {
-    margin: 10px 100px auto;
+    margin: 10px 0px auto;
   }
 
   .headerPanel {
@@ -178,24 +85,6 @@ const VideographyOnCards = () => {
   }
 
   `)
-
-  function addOrUpdateAttribute(searchParams, attributeName, attributeValue) {
-    if (searchParams.has(attributeName)) {
-      // If the attribute already exists, replace its value
-      searchParams.set(attributeName, attributeValue);
-    } else {
-      // If the attribute doesn't exist, add a new one
-      searchParams.append(attributeName, attributeValue);
-    }
-  }
-
-  const onSearch = (value) => {
-    console.log(value);
-    setFetchedData([]);
-    setIsLoading(false);
-    setHasMore(true);
-    asyncFetch(1, value);
-  }
 
   const handleClickVideo = (id) => {
     console.log(id);
@@ -245,44 +134,6 @@ const VideographyOnCards = () => {
 
   return (<>
     <div className="videolistBodyContainer">
-
-      <Row className="headerPanel">
-        <Col span="20">
-          <Title level={3}><Space><YoutubeOutlined /> Videography</Space></Title>
-        </Col>
-        <Col span="4">
-          <div style={{ float: 'right' }}>
-            <Space.Compact block>
-              {/* <Popover content={filter} placement="bottom">
-              </Popover> */}
-              <Search
-                placeholder="Search by Title"
-                onSearch={onSearch}
-                style={{
-                  width: 200,
-                }}
-              />
-              <Button icon={<FilterOutlined />} onClick={showFilter} />
-
-            </Space.Compact>
-
-          </div>
-          {/* showFilter */}
-          <VideographyFilterPopoverPanel _filters={
-            {
-              channels: searchParams.get('channels')?.split(','),
-              publishedAtRange: [],
-              locations: [],
-              series: [],
-              games: [],
-              tags: [],
-              cast: [],
-              search: true
-            }} _open={open} childToParent={childToParent} />
-          {/* <VideographyFilterPanel filters={myFilters} onChange={handleFilterChange} /> */}
-        </Col>
-      </Row>
-      <br></br>
       <List
         grid={{
           gutter: 8,

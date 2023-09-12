@@ -3,7 +3,7 @@ import { Avatar, Card, Divider, Image, Space, Spin, Popover } from 'antd';
 import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useFormatter from '../../hooks/useFormatter';
-import VideoDrawer from './VideoDrawer';
+// import VideoDrawer from './VideoDrawer';
 import VideoRate from './VideoRate';
 import VideoGrowthLine from '../graphs/VideoGrowthLine';
 
@@ -31,13 +31,20 @@ const VideoPreview = ({ _video }) => {
         navigate(url, { state: { id: _video.channel_id } });
     }
 
+    const handleClickVideo = (id) => {
+        console.log(id);
+        const url = '/video/' + id;
+        // not necessary, kind of redudant at the moment. Params are set through useParams and useLocation (state)
+        navigate(url, { state: { id: id } });
+      }
+
     // 480 x 270  top: '0px', position: 'absolute', right: '5px'
     return (
         <> {isLoaded ?
             (<>
                 <Card
                     style={{ width: '220px', fontSize: '12px' }}
-                    onClick={showDrawer}
+                    onClick={() => handleClickVideo(_video.video_id)}
                     bodyStyle={{ padding: 0, cursor: 'pointer' }}>
 
                     <Image style={{ borderRadius: '8px', objectFit: 'cover' }} src={_video.url} width='218px' height='168px' preview={false} />
@@ -64,7 +71,7 @@ const VideoPreview = ({ _video }) => {
                     }} />
                     {/* </Popover> */}
                 </Card>
-                <VideoDrawer _video={_video} _channel={channel} _open={open} childToParent={childToParent}></VideoDrawer>
+                {/* <VideoDrawer _video={_video} _channel={channel} _open={open} childToParent={childToParent}></VideoDrawer> */}
             </>
             ) : (
                 <Spin />

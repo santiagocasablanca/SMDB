@@ -6,7 +6,7 @@ import { IChannelResponse } from "./types";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:8005/api/";
 
-const DB_NAME = 'channelStatsDB';
+const DB_NAME = 'channelsDB';
 const STORE_NAME = 'channelStats';
 
 
@@ -55,7 +55,7 @@ export const getChannelStatsFn = async (channel_id) => {
   // } catch (error) {
   //   console.error('Error parsing cached data:', error);
   // }
-// console.log('fetching from cache: ', channel_id);
+  // console.log('fetching from cache: ', channel_id);
   try {
     const db = await openDatabase();
     const tx = db.transaction(STORE_NAME, 'readonly');
@@ -75,6 +75,26 @@ export const getChannelStatsFn = async (channel_id) => {
   }
 };
 
+export const storeChannelsOnCache = async (channels) => {
+  try {
+
+    const db = await openDatabase();
+    const tx = db.transaction("channels", 'readwrite');
+    const store = tx.objectStore("channels");
+
+    for (const channel of channels) {
+      await store.put(channel, channel.channel_id);
+    }
+
+    // Complete the transaction
+    await tx.complete;
+
+    // Close the database
+    db.close();
+  } catch (error) {
+    console.error('Error fetching or storing data:', error);
+  }
+}
 
 
 export const fetchAndCacheAllData = async (params) => {

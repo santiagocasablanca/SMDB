@@ -3,7 +3,7 @@ import { Avatar, Card, Divider, Image, Space, Spin, Typography } from 'antd';
 import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useFormatter from '../../hooks/useFormatter';
-import VideoDrawer from './VideoDrawer';
+// import VideoDrawer from './VideoDrawer';
 
 
 const VideoPreview = ({ _video }) => {
@@ -38,6 +38,12 @@ const VideoPreview = ({ _video }) => {
         navigate(url, { state: { id: _video.channel_id } });
     }
 
+    const handleClickVideo = (id) => {
+        console.log(id);
+        const url = '/video/' + id;
+        // not necessary, kind of redudant at the moment. Params are set through useParams and useLocation (state)
+        navigate(url, { state: { id: id } });
+      }
 
     // useEffect(() => {
     //     async function fetchData() {
@@ -62,7 +68,7 @@ const VideoPreview = ({ _video }) => {
             (<>
                 <Card
                     style={{ width: '216px', fontSize: '12px' }}
-                    onClick={showDrawer}
+                    onClick={() => handleClickVideo(_video.video_id)}
                     bodyStyle={{ padding: 0, cursor: 'pointer' }}>
                     {/* <Popover content={video.title} placement="top" onClick={showDrawer}> */}
 
@@ -83,7 +89,7 @@ const VideoPreview = ({ _video }) => {
                         <p style={{ color: 'white', fontSize: '10px', top: '0px', position: 'absolute', right: '5px' }}>{formattedDate}</p>
                     {/* </Popover> */}
                 </Card>
-                <VideoDrawer _video={_video} _channel={channel} _open={open} childToParent={childToParent}></VideoDrawer>
+                {/* <VideoDrawer _video={_video} _channel={channel} _open={open} childToParent={childToParent}></VideoDrawer> */}
             </>
             ) : (
                 <Spin />

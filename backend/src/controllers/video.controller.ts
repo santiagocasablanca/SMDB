@@ -801,7 +801,7 @@ export const findAllVideosController = async (
         as: 'cast',
         attributes: ['id', 'custom_url', 'name', 'profile_picture'],
       }],
-      limit, offset: skip, order: [sort]
+      limit, offset: skip, order: [sort], subQuery: false,
     });
 
     res.status(200).json({

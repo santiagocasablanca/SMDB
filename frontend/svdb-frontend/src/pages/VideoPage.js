@@ -71,6 +71,11 @@ const VideoPage = () => {
     overflow: hidden;
 }
 
+.panelContainer {
+  height: 600px;
+  overflow: auto;
+}
+
 .infoStatsComponent {
   float: right; 
   background-color: black;
@@ -87,7 +92,7 @@ const VideoPage = () => {
 }
 
 .evenMoreInfoComponent{
-  height: 414px;
+  height: 352px;
   overflow: auto
 }
 
@@ -123,6 +128,10 @@ const VideoPage = () => {
         height: 240px;
     }
 
+    .panelContainer {
+        height: 350px;
+    }
+
     .divider {
       margin: 0px 4px;
     }
@@ -153,7 +162,7 @@ const VideoPage = () => {
   return (<>
     {isFetched && video ?
       <div className="videoBodyContainer">
-        <Row gutter={[8, 12]}>
+        <Row gutter={[16, 12]}>
           <Col span={24} md={24} lg={24} xl={16}>
             <Row gutter={[8, 12]}>
               <Col span={24}>
@@ -191,7 +200,7 @@ const VideoPage = () => {
                 </div>
               </Col>
               <Col span={24}>
-                <Card bodyStyle={{ padding: '10px', paddingTop: '25px' }}>
+                <Card bodyStyle={{ padding: '10px', paddingTop: '25px' }} className="panelContainer">
                 <Row gutter={[8, 10]}>
                   {video?.serie ?
                     <Col span={24}>
@@ -272,7 +281,7 @@ const VideoPage = () => {
                       </List>
                     </Col>
                     </Row>
-                    <Row className="evenMoreInfoComponent"
+                    <Row 
                     gutter={[8, 10]}>
                     <Col span={24}>
                       <List

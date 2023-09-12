@@ -1,8 +1,8 @@
 import { Button, Col, Collapse, Drawer, DatePicker, Form, Input, Row, Select, Space } from 'antd';
 import { React, useEffect, useState } from "react";
 import { useLocation } from 'react-router-dom';
-import { getChannelsFn } from '../services/channelApi.ts';
-import { TagsEnum, SeriesEnum, GamesEnum } from '../services/enums.ts';
+import { getChannelsFn } from '../../services/channelApi.ts';
+import { TagsEnum, SeriesEnum, GamesEnum } from '../../services/enums.ts';
 
 const VideographyFilterPopoverPanel = ({ _filters, _open, childToParent }) => {
   const [searchClicked, setSearchClicked] = useState(false);
@@ -90,28 +90,20 @@ const VideographyFilterPopoverPanel = ({ _filters, _open, childToParent }) => {
     setGames(temp);
   }
 
+  const onCancel = () => {
+    // console.log('onCancel: ', form, _filters);
+    form.resetFields();
+    childToParent(false, null);
+    setOpen(false);
+  }
+
   const onClose = () => {
-    childToParent(_filters);
+    // console.log('onClose: ', form, _filters);
+    childToParent(true, _filters);
     setOpen(false);
   };
 
   const [form] = Form.useForm();
-
-  const handleSearchClick = () => {
-    setSearchClicked(true);
-    // onChange({
-    //   channels: filters.channels,
-    //   title: filters.title,
-    //   publishedAtRange: filters.publishedAtRange,
-
-    //   locations: filters.locations,
-    //   series: filters.series,
-    //   games: filters.games,
-    //   tags: filters.tags,
-    //   cast: filters.cast,
-    //   search: true
-    // });
-  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -188,16 +180,23 @@ const VideographyFilterPopoverPanel = ({ _filters, _open, childToParent }) => {
           placement="right"
           width={500}
           height="95%"
-          onClose={onClose}
+          onClose={onCancel}
           open={open}
           extra={
             <Space>
-              <Button onClick={onClose}>Cancel</Button>
+              <Button onClick={onCancel}>Cancel</Button>
               <Button type="primary" onClick={onClose}>Search</Button>
             </Space>
           }>
           <div className="filter-container">
-            <Form form={form} layout="vertical" onFinish={handleSearchClick}>
+            <Form form={form} layout="vertical"
+            initialValues={{
+              ["select-multiple"]: _filters.channels,
+              ["select-series"]: _filters.series,
+              ["publishedAt"]: _filters.publishedAtRange,
+              ["select-tags"]: _filters.tags,
+              ["select-game"]: _filters.games,
+            }}>
 
 
               {/* Title */}
@@ -220,7 +219,7 @@ const VideographyFilterPopoverPanel = ({ _filters, _open, childToParent }) => {
                     name="select-multiple"
                     label="Channels">
                     <Select mode="multiple" style={{ width: '95%' }} placeholder="Please select a channel"
-                      defaultValue={_filters.channels}
+                      // defaultValue={_filters.channels}
                       allowClear
                       filterOption={(input, option) =>
                         (option?.label ?? '').toLowerCase().includes(input.toLowerCase())

@@ -6,7 +6,7 @@ import 'react-lazy-load-image-component/src/effects/blur.css';
 import { useNavigate } from 'react-router-dom';
 import useFormatter from '../../hooks/useFormatter';
 import variables from '../../sass/antd.module.scss';
-import VideoDrawer from './VideoDrawer';
+// import VideoDrawer from './VideoDrawer';
 import VideoRate from './VideoRate';
 import LatestVideosGrowthLine from '../graphs/LatestVideosGrowthLine';
 import VideoGrowthLine from '../graphs/VideoGrowthLine';
@@ -80,6 +80,12 @@ const VideoPreviewForHighlight = ({ _video, index }) => {
         )
     };
 
+    const handleClickVideo = (id) => {
+        console.log(id);
+        const url = '/video/' + id;
+        // not necessary, kind of redudant at the moment. Params are set through useParams and useLocation (state)
+        navigate(url, { state: { id: id } });
+      }
 
     // 480 x 270
     return (
@@ -90,7 +96,7 @@ const VideoPreviewForHighlight = ({ _video, index }) => {
                     <Row>
                         <Col span={24}>
                             <div style={{ borderRadius: '8px', height: '270px' }}>
-                                <Image style={{ borderRadius: '8px', objectFit: 'cover' }} src={_video.url} width='100%' height="100%" preview={false} onClick={() => showDrawer()} />
+                                <Image style={{ borderRadius: '8px', objectFit: 'cover' }} src={_video.url} width='100%' height="100%" preview={false} onClick={() => handleClickVideo(_video.video_id)} />
                             </div>
                         </Col>
                     </Row>
@@ -170,7 +176,7 @@ const VideoPreviewForHighlight = ({ _video, index }) => {
 
 
                 {/* </Popover> */}
-                <VideoDrawer _video={_video} _channel={channel} _open={open} childToParent={childToParent}></VideoDrawer>
+                {/* <VideoDrawer _video={_video} _channel={channel} _open={open} childToParent={childToParent}></VideoDrawer> */}
             </>
             ) : (
                 <Spin />
