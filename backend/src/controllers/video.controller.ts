@@ -695,7 +695,7 @@ export const findHighlightedVideosController = async (
 
     // console.log(req.query)
     //sort 
-    let sort = ['published_at', 'DESC'];
+    let sort = ['views', 'DESC'];
 
     let excludeShorts =  'true';
 
