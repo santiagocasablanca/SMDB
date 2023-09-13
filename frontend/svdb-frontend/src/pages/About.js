@@ -109,12 +109,10 @@ const AboutPage = () => {
   const aboutMeTitle = (
     <Row justify="center">
       {/* <Card style={{ width: '90%', backgroundColor: 'white' }} bodyStyle={{ padding: '2px' }}> */}
-        <Space> <Link href="https://www.linkedin.com/in/tiago-martins-lomba/">
-          <Avatar size="large" src="https://media.licdn.com/dms/image/D4D35AQHkJ7Xk52eXcw/profile-framedphoto-shrink_400_400/0/1687518557082?e=1691866800&v=beta&t=a4MXziFTspw1KI09kGoLusaFSpXAF1CkN5KaSe1JCRw"></Avatar>
-        </Link>
+        <Space>
           <Title level={2} className="subTitle" ellipsis={{
-            tooltip: 'Open for work!',
-          }}>Open for work!!</Title></Space>
+            tooltip: 'About me',
+          }}>ABOUT ME</Title></Space>
       {/* </Card> */}
     </Row>
   );
