@@ -165,9 +165,6 @@ const VideographyOnTable = ({searchParams, tableRefresh}) => {
   }
 
   insertCss(`
-  .videolistBodyContainer {
-    margin: 10px 0px auto;
-  }
 
   .ant-pagination {
     background: #202020;
@@ -176,16 +173,6 @@ const VideographyOnTable = ({searchParams, tableRefresh}) => {
   }
   .videolistBodyContainer p {
     color: white;
-  }
-
-  @media (max-width: 600px) {
-    .videolistBodyContainer {
-      margin: 0 10px;
-    }
-    .headerPanel {
-      margin: 10px 0px auto;
-    }
-
   }
 
   `)

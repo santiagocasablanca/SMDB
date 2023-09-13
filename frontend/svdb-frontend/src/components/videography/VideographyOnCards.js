@@ -20,7 +20,7 @@ import VideographyFilterPopoverPanel from './VideographyFilterPopoverPanel';
 const { Title } = Typography;
 const { Search } = Input;
 
-const VideographyOnCards = ({fetchedData, initLoading, isLoading, hasMore, loadMore}) => {
+const VideographyOnCards = ({ fetchedData, initLoading, isLoading, hasMore, loadMore }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -54,36 +54,12 @@ const VideographyOnCards = ({fetchedData, initLoading, isLoading, hasMore, loadM
     loadMore(true);
   };
 
-  
+
 
   insertCss(`
-  .videolistBodyContainer {
-    margin: 10px 0px auto;
-  }
-
-  .headerPanel {
-    padding-top: 10px;
-    color: `+ variables.sdmnYellow + `;
-  }
-
-  .headerPanel h3 {
-    color: `+ variables.sdmnBlack + `;
-  }
-
   .videos-list {
     padding: 0px;
   }
-
-  @media (max-width: 600px) {
-    .videolistBodyContainer {
-      margin: 0 10px;
-    }
-    .headerPanel {
-      margin: 10px 0px auto;
-    }
-
-  }
-
   `)
 
   const handleClickVideo = (id) => {

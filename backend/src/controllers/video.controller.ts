@@ -918,15 +918,16 @@ export const findAllVideosController = async (
           'comments',
           'logo_url',]
       },
-      {
-        model: Creator,
-        as: 'directedBy', attributes: ['id', 'custom_url', 'name', 'profile_picture']
-      },
-      {
-        model: Creator,
-        as: 'cast',
-        attributes: ['id', 'custom_url', 'name', 'profile_picture'],
-      }],
+      // {
+      //   model: Creator,
+      //   as: 'directedBy', attributes: ['id', 'custom_url', 'name', 'profile_picture']
+      // },
+      // {
+      //   model: Creator,
+      //   as: 'cast',
+      //   attributes: ['id', 'custom_url', 'name', 'profile_picture'],
+      // }
+    ],
       limit, offset: skip, order: [sort], subQuery: false,
     });
 

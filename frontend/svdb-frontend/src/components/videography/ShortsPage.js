@@ -22,7 +22,7 @@ const { Title } = Typography;
 const { Search } = Input;
 const { Option } = Select;
 
-const VideographyPage = () => {
+const ShortsPage = () => {
   const [view, setView] = useState('onCards'); // Initial view state (table, list, oncards)
   const navigate = useNavigate();
   const location = useLocation();
@@ -67,6 +67,9 @@ const VideographyPage = () => {
     // console.log('Videography Page ', initLoading, location);
     if (initLoading) {
       setInitLoading(false);
+
+      addOrUpdateAttribute(searchParams, 'onlyShorts', true);
+      addOrUpdateAttribute(searchParams, 'excludeShorts', false);
 
       if (location.state && location.state?.filter) {
         Object.keys(location.state?.filter).forEach((key) => {
@@ -298,7 +301,7 @@ const VideographyPage = () => {
 
       <Row className="headerPanel">
         <Col xs={18} sm={8} md={8} lg={10} xl={10}>
-          <Title level={3}><Space><YoutubeOutlined /> Videography</Space></Title>
+          <Title level={3}><Space><YoutubeOutlined /> Shorts</Space></Title>
         </Col>
         <Col xs={6} sm={16} md={16} lg={14} xl={14}>
           <div style={{ float: 'right' }}>
@@ -332,7 +335,7 @@ const VideographyPage = () => {
             <Space.Compact className="compact-version" >
               <Popover content={
                 <div style={{ display: 'block', width: '195px' }}>
-                  <div style={{ float: 'right', marginBottom: '7px'}}>
+                  <div style={{ float: 'right', marginBottom: '7px' }}>
                     <Segmented
                       value={view}
                       onChange={handleViewChange}
@@ -410,4 +413,4 @@ const VideographyPage = () => {
   </>);
 };
 {/* <VideographyOnCards filters={filters} />} */ }
-export default VideographyPage;
+export default ShortsPage;
