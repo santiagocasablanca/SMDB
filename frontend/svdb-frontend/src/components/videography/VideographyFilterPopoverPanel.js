@@ -1,5 +1,6 @@
 import { Button, Col, Collapse, Drawer, DatePicker, Form, Input, Row, Select, Space } from 'antd';
 import { React, useEffect, useState } from "react";
+import insertCss from 'insert-css';
 import { useLocation } from 'react-router-dom';
 import { getChannelsFn } from '../../services/channelApi.ts';
 import { TagsEnum, SeriesEnum, GamesEnum } from '../../services/enums.ts';
@@ -170,7 +171,28 @@ const VideographyFilterPopoverPanel = ({ _filters, _open, childToParent }) => {
     // });
   };
 
+  insertCss(`
+  .filter-container {
+    padding: 15px;
+  }
+  .ant-drawer .ant-drawer-content-wrapper {
+    width: 380px;
+  }
 
+  @media (max-width: 768px) {
+    .filter-container {
+      padding: 10px;
+       
+    }
+    .ant-drawer .ant-drawer-content-wrapper {
+      width: 280px !important;
+    }
+    .header-container {
+      padding: 16px 6px;
+    }
+  }
+
+  `)
 
   return (
     <> {
@@ -178,8 +200,11 @@ const VideographyFilterPopoverPanel = ({ _filters, _open, childToParent }) => {
         <Drawer
           title="Filters"
           placement="right"
-          width={500}
+          bodyClassName="filter-container"
+          headerClassName="header-container"
+          bodyStyle={{padding: '0px'}}
           height="95%"
+          
           onClose={onCancel}
           open={open}
           extra={

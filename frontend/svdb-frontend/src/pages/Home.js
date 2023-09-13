@@ -189,14 +189,14 @@ const HomePage = () => {
           <div className="homeContainer">
 
             <Row gutter={[16, 16]}>
-              <Col span={24} md={24} lg={12} xl={12}>
+              <Col span={24} md={24} lg={12} xl={16}>
                 <Row gutter={12}>
                   <Col span={24}>
                     <HighlightedVideos title="Highlighted" videos={top10videos} segmentedValue={value} onChangeSegmentedValue={setValue}></HighlightedVideos>
                   </Col>
                 </Row>
               </Col>
-              <Col span={24} md={24} lg={12} xl={12}>
+              <Col span={24} md={24} lg={12} xl={8}>
                 <TopCreators channel_ids={topChannelIds} />
               </Col>
             </Row>

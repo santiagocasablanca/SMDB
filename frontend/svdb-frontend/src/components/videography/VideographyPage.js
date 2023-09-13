@@ -1,9 +1,9 @@
 import {
-  ReloadOutlined, YoutubeOutlined, SortAscendingOutlined, SortDescendingOutlined, UnorderedListOutlined, TableOutlined, AppstoreOutlined,
+  ReloadOutlined, ToolOutlined, YoutubeOutlined, SortAscendingOutlined, SortDescendingOutlined, UnorderedListOutlined, TableOutlined, AppstoreOutlined,
   LikeOutlined, FilterOutlined,
   CommentOutlined
 } from '@ant-design/icons';
-import { Button, Card, Col, Image, Spin, Input, List, Row, Space, Segmented, Typography, Divider, Select, Radio, Tooltip } from 'antd';
+import { Button, Card, Col, Image, Spin, Input, List, Row, Space, Segmented, Typography, Divider, Select, Radio, Tooltip, Popover } from 'antd';
 import insertCss from 'insert-css';
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
@@ -165,12 +165,39 @@ const VideographyPage = () => {
     padding: 0px;
   }
 
-  @media (max-width: 600px) {
+  .full-version {
+    display: flex;
+  }
+  
+  .compact-version {
+    display: none;
+  }
+
+  @media (max-width: 1200px) {
+    .videographyPageBodyContainer {
+      margin: 10px 10px auto;
+    }
+    .headerPanel {
+      margin: 10px 10px auto;
+    }
+
+    
+  }
+
+  @media (max-width: 768px) {
     .videographyPageBodyContainer {
       margin: 0 10px;
     }
     .headerPanel {
-      margin: 10px 0px auto;
+      margin: 10px 10px auto;
+    }
+
+    .full-version {
+      display: none;
+    }
+    
+    .compact-version {
+      display: flex;
     }
 
   }
@@ -192,8 +219,6 @@ const VideographyPage = () => {
   };
 
   const onSortChange = (sort) => {
-    console.log(searchParams);
-    console.log(sort);
     addOrUpdateAttribute(searchParams, 'sort', sort);
     setFetchedData([]);
     asyncFetch(1);
@@ -205,13 +230,16 @@ const VideographyPage = () => {
     const [sortDirection, setSortDirection] = useState(); // Initial sort direction
 
     useEffect(() => {
-      console.log('sortComponent');
+      // console.log('sortComponent');
       if (searchParams.has('sort')) {
-        console.log(searchParams.get('sort'));
+        // console.log(searchParams.get('sort'));
         const sortArr = searchParams.get('sort').split('%');
-        console.log(sortArr[0]);
+        // console.log(sortArr[0]);
         setSortField(sortArr[0]);
         setSortDirection(sortArr[1]);
+      } else {
+        setSortField('published_at');
+        setSortDirection('desc');
       }
     }, []);
 
@@ -233,7 +261,7 @@ const VideographyPage = () => {
         <Select
           value={sortField}
           defaultValue={sortField}
-          style={{ width: 150 }}
+          style={{ width: 125 }}
           onChange={handleSortFieldChange}
         >
           <Option value="title">Title</Option>
@@ -244,17 +272,20 @@ const VideographyPage = () => {
           <Option value="comments">Comments</Option>
           {/* Add more sorting fields as needed */}
         </Select>
-        <Radio.Group onChange={handleSortDirectionChange} value={sortDirection}>
+        <Radio.Group onChange={handleSortDirectionChange} value={sortDirection} defaultValue="desc" size="medium" style={{ display: 'contents' }}>
           <Tooltip title="Ascending">
             <Radio.Button value="asc" style={{
               borderStartStartRadius: '0px',
-              borderEndStartRadius: '0px'
+              borderEndStartRadius: '0px',
+              paddingInline: '9px'
             }}>
               <SortAscendingOutlined />
             </Radio.Button>
           </Tooltip>
           <Tooltip title="Descending">
-            <Radio.Button value="desc"><SortDescendingOutlined /></Radio.Button>
+            <Radio.Button value="desc" style={{
+              paddingInline: '9px'
+            }}><SortDescendingOutlined /></Radio.Button>
           </Tooltip>
         </Radio.Group>
       </Space.Compact>
@@ -266,39 +297,75 @@ const VideographyPage = () => {
     <div className="videographyPageBodyContainer">
 
       <Row className="headerPanel">
-        <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+        <Col xs={18} sm={8} md={8} lg={10} xl={10}>
           <Title level={3}><Space><YoutubeOutlined /> Videography</Space></Title>
         </Col>
-        <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+        <Col xs={6} sm={16} md={16} lg={14} xl={14}>
           <div style={{ float: 'right' }}>
-            <Space>
 
+            <Space className="full-version" style={{ columnGap: '3px' }}>
               <Segmented
                 value={view}
                 onChange={handleViewChange}
                 options={[
                   { value: 'oncards', icon: <Tooltip title="Cards View"><AppstoreOutlined /></Tooltip> },
-                  // { value: 'list', icon: <Tooltip title="List View"><UnorderedListOutlined /></Tooltip> },
+                  { value: 'list', icon: <Tooltip title="List View"><UnorderedListOutlined /></Tooltip> },
                   { value: 'table', icon: <Tooltip title="Table View"><TableOutlined /></Tooltip> },
                 ]}
               />
 
               <SortComponent onSortChange={onSortChange} searchParams={searchParams} />
+
               <Space.Compact block>
-                {/* <Popover content={filter} placement="bottom">
-              </Popover> */}
                 <Search
                   placeholder="Search by Title"
                   onSearch={onSearch}
                   style={{
-                    width: 200,
+                    width: 160,
                   }}
                 />
                 <Button icon={<FilterOutlined />} onClick={showFilter} />
-
               </Space.Compact>
+
             </Space>
+
+            <Space.Compact className="compact-version" >
+              <Popover content={
+                <div style={{ display: 'block', width: '195px' }}>
+                  <div style={{ float: 'right', marginBottom: '7px'}}>
+                    <Segmented
+                      value={view}
+                      onChange={handleViewChange}
+                      options={[
+                        { value: 'oncards', icon: <Tooltip title="Cards View"><AppstoreOutlined /></Tooltip> },
+                        // { value: 'list', icon: <Tooltip title="List View"><UnorderedListOutlined /></Tooltip> },
+                        { value: 'table', icon: <Tooltip title="Table View"><TableOutlined /></Tooltip> },
+                      ]}
+                    />
+                  </div>
+                  <Divider style={{ margin: '8px 0' }}></Divider>
+                  <Space>
+                    <SortComponent onSortChange={onSortChange} searchParams={searchParams} />
+                  </Space>
+                  <Divider style={{ margin: '8px 0' }}></Divider>
+                  <Space.Compact block>
+                    <Search
+                      placeholder="Search by Title"
+                      onSearch={onSearch}
+                      style={{
+                        width: 192,
+                      }}
+                    />
+                  </Space.Compact>
+                </div>}>
+                <Button icon={<ToolOutlined />} />
+              </Popover>
+              <Button icon={<FilterOutlined />} onClick={showFilter} />
+
+            </Space.Compact>
+
           </div>
+
           {/* showFilter */}
           <VideographyFilterPopoverPanel _filters={
             {
@@ -313,6 +380,7 @@ const VideographyPage = () => {
             }} _open={open} childToParent={childToParent} />
           {/* <VideographyFilterPanel filters={myFilters} onChange={handleFilterChange} /> */}
         </Col>
+
       </Row>
       <br></br>
       <div className="view-segment">
@@ -331,7 +399,7 @@ const VideographyPage = () => {
         </div>
         :
         <>
-          {/* {view === 'list' && <VideographyOnList fetchedData={fetchedData} isLoading={isLoading} hasMore={hasMore} initLoading={initLoading} loadMore={onLoadMore} />} */}
+          {view === 'list' && <VideographyOnList fetchedData={fetchedData} isLoading={isLoading} hasMore={hasMore} initLoading={initLoading} loadMore={onLoadMore} />}
           {view === 'table' && <VideographyOnTable searchParams={searchParams} tableRefresh={tableRefresh} />}
           {view === 'oncards' && <VideographyOnCards fetchedData={fetchedData} isLoading={isLoading} hasMore={hasMore} initLoading={initLoading} loadMore={onLoadMore} />}
 
