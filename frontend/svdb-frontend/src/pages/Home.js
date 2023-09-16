@@ -1,5 +1,5 @@
 import { HomeOutlined } from '@ant-design/icons';
-import { Carousel, Col, Row, Space, Spin, Typography, Segmented } from 'antd';
+import { Carousel, Col, Row, Space, Spin, Typography, Popover } from 'antd';
 import dayjs from 'dayjs';
 import insertCss from 'insert-css';
 import React, { useEffect, useState } from 'react';
@@ -11,6 +11,7 @@ import HorizontalHighlightedList from '../components/video/HorizontalHighlighted
 import HorizontalShortsList from '../components/video/HorizontalShortsList';
 import VideoPreviewForHighlight from '../components/video/VideoPreviewForHighlight';
 import variables from '../sass/antd.module.scss';
+import useFormatter from '../hooks/useFormatter';
 import { getChannelsFn } from "../services/channelApi.ts";
 import { getVideosFn, getHighlightedVideosFn } from "../services/videoApi.ts";
 import { AppIntro } from '../components';
@@ -33,6 +34,8 @@ const HomePage = () => {
   const [paramsTop10Liked, setParamsTop10Liked] = useState({ sort: "likes%desc" });
   const [shortsParamsRecent, setShortsParamsRecent] = useState({ sort: "published_at%desc", onlyShorts: true, excludeShorts: false });
 
+  const { intToStringBigNumber, parseDate, parseDuration, parseDateToFromNow } = useFormatter();
+
   useEffect(() => {
 
     async function fetchData() {
@@ -48,7 +51,7 @@ const HomePage = () => {
       _paramsTop10.append("publishedAtRange", range)
       await getHighlightedVideosFn(1, 10, _paramsTop10)
         .then((result) => {
-          console.log(result);
+          // console.log(result);
           setTop10videos(result.videos);
           // setTop10videoIds(result.videos.map(video => { return video.video_id; }));
           setTopChannelIds(result.videos.map(video => { return video.channel_id; }));
@@ -56,7 +59,7 @@ const HomePage = () => {
 
       let params = new URLSearchParams();
       params.limit = 100;
-      await getChannelsFn(params).then((result) => {
+      await getChannelsFn(1, 1000, params).then((result) => {
         const _channels = result.results.map(it => {
           return {
             label: it.title,
@@ -141,20 +144,56 @@ const HomePage = () => {
 
 
 
-  const HeaderPanel = ({ title, creators }) => {
+  const HeaderPanel = ({ title, channels }) => {
+    const [lastUpdated, setLastUpdated] = useState();
+    const [count, setCount] = useState(channels?.length);
+
     useEffect(() => {
+      // console.log('channelws ', channels)
+      const mostRecent = findMostRecentObject(channels);
+      if (mostRecent) setLastUpdated(mostRecent.updated_at);
     }, []);
 
+    function findMostRecentObject(arrayOfObjects) {
+      if (!arrayOfObjects || arrayOfObjects.length === 0) {
+        // Handle the case where the input array is empty or null
+        return null;
+      }
+
+      return arrayOfObjects.reduce((mostRecent, currentObject) => {
+        const mostRecentDate = new Date(mostRecent.updated_at);
+        const currentDate = new Date(currentObject.updated_at);
+
+        if (currentDate > mostRecentDate) {
+          return currentObject;
+        }
+
+        return mostRecent;
+      }, arrayOfObjects[0]);
+    }
 
     return (
       <Row className="homeHeaderPanel">
         <Col span="24">
           <Title level={3}><Space><HomeOutlined /> {title}</Space></Title>
+          <Space style={{ float: 'right', marginTop: '-35px' }}><Popover placement="leftBottom" content={<InfoPopover count={count} last_updated_at={lastUpdated} />}>Info</Popover></Space>
         </Col>
         {/* <Col span="3">
         <Segmented options={['Week', 'Month', 'Year']} value={value} onChange={setValue} />
         </Col> */}
       </Row>
+    );
+  };
+
+  const InfoPopover = ({ count, last_updated_at }) => {
+    useEffect(() => {
+    }, []);
+
+    return (
+      <div style={{ color: 'white' }}>
+        <Text>This website contains data last fetched </Text> {parseDateToFromNow(last_updated_at)}
+        <Text> from </Text> {count} <Text> channels</Text>
+      </div>
     );
   };
 
@@ -182,21 +221,21 @@ const HomePage = () => {
 
 
   return (<>
-    <HeaderPanel title="Home" creators={channels}></HeaderPanel>
+    <HeaderPanel title="Home" channels={channels}></HeaderPanel>
     {isLoaded ?
       (
         <>
           <div className="homeContainer">
 
             <Row gutter={[16, 16]}>
-              <Col span={24} md={24} lg={12} xl={16}>
-                <Row gutter={12}>
-                  <Col span={24}>
-                    <HighlightedVideos title="Highlighted" videos={top10videos} segmentedValue={value} onChangeSegmentedValue={setValue}></HighlightedVideos>
-                  </Col>
-                </Row>
+              <Col span={24} md={24} lg={12} xl={14}>
+                {/* <Row gutter={12}>
+                  <Col span={24}> */}
+                <HighlightedVideos title="Highlighted" videos={top10videos} segmentedValue={value} onChangeSegmentedValue={setValue}></HighlightedVideos>
+                {/* </Col>
+                </Row> */}
               </Col>
-              <Col span={24} md={24} lg={12} xl={8}>
+              <Col span={24} md={24} lg={12} xl={10}>
                 <TopCreators channel_ids={topChannelIds} />
               </Col>
             </Row>
@@ -248,9 +287,9 @@ const HomePage = () => {
                 </Row>
               </Col>
             </Row>
-            
+
             <br></br>
-            
+
 
 
           </div>

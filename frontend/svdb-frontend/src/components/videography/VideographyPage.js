@@ -309,7 +309,7 @@ const VideographyPage = () => {
                 onChange={handleViewChange}
                 options={[
                   { value: 'oncards', icon: <Tooltip title="Cards View"><AppstoreOutlined /></Tooltip> },
-                  // { value: 'list', icon: <Tooltip title="List View"><UnorderedListOutlined /></Tooltip> },
+                  { value: 'list', icon: <Tooltip title="List View"><UnorderedListOutlined /></Tooltip> },
                   { value: 'table', icon: <Tooltip title="Table View"><TableOutlined /></Tooltip> },
                 ]}
               />
@@ -399,7 +399,7 @@ const VideographyPage = () => {
         </div>
         :
         <>
-          {/* {view === 'list' && <VideographyOnList fetchedData={fetchedData} isLoading={isLoading} hasMore={hasMore} initLoading={initLoading} loadMore={onLoadMore} />} */}
+          {view === 'list' && <VideographyOnList fetchedData={fetchedData} isLoading={isLoading} hasMore={hasMore} initLoading={initLoading} loadMore={onLoadMore} />}
           {view === 'table' && <VideographyOnTable searchParams={searchParams} tableRefresh={tableRefresh} />}
           {view === 'oncards' && <VideographyOnCards fetchedData={fetchedData} isLoading={isLoading} hasMore={hasMore} initLoading={initLoading} loadMore={onLoadMore} />}
 

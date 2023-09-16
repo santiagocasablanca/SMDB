@@ -3,7 +3,7 @@ import {
   LikeOutlined,
   CommentOutlined
 } from '@ant-design/icons';
-import { Button, Card, Col, Image, Input, List, Row, Space, Typography, Divider, Avatar, Popover, Tag, Spin } from 'antd';
+import { Button, Card, Col, Image, Input, List, Row, Space, Typography, Divider, Avatar, Empty, Popover, Tag, Spin } from 'antd';
 import insertCss from 'insert-css';
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -266,6 +266,9 @@ const VideoPage = () => {
                       <List
                         header={<Text strong style={{ marginLeft: '20px' }}>Directed by</Text>}
                         size="small"
+                        empty={<p style={{color:'yellow'}}>No Data</p>}
+                        locale={{ emptyText: 'No data', emptyImage: Empty.PRESENTED_IMAGE_SIMPLE }}
+
                         itemLayout="horizontal"
                         dataSource={video?.directedBy}
                         //   style={{ width: '100%' }}
@@ -287,6 +290,7 @@ const VideoPage = () => {
                       <List
                         header={<Text strong style={{ marginLeft: '20px' }}>Cast</Text>}
                         size="small"
+                        locale={{ emptyText: <Empty text="No data" image={Empty.PRESENTED_IMAGE_SIMPLE} imageStyle={{padding: '2px', height: '32px'}}></Empty> }}
                         itemLayout="horizontal"
                         dataSource={video?.cast}
                         renderItem={(creator, index) => (
