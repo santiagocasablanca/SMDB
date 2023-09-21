@@ -62,6 +62,8 @@ const VideographyPage = () => {
   const [fetchedData, setFetchedData] = useState([]);
   const [total, setTotal] = useState();
 
+  
+
   useEffect(() => {
     setView('oncards');
     // console.log('Videography Page ', initLoading, location);
@@ -175,7 +177,7 @@ const VideographyPage = () => {
 
   @media (max-width: 1200px) {
     .videographyPageBodyContainer {
-      margin: 10px 10px auto;
+      margin: 10px 40px auto;
     }
     .headerPanel {
       margin: 10px 10px auto;
@@ -186,7 +188,7 @@ const VideographyPage = () => {
 
   @media (max-width: 768px) {
     .videographyPageBodyContainer {
-      margin: 0 10px;
+      margin: 0 20px;
     }
     .headerPanel {
       margin: 10px 10px auto;

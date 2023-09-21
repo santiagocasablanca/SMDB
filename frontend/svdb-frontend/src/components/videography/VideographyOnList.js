@@ -12,8 +12,7 @@ import variables from '../../sass/antd.module.scss';
 import VideoRate from '../video/VideoRate';
 import VideoGrowthLine from '../graphs/VideoGrowthLine';
 import { Map, Marker, ZoomControl } from "pigeon-maps";
-
-
+import { gsap } from "gsap";
 
 
 const { Title, Text } = Typography;
@@ -26,6 +25,13 @@ const VideographyOnList = ({ fetchedData, initLoading, isLoading, hasMore, loadM
   const loadMoreRef = useRef(null);
   const { intToStringBigNumber, parseDate, parseDuration, parseDateToFromNow } = useFormatter();
 
+  const onEnter = ({ currentTarget }) => {
+    gsap.to(currentTarget, { backgroundColor: variables.sdmnYellow, marginBottom: '30px', scale: 1.1 });
+  };
+
+  const onLeave = ({ currentTarget }) => {
+    gsap.to(currentTarget, { backgroundColor: variables.coolerGray9, scale: 1, marginBottom: '10px' });
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -350,6 +356,8 @@ const VideographyOnList = ({ fetchedData, initLoading, isLoading, hasMore, loadM
           <List.Item
             style={{ marginBottom: '10px', padding: '0px', background: variables.coolerGray9, borderRadius: '8px' }}
             key={item.video_id}
+            onMouseEnter={onEnter}
+            onMouseLeave={onLeave}
             actions={[
               <>
                 {/* <Text strong style={{ color: 'black', marginLeft: '10px' }}>Stats </Text> */}
@@ -430,7 +438,8 @@ const VideographyOnList = ({ fetchedData, initLoading, isLoading, hasMore, loadM
                   </div>
                 </>
               }
-            // description={} , height: '172px'
+            // description={} 
+            //, height: '172px'
             />
             <div className="moreInfoPanel">
               <Row>

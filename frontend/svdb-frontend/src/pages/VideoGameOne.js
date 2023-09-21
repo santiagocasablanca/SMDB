@@ -22,7 +22,7 @@ import TinyLineViews from '../components/graphs/TinyLineViews';
 const { Title, Text } = Typography;
 const { Search } = Input;
 
-const VideoPage = () => {
+const VideoGameOne = () => {
   const { id } = useParams();
   const [isFetched, setIsFetched] = useState(false);
   const navigate = useNavigate();
@@ -153,6 +153,7 @@ const VideoPage = () => {
   `)
 
   const goToCreator = (id) => {
+    console.log('heere: ', id);
     const url = '/creator/' + id;
     // not necessary, kind of redudant at the moment. Params are set through useParams and useLocation (state)
     navigate(url, { state: { id: id } });
@@ -351,4 +352,4 @@ const VideoPage = () => {
 
 
 
-export default VideoPage;
+export default VideoGameOne;

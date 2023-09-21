@@ -32,14 +32,35 @@ export const getCreatorStatsFn = async (params) => {
 };
 
 
-export const getChannelsFn = async (page = 1, limit = 30, params) => {
-  const req = `channels?page=${page}&limit=${limit}&${params}`;
-  const response = await api.get<IChannelResponse>(
-    req
-  );
+export const getChannelsFn = async (page = 1, limit = 1000, params) => {
+  try {
+    const cachedData = localStorage.getItem('channels');
+    if (cachedData) {
+      const parsedData = JSON.parse(cachedData);
+      return parsedData || null;
+    } else {
+      // Data not found in cache, fetch it and store it in cache
+      const req = `channels?page=${page}&limit=${limit}&${params}`;
+      const response = await api.get<IChannelResponse>(
+        req
+      );
+      setChannels(response.data);
+      return response.data;
+    }
+  } catch (error) {
+    console.error('Error parsing cached data:', error);
+  }
+  // console.log('fetching from cache: ', channel_id);
 
-  return response.data;
 };
+
+export const setChannels = async (channels) => {
+  try {
+    localStorage.setItem('channels', JSON.stringify(channels));
+  } catch (error) {
+    console.error('error storing channels ', channels);
+  }
+}
 
 export const getChannelStatsFn = async (channel_id) => {
   // try {
