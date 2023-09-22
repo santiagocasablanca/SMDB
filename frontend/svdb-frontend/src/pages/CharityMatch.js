@@ -23,11 +23,17 @@ const CharityMatch = () => {
   useEffect(() => {
 
     async function fetchData() {
+      let now = dayjs();
+      let oldDate = dayjs().subtract(2, 'months');
+      let range = [];
+      range.push(oldDate.format());
+      range.push(now.format());
 
       let _params = new URLSearchParams();
       _params.append("sort", "views%desc")
       _params.append("title", "charity match")
-      await getVideosFn(1, 10, _params)
+      _params.append("publishedAtRange", range)
+      await getVideosFn(1, 100, _params)
         .then((result) => {
           // console.log(result);
           setVideos(result.videos);
