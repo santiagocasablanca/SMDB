@@ -44,7 +44,7 @@ const FrequencyCardByYear = ({ _channels, year }) => {
   const handleChannelChange = (channel) => {
     setSelectedChannels(channel);
   };
-  
+
   useEffect(() => {
     console.log(_channels, year);
     setSelectedYear(year);
@@ -75,9 +75,14 @@ const FrequencyCardByYear = ({ _channels, year }) => {
 
     while (currentDate.isBefore(endDate)) {
       const month = dayjs(currentDate).format('M');
-      let week = dayjs(currentDate).week(); // Format the date as YYYY-MM-DD
+      let week = dayjs(currentDate).week();
+      // console.log(month, week); // Format the date as YYYY-MM-DD
       if (month == 1 && week > 50) {
         week = 0;
+      } else if (month == 12 && week == 1) {
+        
+        console.log(month, week, currentDate);
+        week = 53;
       }
       daysArray.push({
         date: currentDate.format('YYYY-MM-DD'),
@@ -216,7 +221,7 @@ const FrequencyCardByYear = ({ _channels, year }) => {
         type: 'cat',
         values: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
           '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39',
-          '40', '41', '42', '43', '44', '45', '46', '47', '48', '49', '50', '51', '52'],
+          '40', '41', '42', '43', '44', '45', '46', '47', '48', '49', '50', '51', '52', '53'],
       },
       count: {
         sync: true,
