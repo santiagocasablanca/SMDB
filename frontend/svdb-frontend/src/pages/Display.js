@@ -25,7 +25,7 @@ const Display = () => {
       
 
       let params = new URLSearchParams();
-      params.append("channels", "UCvwgF_0NOZe2vN4Q3g1bY-A,UCmbnlwXAdGYACzvStDjquaA");
+      params.append("channels", "UCvwgF_0NOZe2vN4Q3g1bY-A,UCmbnlwXAdGYACzvStDjquaA,UCBXG9Hl9f94Zfoceh1a8otQ,UC0OevbYhRrD3UP1jJlYB7qw");
       await getChannelsFn(1, 1000, params).then((result) => {
         const _channels = result.results.map(it => {
           return {
