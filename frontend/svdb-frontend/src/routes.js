@@ -12,6 +12,8 @@ const VideoPage = React.lazy(() => import('./pages/VideoPage'))
 const Shorts = React.lazy(() => import('./components/videography/ShortsPage'))
 const About = React.lazy(() => import('./pages/About'))
 const Display = React.lazy(() => import('./pages/Display'))
+const CharityMatch = React.lazy(() => import('./pages/CharityMatch'))
+
 const Videography = React.lazy(() => import('./components/videography/VideographyPage'))
 // const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
 // const Typography = React.lazy(() => import('./views/theme/typography/Typography'))
@@ -30,6 +32,7 @@ const routes = [
   { path: '/video/:id', name: 'Video', element: VideoPage },
   { path: '/shorts', name: 'Shorts', element: Shorts },
   { path: '/vikkStreak', name: 'VikkStreak', element: Display },
+  { path: '/charityMatch23', name: 'SDMN Charity Match 2023', element: CharityMatch },
   { path: '/about', name: 'About', element: About },
 ]
 
