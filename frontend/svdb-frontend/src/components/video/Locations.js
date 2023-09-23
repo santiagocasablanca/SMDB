@@ -5,7 +5,7 @@ import { Avatar, Col, Modal, List, Row, Space, Tag, Typography, Divider } from '
 
 const { Text } = Typography;
 
-const Locations = ({ video }) => {
+const Locations = ({ video, _showLabel = true }) => {
     const [loaded, setLoaded] = useState(false);
     const [visible, setVisible] = useState(false);
     const [visibleAll, setVisibleAll] = useState(false);
@@ -16,7 +16,7 @@ const Locations = ({ video }) => {
 
 
     useEffect(() => {
-        // console.log(video?.locations);
+        // console.log(video);
         setLocations(video?.locations);
         setLoaded(true);
 
@@ -50,8 +50,8 @@ const Locations = ({ video }) => {
         <>
             {loaded && locations ?
                 <>
-                    <Text strong style={{ marginLeft: '20px' }}>Locations </Text>
-                    <Tag color='#101010' key='allTag' onClick={showAll}>See All </Tag>
+                    {_showLabel ? <><Text strong style={{ marginLeft: '20px' }}>Locations </Text>
+                        <Tag color='#101010' key='allTag' onClick={showAll}>See All </Tag> </> : ''}
                     {Object.keys(locations).map(key => {
                         const _locations = locations[key];
                         return _locations.map(location => {
@@ -85,7 +85,7 @@ const Locations = ({ video }) => {
                         onCancel={handleCancelAll}
                         footer={null}>
 
-                        <Map height={500} width={700} defaultCenter={[51.4873439,0.0335215]} zoom={3} onBoundsChanged={({ center, zoom }) => {
+                        <Map height={500} width={700} defaultCenter={[51.4873439, 0.0335215]} zoom={3} onBoundsChanged={({ center, zoom }) => {
                             // setCenter(center)
                             setZoom(zoom)
                         }} >
