@@ -32,7 +32,7 @@ const routes = [
   { path: '/video/:id', name: 'Video', element: VideoPage },
   { path: '/shorts', name: 'Shorts', element: Shorts },
   { path: '/vikkStreak', name: 'VikkStreak', element: Display },
-  { path: '/charityMatch23', name: 'SDMN Charity Match 2023', element: CharityMatch },
+  { path: '/charityMatch', name: 'SDMN Charity Match', element: CharityMatch },
   { path: '/about', name: 'About', element: About },
 ]
 
