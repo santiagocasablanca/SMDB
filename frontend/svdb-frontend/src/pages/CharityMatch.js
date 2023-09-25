@@ -188,15 +188,29 @@ const CharityMatch = () => {
       width: '30%'
     },
     { key: 'duration_parsed', title: 'Duration', dataIndex: 'duration_parsed', align: 'right', render: (text) => <p>{displayVideoDurationFromSecondsWithLegend(text)}</p> },
-    { key: 'published_at', title: 'Published At', dataIndex: 'published_at', render: (text) => <p style={{ whiteSpace: 'nowrap' }}>{dayjs(text).format("DD MMM YYYY")}</p> },
+    {
+      key: 'published_at', title: 'Published At', dataIndex: 'published_at', render: (text) => <p style={{ whiteSpace: 'nowrap' }}>{dayjs(text).format("DD MMM YYYY")}</p>,
+      sorter: (a, b) => {
+        // Convert the dates to JavaScript Date objects for comparison
+        const dateA = new Date(a.published_at);
+        const dateB = new Date(b.published_at);
+
+        return dateA - dateB; // Ascending order
+        // To reverse the order, use: return dateB - dateA;
+      },
+    },
     {
       key: 'views', title: 'Views', dataIndex: 'views', align: 'right', render: (text) => <p>{intToStringBigNumber(text)}</p>, defaultSortOrder: 'descend',
       sorter: (a, b) => a.views - b.views,
     },
-    { key: 'likes', title: 'Likes', dataIndex: 'likes', align: 'right', render: (text) => <p>{intToStringBigNumber(text)}</p>, 
-    sorter: (a, b) => a.likes - b.likes, },
-    { key: 'comments', title: 'Comments', dataIndex: 'comments', align: 'right', render: (text) => <p>{intToStringBigNumber(text)}</p>, 
-    sorter: (a, b) => a.comments - b.comments, },
+    {
+      key: 'likes', title: 'Likes', dataIndex: 'likes', align: 'right', render: (text) => <p>{intToStringBigNumber(text)}</p>,
+      sorter: (a, b) => a.likes - b.likes,
+    },
+    {
+      key: 'comments', title: 'Comments', dataIndex: 'comments', align: 'right', render: (text) => <p>{intToStringBigNumber(text)}</p>,
+      sorter: (a, b) => a.comments - b.comments,
+    },
     // {
     //   key: 'tags',
     //   width: '10%',
