@@ -57,7 +57,7 @@ const VideoPreview = ({ _video }) => {
                         </Space>
                     </div>
                     <div>
-                        <Space split={<Divider type="vertical" />} size="small" style={{ marginLeft: '5px' }}>
+                        <Space split={<Divider type="vertical" />} size="small" style={{ marginLeft: '5px', marginRight: '5px' }}>
                             <p style={{ color: 'white', fontSize: '10px' }}><EyeOutlined /> {intToStringBigNumber(_video.views)}</p>
                             <p style={{ color: 'white', fontSize: '10px' }}><LikeOutlined /> {intToStringBigNumber(_video.likes)}</p>
                             <p style={{ color: 'white', fontSize: '10px' }}><CommentOutlined /> {intToStringBigNumber(_video.comments)}</p>

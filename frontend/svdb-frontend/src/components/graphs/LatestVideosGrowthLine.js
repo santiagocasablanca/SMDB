@@ -10,7 +10,7 @@ import { Line } from '@ant-design/plots';
 
 const { Title } = Typography;
 
-const LatestVideosGrowthLine = ({ title, filter }) => {
+const LatestVideosGrowthLine = ({ title, filter, start = 0 }) => {
     const [data, setData] = useState([]);
     const { intToStringBigNumber, parseDate, parseDuration } = useFormatter();
     const [isLoaded, setIsLoaded] = useState(false);
@@ -74,7 +74,7 @@ const LatestVideosGrowthLine = ({ title, filter }) => {
             tickCount: 5,
         },
         slider: {
-            start: 0,
+            start: start,
             end: 1,
             style: { fill: 'white' }
         },
