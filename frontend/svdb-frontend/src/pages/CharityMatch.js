@@ -74,11 +74,6 @@ const CharityMatch = () => {
   useEffect(() => {
 
     async function fetchData() {
-      // let now = dayjs();
-      // let oldDate = dayjs().subtract(2, 'months');
-      // let range = [];
-      // range.push(oldDate.format());
-      // range.push(now.format());
 
       let _params = new URLSearchParams();
       _params.append("sort", "views%desc")
@@ -378,18 +373,20 @@ const CharityMatch = () => {
         (
           <>
             <div className="charityMatchContainer">
-              <br></br>
-              <Row gutter={[16, 16]}>
-                <Col span={24}>
-                  <LatestVideosGrowthLine title="Charity Match Videos Views Growth" filter={{ videos: videos }} start={0.8} />
-                </Col>
-              </Row>
-
-              <br></br>
+            
               <br></br>
               <Row gutter={[16, 16]}>
                 <Col span={24}>
                   <Column {...config} />
+                </Col>
+              </Row>
+
+              
+              <br></br>
+              <br></br>
+              <Row gutter={[16, 16]}>
+                <Col span={24}>
+                  <LatestVideosGrowthLine title="Charity Match Videos Views Growth" filter={{ videos: videos.slice(0, 15) }} start={0.6} />
                 </Col>
               </Row>
 
@@ -399,7 +396,7 @@ const CharityMatch = () => {
               <Row>
                 <Col span={24}>
                   <Title style={{ color: "black" }} level={5}>Charity Match related published videos</Title>
-                  <Button onClick={() => handleClick()} style={{ float: 'right' }} type="link">Go to</Button>
+                  {/* <Button onClick={() => handleClick()} style={{ float: 'right' }} type="link">Go to</Button> */}
                 </Col>
               </Row>
               <Row className="hide-on-small-screen">
