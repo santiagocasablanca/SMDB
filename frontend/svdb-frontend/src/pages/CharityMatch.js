@@ -82,7 +82,7 @@ const CharityMatch = () => {
 
       let _params = new URLSearchParams();
       _params.append("sort", "views%desc")
-      _params.append("title", "charity match")
+      _params.append("title", "charity%match")
       // _params.append("publishedAtRange", range)
       await getVideosFn(1, 1000, _params)
         .then((result) => {
