@@ -174,7 +174,7 @@ const VideoPage = () => {
               </Col>
               <Col span={24}>
                 <div className="videoContainer">
-                  <ReactPlayer url={video.player.embedHtml} width='100%' height="100%"></ReactPlayer>
+                  <ReactPlayer url={video.player.embedHtml} controls={true} width='100%' height="100%"></ReactPlayer>
                 </div>
               </Col>
             </Row>
