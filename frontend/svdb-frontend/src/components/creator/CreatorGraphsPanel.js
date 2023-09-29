@@ -32,6 +32,7 @@ const CreatorGraphsPanel = ({ title, _channels }) => {
 
     const [channels, setChannels] = useState(_channels);
     const [top10videos, setTop10videos] = useState([]);
+    const [latestVideos, setLatestVideos] = useState([]);
 
 
     useEffect(() => {
@@ -39,10 +40,18 @@ const CreatorGraphsPanel = ({ title, _channels }) => {
             let _paramsTop10 = new URLSearchParams();
             _paramsTop10.append("channels", _channels.map(it => { return it.channel_id; }))
             _paramsTop10.append("sort", "views%desc")
-            await getVideosFn(1, 10, _paramsTop10)
+            await getVideosFn(1, 20, _paramsTop10)
                 .then((result) => {
                     setTop10videos(result.videos);
                 })
+
+                let latest = new URLSearchParams();
+                latest.append("channels", _channels.map(it => { return it.channel_id; }))
+                latest.append("sort", "published_at%desc")
+                await getVideosFn(1, 20, latest)
+                    .then((result) => {
+                        setLatestVideos(result.videos);
+                    })
         }
         fetchData();
     }, [title]);
@@ -107,6 +116,18 @@ const CreatorGraphsPanel = ({ title, _channels }) => {
 
             <br></br>
             <Row gutter={[16, 16]}>
+                <Col span={24}>
+                    {
+                        latestVideos?.length > 0 ?
+                            <LatestVideosGrowthLine title="Latest Videos View Growth" filter={{ videos: latestVideos }} />
+                            : <Spin />
+                    }
+                </Col>
+            </Row>
+           
+
+            <br></br>
+            <Row gutter={[16, 16]}>
                 <Col span={24} xl={24}>
                     <TreeMapPlot title="Videos Grouped by Tags" filter={{ channels: _channels.map(it => { return it.channel_id; }), sort: "views%desc" }} />
                 </Col>
@@ -131,9 +152,9 @@ const CreatorGraphsPanel = ({ title, _channels }) => {
                 </Col>
             </Row>
             <br></br>
+            
             <Row gutter={[16, 16]}>
                 <Col span={24}>
-                    {/* <AppIntro /> */}
                     {
                         top10videos?.length > 0 ?
                             <LatestVideosGrowthLine title="Top Videos Growth" filter={{ videos: top10videos }} />
