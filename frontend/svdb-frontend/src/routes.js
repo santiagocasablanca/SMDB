@@ -15,6 +15,7 @@ const Display = React.lazy(() => import('./pages/Display'))
 const CharityMatch = React.lazy(() => import('./pages/CharityMatch'))
 
 const Videography = React.lazy(() => import('./components/videography/VideographyPage'))
+const VideoGameOnePage = React.lazy(() => import('./components/videoGameOne/VideoGameOne'))
 // const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
 // const Typography = React.lazy(() => import('./views/theme/typography/Typography'))
 
@@ -33,6 +34,7 @@ const routes = [
   { path: '/shorts', name: 'Shorts', element: Shorts },
   { path: '/vikkStreak', name: 'VikkStreak', element: Display },
   { path: '/charityMatch', name: 'SDMN Charity Match', element: CharityMatch },
+  { path: '/game', name: 'SDMN Video Game', element: VideoGameOnePage },
   { path: '/about', name: 'About', element: About },
 ]
 

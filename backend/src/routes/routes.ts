@@ -18,12 +18,14 @@ import {
   fetchStatsGroupedByYear,
   fetchStatsGroupedByDurationRange,
   findHighlightedVideosController,
-  findGroupedByTags
+  findGroupedByTags,
+  gameOne
 } from "../controllers/video.controller";
 
 import { fetchChannelController, findAllChannelsController, createChannelController, findAllGuestsController } from "../controllers/channel.controller";
 import { findAllCreatorsController, fetchCreatorController, fetchCreatorStatsController, findTopCreatorsController, createCreatorController } from "../controllers/creator.controller";
 import { findAllVideoStatsController } from "../controllers/videoStats.controller";
+import { fetchLeaderboardController, addToLeaderboardController } from "../controllers/gameOne.controller";
 
 const router = express.Router();
 
@@ -32,6 +34,10 @@ router.route("/channels/")
   .post(apiKeyAuth, createChannelController);
 router.route("/channels/:id")
   .get(fetchChannelController);
+
+router.route("/gameOneLeaderboard/")
+  .get(fetchLeaderboardController)
+  .post(addToLeaderboardController);
   
 
 router.route("/creators/")
@@ -51,6 +57,11 @@ router
 router
   .route("/videos/highlighted/")
   .get(findHighlightedVideosController);
+  
+router
+  .route("/videos/gameOne")
+  .get(gameOne);
+  
 
 router
   .route("/appearences/")

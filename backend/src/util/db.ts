@@ -28,7 +28,7 @@ db.videoCreator = sequelize.define('video_creator', {
     tableName: 'video_creator'
 });
 
-
+db.gameOneLeaderboard = require("../models/gameOneLeaderboard")(sequelize, Sequelize, DataTypes);
 db.creator = require("../models/creator")(sequelize, Sequelize, DataTypes);
 db.channel = require("../models/channel")(sequelize, Sequelize, DataTypes);
 db.video = require("../models/video")(sequelize, Sequelize, DataTypes);

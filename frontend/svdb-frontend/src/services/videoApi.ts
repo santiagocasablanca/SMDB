@@ -151,6 +151,34 @@ export const getVideoFn = async (id) => {
   return response.data;
 };
 
+export const getGameOneFn = async (params) => {
+  const req = `videos/gameOne?${params}`;
+
+  const response = await videoApi.get<IVideosResponse>(
+    req
+  );
+  return response.data;
+};
+
+export const fetchGameOneLeaderboard = async (params) => {
+  const req = `gameOneLeaderboard?${params}`;
+
+  const response = await videoApi.get<IVideosResponse>(
+    req
+  );
+  return response.data;
+}; 
+export const gameOneAddToLeaderboard = async ( params) => {
+
+  try {
+    const response = await videoApi.post('gameOneLeaderboard/', params);
+    return response.data;
+  }  catch (error) {
+    console.log(error);
+  }
+
+};
+
 export const fetchAllSeries = async () => {
   const req = `fetchAllSeries`;
   const response = await videoApi.get<IVideosResponse>(

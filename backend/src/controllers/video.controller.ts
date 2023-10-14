@@ -810,6 +810,89 @@ export const findHighlightedVideosController = async (
   }
 };
 
+export const gameOne = async (req: Request<{}, {}, {}, VideosSearchReqQuery & { series?: string, title?: string }>,
+  res: Response
+) => {
+  try {
+
+    const page = 1;
+    const limit = 100;
+    const skip = (page - 1) * limit;
+
+    // console.log(req.query)
+    //sort 
+    let sort = req.query.sort ? req.query.sort.split('%') : ['published_at', 'DESC'];
+
+    let whereClause = {}
+
+    if (req.query.channels) {
+      var channelsArr = req.query.channels.split(',');
+
+      whereClause['channel_id'] = { [Op.or]: channelsArr };
+    }
+
+    if (true) { // true for now : req.query.excludedChannels
+      // var channelsArr = req.query.excludedChannels.split(',');
+
+      whereClause['channel_id'] = { [Op.notIn]: ['UC81hVmI5eEBIt3s3HQpJd_w', 'UC8YMVhioY0gp7zpPYHl779g'] };
+    }
+
+    if (req.query.publishedAtRange) {
+      let rangeDate = req.query.publishedAtRange.split(',');
+      const publishedAtSearchInitial = dayjs(rangeDate[0]).format("YYYY-MM-DD");
+      const publishedAtSearchFinal = dayjs(rangeDate[1]).format("YYYY-MM-DD");
+      whereClause['published_at'] = { [Sequelize.Op.between]: [publishedAtSearchInitial, publishedAtSearchFinal] };
+
+    }
+    whereClause['duration_parsed'] = { [Sequelize.Op.gt]: ['69'] };
+
+    const videos = await Video.findAndCountAll({
+      attributes: ['video_id', 'title',
+        'duration',
+        'duration_parsed',
+        'channel_id',
+        'channel_title',
+        'views',
+        'likes',
+        'dislikes',
+        'comments',
+        'url',
+        'player',
+        'tags',
+        'locations',
+        'category',
+        'serie',
+        'game',
+        'published_at',
+        'updated_at'
+      ], where: whereClause,
+      include: [{
+        model: Channel,
+        as: 'channel', attributes: ['channel_id', 'custom_url',
+          'title',
+          'subs',
+          'videos',
+          'views',
+          'likes',
+          'comments',
+          'logo_url',]
+      }],
+      limit, offset: skip, order: sequelize.random()
+    });
+
+    res.status(200).json({
+      status: "success",
+      results: videos.count,
+      videos: videos.rows,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      status: "error",
+      message: error.message,
+    });
+  }
+}
+
 export const findAllVideosController = async (
   req: Request<{}, {}, {}, VideosSearchReqQuery & { series?: string, title?: string }>,
   res: Response
