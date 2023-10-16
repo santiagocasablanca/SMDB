@@ -1,7 +1,9 @@
 import React from 'react';
 import { Card, Grid, Typography } from 'antd';
 import insertCss from 'insert-css';
-import $ from 'jquery'
+import $ from 'jquery';
+
+
 
 const { Meta } = Card;
 const { Title, Text } = Typography;

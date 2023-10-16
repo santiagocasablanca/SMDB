@@ -291,6 +291,8 @@ const VideoGameOneRound = ({ _round, totalPoints, remainingLives, handleNextVide
     }
   }
 
+  
+
   const GuessBttn = ({ handleGuess }) => {
     const [open, setOpen] = useState(false);
     const [confirmLoading, setConfirmLoading] = useState(false);
@@ -443,6 +445,13 @@ const VideoGameOneRound = ({ _round, totalPoints, remainingLives, handleNextVide
     message.success(`You bought the vowel: ${randomVowel} for 10 points!`);
   }
   // style={{wordSpacing: '6px'}} style={backgroundImageStyle}
+
+
+  const getChannelTitle = (channel_id) => {
+    console.log(channel_id, channels);
+    const channel = channels.find(el => el.channel_id == channel_id);
+    return channel ? channel.title : 'none?';
+  }
   return (<>
 
     {isFetched && round ? <>
@@ -465,9 +474,9 @@ const VideoGameOneRound = ({ _round, totalPoints, remainingLives, handleNextVide
                   <Avatar className={`${round?.show_channel ? '' : 'blur-image'}`} src={round?.video?.channel?.logo_url} />
                   {/* onClick={() => goToChannel(round?.video?.channel?.channel_id)} */}
                   <Space.Compact direction="vertical" className={`${round?.show_channel ? '' : 'blur-image'}`}>
-                    <Text>{round?.video?.channel?.title}</Text>
+                    <Text>{channels.find(el => el.channel_id == round?.video?.channel.channel_id)?.title}</Text>
                     <Text type="secondary">{round?.video?.channel?.subs} subscribers</Text>
-
+                    <Text type="secondary">{parseDate(round?.video?.published_at)}</Text>
                   </Space.Compact>
                 </Space>
               </Card>

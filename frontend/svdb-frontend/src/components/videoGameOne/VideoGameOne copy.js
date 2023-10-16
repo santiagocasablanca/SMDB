@@ -1,5 +1,5 @@
-import { Input, Typography, Spin, Button, Avatar, Modal, Table, Row, Col, Card, FloatButton } from 'antd';
-import { CloseOutlined, OrderedListOutlined, ReloadOutlined } from '@ant-design/icons';
+import { Input, Typography, Spin, Button, Avatar, Modal, Table, Row, Col, Card } from 'antd';
+import { CloseOutlined, ReloadOutlined } from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useFormatter from '../../hooks/useFormatter';
@@ -10,7 +10,6 @@ import {
 import VideoGameOneRound from './VideoGameOneRound';
 import insertCss from 'insert-css';
 import { gsap } from 'gsap';
-
 
 const stringSimilarity = require('string-similarity');
 
@@ -208,14 +207,14 @@ const VideoGameOne = () => {
 
     // style={{ width: '100%' }}
     return (
-      <>
+      <> 
         <div >
           <label>Player Name</label>
           <Input
             value={playerName}
             onChange={(e) => setPlayerName(e.target.value)}
             style={{ width: '50%', margin: '10px' }}
-          />
+            />
           <Button onClick={handleOk}>
             Add to Leaderboard
          </Button>
@@ -309,20 +308,20 @@ const VideoGameOne = () => {
           <Col sm={24} md={24} lg={12}>
             <Title level={4}>Leaderboard</Title>
             <Table
-              columns={columns}
+              columns={columns} 
               // dataSource={leaderboard} 
               dataSource={leaderboard.map((item) => ({
                 ...item,
                 key: item.id,
               }))}
               size="small" pagination={{
-                // simple: true,
-                total: leaderboardTotalResults,
-                // showQuickJumper: true,
-                showSizeChanger: false,
-                defaultPageSize: 5,
-                // pageSizeOptions: ["5", "30", "50"]
-              }} />
+              // simple: true,
+              total: leaderboardTotalResults,
+              // showQuickJumper: true,
+              showSizeChanger: false,
+              defaultPageSize: 5,
+              // pageSizeOptions: ["5", "30", "50"]
+            }} />
           </Col>
         </Row>
       </div>
@@ -353,96 +352,15 @@ const VideoGameOne = () => {
     </>);
   };
 
-  const LeaderboardBttn = () => {
-    const [open, setOpen] = useState(false);
-
-    const columns = [
-      {
-        title: 'Name',
-        dataIndex: 'player_name',
-        key: 'player_name',
-        render: (text) => <p>{text}</p>,
-      },
-      {
-        title: 'Date',
-        dataIndex: 'created_at',
-        width: '25%',
-        key: 'created_at',
-        render: (text) => <p>{parseDate(text)}</p>
-      },
-      {
-        title: 'Rounds',
-        dataIndex: 'total_rounds',
-        width: '10%',
-        key: 'total_rounds',
-        sorter: {
-          compare: (a, b) => a.total_rounds - b.total_rounds,
-          multiple: 1,
-        },
-      },
-      {
-        title: 'Points',
-        dataIndex: 'total_points',
-        width: '15%',
-        key: 'total_points',
-        sorter: {
-          compare: (a, b) => a.total_points - b.total_points,
-          multiple: 2,
-        },
-      }
-    ];
-    const showModal = () => {
-      setOpen(true);
-    };
-    const handleOk = () => {
-      setTimeout(() => {
-        setOpen(false);
-      }, 500);
-    };
-    const handleCancel = () => {
-      setOpen(false);
-    };
-    return (
-      <>
-        <FloatButton icon={<OrderedListOutlined />} type="primary" onClick={showModal} tooltip={<div>Leaderboard</div>}>
-        </FloatButton>
-        <Modal
-          title="Leaderboard"
-          open={open}
-          onOk={handleOk}
-          onCancel={handleCancel}
-        >
-          <Table
-            columns={columns}
-            // dataSource={leaderboard} 
-            dataSource={leaderboard.map((item) => ({
-              ...item,
-              key: item.id,
-            }))}
-            size="small" pagination={{
-              // simple: true,
-              total: leaderboardTotalResults,
-              // showQuickJumper: true,
-              showSizeChanger: false,
-              defaultPageSize: 5,
-              // pageSizeOptions: ["5", "30", "50"]
-            }} />
-        </Modal>
-      </>
-    );
-  }
-
 
   return (<>
-    {isFetched && round ?
-      <>
-        {gameover ? <DisplayGameOver /> : <>
-          <VideoGameOneRound key={currentIndex} _round={round} remainingLives={remainingLives} totalPoints={totalOfPoints} handleNextVideo={(updatedRound) => nextVideo(updatedRound)}
-            handlePrevVideo={(updatedRound) => prevVideo(updatedRound)} handleGuessCB={(updatedRound) => handleGuess(updatedRound)} /> <LeaderboardBttn /> </>
-        }
-      </>
-      :
-      <Spin style={{ position: 'absolute', top: '50%', left: '50%' }} />
+    {isFetched && round ? <>
+      {gameover ? <DisplayGameOver /> :
+        <VideoGameOneRound key={currentIndex} _round={round} remainingLives={remainingLives} totalPoints={totalOfPoints} handleNextVideo={(updatedRound) => nextVideo(updatedRound)}
+          handlePrevVideo={(updatedRound) => prevVideo(updatedRound)} handleGuessCB={(updatedRound) => handleGuess(updatedRound)} />
+      }
+    </>
+      : <Spin />
     }
   </>);
 };
