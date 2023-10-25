@@ -21,7 +21,7 @@ if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 const youtubeService = new YoutubeService();
 const videoMetaService = new VideoMetaService();
 
-cron.schedule('00 10 * * *', () => {
+cron.schedule('00 01 * * *', () => {
   console.log('Running fetchStatisticsForAllChannels');
   youtubeService.fetchStatisticsForAllChannels();
 })
@@ -31,7 +31,7 @@ cron.schedule('00 10 * * *', () => {
 //   youtubeService.fetchLatestStatisticsForAllChannels();
 // })
 
-cron.schedule('00 09 * * *', () => {
+cron.schedule('00 12 * * *', () => {
   console.log("Associate Tags to Videos Job ");
   videoMetaService.associateTagsToVideos();
 })
@@ -53,6 +53,14 @@ app.get("/v1/healthchecker", (req: Request, res: Response) => {
   res.status(200).json({
     status: "success",
     message: "Build CRUD API with Node.js and Sequelize",
+  });
+});
+
+app.get("/v1/jobs/all/run", (req: Request, res: Response) => {
+  youtubeService.fetchStatisticsForAllChannels();
+  res.status(200).json({
+    status: "success",
+    message: "Running in backbgound!",
   });
 });
 
