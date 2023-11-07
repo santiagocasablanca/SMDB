@@ -144,7 +144,7 @@ class YoutubeService {
                             'comments': item.statistics.commentCount,
                             'duration': item.contentDetails.duration,
                             'duration_parsed': parsedDuration,
-                            'url': item.snippet.thumbnails.high.url,
+                            'url': item.snippet.thumbnails.maxres ? item.snippet.thumbnails.maxres?.url : item.snippet.thumbnails.high.url,
                             'player': item.player,
                             'published_at': item.snippet.publishedAt,
                             'livestream': item.liveStreamingDetails,
@@ -160,7 +160,7 @@ class YoutubeService {
                             'comments': item.statistics.commentCount,
                             'duration': item.contentDetails.duration,
                             'duration_parsed': parsedDuration,
-                            'url': item.snippet.thumbnails.high.url,
+                            'url': item.snippet.thumbnails.maxres ? item.snippet.thumbnails.maxres?.url : item.snippet.thumbnails.high.url,
                             'published_at': item.snippet.publishedAt,
                             'updated_at': new Date(),
                             'livestream': item.liveStreamingDetails,
@@ -205,7 +205,7 @@ class YoutubeService {
         const viewCount = data.items[0].statistics.viewCount;
         const subscriberCount = data.items[0].statistics.subscriberCount;
         const videoCount = data.items[0].statistics.videoCount;
-        const logo = data.items[0].snippet.thumbnails.high.url;
+        const logo = data.items[0].snippet.thumbnails.maxres ? data.items[0].snippet.thumbnails.maxres.url : data.items[0].snippet.thumbnails.high.url;
         const banner = data.items[0].brandingSettings.image ? data.items[0].brandingSettings.image.bannerExternalUrl : null;
         const playlistId = data.items[0].contentDetails.relatedPlaylists.uploads;
 
@@ -293,7 +293,7 @@ class YoutubeService {
                         'comments': item.statistics.commentCount,
                         'duration': item.contentDetails.duration,
                         'duration_parsed': parsedDuration,
-                        'url': item.snippet.thumbnails.high.url,
+                        'url': item.snippet.thumbnails.maxres ?  item.snippet.thumbnails.maxres.url : item.snippet.thumbnails.high.url,
                         'player': item.player,
                         'published_at': item.snippet.publishedAt,
                         'livestream': item.liveStreamingDetails,
@@ -309,7 +309,7 @@ class YoutubeService {
                         'comments': item.statistics.commentCount,
                         'duration': item.contentDetails.duration,
                         'duration_parsed': parsedDuration,
-                        'url': item.snippet.thumbnails.high.url,
+                        'url': item.snippet.thumbnails.maxres ?  item.snippet.thumbnails.maxres.url : item.snippet.thumbnails.high.url,
                         'published_at': item.snippet.publishedAt,
                         'updated_at': new Date(),
                         'livestream': item.liveStreamingDetails,

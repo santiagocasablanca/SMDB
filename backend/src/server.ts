@@ -26,10 +26,10 @@ cron.schedule('00 01 * * *', () => {
   youtubeService.fetchStatisticsForAllChannels();
 })
 
-// cron.schedule('40 00 * * *', () => {
-//   console.log('Fetch latest video and channel statistics Job');
-//   youtubeService.fetchLatestStatisticsForAllChannels();
-// })
+cron.schedule('00 16 * * *', () => {
+  console.log('Fetch latest video and channel statistics Job');
+  youtubeService.fetchLatestStatisticsForAllChannels();
+})
 
 cron.schedule('00 12 * * *', () => {
   console.log("Associate Tags to Videos Job ");
