@@ -208,10 +208,10 @@ const StatsGroupedByYearColumns = ({ title, filter }) => {
         <>
             <Row>
                 <Col span={24}>
-                    <Title style={{ color: "black" }} level={5}>{title}</Title>
+                    <Title style={{ color: "black" }} level={4}>{title}</Title>
                 </Col>
             </Row>
-            <Card bordered={false} size="small">
+            {/* <Card bordered={false} size="small"> */}
                 {isLoaded ? (
                     data.length > 0 ? (
                         <Column {...config} />
@@ -222,7 +222,7 @@ const StatsGroupedByYearColumns = ({ title, filter }) => {
                 ) : (
                         <Spin />
                     )}
-            </Card>
+            {/* </Card> */}
         </>
     );
 

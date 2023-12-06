@@ -22,6 +22,11 @@ const TreeMapPlot = ({ title, filter }) => {
     const [likedSeriesData, setLikedSeriesData] = useState([]);
     const [refreshKey, setRefreshKey] = useState(0);
 
+    insertCss(`
+        .ant-card .ant-card-head .ant-tabs-top {
+            color: black;
+        }
+    `);
 
 
     useEffect(() => {
@@ -73,19 +78,9 @@ const TreeMapPlot = ({ title, filter }) => {
         const url = '/videography';
         navigate(url, { state: { filter } });
     }
-    insertCss(`
+    // insertCss(`
 
-    .videoPreviewForHighlight:hover {
-        cursor: pointer;
-      }
-       
-        .videoPreviewForHighlight h5, p {
-            color: black;
-        }
-        .videoPreviewForHighlight span {
-            color: black;
-        }
-    `);
+    // `);
     const mostViewedSeries = {
         name: 'Most Viewed Series',
         children: data
@@ -182,10 +177,13 @@ const TreeMapPlot = ({ title, filter }) => {
         <>
             <Row>
                 <Col span={24}>
-                    <Title style={{ color: "black" }} level={5}>{title}</Title>
+                    <Title style={{ color: "black" }} level={4}>{title}</Title>
                 </Col>
             </Row>
-            <Card bordered={false} size="small"
+            <Card size="small"
+                style={{padding: '0px', border: 'none', backgroundColor: 'transparent', color: 'black'}}
+                headStyle={{color: 'black'}}
+                bodyStyle={{paddingRight: '0px', paddingLeft: '0px'}}
                 tabList={tabListNoTitle}
                 activeTabKey={activeTabKey2}
                 onTabChange={onTab2Change}>

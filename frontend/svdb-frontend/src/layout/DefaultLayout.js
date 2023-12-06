@@ -26,6 +26,7 @@ const DefaultLayout = () => {
         <Layout hasSider style={{
           // padding: '30px', bg sdmnPink sdmnLightBlue babyPowder secondary  aquamarine oxfordBlue
           // new tries coolerGray10 oxfordBlueSofter10
+          // coolerGray10 cerise
           background: variables.coolerGray10,
           color: variables.onBg,
           primaryColor: variables.sdmnYellow,

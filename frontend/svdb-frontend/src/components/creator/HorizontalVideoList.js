@@ -51,7 +51,7 @@ const HorizontalVideoList = ({ title, filter }) => {
         <> {isLoaded ?
             (
                 <>
-                    <Row><Col span={18}><Title style={{ color: 'black' }} level={5}>{title}</Title></Col> <Col span={6}><Button onClick={() => handleClick()} style={{ float: 'right' }} type="link">See all</Button></Col></Row>
+                    <Row><Col span={18}><Title style={{ color: 'black' }} level={4}>{title}</Title></Col> <Col span={6}><Button onClick={() => handleClick()} style={{ float: 'right' }} type="link">See all</Button></Col></Row>
                     <List
                         grid={{
                             gutter: 6,

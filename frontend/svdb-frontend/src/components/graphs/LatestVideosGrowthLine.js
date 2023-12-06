@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Card, List, Row, Col, Image, Avatar, Table, Divider, Popover, Button, Typography, Space, Spin, Empty } from 'antd';
+import { Card, List, Row, Col, Image, Avatar, Table, Divider, Popover, Button, Typography, Space, Spin, Skeleton, Empty } from 'antd';
 import insertCss from 'insert-css';
 import variables from '../../sass/antd.module.scss';
 import useFormatter from '../../hooks/useFormatter';
@@ -65,7 +65,7 @@ const LatestVideosGrowthLine = ({ title, filter, start = 0 }) => {
 
     const config = {
         data,
-        theme: 'dark',
+        // theme: 'default',
         padding: 'auto',
         xField: 'fetched_at',
         seriesField: 'video_id',
@@ -175,21 +175,25 @@ const LatestVideosGrowthLine = ({ title, filter, start = 0 }) => {
         <>
             <Row>
                 <Col span={24}>
-                    <Title style={{ color: "black" }} level={5}>{title}</Title>
+                    <Title style={{ color: "black", marginBottom: '25px'  }} level={4}>{title}</Title>
                 </Col>
             </Row>
-            <Card bordered={false} size="small">
-                {isLoaded ? (
-                    data.length > 0 ? (
-                        <Line {...config} />
-                    ) : (
-                            <Empty description="No data available" />
-                            // <Text>No data available.</Text>
-                        )
+            {/* <Card bordered={false} size="small"> */}
+            {isLoaded ? (
+                data.length > 0 ? (
+                    <Line {...config} style={{ marginTop: '10px' }} />
                 ) : (
-                        <Spin />
-                    )}
-            </Card>
+                        <Card bordered={false} size="small">
+                            <Empty description="No data available" />
+                        </Card>
+                        // <Text>No data available.</Text>
+                    )
+            ) : (
+                    <Skeleton.Image active size="large" width="100%" height="300px"/>
+
+                    // <Spin />
+                )}
+            {/* </Card> */}
         </>
     );
 

@@ -3,19 +3,15 @@ import { Carousel, Col, Row, Space, Spin, Typography, Popover } from 'antd';
 import dayjs from 'dayjs';
 import insertCss from 'insert-css';
 import React, { useEffect, useState } from 'react';
-import HorizontalVideoList from '../components/creator/HorizontalVideoList';
-import FrequencyCard from '../components/home/FrequencyCard';
-import TopCreators from '../components/home/TopCreators';
-import UploadTimeFrequencyCard from '../components/home/UploadTimeFrequencyCard';
 import HorizontalHighlightedList from '../components/video/HorizontalHighlightedList';
 import HorizontalShortsList from '../components/video/HorizontalShortsList';
 import VideoPreviewForHighlight from '../components/video/VideoPreviewForHighlight';
 import variables from '../sass/antd.module.scss';
 import useFormatter from '../hooks/useFormatter';
-import { getChannelsFn } from "../services/channelApi.ts";
+import { getChannelsFn, fetchMostSubChannelByMonth } from "../services/channelApi.ts";
 import { getVideosFn, getHighlightedVideosFn } from "../services/videoApi.ts";
-import { AppIntro } from '../components';
 import LatestVideosGrowthLine from '../components/graphs/LatestVideosGrowthLine';
+import MonthlyHighlightedCreators from '../components/home/MonthlyHighlightedCreators';
 
 
 const { Title, Text } = Typography;
@@ -26,6 +22,8 @@ const HomePage = () => {
   const [top10videos, setTop10videos] = useState([]);
   // const [top10videoIds, setTop10videoIds] = useState([]);
   const [topChannelIds, setTopChannelIds] = useState([]);
+  const [channelsGrowth, setChannelsGrowth] = useState([]);
+
 
   const [filters, setFilters] = useState({ channels: [], published_atRange: [] });
 
@@ -40,10 +38,16 @@ const HomePage = () => {
 
     async function fetchData() {
       let now = dayjs();
-      let oldDate = dayjs().subtract(7, 'days');
+      let oldDate = dayjs().subtract(30, 'days');
       let range = [];
       range.push(oldDate.format());
       range.push(now.format());
+
+      await fetchMostSubChannelByMonth()
+        .then((result) => {
+          // console.log(result);
+          setChannelsGrowth(result.results);//calculateGrowthStatsForEachChannel(result.results));
+        })
 
 
       let _paramsTop10 = new URLSearchParams();
@@ -57,9 +61,8 @@ const HomePage = () => {
           setTopChannelIds(result.videos.map(video => { return video.channel_id; }));
         })
 
-      let params = new URLSearchParams();
-      params.limit = 100;
-      await getChannelsFn(1, 1000, params).then((result) => {
+
+      await getChannelsFn(1, 1000, null).then((result) => {
         const _channels = result.results.map(it => {
           return {
             label: it.title,
@@ -79,7 +82,52 @@ const HomePage = () => {
     fetchData();
   }, []);
 
+  const calculateGrowthStatsForEachChannel = (results) => {
+    const growthStatsMap = {};
+
+    results.forEach((result) => {
+      const { channel_id, fetched_date, subs, views } = result;
+
+      if (!growthStatsMap[channel_id]) {
+        growthStatsMap[channel_id] = {
+          channel_id,
+          initial_subs: subs,
+          initial_views: views,
+          initial_fetched_date: fetched_date,
+          final_subs: subs,
+          final_views: views,
+          final_fetched_date: fetched_date,
+        };
+      } else {
+        growthStatsMap[channel_id].final_subs = subs;
+        growthStatsMap[channel_id].final_views = views;
+        growthStatsMap[channel_id].final_fetched_date = fetched_date;
+      }
+    });
+
+    Object.values(growthStatsMap).forEach((stats) => {
+      stats.subs_increase = stats.final_subs - stats.initial_subs;
+      stats.subs_growth_percentage =
+        (stats.subs_increase * 100) / stats.initial_subs;
+      stats.views_increase = stats.final_views - stats.initial_views;
+      stats.views_growth_percentage =
+        (stats.views_increase * 100) / stats.initial_views;
+    });
+    // console.log(growthStatsMap, Object.values(growthStatsMap));
+    return growthStatsMap; //Object.values(growthStatsMap);
+  };
+
   insertCss(`  
+  .spinContent {
+    padding: 50px;
+    background: rgba(0, 0, 0, 0.01);
+    border-radius: 4px;
+  }
+  
+  .ant-spin-nested-loading >div>.ant-spin .ant-spin-text {
+    text-shadow: 0px 0px;
+    
+  }
 
 
   .scrollmenu {
@@ -115,6 +163,7 @@ const HomePage = () => {
 
   .homeContainer {
     margin: 0 100px auto;
+    margin-top: 25px;
   }
 
   :where(.css-dev-only-do-not-override-kda5v0).ant-carousel .slick-dots-bottom {
@@ -130,6 +179,7 @@ const HomePage = () => {
   @media (max-width: 600px) {
     .homeContainer {
       margin: 0 20px;
+      margin-top: 25px;
     }
     .homeHeaderPanel {
       margin: 10px 30px auto;
@@ -190,7 +240,7 @@ const HomePage = () => {
     }, []);
 
     return (
-      <div style={{ color: 'white' }}>
+      <div style={{ color: 'white', width: '300px' }}>
         <Text>This website contains data last fetched </Text> {parseDateToFromNow(last_updated_at)}
         <Text> from </Text> {count} <Text> channels</Text>
       </div>
@@ -221,24 +271,13 @@ const HomePage = () => {
 
 
   return (<>
-    <HeaderPanel title="Home" channels={channels}></HeaderPanel>
+    {/* <HeaderPanel title="Home" channels={channels}></HeaderPanel> */}
     {isLoaded ?
       (
         <>
           <div className="homeContainer">
 
-            <Row gutter={[16, 16]}>
-              <Col span={24} md={24} lg={12} xl={14}>
-                {/* <Row gutter={12}>
-                  <Col span={24}> */}
-                <HighlightedVideos title="Highlighted" videos={top10videos} segmentedValue={value} onChangeSegmentedValue={setValue}></HighlightedVideos>
-                {/* </Col>
-                </Row> */}
-              </Col>
-              <Col span={24} md={24} lg={12} xl={10}>
-                <TopCreators channel_ids={topChannelIds} />
-              </Col>
-            </Row>
+            <MonthlyHighlightedCreators top10videos={top10videos} topChannelIds={topChannelIds} channelsGrowth={channelsGrowth} />
             <br></br>
             <Row>
               <Col span={24}>
@@ -258,12 +297,12 @@ const HomePage = () => {
               </Col>
             </Row>
 
-            <br></br>
+            {/* <br></br>
             <Row gutter={[16, 16]} className="hide-on-small-screen">
               <Col span={24} xl={24}>
                 <FrequencyCard _channels={channels}></FrequencyCard>
               </Col>
-            </Row>
+            </Row> */}
             {/* <br></br>
             <Row gutter={[16, 16]}>
               <Col span={24}>
@@ -272,21 +311,20 @@ const HomePage = () => {
             </Row> */}
 
             <br></br>
-
-            <Row gutter={[16, 16]}>
-              <Col span={24} md={24} lg={12} xl={8}>
-                <UploadTimeFrequencyCard _channels={channels}></UploadTimeFrequencyCard>
-              </Col>
-              <Col span={24} md={24} lg={12} xl={16}>
-                <Row gutter={16}>
-                  <Col span={24}>
-                    <HorizontalVideoList title="Most Viewed" filter={paramsTop10} />
-
-                    <HorizontalVideoList title="Most Liked" filter={paramsTop10Liked} />
-                  </Col>
-                </Row>
+            <Row>
+              <Col span={24}>
+                <HorizontalHighlightedList title="Most Viewed" filter={paramsTop10} />
               </Col>
             </Row>
+
+            <br></br>
+            <Row>
+              <Col span={24}>
+                <HorizontalHighlightedList title="Most Liked" filter={paramsTop10Liked} />
+              </Col>
+            </Row>
+
+            
 
             <br></br>
 
@@ -295,8 +333,10 @@ const HomePage = () => {
           </div>
         </>
       ) : (
-        <Row justify="center">
-          <Spin />
+        <Row justify="center" style={{marginTop: '70px'}}>
+          <Spin spining="true" tip="Loading..." size="large" >
+            <div className="spinContent" />
+          </Spin>
         </Row>
       )
     }

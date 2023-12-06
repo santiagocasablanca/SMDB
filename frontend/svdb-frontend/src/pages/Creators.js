@@ -1,5 +1,5 @@
 import { CalendarOutlined, EyeOutlined, FilterOutlined, UserOutlined, VideoCameraOutlined, YoutubeOutlined, EditOutlined } from '@ant-design/icons';
-import { Avatar, Button, Card, Col, Form, Image, Input, List, Modal, notification, Popover, Row, Space, Table, Tag, Tooltip, Typography } from 'antd';
+import { Avatar, Button, Card, Col, Form, Image, Input, List, Modal, notification, Popover, Row, Space, Table, Tag, Tooltip, Spin, Divider, Typography } from 'antd';
 import dayjs from "dayjs";
 import insertCss from 'insert-css';
 import React, { useEffect, useState } from 'react';
@@ -10,7 +10,7 @@ import variables from '../sass/antd.module.scss';
 import { associateChannelIdsToCreatorFn, getCreatorsFn } from "../services/creatorApi.ts";
 
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 const CreatorPage = () => {
   const navigate = useNavigate();
@@ -32,6 +32,7 @@ const CreatorPage = () => {
     getCreatorsFn(params).then((result) => {
       if (result.results) {
         setFetchedData(result.results);
+       
       }
     })
   }
@@ -149,9 +150,9 @@ const CreatorPage = () => {
               {isAdmin ? (<Tooltip title="Add Creator">
                 <AddCreatorModal />
               </Tooltip>) : ('')}
-              <Tooltip title="Filter">
+              {/* <Tooltip title="Filter">
                 <Button icon={<FilterOutlined />} />
-              </Tooltip>
+              </Tooltip> */}
             </Space.Compact>
 
           </div>
@@ -312,12 +313,12 @@ const CreatorPage = () => {
       <>
         {!isFetched ? (
           // <LoadingAnimation />
-          <p>Loading...</p>
+          <Spin></Spin>
         ) : (
             <div className="since-panel">
               <Popover content={content} placement="bottomRight">
                 <div className="since-tag">
-                  <span><CalendarOutlined /> Since {dayjs(oldestCreationDate).format("MMM YYYY")}</span>
+                  <span>Circa {dayjs(oldestCreationDate).format("YYYY")}</span>
                 </div>
               </Popover>
             </div>
@@ -367,7 +368,7 @@ const CreatorPage = () => {
     return (
       <>
         {/* <Button onClick={showModal}></Button> */}
-        <Button type="text" onClick={showModal} icon={<EditOutlined />} />
+        <Button style={{color: 'lightgray'}} type="text" onClick={showModal} icon={<EditOutlined />} />
         <Modal
           title="Associate Channels"
           open={visible}
@@ -424,25 +425,13 @@ const CreatorPage = () => {
         }}
         className="creators-list"
         itemLayout="horizontal"
-        // style={{
-        //   background: variables.sdmnPink,
-        //   padding: 20,
-        //   marginTop: 20,
-        //   marginBottom: 20,
-        //   borderRadius: '5px'
-        // }}
         // loading={isTop10VideosLoaded}
         dataSource={fetchedData}
         renderItem={(item, index) => (
           <List.Item>
-            <Card title={item.name}
-              style={{ width: '100%', maxWidth: '450px' }}
+            <Card
+              style={{ width: '100%', maxWidth: '450px', backgroundColor: 'transparent', border: 'none' }}
               bodyStyle={{ padding: 0 }}
-              actions={[
-                (item.channels.length > 0 ? (<SeeChannelsButton channels={item.channels}></SeeChannelsButton>) : null),
-                <CreatorModal creator={item} />,
-                // <VideoCameraOutlined key="ellipsis" />,
-              ]}
               cover={
                 // <div style={{height: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
                 <Image alt={item.name}
@@ -460,8 +449,36 @@ const CreatorPage = () => {
               key={item.id}>
               {item.channels.length > 0 ? (
                 <>
-                  <SincePanel channels={item.channels}></SincePanel>
-                  <StatsPanel subs={intToStringBigNumber(item.subs)} videos={intToStringBigNumber(item.videos)} views={intToStringBigNumber(item.views)}></StatsPanel>
+                  <div style={{ padding: '5px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', color: 'black', marginBottom: '5px', alignItems: 'flex-start' }}>
+                      <div style={{ display: 'flex' }}>
+                        <Avatar src={item.profile_picture} 
+                         onClick={() => handleClickCreator(item.id)} style={{
+                          backgroundColor: '#f56a00', marginRight: '5px', cursor: 'pointer'
+                        }} size="large" />
+                        <div>
+                          <div style={{ display: 'flex' }}>
+                            <Text  onClick={() => handleClickCreator(item.id)} style={{ color: 'black', cursor: 'pointer', fontSize: '15px' }} strong>{item.name}</Text>
+                            <SincePanel channels={item.channels}></SincePanel>
+                            <CreatorModal creator={item} />
+                          </div>
+                          <div style={{ display: 'flex' }}>
+                            <p style={{ color: 'black', fontSize: '10px' }}>{intToStringBigNumber(item.subs)} subs</p>
+                            <Divider style={{ backgroundColor: 'black' }} type="vertical" />
+                            <p style={{ color: 'black', fontSize: '10px' }}>{intToStringBigNumber(item.videos)} videos</p>
+                            <Divider style={{ backgroundColor: 'black' }} type="vertical" />
+                            <p style={{ color: 'black', fontSize: '10px' }}>{intToStringBigNumber(item.views)} views</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div style={{ float: 'right' }}>
+                        {/* <p style={{ color: 'black', fontSize: '10px' }}>Circa {parseDate(item.channel_created_at, "YYYY")}</p> */}
+
+
+
+                      </div>
+                    </div>
+                  </div>
                 </>
               ) :
                 ('')

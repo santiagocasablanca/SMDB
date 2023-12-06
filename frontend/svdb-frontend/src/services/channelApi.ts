@@ -27,18 +27,47 @@ export const getChannelsFn = async (page = 1, limit = 30, params) => {
   return response.data;
 };
 
-export const getChannelStatsFn = async (channel_id) => {
-  try {
-    const cachedData = localStorage.getItem('channelStats');
-    if (cachedData) {
-      const parsedData = JSON.parse(cachedData);
-      const channel = parsedData.find(entry => entry.channel_id === channel_id);
-      return channel || null;
-    } else {
-      // Data not found in cache, fetch it and store it in cache
-      console.log('shouldnt happen but either way: TODO implement DATA NOT FOUND in CACHE, fetch it from API and STORE it');
-    }
-  } catch (error) {
-    console.error('Error parsing cached data:', error);
-  }
+export const fetchMostSubChannelByMonth = async (month) => {
+  
+  const req = `channelStats?month=${month}`;
+  const response = await channelApi.get<IChannelResponse>(
+    req
+  );
+
+  return response.data;
+}
+
+// export const getChannelStatsFn = async (channel_id) => {
+//   try {
+//     const cachedData = localStorage.getItem('channelStats');
+//     if (cachedData) {
+//       const parsedData = JSON.parse(cachedData);
+//       const channel = parsedData.find(entry => entry.channel_id === channel_id);
+//       return channel || null;
+//     } else {
+//       // Data not found in cache, fetch it and store it in cache
+//       console.log('shouldnt happen but either way: TODO implement DATA NOT FOUND in CACHE, fetch it from API and STORE it');
+//     }
+//   } catch (error) {
+//     console.error('Error parsing cached data:', error);
+//   }
+// };
+
+export const fetchInfo = async () => {
+  const req = `info`;
+  const response = await channelApi.get<IChannelResponse>(
+    req
+  );
+
+  return response.data;
 };
+
+export const callLatestRefresh = async () => {
+  const req = `/jobs/latest/run`;
+  const response = await channelApi.get<IChannelResponse>(
+    req
+  );
+  console.log(response);
+
+  return response.data;
+}

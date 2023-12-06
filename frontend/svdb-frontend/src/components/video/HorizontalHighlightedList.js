@@ -1,5 +1,5 @@
-import { EyeOutlined, LikeOutlined, LineChartOutlined } from '@ant-design/icons';
-import { Avatar, Button, Card, Col, Divider, Image, List, Row, Space, Spin, Typography, Popover } from 'antd';
+import { EyeOutlined, LikeOutlined, LineChartOutlined, UsergroupAddOutlined } from '@ant-design/icons';
+import { Avatar, Button, Card, Col, Divider, Image, List, Row, Space, Spin, Typography, Popover, Skeleton } from 'antd';
 import insertCss from 'insert-css';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -11,7 +11,7 @@ import VideoGrowthLine from '../graphs/VideoGrowthLine';
 
 
 
-const { Title, Text } = Typography;
+const { Title, Text, Link } = Typography;
 
 
 
@@ -50,17 +50,42 @@ const HorizontalHighlightedList = ({ title, filter }) => {
         navigate(url, { state: { filter } });
     }
     insertCss(`
+    .rating span {
+        color: black;
+    }
 
-    .videoPreviewForHighlight:hover {
-        cursor: pointer;
-      }
-       
-        .videoPreviewForHighlight h5, p {
-            color: black;
-        }
-        .videoPreviewForHighlight span {
-            color: black;
-        }
+    :where(.css-dev-only-do-not-override-1m26euv).ant-skeleton.ant-skeleton-element .ant-skeleton-image {
+        width: 316px;
+        height: 189px;
+    }
+
+    /* Basic list item styles */
+.list-item {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Styling for the div inside the list item */
+.list-item:hover .hover-div {
+  transform: translateX(100%);
+  transition: transform 0.3s ease; /* You can adjust the duration and timing function */
+}
+
+/* Additional styling for the hover-div */
+.hover-div {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #3498db;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease; /* You can adjust the duration and timing function */
+}
     `);
 
     const VideoCard = ({ video }) => {
@@ -93,42 +118,60 @@ const HorizontalHighlightedList = ({ title, filter }) => {
             const url = '/video/' + id;
             // not necessary, kind of redudant at the moment. Params are set through useParams and useLocation (state)
             navigate(url, { state: { id: id } });
-          }
+        }
 
         return (
             <> {isLoaded ?
                 (<>
-                    <Card
-                        style={{ width: '336px', fontSize: '12px' }}
-                        onClick={() => handleClickVideo(video.video_id)}
-                        cover={
-                            <Image style={{ borderRadius: '8px', objectFit: 'cover' }} src={video.url} width='336px' height='189px' preview={false} />
-                        }
-                        hoverable
-                        title={video.title}
-                        headStyle={{ marginLeft: 40, minHeight: '45px', fontSize: '15px', padding: 0 }}
-                        bodyStyle={{ padding: 5, cursor: 'pointer' }}>
+                    <div style={{ marginRight: '10px' }}>
+                        <div style={{ padding: '5px' }}>
+                            <div style={{ width: '310px', display: 'flex', justifyContent: 'space-between', color: 'black', marginBottom: '5px', alignItems: 'baseline' }}>
+                                <div onMouseEnter={(e) => {
+                                    e.currentTarget.style.backgroundColor = 'hsl(0, 0%, 90%)';
+                                    e.currentTarget.style.borderRadius = '8px';
+                                }}
+                                    onMouseLeave={(e) => {
+                                        e.currentTarget.style.backgroundColor = 'inherit';
+                                        e.currentTarget.style.borderRadius = 'inherit';
+                                    }}>
+                                    <Avatar src={logo} onClick={goToChannel} style={{
+                                        backgroundColor: '#f56a00', marginRight: '5px', cursor: 'pointer'
+                                    }} />
+                                    <Text style={{ color: 'black', cursor: 'pointer' }} strong onClick={goToChannel}>{video.channel.title}</Text>
+                                </div>
+                                <p style={{ color: 'black', fontSize: '10px', float: 'right' }}>{parseDate(video.published_at, "DD MMM YYYY")}</p>
+                            </div>
+                            <div onMouseEnter={(e) => {
+                                e.currentTarget.style.backgroundColor = 'hsl(0, 0%, 90%)';
+                                e.currentTarget.style.borderRadius = '8px';
+                            }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.backgroundColor = 'inherit';
+                                    e.currentTarget.style.borderRadius = 'inherit';
+                                    // e.currentTarget.style.margin = 'inherit';
+                                }}>
+                                {/* <br></br> */}
+                                <Image onClick={() => handleClickVideo(video.video_id)} style={{ borderRadius: '8px', objectFit: 'cover', cursor: 'pointer' }} src={video.url} width='316px' height='189px' preview={false} />
 
+                                <Title style={{ color: 'black', width: '310px', marginTop: '10px', marginBottom: '10px' }}
+                                    ellipsis={{ tooltip: video.title }}
+                                    onClick={() => handleClickVideo(video.video_id)}
+                                    level={5}>{video.title}</Title>
 
-                        {/* <p style={{ color: 'red', fontSize: '12px', margin: '0px 5px' }}>{video.title}</p> */}
-                        <div style={{ top: '45px', position: 'absolute', borderRadius: '8px', right: '5px', padding: 2, height: '24px', background: 'radial-gradient(black, transparent)' }}>
-                            <Space split={<Divider type="vertical" />} size="small">
-                                <p style={{ color: 'white', fontSize: '12px' }}><EyeOutlined /> {intToStringBigNumber(video.views)}</p>
-                                <p style={{ color: 'white', fontSize: '12px' }}><LikeOutlined /> {intToStringBigNumber(video.likes)}</p>
-                                <p style={{ color: 'white', fontSize: '12px' }}><Popover title={video.title} content={<VideoGrowthLine _video={video} />}>
-                                    <LineChartOutlined />
-                                </Popover></p>
-                                {/* <Divider type="vertical" /> */}
-                                <VideoRate _video={video} />
-                            </Space>
+                                <div style={{ float: 'right', color: 'black' }}>
+                                    <Space className="rating" split={<Divider type="vertical" style={{ background: 'black' }} />} size="small">
+
+                                        <p style={{ fontSize: '13px' }}><EyeOutlined /> {intToStringBigNumber(video.views)}</p>
+                                        <p style={{ fontSize: '13px' }}><LikeOutlined /> {intToStringBigNumber(video.likes)}</p>
+                                        <p style={{ fontSize: '13px' }}><Popover title={video.title} content={<VideoGrowthLine _video={video} />}>
+                                            <LineChartOutlined style={{ cursor: 'pointer' }} />
+                                        </Popover></p>
+                                        <VideoRate _video={video} />
+                                    </Space>
+                                </div>
+                            </div>
                         </div>
-                        <Avatar src={logo} onClick={goToChannel} style={{
-                            backgroundColor: '#f56a00', top: '5px', position: 'absolute', left: '5px'
-                        }} />
-                        <p style={{ color: 'white', fontSize: '10px', top: '0px', position: 'absolute', right: '5px' }}>{parseDate(video.published_at, "DD MMM YYYY")}</p>
-
-                    </Card>
-                    {/* <VideoDrawer _video={video} _channel={channel} _open={open} childToParent={childToParent}></VideoDrawer> */}
+                    </div>
                 </>
                 ) : (
                     <Spin />
@@ -138,34 +181,61 @@ const HorizontalHighlightedList = ({ title, filter }) => {
         );
     };
 
-  
 
     return (
-        <> {isLoaded ?
-            (
-                <>
-                    <Row><Col span={18}><Title style={{ color: 'black' }} level={5}>{title}</Title></Col> <Col span={6}><Button onClick={() => handleClick()} style={{ float: 'right' }} type="link">See all</Button></Col></Row>
-                    <List
-                        grid={{
-                            gutter: 10,
-                            column: videos?.lenght,
-                        }}
-                        className="scrollmenu"
-                        itemLayout="horizontal"
-                        dataSource={videos}
-                        renderItem={(item) => (
-                            <List.Item>
-                                <VideoCard video={item} />
-                            </List.Item>
-                        )}
-                    />
-                </>
+        <>
+            <Row><Col span={18}><Title style={{ color: 'black', marginBottom: '25px' }} level={4}>{title}</Title></Col>
+                <Col span={6}>
+                    <div  style={{ float: 'right' }} 
+                    onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = 'hsl(0, 0%, 80%)';
+                        e.currentTarget.style.borderRadius = '8px';
+                    }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor = 'inherit';
+                            e.currentTarget.style.borderRadius = 'inherit';
+                        }}>
+                        <Button onClick={() => handleClick()}type="link">See all</Button></div></Col></Row>
 
-            ) : (
-                <Spin />
-            )
-        }
+            <div className="scrollmenu" style={{ height: '315px' }}>
+                {isLoaded ?
+                    (
+                        <>
+
+                            {videos.map((video, index) => {
+                                return <VideoCard key={index} video={video} />;
+                            })}
+                        </>
+                    ) : (
+                        // <Spin />
+                        Array.from({ length: 10 }).map((_, i) => {
+                            return (
+                                <div key={i}
+                                    style={{ marginRight: '10px', width: '318px' }}>
+                                    {/* <div style={{width: '310px', display: 'flex', justifyContent: 'space-between', color: 'black', marginBottom: '5px', alignItems: 'baseline'}}> */}
+                                    <Space style={{ marginBottom: '5px' }}>
+                                        <Skeleton.Avatar active size="default" shape="circle" />
+                                        <Skeleton.Input active size="default" style={{ width: '200px', marginLeft: '5px', marginRight: '15px' }} />
+                                        <Skeleton.Button active size="small" />
+                                        {/* <Skeleton.Input active size="default" style={{width: '20px'}} /> */}
+                                    </Space>
+                                    <br></br>
+                                    <Skeleton.Image active />
+                                    <br></br>
+                                    <Space style={{ marginTop: '10px' }}>
+                                        {/* <Skeleton.Avatar active size="default" shape="circle" /> */}
+                                        <Skeleton.Input active size="default" style={{ width: '316px' }} />
+                                    </Space>
+                                    {/* </div> */}
+                                </div>);
+                        })
+                    )
+                }
+
+            </div>
         </>
+
+
     );
 }
 

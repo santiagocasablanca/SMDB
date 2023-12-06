@@ -96,6 +96,26 @@ export const getChannelStatsFn = async (channel_id) => {
   }
 };
 
+export const getChannelsStatsFn = async () => {
+  try {
+    const db = await openDatabase();
+    const tx = db.transaction(STORE_NAME, 'readonly');
+    const store = tx.objectStore(STORE_NAME);
+
+    const cache = await store.getAll();
+    // console.log('found: ', cachedChannel );
+    if (cache) {
+      return cache;
+    } else {
+      // do nothing for now
+      console.log('shouldnt happen but either way: TODO implement DATA NOT FOUND in CACHE, fetch it from API and STORE it');
+
+    }
+  } catch (error) {
+    console.error('Error fetching or storing cached data:', error);
+  }
+};
+
 export const storeChannelsOnCache = async (channels) => {
   try {
 
@@ -132,6 +152,7 @@ export const fetchAndCacheAllData = async (params) => {
         const data = (result.results);
         let tempArray = [];
         for (const el of data) {
+          // console.log(el);
           let temp = {
             channel_id: el.channel_id,
             subs: {

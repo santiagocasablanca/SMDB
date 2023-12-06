@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import ReactDOM from 'react-dom';
 import { Rose } from '@ant-design/plots';
 import React, { useState, useEffect } from 'react';
 import { Card, List, Row, Col, Image, Avatar, Table, Divider, Popover, Button, Typography, Space, Spin, Empty } from 'antd';
@@ -72,19 +71,19 @@ const TitleRose = ({ title, filter }) => {
 
     }, [refreshKey, filter]);
 
-    insertCss(`
+    // insertCss(`
 
-    .videoPreviewForHighlight:hover {
-        cursor: pointer;
-      }
+    // .videoPreviewForHighlight:hover {
+    //     cursor: pointer;
+    //   }
        
-        .videoPreviewForHighlight h5, p {
-            color: black;
-        }
-        .videoPreviewForHighlight span {
-            color: black;
-        }
-    `);
+    //     .videoPreviewForHighlight h5, p {
+    //         color: black;
+    //     }
+    //     .videoPreviewForHighlight span {
+    //         color: black;
+    //     }
+    // `);
 
     const config = {
         data,

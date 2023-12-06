@@ -243,9 +243,16 @@ const CreatorChannel = ({ creator, channel }) => {
         setIsLoaded(true);
     }
     insertCss(`
+    .responsiveCard {
+        height: 119px;
+    }
+
     @media (max-width: 768px) {
         .hide-on-small-screen {
           display: none;
+        }
+        .responsiveCard {
+            height: 145px;
         }
       }
       `);
@@ -263,7 +270,7 @@ const CreatorChannel = ({ creator, channel }) => {
                     <br></br>
                     <Row gutter={[16, 16]}>
                         <Col span={24} xl={12}>
-                            <Title style={{ color: 'black' }} level={5}>Channel Stats</Title>
+                            <Title style={{ color: 'black' }} level={4}>Channel Stats</Title>
 
                             <CreatorStatsPanel creator={creator} channel={channel} stats={stats} channelsStats={channelsStats} mostRecentVideos={mostRecentVideos} isAllChannels={isAllChannels}></CreatorStatsPanel>
                         </Col>
@@ -273,9 +280,9 @@ const CreatorChannel = ({ creator, channel }) => {
                                     {/* <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', gap: '9px' }}> */}
                                     <Row gutter={4}>
                                         <Col span={9}>
-                                            <Title style={{ color: 'black' }} level={5}>Last Video</Title>
+                                            <Title style={{ color: 'black' }} level={4}>Last Video</Title>
 
-                                            <Card bordered={false} style={{ height: '117px' }}>
+                                            <Card bordered={false} className="responsiveCard">
                                                 <Statistic
                                                     title="Last Video was published "
                                                     value={parseDateToFromNow(mostRecentVideos[0]?.published_at)}
@@ -284,9 +291,9 @@ const CreatorChannel = ({ creator, channel }) => {
                                         </Col>
 
                                         <Col span={15}>
-                                            <Title style={{ color: 'black' }} level={5}>Next Goals</Title>
+                                            <Title style={{ color: 'black' }} level={4}>Next Goals</Title>
                                             {/* style={{ width: '100%', height: '112px' }} */}
-                                            <Card bordered={false} bodyStyle={{ padding: '19px' }}>
+                                            <Card bordered={false} bodyStyle={{ padding: '19px'}} className="responsiveCard">
                                                 <SubGoalBullet channel={isAllChannels ? {subs: stats['subs'].value, videos: stats['videos'].value, views: stats['views'].value} : channel} />
                                             </Card>
                                         </Col>
@@ -298,9 +305,11 @@ const CreatorChannel = ({ creator, channel }) => {
                             <br></br>
                             <Row gutter={16}>
                                 <Col span={24}>
-                                    <HorizontalVideoList title="Most Recent" filter={paramsRecent} />
+                                <HorizontalHighlightedList title="Most Viewed" filter={paramsTop10} />
 
-                                    <HorizontalVideoList title="Most Viewed" filter={paramsTop10} />
+                                    {/* <HorizontalVideoList title="Most Recent" filter={paramsRecent} />
+
+                                    <HorizontalVideoList title="Most Viewed" filter={paramsTop10} /> */}
 
                                     {/* <Title style={{ color: 'black' }} level={5}>Last Appearences in other channels // TODO</Title>
                                     <HorizontalVideoList _videos={top10videos} /> */}
@@ -325,23 +334,6 @@ const CreatorChannel = ({ creator, channel }) => {
                         </Col>
                     </Row>
                     <br></br>
-
-
-                    {/* <Row gutter={[16, 16]}>
-                        <Col span={24} xl={12}>
-                            <Row gutter={16}>
-                                <Col span={24}>
-                                    <HorizontalVideoList title="Most Recent" filter={paramsRecent} />
-
-                                    <HorizontalVideoList title="Most Viewed" filter={paramsTop10} />
-                                </Col>
-                            </Row>
-                        </Col>
-                        <Col span={24} xl={12}>
-                            <CreatorUploadTimeFrequencyCard _channels={isAllChannels ? creator.channels : [channel]}></CreatorUploadTimeFrequencyCard>
-                        </Col>
-                    </Row>
-                    <br></br> */}
                 </>
             ) : (
                 <Spin />

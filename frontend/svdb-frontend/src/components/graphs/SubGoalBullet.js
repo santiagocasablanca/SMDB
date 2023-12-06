@@ -70,16 +70,16 @@ const SubGoalBullet = ({ channel }) => {
 
         if (si[(index)].s === 'K' && parsedNum < 10000) {
             // console.log(parsedNum, index, si[(index)].s, Math.ceil((parsedNum / 10000) / 100) * 100);
-            return (Math.ceil((parsedNum/100) / 100) * 100) * 100;
+            return (Math.ceil((parsedNum / 100) / 100) * 100) * 100;
         } else if (si[(index)].s === 'K' && parsedNum >= 10000) {
             // console.log(parsedNum, index, si[(index)].s, Math.ceil((parsedNum / 100) / 100) * 10000);
             return (Math.ceil((parsedNum / 1000) / 100) * 100) * 1000;
         }
-        else if (si[(index)].s === 'M' && parsedNum < 1*1E6) {
+        else if (si[(index)].s === 'M' && parsedNum < 1 * 1E6) {
             // console.log(parsedNum, index, si[(index)].s, Math.ceil((parsedNum / 100000) / 100) * 100);
             return (Math.ceil((parsedNum / 10000) / 100) * 100) * 10000;
         }
-        else if (si[(index)].s === 'M' && parsedNum >= 1*1E6) {
+        else if (si[(index)].s === 'M' && parsedNum >= 1 * 1E6) {
             // console.log(parsedNum, index, si[(index)].s, Math.ceil((parsedNum / 100000) / 100) * 100);
             return (Math.ceil((parsedNum / 100000) / 100) * 100) * 100000;
         }
@@ -126,11 +126,11 @@ const SubGoalBullet = ({ channel }) => {
             // console.log(parsedNum, index, si[(index)].s, Math.ceil((parsedNum / 100) / 100) * 10000);
             return (Math.ceil((parsedNum / 1000) / 100) * 100) * 1000;
         }
-        else if (si[(index)].s === 'M' && parsedNum < 10*1E6) {
+        else if (si[(index)].s === 'M' && parsedNum < 10 * 1E6) {
             // console.log(parsedNum, index, si[(index)].s, Math.ceil((parsedNum / 100000) / 100) * 100);
             return (Math.ceil((parsedNum / 10000) / 100) * 100) * 10000;
         }
-        else if (si[(index)].s === 'M' && parsedNum >= 10*1E6) {
+        else if (si[(index)].s === 'M' && parsedNum >= 10 * 1E6) {
             // console.log(parsedNum, index, si[(index)].s, Math.ceil((parsedNum / 100000) / 100) * 100);
             return (Math.ceil((parsedNum / 100000) / 100) * 100) * 100000;
         }
@@ -201,7 +201,7 @@ const SubGoalBullet = ({ channel }) => {
                 formatter: (val) => {
                     if (val.hasOwnProperty('tKey')) {
                         return intToStringBigNumber(val.target);
-                    } 
+                    }
                 }
             },
             range: {
@@ -212,7 +212,7 @@ const SubGoalBullet = ({ channel }) => {
                 formatter: (val) => {
                     if (val.hasOwnProperty('rKey')) {
                         return intToStringBigNumber(val.ranges);
-                    } 
+                    }
                 }
             },
         },
@@ -254,7 +254,7 @@ const SubGoalBullet = ({ channel }) => {
                 formatter: (val) => {
                     if (val.hasOwnProperty('tKey')) {
                         return intToStringBigNumber(val.target);
-                    } 
+                    }
                 }
             },
             range: {
@@ -265,7 +265,7 @@ const SubGoalBullet = ({ channel }) => {
                 formatter: (val) => {
                     if (val.hasOwnProperty('rKey')) {
                         return intToStringBigNumber(val.ranges);
-                    } 
+                    }
                 }
             }
         },
@@ -307,7 +307,7 @@ const SubGoalBullet = ({ channel }) => {
                 formatter: (val) => {
                     if (val.hasOwnProperty('tKey')) {
                         return intToStringBigNumber(val.target);
-                    } 
+                    }
                 }
             },
             range: {
@@ -318,7 +318,7 @@ const SubGoalBullet = ({ channel }) => {
                 formatter: (val) => {
                     if (val.hasOwnProperty('rKey')) {
                         return intToStringBigNumber(val.ranges);
-                    } 
+                    }
                 }
             },
         },
@@ -333,12 +333,7 @@ const SubGoalBullet = ({ channel }) => {
     };
     return (
         <>
-            {/* <Row>
-                <Col span={24}>
-                    <Title style={{ color: "black" }} level={5}>Sub Goal</Title>
-                </Col>
-            </Row> */}
-            {/* <Card bordered={false} size="small"> */}
+
             {isLoaded ? (
                 channel ? (
                     <>
@@ -346,17 +341,15 @@ const SubGoalBullet = ({ channel }) => {
 
                         <Bullet {...configVideos} style={{ marginBottom: '3px' }} />
 
-                        <Bullet {...configViews} />
+                        <Bullet {...configViews} style={{ marginBottom: '0px' }} />
 
                     </>
                 ) : (
                         <Empty description="No data available" />
-                        // <Text>No data available.</Text>
                     )
             ) : (
                     <Spin />
                 )}
-            {/* </Card> */}
         </>
     );
 }

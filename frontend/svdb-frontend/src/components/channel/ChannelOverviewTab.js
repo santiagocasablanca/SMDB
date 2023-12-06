@@ -52,8 +52,12 @@ const ChannelOverviewTab = ({ _channel }) => {
         navigate(url, { state: { id: id } });
     }
 
-    // width: 215px;
+    
     insertCss(`
+    .responsiveCard {
+        height: 119px;
+    }
+
         .tabTitle {
             padding: 0px 0px;
             background-size: cover;    
@@ -186,6 +190,14 @@ const ChannelOverviewTab = ({ _channel }) => {
         }
 
         @media (max-width: 768px) {
+            .responsiveCard {
+                height: 145px;
+            }
+
+            .ant-statistic .ant-statistic-content .ant-statistic-content-value {
+                font-size: 14px;
+            }
+
             .hide-on-small-screen {
               display: none;
             }
@@ -645,7 +657,7 @@ const ChannelOverviewTab = ({ _channel }) => {
                     <br></br>
                     <Row gutter={[16, 16]}>
                         <Col span={24} xl={12}>
-                            <Title style={{ color: 'black' }} level={5}>Channel Stats</Title>
+                            <Title style={{ color: 'black' }} level={4}>Channel Stats</Title>
                             <ChannelPanel _channel={channel} last5VideosStats={last5VideosStats} stats={stats} />
                             {/* <CreatorStatsPanel creator={creator} channel={channel} stats={stats} channelsStats={channelsStats} mostRecentVideos={mostRecentVideos} isAllChannels={isAllChannels}></CreatorStatsPanel> */}
                         </Col>
@@ -655,9 +667,9 @@ const ChannelOverviewTab = ({ _channel }) => {
                                     {/* <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', gap: '9px' }}> */}
                                     <Row gutter={4}>
                                         <Col span={9}>
-                                            <Title style={{ color: 'black' }} level={5}>Last Video</Title>
+                                            <Title style={{ color: 'black' }} level={4}>Last Video</Title>
 
-                                            <Card bordered={false} style={{ height: '117px' }}>
+                                            <Card bordered={false} className="responsiveCard">
                                                 <Statistic
                                                     title="Last Video was published "
                                                     value={parseDateToFromNow(mostRecentVideos[0]?.published_at)}
@@ -666,9 +678,9 @@ const ChannelOverviewTab = ({ _channel }) => {
                                         </Col>
 
                                         <Col span={15}>
-                                            <Title style={{ color: 'black' }} level={5}>Next Goals</Title>
+                                            <Title style={{ color: 'black' }} level={4}>Next Goals</Title>
                                             {/* style={{ width: '100%', height: '112px' }} */}
-                                            <Card bordered={false} bodyStyle={{ padding: '19px' }}>
+                                            <Card bordered={false} bodyStyle={{ padding: '19px' }} className="responsiveCard">
                                                 <SubGoalBullet channel={_channel} />
                                             </Card>
                                         </Col>
@@ -680,18 +692,12 @@ const ChannelOverviewTab = ({ _channel }) => {
                             <br></br>
                             <Row gutter={16}>
                                 <Col span={24}>
-                                    <HorizontalVideoList title="Most Recent" filter={paramsRecent} />
-
-                                    <HorizontalVideoList title="Most Viewed" filter={paramsTop10} />
+                                    <HorizontalHighlightedList title="Most Viewed" filter={paramsTop10} />
                                 </Col>
                             </Row>
                         </Col>
                     </Row>
-                    {/* <Row>
-                        <Col span={24} xl={12}>
-                            <SubGoalBullet channel={_channel} />
-                        </Col>
-                    </Row> */}
+                    
                     <br></br>
                     <Row gutter={[16, 16]} className="hide-on-small-screen">
                         <Col span={24} xl={24}>
@@ -706,27 +712,6 @@ const ChannelOverviewTab = ({ _channel }) => {
                     </Row>
                     <br></br>
 
-                    {/* <Row gutter={[16, 16]}>
-                        <Col span={24} xl={12}>
-                            <Row gutter={16}>
-                                <Col span={24}>
-                                    <HorizontalVideoList title="Most Recent" filter={paramsRecent} />
-
-                                    <HorizontalVideoList title="Most Viewed" filter={paramsTop10} />
-                                </Col>
-                            </Row>
-                        </Col>
-                        <Col span={24} xl={12}>
-                            <UploadTimeFrequencyCard _channels={[channel]}></UploadTimeFrequencyCard>
-                        </Col>
-                    </Row>
-                    <br></br> */}
-
-                    {/* <Row>
-                        <Col span={24} xl={12}>
-                            <TreeMapPlot filter={paramsTreeMapPlot} />
-                        </Col>
-                    </Row> */}
                 </>
                 :
                 <Spin />

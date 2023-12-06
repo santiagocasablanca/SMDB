@@ -50,7 +50,22 @@ const HorizontalShortsList = ({ title, filter }) => {
         <> {isLoaded ?
             (
                 <>
-                    <Row><Col span={18}><Title style={{ color: 'black' }} level={5}>{title}</Title></Col> <Col span={6}><Button onClick={() => handleClick()} style={{ float: 'right' }} type="link">See all</Button></Col></Row>
+                    {/* <Row><Col span={18}><Title style={{ color: 'black', marginBottom: '25px'  }} level={4}>{title}</Title></Col> <Col span={6}><Button onClick={() => handleClick()} style={{ float: 'right' }} type="link">See all</Button></Col></Row> */}
+                    <Row>
+                        <Col span={18}><Title style={{ color: 'black', marginBottom: '25px' }} level={4}>{title}</Title></Col>
+                        <Col span={6}>
+                            <div style={{ float: 'right' }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.backgroundColor = 'hsl(0, 0%, 80%)';
+                                    e.currentTarget.style.borderRadius = '8px';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.backgroundColor = 'inherit';
+                                    e.currentTarget.style.borderRadius = 'inherit';
+                                }}>
+                                <Button onClick={() => handleClick()} type="link">See all</Button></div>
+                        </Col>
+                    </Row>
                     <List
                         grid={{
                             gutter: 10,

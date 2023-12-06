@@ -51,6 +51,8 @@ const CastScatterPlot = ({ title, filter }) => {
 
     insertCss(`
 
+   
+
     .container{
         padding: 16px 0px;
         width: 160px;
@@ -138,15 +140,17 @@ const CastScatterPlot = ({ title, filter }) => {
         <>
             <Row>
                 <Col span={24}>
-                    <Title style={{ color: "black" }} level={5}>{title}</Title>
+                    <Title style={{ color: "black" }} level={4}>{title}</Title>
                 </Col>
             </Row>
-            <Card bordered={false} size="small">
+            <Card style={{padding: '0px', border: 'none', backgroundColor: 'transparent', color: 'black'}}
+                headStyle={{color: 'black'}}
+                bodyStyle={{paddingRight: '0px', paddingLeft: '0px'}} size="small">
                 {isLoaded ? (
                     data.length > 0 ? (
                         <Scatter {...config} />
                     ) : (
-                            <Empty description="No data available" />
+                            <Empty description="No data available"/>
                             // <Text>No data available.</Text>
                         )
                 ) : (

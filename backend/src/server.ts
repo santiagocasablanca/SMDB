@@ -5,6 +5,8 @@ import cors from "cors";
 const cron = require('node-cron');
 import noteRouter from "./routes/routes";
 const YoutubeService = require('./services/youtubeService');
+const InfoService = require('./services/infoService');
+
 const VideoMetaService = require('./services/videoMetaService');
 
 import visitorTrackerMiddleware from './middlewares/visitorTracker'; // Adjust the import
@@ -20,6 +22,7 @@ if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 
 const youtubeService = new YoutubeService();
 const videoMetaService = new VideoMetaService();
+const infoService = new InfoService();
 
 cron.schedule('00 01 * * *', () => {
   console.log('Running fetchStatisticsForAllChannels');
@@ -54,6 +57,25 @@ app.get("/v1/healthchecker", (req: Request, res: Response) => {
     status: "success",
     message: "Build CRUD API with Node.js and Sequelize",
   });
+});
+
+
+app.get("/v1/info", async (req: Request, res: Response) => {
+
+  try {
+    console.log('here');
+    const results = await infoService.fetchDBInfo();
+    console.log(results);
+    res.status(200).json({
+      status: "success",
+      results: results[0]
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      status: "error",
+      message: error.message,
+    });
+  }
 });
 
 app.get("/v1/jobs/all/run", (req: Request, res: Response) => {
@@ -111,7 +133,7 @@ db.sequelize
       console.log("Updated!!!")
       // const youtubeService = new YoutubeService();
       // youtubeService.fetchLatestStatisticsForAllChannels()
-    
+
       // youtubeService.updateAllCreatorPicturesFromMainChannel();
 
 

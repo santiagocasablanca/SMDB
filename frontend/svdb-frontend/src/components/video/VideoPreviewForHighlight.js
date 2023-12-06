@@ -45,10 +45,15 @@ const VideoPreviewForHighlight = ({ _video, index }) => {
     }
 
 
+    // padding: 2px;
     insertCss(`
+    .responive_label {
+        font-size: 12px;
+    }
 
     .videoPreviewForHighlight:hover {
-        cursor: pointer;
+        
+        border-radius: 8px;
       }
        
         .videoPreviewForHighlight h5, p {
@@ -57,6 +62,26 @@ const VideoPreviewForHighlight = ({ _video, index }) => {
         .videoPreviewForHighlight span {
             color: black;
         }
+
+        .highlightedThumbnail {
+            border-radius: 8px; 
+            height: 390px;
+          }
+
+        @media (max-width: 990px) {
+            .highlightedThumbnail {
+              height: 320px;
+            }
+          }
+          @media (max-width: 600px) {
+            .highlightedThumbnail {
+              height: 200px;
+            }
+
+            .responive_label {
+                font-size: 11px;
+            }
+          }
     `);
 
     const castContent = ({ creators }) => {
@@ -81,65 +106,91 @@ const VideoPreviewForHighlight = ({ _video, index }) => {
     };
 
     const handleClickVideo = (id) => {
-        console.log(id);
+        // console.log(id);
         const url = '/video/' + id;
         // not necessary, kind of redudant at the moment. Params are set through useParams and useLocation (state)
         navigate(url, { state: { id: id } });
-      }
+    }
 
     // 480 x 270
     return (
         <> {isLoaded ?
             (<>
                 {/* <Popover content={video.title} placement="top" onClick={showDrawer}> */}
-                <div className="videoPreviewForHighlight">
+                <div className="videoPreviewForHighlight"
+                    onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = 'hsl(0, 0%, 90%)';
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = 'inherit';
+                    }}>
                     <Row>
                         <Col span={24}>
-                            <div style={{ borderRadius: '8px', height: '270px' }}>
-                                <Image style={{ borderRadius: '8px', objectFit: 'cover' }} src={_video.url} width='100%' height="100%" preview={false} onClick={() => handleClickVideo(_video.video_id)} />
+                            <div className="highlightedThumbnail">
+                                <Image style={{ borderRadius: '8px', objectFit: 'cover', cursor: 'pointer' }} src={_video.url} width='100%' height="100%" preview={false}
+                                    onClick={() => handleClickVideo(_video.video_id)} />
                             </div>
                         </Col>
                     </Row>
-                    <Row style={{ marginTop: '20px' }}>
-                        <Col span={18}>
-                            <Title level={5} ellipsis={true}>{_video.title}</Title>
+                    <Row style={{ paddingLeft: '10px', paddingRight: '10px', marginTop: '15px' }}>
+                        <Col span={20}>
+                            <Title level={5} ellipsis={true}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.cursor = 'pointer';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.cursor = 'inherit';
+                                }}
+                                onClick={() => handleClickVideo(_video.video_id)}>{_video.title}</Title>
                         </Col>
-                        <Col span={6}>
-                            <Text style={{ float: 'right' }}>{formattedDate}</Text>
+                        <Col span={4}>
+                            <Text className="responive_label" style={{ float: 'right', textAlign: 'end' }} onClick={() => handleClickVideo(_video.video_id)}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.cursor = 'pointer';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.cursor = 'inherit';
+                                }}>{formattedDate}</Text>
                         </Col>
                     </Row>
-                    <Row>
-                        <Col span={20}>
-                            <Space onClick={goToChannel}>
+                    <Row style={{ paddingLeft: '10px', paddingRight: '10px' }}>
+                        <Col span={19}>
+                            <Space onClick={goToChannel}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.cursor = 'pointer';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.cursor = 'inherit';
+                                }}>
                                 <Avatar src={logo} style={{
                                     backgroundColor: '#f56a00',
                                 }} />
                                 {/* <Image src={video.channel?.logo_url}></Image> */}
                                 {/* */}
                                 <Text strong>{_video.channel_title}</Text>
-                                <Text style={{ fontSize: '12px' }}>{intToStringBigNumber(channel?.subs)} subscribers</Text>
+                                <Text className="responive_label">{intToStringBigNumber(channel?.subs)} subs</Text>
                             </Space>
                         </Col>
-                        <Col span={4}>
+                        <Col span={5}>
                             <div style={{ float: 'right' }}>
                                 <VideoRate _video={_video} />
                             </div>
                         </Col>
                     </Row>
-                    <Row>
+                    <Row style={{ paddingLeft: '10px', paddingRight: '10px' }}>
                         <Col span={24}>
                             <Space size="small" style={{ float: 'right' }}>
                                 <EyeOutlined />{intToStringBigNumber(_video.views)}
                                 <LikeOutlined />{intToStringBigNumber(_video.likes)}
                                 <CommentOutlined />{intToStringBigNumber(_video.comments)}
-                                <Popover title="Views Growth" content={<VideoGrowthLine _video={_video}/>}>
+                                <Popover title="Views Growth" content={<VideoGrowthLine _video={_video} />}>
                                     <LineChartOutlined />
                                 </Popover>
                             </Space>
                         </Col>
                     </Row>
 
-                    <Row>
+                    <Row style={{ paddingLeft: '10px', paddingRight: '10px' }}>
                         <Col span={24}>
                             <Space style={{ float: 'right' }}>
                                 {

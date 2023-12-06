@@ -113,10 +113,11 @@ const UploadTimeFrequencyCard = (_channels) => {
 
   insertCss(`
   .heatmap-container{
-    margin-top:10px;
+    
     padding: 16px 0px;
     width: 200px;
     display: flex;
+    max-width: 350px;
     flex-direction: column;
   }
   .title{
@@ -124,9 +125,14 @@ const UploadTimeFrequencyCard = (_channels) => {
     font-size: 15px;
   }
   .heatmapLegend {
+    
     position: absolute;
-    bottom: 5px; 
+    bottom: -25px; 
     right: 10px
+  }
+
+  .heatmapLegend p {
+    color: black;
   }
 
   @media (max-width: 600px) {
@@ -280,40 +286,45 @@ const UploadTimeFrequencyCard = (_channels) => {
       ) : (
           <>
             <Row>
-              <Col span={24}>
-                <Title style={{ color: "black" }} level={5}>Day and Time Upload Frequency Heatmap</Title>
+              <Col span={23}>
+                <Title style={{ color: "black" }} level={4}>Day and Time Upload Frequency Heatmap</Title>
+              </Col>
+              <Col span={1}>
+                <Popover content={filterPopover} placement="bottom">
+                  <Button style={{ color: "black", paddingBottom: "2px", float: 'right' }} type="text" icon={<FilterOutlined />} />
+                </Popover>
               </Col>
             </Row>
             <Row justify="center">
               <Col span={24}>
-                <Card bodyStyle={{ padding: '3px', paddingTop: '20px', paddingBottom: '50px' }}>
-                  <div style={{ position: 'absolute', top: '5px', right: '10px' }}>
-                    <Popover content={filterPopover} placement="bottom">
-                      <Button style={{ color: "white", paddingBottom: "2px" }} type="text" icon={<FilterOutlined />} />
-                    </Popover>
-                  </div>
-                  <Heatmap {...heatmapTimeConfig} />
-                  <div className="heatmapLegend">
+                <Row gutter={[16, 16]}>
+                  <Col span={24}>
+                    <Heatmap {...heatmapTimeConfig} />
+                  </Col>
+                  <Col span={24}>
 
-                    <Text style={{ float: 'right', marginTop: '0px' }} type="secondary">Less <Space gutter={2}>
-                      <Popover content={<Text>0 Uploads</Text>} placement="top">
-                        <Avatar style={{ backgroundColor: variables.freq1 }} shape="square" size="small" />
-                      </Popover>
-                      <Popover content={<Text>1 Upload</Text>} placement="top">
-                        <Avatar style={{ backgroundColor: variables.freq2 }} shape="square" size="small" />
-                      </Popover>
-                      <Popover content={<Text>1 to 3 Uploads</Text>} placement="top">
-                        <Avatar style={{ backgroundColor: variables.freq3 }} shape="square" size="small" />
-                      </Popover>
-                      <Popover content={<Text>4 to 5 Uploads</Text>} placement="top">
-                        <Avatar style={{ backgroundColor: variables.freq4 }} shape="square" size="small" />
-                      </Popover>
-                      <Popover content={<Text>More than 6 Uploads</Text>} placement="top">
-                        <Avatar style={{ backgroundColor: variables.freq5 }} shape="square" size="small" />
-                      </Popover>
-                    </Space> More</Text>
-                  </div>
-                </Card>
+                    <div className="heatmapLegend">
+
+                      <Text style={{ float: 'right', marginTop: '0px', color: 'gray' }}>Less <Space gutter={2}>
+                        <Popover content={<Text>0 Uploads</Text>} placement="top">
+                          <Avatar style={{ backgroundColor: variables.freq1 }} shape="square" size="small" />
+                        </Popover>
+                        <Popover content={<Text>1 Upload</Text>} placement="top">
+                          <Avatar style={{ backgroundColor: variables.freq2 }} shape="square" size="small" />
+                        </Popover>
+                        <Popover content={<Text>1 to 3 Uploads</Text>} placement="top">
+                          <Avatar style={{ backgroundColor: variables.freq3 }} shape="square" size="small" />
+                        </Popover>
+                        <Popover content={<Text>4 to 5 Uploads</Text>} placement="top">
+                          <Avatar style={{ backgroundColor: variables.freq4 }} shape="square" size="small" />
+                        </Popover>
+                        <Popover content={<Text>More than 6 Uploads</Text>} placement="top">
+                          <Avatar style={{ backgroundColor: variables.freq5 }} shape="square" size="small" />
+                        </Popover>
+                      </Space> More</Text>
+                    </div>
+                  </Col>
+                </Row>
               </Col>
             </Row>
           </>

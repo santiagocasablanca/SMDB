@@ -154,10 +154,12 @@ const ChannelTagRadarForViews = ({ title, filter, options }) => {
         <>
             <Row>
                 <Col span={24}>
-                    <Title style={{ color: "black" }} level={5}>{title}</Title>
+                    <Title style={{ color: "black" }} level={4}>{title}</Title>
                 </Col>
             </Row>
-            <Card bordered={false} size="small">
+            <Card style={{padding: '0px', border: 'none', backgroundColor: 'transparent', color: 'black'}}
+                headStyle={{color: 'black'}}
+                bodyStyle={{paddingRight: '0px', paddingLeft: '0px'}} size="small">
                 {isLoaded ? (
                     data.length > 0 ? (
                         <Radar {...config} />

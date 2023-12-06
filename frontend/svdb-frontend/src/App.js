@@ -6,7 +6,6 @@ import { Spin, Row } from 'antd';
 
 import 'antd/dist/reset.css';
 import variables from './sass/antd.module.scss';
-import { AppIntro } from './components/index';
 
 
 const loading = (
@@ -39,11 +38,12 @@ class App extends Component {
         theme={{
           algorithm: theme.darkAlgorithm,
           token: {
-            colorPrimary: "#F5C518",
+            colorPrimary:  variables.highlightColor, //"#F5C518",
 
             colorLinkActive: variables.primary,
             colorLinkHover: variables.primary,
-
+            colorFill: "rgba(0, 0, 0, 0.25)", 
+            colorFillContent: "rgba(0, 0, 0, 0.3)"
 
           },
         }}
