@@ -7,6 +7,7 @@ export type SearchReqQuery = {
 export type ChannelsReqQuery = {
   channels?: string,
   title?: string,
+  range?: string,
   publishedAtRange?: string
 }
 

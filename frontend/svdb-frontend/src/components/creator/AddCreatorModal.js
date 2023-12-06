@@ -31,7 +31,7 @@ const AddCreatorModal = ({ }) => {
 
     return (
         <>
-            <Button  onClick={showModal} icon={<UserAddOutlined />} />
+            <Button onClick={showModal} icon={<UserAddOutlined />} />
             <Modal
                 title="Add new Creator and Associate Channels Ids"
                 open={visible}
