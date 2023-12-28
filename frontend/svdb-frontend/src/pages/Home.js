@@ -166,7 +166,7 @@ const HomePage = () => {
     margin-top: 25px;
   }
 
-  :where(.css-dev-only-do-not-override-kda5v0).ant-carousel .slick-dots-bottom {
+  .ant-carousel .slick-dots-bottom {
     bottom: 55px !important;
   }
 
@@ -185,7 +185,7 @@ const HomePage = () => {
       margin: 10px 30px auto;
     }
 
-    :where(.css-dev-only-do-not-override-kda5v0).ant-carousel .slick-dots-bottom {
+    .ant-carousel .slick-dots-bottom {
       bottom: 67px !important;
     }
   }
@@ -296,19 +296,6 @@ const HomePage = () => {
                 <HorizontalShortsList title="Most Recent Shorts" filter={shortsParamsRecent} />
               </Col>
             </Row>
-
-            {/* <br></br>
-            <Row gutter={[16, 16]} className="hide-on-small-screen">
-              <Col span={24} xl={24}>
-                <FrequencyCard _channels={channels}></FrequencyCard>
-              </Col>
-            </Row> */}
-            {/* <br></br>
-            <Row gutter={[16, 16]}>
-              <Col span={24}>
-                <LatestVideosGrowthLine title="Latest Videos Growth" filter={{ videos: top10videos }} />
-              </Col>
-            </Row> */}
 
             <br></br>
             <Row>

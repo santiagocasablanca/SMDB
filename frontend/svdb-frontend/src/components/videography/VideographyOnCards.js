@@ -1,9 +1,9 @@
 import {
-  ReloadOutlined, YoutubeOutlined, EyeOutlined, LineChartOutlined,
+  ReloadOutlined, YoutubeOutlined, EyeOutlined, LineChartOutlined, MoreOutlined,
   LikeOutlined, FilterOutlined,
   CommentOutlined
 } from '@ant-design/icons';
-import { Button, Card, Col, Image, Input, List, Row, Space, Typography, Divider, Avatar, Popover } from 'antd';
+import { Button, Card, Col, Image, Input, Spin, List, Row, Tooltip, Space, Typography, Divider, Avatar, Popover } from 'antd';
 import insertCss from 'insert-css';
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
@@ -17,15 +17,15 @@ import VideographyFilterPopoverPanel from './VideographyFilterPopoverPanel';
 
 
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 const { Search } = Input;
 
 const VideographyOnCards = ({ fetchedData, initLoading, isLoading, hasMore, loadMore }) => {
   const navigate = useNavigate();
   const location = useLocation();
-
+  const [show, setShow] = useState(false);
   const loadMoreRef = useRef(null);
-  const { intToStringBigNumber, parseDate, parseDuration } = useFormatter();
+  const { intToStringBigNumber, parseDate, parseDuration, parseDateToFromNow } = useFormatter();
 
 
   useEffect(() => {
@@ -88,6 +88,30 @@ const VideographyOnCards = ({ fetchedData, initLoading, isLoading, hasMore, load
   );
 
   const VideoCardBody = ({ item }) => {
+    return (
+      <div style={{ color: 'black', maxWidth: '360px', overflowX: 'none', marginLeft: '5px', marginTop: '5px', marginBottom: '10px' }}>
+
+        <Title style={{ color: 'black', marginBottom: '5px' }}
+          ellipsis={{ tooltip: item.title }}
+          onClick={() => handleClickVideo(item.video_id)}
+          level={5}>{item.title}</Title>
+
+        <span style={{ color: 'black', fontSize: '14px' }}>
+          <Popover title="Video Statistics Growth" content={<VideoGrowthLine _video={item} />}>
+            <span style={{ color: 'black', fontSize: '12px', float: 'left' }}><EyeOutlined/> {intToStringBigNumber(item?.views)} views </span>
+          </Popover>
+        </span>
+        <Tooltip title={parseDate(item?.published_at, "DD MMM YYYY HH:MM")}>
+          <span style={{ color: 'black', fontSize: '12px', float: 'right' }}> {parseDateToFromNow(item?.published_at)}</span>
+        </Tooltip>
+      </div>
+    );
+  };
+
+  const VideoCardChannelBody = ({ item }) => {
+
+    const [showChannel, setShowChannel] = useState(false);
+
     // const navigate = useNavigate();
     const goToChannel = (id) => {
       // console.log('going to channel?');
@@ -97,27 +121,49 @@ const VideographyOnCards = ({ fetchedData, initLoading, isLoading, hasMore, load
     };
 
     return (
-      <Space>
-        <Avatar src={item?.channel?.logo_url} onClick={() => goToChannel(item?.channel?.channel_id)}
-          style={{ backgroundColor: '#f56a00', top: '5px', position: 'absolute', left: '5px' }} />
-        <Divider />
-        {item.title}
-      </Space >
+      <div style={{ position: 'absolute', top: '5px', left: '5px', color: 'black' }}>
+        <div
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = 'hsl(0, 0%, 90%)';
+            e.currentTarget.style.borderRadius = '8px';
+            // e.currentTarget.style.paddingRight = '3px';
+            setShowChannel(true);
+
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = 'inherit';
+            e.currentTarget.style.borderRadius = 'inherit';
+            // e.currentTarget.style.paddingRight = '0px';
+            setShowChannel(false);
+          }}>
+          <Avatar src={item.channel.logo_url} onClick={() => goToChannel(item.channel.channel_id)} style={{
+            marginRight: '5px', cursor: 'pointer'
+          }} />
+          {
+            showChannel ? <>
+              <Text style={{ color: 'black', marginRight: '5px', cursor: 'pointer' }} strong
+                onClick={() => goToChannel(item.channel.channel_id)}>{item.channel.title}</Text>
+              <Text style={{ color: 'gray', cursor: 'pointer', fontSize: '12px', paddingRight: '3px' }}
+                onClick={() => goToChannel(item.channel.channel_id)}>{intToStringBigNumber(item.channel.subs)} subs</Text>
+            </> : <></>
+          }
+
+        </div>
+        {/* <p style={{ color: 'black', fontSize: '10px', float: 'right' }}>{parseDate(item.published_at, "DD MMM YYYY")}</p> */}
+      </div>
     );
   };
-
-
 
   return (<>
     <div className="videolistBodyContainer">
       <List
         grid={{
-          gutter: 8,
+          gutter: 16,
           xs: 1,
           sm: 1,
           md: 2,
           lg: 3,
-          xl: 4,
+          xl: 3,
           xxl: 4,
         }}
         className="videos-list"
@@ -129,8 +175,9 @@ const VideographyOnCards = ({ fetchedData, initLoading, isLoading, hasMore, load
         dataSource={fetchedData}
         renderItem={(item, index) => (
           <List.Item>
+            {/* <VideoCard key={index} video={item} /> */}
             <Card
-              style={{ width: '100%', maxWidth: '450px' }}
+              style={{ width: '100%', maxWidth: '450px', backgroundColor: 'transparent', border: 'none' }}
               bodyStyle={{ padding: 0 }}
 
               cover={
@@ -144,21 +191,18 @@ const VideographyOnCards = ({ fetchedData, initLoading, isLoading, hasMore, load
               }
               hoverable
               key={item.video_id}>
-
-              <VideoCardBody item={item} />
-
-              <div style={{ color: 'white', fontSize: '10px', top: '3px', position: 'absolute', right: '5px', backgroundColor: 'black', opacity: '0.9', borderRadius: '8px', padding: '3px' }}>
+              <div style={{ color: 'white', fontSize: '10px', top: '5px', position: 'absolute', right: '5px', backgroundColor: 'black', opacity: '0.9', borderRadius: '8px', padding: '3px' }}
+              >
                 <Space>
-                  <span style={{ color: 'white', fontSize: '10px' }}>{parseDate(item?.published_at, "DD MMM YYYY")}</span>
-                  <Divider type="vertical" style={{ color: 'white' }} />
-                  <span style={{ color: 'white', fontSize: '16px' }}>
-                    <Popover title="Video Statistics Growth" content={<VideoGrowthLine _video={item} />}>
-                      <LineChartOutlined />
-                    </Popover>
-                  </span>
                   <VideoRate _video={item} />
                 </Space>
-              </div>
+
+                ˙</div>
+
+              <VideoCardChannelBody item={item} />
+              <VideoCardBody item={item} />
+
+
 
             </Card>
 

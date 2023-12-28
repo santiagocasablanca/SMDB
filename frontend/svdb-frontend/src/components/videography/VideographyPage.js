@@ -26,6 +26,7 @@ const VideographyPage = () => {
   const [view, setView] = useState('onCards'); // Initial view state (table, list, oncards)
   const navigate = useNavigate();
   const location = useLocation();
+  // const history = useHistory();
   let [searchParams, setSearchParams] = useSearchParams();
   const { intToStringBigNumber, parseDate, parseDuration } = useFormatter();
 
@@ -70,6 +71,7 @@ const VideographyPage = () => {
     if (initLoading) {
       setInitLoading(false);
 
+      // console.log('location.state ', location.state, location);
       if (location.state && location.state?.filter) {
         Object.keys(location.state?.filter).forEach((key) => {
           addOrUpdateAttribute(searchParams, key, location.state?.filter[key]);
@@ -84,14 +86,13 @@ const VideographyPage = () => {
       if (isLoading || !hasMore) {
         return;
       }
-
-
+      
       if (title !== null) {
         addOrUpdateAttribute(searchParams, 'title', title);
       }
 
       setIsLoading(true);
-      const result = await getVideosFn(pageNumber, 24, searchParams);
+      const result = await getVideosFn( pageNumber, 36, searchParams);
 
       if (result.videos && result.videos.length > 0) {
         setFetchedData((prevData) => [...prevData, ...result.videos]);
@@ -213,6 +214,16 @@ const VideographyPage = () => {
     } else {
       // If the attribute doesn't exist, add a new one
       searchParams.append(attributeName, attributeValue);
+    }
+  }
+
+  function addOrUpdateFilterAttribute(attributeName, attributeValue) {
+    if (location.state?.filter.has(attributeName)) {
+      // If the attribute already exists, replace its value
+      location.state?.filter.set(attributeName, attributeValue);
+    } else {
+      // If the attribute doesn't exist, add a new one
+      location.state?.filter.append(attributeName, attributeValue);
     }
   }
 

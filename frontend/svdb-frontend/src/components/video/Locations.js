@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Map, Marker, ZoomControl } from "pigeon-maps";
-import { Avatar, Col, Modal, List, Row, Space, Tag, Typography, Divider } from 'antd';
+import { Avatar, Col, Modal, List, Row, Space, Tag, Typography, Divider, Empty } from 'antd';
 
 
 const { Text } = Typography;
@@ -50,13 +50,13 @@ const Locations = ({ video, _showLabel = true }) => {
         <>
             {loaded && locations ?
                 <>
-                    {_showLabel ? <><Text strong style={{ marginLeft: '20px' }}>Locations </Text>
-                        <Tag color='#101010' key='allTag' onClick={showAll}>See All </Tag> </> : ''}
+                    {_showLabel ? <><Text strong style={{ marginRight: '5px' }}>Locations </Text>
+                        <Tag style={{ cursor: 'pointer' }} color='#101010' key='allTag' onClick={showAll}>See All</Tag> </> : <Empty text="No data" image={Empty.PRESENTED_IMAGE_SIMPLE} imageStyle={{ padding: '2px', height: '32px' }}></Empty>}
                     {Object.keys(locations).map(key => {
                         const _locations = locations[key];
                         return _locations.map(location => {
                             return (
-                                <Tag color={location.color} key={location.title + '_list'} onClick={() => showModal(location)}>
+                                <Tag style={{ cursor: 'pointer' }} color={location.color} key={location.title + '_list'} onClick={() => showModal(location)}>
                                     {location.title}
                                 </Tag>
                             );

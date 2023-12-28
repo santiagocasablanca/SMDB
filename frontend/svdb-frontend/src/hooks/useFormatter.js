@@ -90,6 +90,13 @@ const useFormatter = () => {
     []
   )
 
+  const displayVideoDurationInMinutes = useMemo(
+    () => {
+      return duration => Math.round(dayjs.duration(duration).asMinutes());
+    }, 
+    []
+  )
+
   const displayVideoDurationFromSecondsWithLegend = useMemo(
     () => {
       return (durationAsSeconds) => {
@@ -101,7 +108,7 @@ const useFormatter = () => {
     []
   )
 
-  return { intToStringBigNumber, parseDateToFromNow, parseDate, parseDuration, humanizeDurationFromSeconds, displayDurationFromSeconds, displayVideoDurationFromSecondsWithLegend, displayVideoDurationFromSeconds };
+  return { intToStringBigNumber, parseDateToFromNow, parseDate, parseDuration, humanizeDurationFromSeconds, displayDurationFromSeconds, displayVideoDurationInMinutes, displayVideoDurationFromSecondsWithLegend, displayVideoDurationFromSeconds };
 };
 
 export default useFormatter;

@@ -47,16 +47,16 @@ const HorizontalHighlightedList = ({ title, filter }) => {
 
     const handleClick = () => {
         const url = '/videography';
-        navigate(url, { state: { filter } });
+        navigate(url, { state: { filter }, replace: true, preventScrollReset: true });
     }
     insertCss(`
     .rating span {
         color: black;
     }
 
-    :where(.css-dev-only-do-not-override-1m26euv).ant-skeleton.ant-skeleton-element .ant-skeleton-image {
-        width: 316px;
-        height: 189px;
+    .ant-skeleton .ant-skeleton-element .ant-skeleton-image {
+        width: 316px !important;
+        height: 189px !important;
     }
 
     /* Basic list item styles */
@@ -151,7 +151,10 @@ const HorizontalHighlightedList = ({ title, filter }) => {
                                     // e.currentTarget.style.margin = 'inherit';
                                 }}>
                                 {/* <br></br> */}
-                                <Image onClick={() => handleClickVideo(video.video_id)} style={{ borderRadius: '8px', objectFit: 'cover', cursor: 'pointer' }} src={video.url} width='316px' height='189px' preview={false} />
+                                {/* <RenderSmoothImage alt={video.video_id} src={video.url}></RenderSmoothImage> */}
+                                <Image onClick={() => handleClickVideo(video.video_id)} style={{ borderRadius: '8px', objectFit: 'cover', cursor: 'pointer' }} 
+                                placeholder={true}
+                                src={video.url} width='316px' height='189px' preview={false} />
 
                                 <Title style={{ color: 'black', width: '310px', marginTop: '10px', marginBottom: '10px' }}
                                     ellipsis={{ tooltip: video.title }}
@@ -186,16 +189,16 @@ const HorizontalHighlightedList = ({ title, filter }) => {
         <>
             <Row><Col span={18}><Title style={{ color: 'black', marginBottom: '25px' }} level={4}>{title}</Title></Col>
                 <Col span={6}>
-                    <div  style={{ float: 'right' }} 
-                    onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = 'hsl(0, 0%, 80%)';
-                        e.currentTarget.style.borderRadius = '8px';
-                    }}
+                    <div style={{ float: 'right' }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = 'hsl(0, 0%, 80%)';
+                            e.currentTarget.style.borderRadius = '8px';
+                        }}
                         onMouseLeave={(e) => {
                             e.currentTarget.style.backgroundColor = 'inherit';
                             e.currentTarget.style.borderRadius = 'inherit';
                         }}>
-                        <Button onClick={() => handleClick()}type="link">See all</Button></div></Col></Row>
+                        <Button onClick={() => handleClick()} type="link">See all</Button></div></Col></Row>
 
             <div className="scrollmenu" style={{ height: '315px' }}>
                 {isLoaded ?

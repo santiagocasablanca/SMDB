@@ -9,7 +9,6 @@ import Guests from "../components/channel/Guests";
 import useFormatter from '../hooks/useFormatter';
 import variables from '../sass/antd.module.scss';
 import { getChannelFn } from "../services/channelApi.ts";
-import VideographyOnCards from './VideographyOnCards';
 
 
 

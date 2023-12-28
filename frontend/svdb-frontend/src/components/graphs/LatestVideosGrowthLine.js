@@ -31,12 +31,21 @@ const LatestVideosGrowthLine = ({ title, filter, start = 0 }) => {
                     // console.log(video_stat)
                     let video = filter.videos.find((v) => v.video_id === video_stat.video_id);
                     if (video) {
-
-                        return {
-                            video_id: video_stat.video_id,
-                            video_title: video?.title,
-                            views: parseInt(video_stat.views),
-                            fetched_at: video_stat.fetched_date
+                        console.log(video_stat.fetched_date, parseDate(video.published_at, 'YYYY-MM-DD'), video_stat.fetched_date === parseDate(video.published_at, 'YYYY-MM-DD'));
+                        if (video_stat.fetched_date === parseDate(video.published_at, 'YYYY-MM-DD')) {
+                            return {
+                                video_id: video_stat.video_id,
+                                video_title: video?.title,
+                                views: parseInt(0),
+                                fetched_at: video_stat.fetched_date
+                            }
+                        } else {
+                            return {
+                                video_id: video_stat.video_id,
+                                video_title: video?.title,
+                                views: parseInt(video_stat.views),
+                                fetched_at: video_stat.fetched_date
+                            }
                         }
                     } else { return null; }
                 })
@@ -175,7 +184,7 @@ const LatestVideosGrowthLine = ({ title, filter, start = 0 }) => {
         <>
             <Row>
                 <Col span={24}>
-                    <Title style={{ color: "black", marginBottom: '25px'  }} level={4}>{title}</Title>
+                    <Title style={{ color: "black", marginBottom: '25px' }} level={4}>{title}</Title>
                 </Col>
             </Row>
             {/* <Card bordered={false} size="small"> */}
@@ -189,7 +198,7 @@ const LatestVideosGrowthLine = ({ title, filter, start = 0 }) => {
                         // <Text>No data available.</Text>
                     )
             ) : (
-                    <Skeleton.Image active size="large" width="100%" height="300px"/>
+                    <Skeleton.Image active size="large" width="100%" height="300px" />
 
                     // <Spin />
                 )}
