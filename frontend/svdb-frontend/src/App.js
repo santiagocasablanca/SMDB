@@ -37,6 +37,14 @@ class App extends Component {
       <ConfigProvider
         theme={{
           algorithm: theme.darkAlgorithm,
+          components: {
+            Timeline: {
+              /* here is your component tokens */
+              tailColor: variables.richBlack,
+              tailWidth: 2,
+              colorText: variables.richBlack
+            },
+          },
           token: {
             colorPrimary:  variables.highlightColor, //"#F5C518",
 

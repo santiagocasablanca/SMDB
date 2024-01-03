@@ -3,6 +3,7 @@ import React from 'react'
 const Dashboard = React.lazy(() => import('./pages/Dashboard'))
 const Home = React.lazy(() => import('./pages/Home'))
 
+const Year23 = React.lazy(() => import('./pages/Year23'))
 const Creator = React.lazy(() => import('./pages/Creator'))
 const Creators = React.lazy(() => import('./pages/Creators'))
 const Channels = React.lazy(() => import('./pages/Channels'))
@@ -23,6 +24,7 @@ const VideoGameOnePage = React.lazy(() => import('./components/videoGameOne/Vide
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/home', name: 'Home', element: Home },
+  { path: '/year23', name: 'Year23', element: Year23 },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
   { path: '/creator/:id', name: 'Creator', element: Creator },
   { path: '/creators', name: 'Creators', element: Creators },

@@ -310,17 +310,12 @@ const HomePage = () => {
                 <HorizontalHighlightedList title="Most Liked" filter={paramsTop10Liked} />
               </Col>
             </Row>
-
-            
-
             <br></br>
-
-
-
+            
           </div>
         </>
       ) : (
-        <Row justify="center" style={{marginTop: '70px'}}>
+        <Row justify="center" style={{ marginTop: '70px' }}>
           <Spin spining="true" tip="Loading..." size="large" >
             <div className="spinContent" />
           </Spin>
