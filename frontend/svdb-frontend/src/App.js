@@ -38,16 +38,39 @@ class App extends Component {
         theme={{
           algorithm: theme.darkAlgorithm,
           components: {
+            Spin: {
+              colorText: 'black',
+              colorPrimary: variables.coolerGray6
+            },
             Timeline: {
               /* here is your component tokens */
               tailColor: variables.richBlack,
               tailWidth: 2,
               colorText: variables.richBlack
             },
+            DatePicker: {
+              colorText: 'white',
+              colorPrimaryHover: 'white',
+              colorTextHeading: 'white',
+              colorTextLightSolid: 'white'
+            },
+            Popover: {
+              colorText: 'white',
+              colorTextHeading: 'white'
+            },
+            Modal: {
+              colorText: 'white',
+              colorTextHeading: 'white',
+              titleColor: variables.coolerGray8
+            },
+            Table: {
+              colorText: 'white',
+              colorTextHeading: 'white'
+            }
           },
           token: {
             colorPrimary:  variables.highlightColor, //"#F5C518",
-
+            colorText: variables.coolerGray8,
             colorLinkActive: variables.primary,
             colorLinkHover: variables.primary,
             colorFill: "rgba(0, 0, 0, 0.25)", 

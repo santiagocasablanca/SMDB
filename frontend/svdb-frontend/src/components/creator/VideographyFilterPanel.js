@@ -66,8 +66,6 @@ const VideographyFilterPanel = ({ filters, onChange }) => {
   
 
   const handleSearchClick = () => {
-    console.log('search clicked videographyFilter');
-    console.log(series);
     setSearchClicked(true);
     onChange({
       channels: filters.channels,
@@ -99,12 +97,10 @@ const VideographyFilterPanel = ({ filters, onChange }) => {
   };
 
   const handleTagsChange = (e) => {
-    console.log(e);
     onChange({ tags: e });
   };
 
   const handleDateRangeChange = (range) => {
-    console.log(range);
     const rangeStr = [];
     range.forEach((date) => {
       // console.log(date.format());
@@ -128,7 +124,6 @@ const VideographyFilterPanel = ({ filters, onChange }) => {
   const handleReset = () => {
     form.resetFields();
     // Reset table filters and trigger update
-    console.log('Filters reset');
   };
 
   const toggleFilters = () => {

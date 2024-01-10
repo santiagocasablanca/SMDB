@@ -22,11 +22,8 @@ const VideographyEditPanel = ({ _video, onChange }) => {
   useEffect(() => {
 
     async function fetchData() {
-      console.log(_video);
-      console.log('videoeditpanel loaded')
       await getVideoFn(_video.video_id).then(res => {
         if (res.result) {
-          console.log(res.result);
           setVideo(res.result);
         }
       })

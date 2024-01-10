@@ -49,7 +49,6 @@ const VideoGrowthLine = ({ _video }) => {
 
 
             }).then((cont) => {
-                console.log(cont);
                 // const stats = await getChannelStatsFn(_video?.channel.channel_id);
                 // console.log(stats);
 

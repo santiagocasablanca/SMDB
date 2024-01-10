@@ -66,8 +66,6 @@ const TreeMapPlot = ({ title, filter }) => {
                     setData(transformedData);
                     setLikedSeriesData(transformedLikedData);
                     setIsLoaded(true);
-
-                    console.log("finished fetching");
                 });
         }
         fetchData();

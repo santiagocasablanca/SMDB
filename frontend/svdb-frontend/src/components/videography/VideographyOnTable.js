@@ -46,7 +46,7 @@ const VideographyOnTable = ({searchParams, tableRefresh}) => {
       render: (video_id) => (
         (
           <span>
-            <VideoRate _video={getVideoById(video_id)} small={true} />
+            <VideoRate _video={getVideoById(video_id)} small={true} color="white" />
           </span>)
       ),
     },
@@ -136,7 +136,6 @@ const VideographyOnTable = ({searchParams, tableRefresh}) => {
   ]
   
   useEffect(() => {
-    console.log('here again table, ', searchParams)
     const page = activePage;
     
 
@@ -178,7 +177,6 @@ const VideographyOnTable = ({searchParams, tableRefresh}) => {
   `)
 
   const handleClickVideo = (id) => {
-    console.log(id);
     const url = '/video/' + id;
     // not necessary, kind of redudant at the moment. Params are set through useParams and useLocation (state)
     navigate(url, { state: { id: id } });
@@ -196,7 +194,7 @@ const VideographyOnTable = ({searchParams, tableRefresh}) => {
                 size="small"
                 style={{
                   controlItemBgHover: variables.primary,
-                  
+                  cursor: 'pointer'
                 }}
                 onRow={(record, rowIndex) => {
                   return {

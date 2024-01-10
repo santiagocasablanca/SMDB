@@ -64,7 +64,6 @@ const TitleRose = ({ title, filter }) => {
                     setLikedSeriesData(transformedLikedData);
                     setIsLoaded(true);
 
-                    console.log("finished fetching");
                 });
         }
         fetchData();

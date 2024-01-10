@@ -12,21 +12,21 @@ const Filters = () => {
   const handleFilterSubmit = () => {
     form.validateFields().then((values) => {
       // Apply filters and trigger table update
-      console.log('Applied filters:', values);
+      // console.log('Applied filters:', values);
     });
   };
 
   const handleReset = () => {
     form.resetFields();
     // Reset table filters and trigger update
-    console.log('Filters reset');
+    // console.log('Filters reset');
   };
 
   const toggleFilters = () => {
     setIsExpanded((prevExpanded) => !prevExpanded);
   };
   const onChange = (key) => {
-    console.log(key);
+    // console.log(key);
   };
 
   return (

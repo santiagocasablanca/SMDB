@@ -43,7 +43,6 @@ const VideoGameOne = () => {
   };
 
   const prevVideo = (updatedRound) => {
-    console.log(updatedRound);
     rounds[currentIndex] = updatedRound;
     setCurrentIndex((prevIndex) => (prevIndex === 0 ? videos.length - 1 : prevIndex - 1));
 
@@ -59,7 +58,7 @@ const VideoGameOne = () => {
       // console.log('removing life', );
       setRemainingLives((prev) => prev - 1);
       if (newRemainingLives - 1 === 0) {
-        console.log('gameover', newRemainingLives);
+        // console.log('gameover', newRemainingLives);
         setGameover(true);
         // fetchGameOneLeaderboard().then((res) => { setLeaderboard(res.results) });
       }

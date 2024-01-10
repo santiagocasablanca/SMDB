@@ -99,9 +99,9 @@ const AboutPage = () => {
   const svdbProjectTitle = (
     <Row justify="center">
       {/* <Card style={{ width: '90%', backgroundColor: 'white' }} bodyStyle={{ padding: '2px' }}> */}
-        <Space><AppLogo /> <Title level={2} className="subTitle" ellipsis={{
-          tooltip: 'Sidemen Video Database',
-        }}>Sidemen Video Database</Title></Space>
+      <Space><AppLogo /> <Title level={2} className="subTitle" ellipsis={{
+        tooltip: 'Sidemen Video Database',
+      }}>Sidemen Video Database</Title></Space>
       {/* </Card> */}
     </Row>
   );
@@ -109,10 +109,10 @@ const AboutPage = () => {
   const aboutMeTitle = (
     <Row justify="center">
       {/* <Card style={{ width: '90%', backgroundColor: 'white' }} bodyStyle={{ padding: '2px' }}> */}
-        <Space>
-          <Title level={2} className="subTitle" ellipsis={{
-            tooltip: 'About me',
-          }}>ABOUT ME</Title></Space>
+      <Space>
+        <Title level={2} className="subTitle" ellipsis={{
+          tooltip: 'About me',
+        }}>ABOUT ME</Title></Space>
       {/* </Card> */}
     </Row>
   );
@@ -181,7 +181,7 @@ const AboutPage = () => {
             <Col md={24} lg={24} xl={12}>
               <Card title={svdbProjectTitle} headStyle={{ padding: '10px', background: 'white' }} bodyStyle={{ maxHeight: 550, overflow: 'auto' }}>
 
-                <Text style={{float: 'right'}} type="secondary">[July 2023 - still going]</Text>
+                <Text style={{ float: 'right' }} type="secondary">[July 2023 - still going]</Text>
                 <Divider orientation="left">STILL UNDER CONSTRUCTION</Divider>
                 <div className="projectContainer">
 
@@ -202,7 +202,7 @@ const AboutPage = () => {
                   <br></br>
                   <br></br>
                   <Divider orientation="left">Deployment and current DB size</Divider>
-                  
+
                   <Paragraph ellipsis={
                     {
                       rows: 2,
@@ -210,9 +210,9 @@ const AboutPage = () => {
                       symbol: 'more',
                     }
                   }>
-                  The deployment process for the project utilizes GitHub Actions for continuous integration and deployment (CI/CD). 
-                  Triggered by pushes to the main branch, the workflow automates backend and frontend image building and tagging through Docker Hub authentication using GitHub secrets. 
-                  These Dockerized images are subsequently pushed to Docker Hub, ensuring a streamlined process that swiftly delivers updates.
+                    The deployment process for the project utilizes GitHub Actions for continuous integration and deployment (CI/CD).
+                    Triggered by pushes to the main branch, the workflow automates backend and frontend image building and tagging through Docker Hub authentication using GitHub secrets.
+                    These Dockerized images are subsequently pushed to Docker Hub, ensuring a streamlined process that swiftly delivers updates.
                   </Paragraph>
                   <Text>Hosted at <Link href="https://contabo.com/">Contabo</Link> (Cloud VPS S => 4 vCPU Cores | 8 GB RAM)</Text>
                   <br></br>
@@ -223,7 +223,7 @@ const AboutPage = () => {
                     <li>Over 68000 Videos</li>
                   </ul>
                   <br></br>
-                  <Text>Special thanks to <Avatar src="https://avatars.githubusercontent.com/u/8502778?v=4"/> <Link href="https://github.com/danilomagalhaes">Danilo Magalhães</Link> for the help on the configuration of the infrastructure!</Text>
+                  <Text>Special thanks to <Avatar src="https://avatars.githubusercontent.com/u/8502778?v=4" /> <Link href="https://github.com/danilomagalhaes">Danilo Magalhães</Link> for the help on the configuration of the infrastructure!</Text>
                   {/* <br></br> */}
                   <Divider orientation="left">Project Inspirations</Divider>
                   <ul>
@@ -236,7 +236,15 @@ const AboutPage = () => {
           </Row>
           <br></br>
         </div>
-      ) : (<Spin />)
+      ) : (
+        <Row justify="center" style={{ marginTop: '70px' }}>
+          <div style={{ borderRadius: '50%', overflow: 'hidden' }} >
+            <Spin spining="true" tip="Loading..." size="large" style={{ background: '#F3F4F6' }}>
+              <div className="spinContent" style={{ padding: '100px' }} />
+            </Spin>
+          </div>
+        </Row>
+      )
     }
   </>);
 };

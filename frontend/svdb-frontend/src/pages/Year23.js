@@ -16,7 +16,8 @@ import { getVideosFn, getVideoFn } from "../services/videoApi.ts";
 import VideoRate from '../components/video/VideoRate';
 import VideoGrowthLine from '../components/graphs/VideoGrowthLine';
 
-const { Title, Text } = Typography;
+const { Title, Text, Paragraph } = Typography;
+const { CheckableTag } = Tag;
 const { useBreakpoint } = Grid;
 
 const Year23Page = () => {
@@ -26,26 +27,58 @@ const Year23Page = () => {
 
   const [isLoaded, setIsLoaded] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState([]);
-  const [top10videos, setTop10videos] = useState([]);
+  const [top100videos, setTop100videos] = useState([]);
+  const [channels, setChannels] = useState([]);
+
   const [open, setOpen] = useState(false);
 
 
   const { intToStringBigNumber, parseDate, parseDuration, parseDateToFromNow, displayVideoDurationInMinutes } = useFormatter();
 
+  const [selectedChannels, setSelectedChannels] = useState([]);
+  const [selectedAllChannels, setSelectedAllChannels] = useState(true)
+  const handleChange = (channel, checked) => {
+    const nextSelectedTags = checked
+      ? [...selectedChannels, channel]
+      : selectedChannels.filter((t) => t !== channel);
+    console.log('You are interested in: ', nextSelectedTags);
+    setSelectedChannels(nextSelectedTags);
+  };
+
+  const handleAllChange = (checked) => {
+    setSelectedAllChannels(checked);
+    const nextSelectedTags = checked
+      ? [channels]
+      : [];
+    console.log('You are interested in: ', nextSelectedTags);
+    setSelectedChannels(nextSelectedTags);
+  };
+
+  useEffect(() => {
+    async function fetchChannels() {
+      await getChannelsFn(1, 1000, null).then((channelsResult) => {
+        setChannels(channelsResult.results);
+        setSelectedChannels(channelsResult.results);
+      });
+    }
+    fetchChannels();
+  }, []);
+
   useEffect(() => {
 
-    async function fetchData() {
+    async function fetchVideos() {
       let now = dayjs();
       let oldDate = dayjs('2023-01-01');  //.subtract(1, 'year');
       let range = [];
       range.push(oldDate.format());
       range.push(now.format());
 
-
-
-
+      // search videos
       let _paramsTop = new URLSearchParams();
       _paramsTop.append("sort", "views%desc")
+      _paramsTop.append("channels", selectedChannels.map(it => {
+        return it.channel_id
+      }))
       _paramsTop.append("publishedAtRange", range)
       await getVideosFn(1, 100, _paramsTop)
         .then((result) => {
@@ -53,7 +86,7 @@ const Year23Page = () => {
           const sorted = result.videos?.sort(
             (a, b) => new Date(a.published_at) - new Date(b.published_at)
           );
-          setTop10videos(sorted.map(video => {
+          setTop100videos(sorted.map(video => {
             return {
               dot: (
                 <YoutubeOutlined
@@ -67,14 +100,11 @@ const Year23Page = () => {
               children: <VideoCard video={video} childToParent={childToParent} />,
             }
           }));
-          // setTop10videoIds(result.videos.map(video => { return video.video_id; }));
           setIsLoaded(true);
-          // setTopChannelIds(result.videos.map(video => { return video.channel_id; }));
         })
-
     }
-    fetchData();
-  }, []);
+    fetchVideos();
+  }, [selectedChannels]);
 
   const fetchVideo = async (video_id) => {
     await getVideoFn(video_id)
@@ -361,6 +391,7 @@ const Year23Page = () => {
   };
 
 
+
   return (<>
     {/* <HeaderPanel title="Home" channels={channels}></HeaderPanel> */}
     {isLoaded ?
@@ -369,10 +400,60 @@ const Year23Page = () => {
           <div className="year23Container">
             <Row justify="center">
               <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={18}>
-                <Title style={{ color: 'black', justify: 'center' }} level={1}>'23 Top 100</Title>
+                <Title style={{ color: 'black', justify: 'center' }} level={2}><YoutubeOutlined style={{ marginRight: '5px' }} /> Top 100 of 2023</Title>
+
+                <Space size={[6, 8]} wrap>
+                  <Paragraph
+                    ellipsis={
+                      {
+                        rows: 2,
+                        expandable: true,
+                        symbol: 'more',
+                      }
+                    }
+                  >
+                    The timeline of the Best 100 Videos of 2023.
+
+
+                    <CheckableTag
+                          key='selectAll'
+                          checked={selectedAllChannels}
+                          onChange={(checked) => handleAllChange(checked)}
+                        >
+                          {selectedAllChannels ? 'Deselect All' : 'Select All'}
+                        </CheckableTag>
+                    {channels?.map((channel, index) => {
+                      return (
+                        <CheckableTag
+                          key={channel.channel_id}
+                          checked={selectedChannels.includes(channel)}
+                          onChange={(checked) => handleChange(channel, checked)}
+                        >
+                          {channel.title}
+                        </CheckableTag>
+                        // <Tag
+                        //   key={channel.channel_id}
+                        //   color={variables.richBlack}
+                        //   closable={false}
+                        //   style={{
+                        //     userSelect: 'none',
+                        //     color: 'white'
+                        //   }}>
+                        //   <span>
+                        //     {channel.title}
+                        //   </span>
+                        // </Tag>
+                      )
+                    })
+                    }</Paragraph>
+                </Space>
+              </Col>
+            </Row>
+            <Row justify="center">
+              <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={18}>
                 <Timeline
                   mode="alternate"
-                  items={top10videos}
+                  items={top100videos}
                 />
               </Col>
             </Row>

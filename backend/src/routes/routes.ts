@@ -41,7 +41,7 @@ router.route("/gameOneLeaderboard/")
   .get(fetchLeaderboardController)
   .post(addToLeaderboardController);
 
-  router.route("/channelStats")
+  router.route("/channelStats/")
   .get(fetchHottestChannels); //findAllChannelStatsController);
   // .get(fetchMostSubscribedChannelsByMonth);
   

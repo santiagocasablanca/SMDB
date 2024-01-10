@@ -10,7 +10,7 @@ const SeriesOrGameAdd = ({ _tag, onChange }) => {
   }, [_tag]);
 
   const handleEditInputChange = (e) => {
-    console.log('handling input change', e.target.value);
+    // console.log('handling input change', e.target.value);
     onChange(e.target.value);
   };
   

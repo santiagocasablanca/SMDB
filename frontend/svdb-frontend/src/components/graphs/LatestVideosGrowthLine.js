@@ -31,7 +31,7 @@ const LatestVideosGrowthLine = ({ title, filter, start = 0 }) => {
                     // console.log(video_stat)
                     let video = filter.videos.find((v) => v.video_id === video_stat.video_id);
                     if (video) {
-                        console.log(video_stat.fetched_date, parseDate(video.published_at, 'YYYY-MM-DD'), video_stat.fetched_date === parseDate(video.published_at, 'YYYY-MM-DD'));
+                        // console.log(video_stat.fetched_date, parseDate(video.published_at, 'YYYY-MM-DD'), video_stat.fetched_date === parseDate(video.published_at, 'YYYY-MM-DD'));
                         if (video_stat.fetched_date === parseDate(video.published_at, 'YYYY-MM-DD')) {
                             return {
                                 video_id: video_stat.video_id,

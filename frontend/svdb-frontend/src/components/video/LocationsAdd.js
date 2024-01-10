@@ -30,7 +30,7 @@ const TagsAdd = ({_locations, onChange}) => {
   }, [editInputValue]);
   const handleClose = (removedTag) => {
     const newTags = tags.filter((tag) => tag !== removedTag);
-    console.log(newTags);
+    // console.log(newTags);
     setTags(newTags);
     onChange([...newTags, newTags]);
   };

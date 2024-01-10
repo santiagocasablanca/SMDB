@@ -13,7 +13,7 @@ const TagsAdd = ({ _tags, onChange }) => {
   const editInputRef = useRef(null);
 
   useEffect(() => {
-    console.log(_tags);
+    // console.log(_tags);
     setTags(_tags ? _tags : []);
   }, [_tags]);
 
@@ -29,7 +29,7 @@ const TagsAdd = ({ _tags, onChange }) => {
 
   const handleClose = (removedTag) => {
     const newTags = tags.filter((tag) => tag !== removedTag);
-    console.log(newTags);
+    // console.log(newTags);
     setTags(newTags);
     onChange(newTags);
   };
@@ -51,7 +51,7 @@ const TagsAdd = ({ _tags, onChange }) => {
     setEditInputValue(e.target.value);
   };
   const handleEditInputConfirm = () => {
-    console.log([...tags]);
+    // console.log([...tags]);
     const newTags = [...tags];
     newTags[editInputIndex] = editInputValue;
     setTags(newTags);

@@ -264,7 +264,6 @@ const FrequencyCard = (_channels) => {
         getVideosFn(1, 10, params)
           .then((result) => {
 
-            console.log('views')
             return (
               `<div class='container'>` +
               `<div class='title'>${itemData.day} ${itemData.date}</div>` +

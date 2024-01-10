@@ -11,7 +11,7 @@ import useFormatter from '../hooks/useFormatter';
 import variables from '../sass/antd.module.scss';
 import VideoRate from '../components/video/VideoRate';
 import VideoGrowthLine from '../components/graphs/VideoGrowthLine';
-import ReactPlayer from 'react-player';
+import ReactPlayer from 'react-player/youtube';
 import LocationsMap from '../components/video/LocationsMap';
 import UpdateVideoModal from '../components/video/UpdateVideoModal';
 import { getVideoFn } from "../services/videoApi.ts";

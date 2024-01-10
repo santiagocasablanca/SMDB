@@ -179,8 +179,6 @@ const ChannelsPage = () => {
   );
 
   const handleInputChange = (e) => {
-
-    console.log('here ', e);
     // const { name, value } = e.target;
     // onChange({ [name]: value });
     setFilters({ title: e });
@@ -188,7 +186,6 @@ const ChannelsPage = () => {
 
 
   const handleClickChannel = (id) => {
-    console.log(id);
     const url = '/channel/' + id;
     // not necessary, kind of redudant at the moment. Params are set through useParams and useLocation (state)
     navigate(url, { state: { id: id } });

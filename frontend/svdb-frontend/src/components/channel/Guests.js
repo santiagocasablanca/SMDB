@@ -89,7 +89,7 @@ const Guests = ({ title, _filters }) => {
   const [records, setRecords] = useState([])
 
   const handleClickCreator = (id) => {
-    console.log(id);
+    // console.log(id);
     const url = '/creator/' + id;
     // not necessary, kind of redudant at the moment. Params are set through useParams and useLocation (state)
     navigate(url, { state: { id: id } });
@@ -240,7 +240,6 @@ const Guests = ({ title, _filters }) => {
 
     }
     myFilters.search = false;
-    console.log('just for be sure')
     setMyFilters({ ...myFilters, ...newFilters });
   };
 

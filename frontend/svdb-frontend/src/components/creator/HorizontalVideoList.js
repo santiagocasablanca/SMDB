@@ -43,7 +43,6 @@ const HorizontalVideoList = ({ title, filter }) => {
 
     const handleClick = () => {
         const url = '/videography';
-        console.log(filter);
         navigate(url,{ state: { filter } });
     }
 

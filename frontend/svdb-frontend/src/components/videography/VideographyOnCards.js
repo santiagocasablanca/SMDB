@@ -13,6 +13,8 @@ import { getVideosFn } from "../../services/videoApi.ts";
 import VideoRate from '../video/VideoRate';
 import VideoGrowthLine from '../graphs/VideoGrowthLine';
 import VideographyFilterPopoverPanel from './VideographyFilterPopoverPanel';
+import VideoDurationOverlay from '../video/VideoDurationOverlay';
+import VideoOnHoverPreview from '../video/VideoOnHoverPreview';
 
 
 
@@ -37,7 +39,6 @@ const VideographyOnCards = ({ fetchedData, initLoading, isLoading, hasMore, load
         !isLoading &&
         hasMore
       ) {
-        console.log('loading handleScroll')
         onLoadMore();
       }
     };
@@ -63,7 +64,6 @@ const VideographyOnCards = ({ fetchedData, initLoading, isLoading, hasMore, load
   `)
 
   const handleClickVideo = (id) => {
-    console.log(id);
     const url = '/video/' + id;
     // not necessary, kind of redudant at the moment. Params are set through useParams and useLocation (state)
     navigate(url, { state: { id: id } });
@@ -98,23 +98,21 @@ const VideographyOnCards = ({ fetchedData, initLoading, isLoading, hasMore, load
 
         <span style={{ color: 'black', fontSize: '14px' }}>
           <Popover title="Video Statistics Growth" content={<VideoGrowthLine _video={item} />}>
-            <span style={{ color: 'black', fontSize: '12px', float: 'left' }}><EyeOutlined/> {intToStringBigNumber(item?.views)} views </span>
+            <span style={{ color: 'black', fontSize: '12px', float: 'left' }}><EyeOutlined /> {intToStringBigNumber(item?.views)} views </span>
           </Popover>
         </span>
         <Tooltip title={parseDate(item?.published_at, "DD MMM YYYY HH:MM")}>
-          <span style={{ color: 'black', fontSize: '12px', float: 'right' }}> {parseDateToFromNow(item?.published_at)}</span>
+          <span style={{ color: 'black', fontSize: '12px', float: 'right', marginRight: '2px' }}> {parseDateToFromNow(item?.published_at)}</span>
         </Tooltip>
       </div>
     );
   };
 
   const VideoCardChannelBody = ({ item }) => {
-
     const [showChannel, setShowChannel] = useState(false);
 
     // const navigate = useNavigate();
     const goToChannel = (id) => {
-      // console.log('going to channel?');
       const url = '/channel/' + id;
       // not necessary, kind of redudant at the moment. Params are set through useParams and useLocation (state)
       navigate(url, { state: { id: id } });
@@ -153,6 +151,10 @@ const VideographyOnCards = ({ fetchedData, initLoading, isLoading, hasMore, load
       </div>
     );
   };
+  const [isHovered, setIsHovered] = useState(false);
+  const toggleHover = (state) => {
+    setIsHovered(state);
+  }
 
   return (<>
     <div className="videolistBodyContainer">
@@ -175,6 +177,7 @@ const VideographyOnCards = ({ fetchedData, initLoading, isLoading, hasMore, load
         dataSource={fetchedData}
         renderItem={(item, index) => (
           <List.Item>
+            
             {/* <VideoCard key={index} video={item} /> */}
             <Card
               style={{ width: '100%', maxWidth: '450px', backgroundColor: 'transparent', border: 'none' }}
@@ -191,10 +194,14 @@ const VideographyOnCards = ({ fetchedData, initLoading, isLoading, hasMore, load
               }
               hoverable
               key={item.video_id}>
+              <div style={{ position: 'absolute', bottom: '55px', right: '5px' }}>
+                <VideoDurationOverlay duration={item.duration} />
+
+              </div>
               <div style={{ color: 'white', fontSize: '10px', top: '5px', position: 'absolute', right: '5px', backgroundColor: 'black', opacity: '0.9', borderRadius: '8px', padding: '3px' }}
               >
                 <Space>
-                  <VideoRate _video={item} />
+                  <VideoRate _video={item} color="white" />
                 </Space>
 
                 ˙</div>

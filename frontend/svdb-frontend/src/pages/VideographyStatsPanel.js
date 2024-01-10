@@ -52,7 +52,6 @@ const FrequencyCard = () => {
       const month = dayjs(currentDate).format('M');
       let week = dayjs(currentDate).week(); // Format the date as YYYY-MM-DD
       if (month == 1 && week > 50) {
-        console.log('inside 1')
         week = 0;
       }
       daysArray.push({

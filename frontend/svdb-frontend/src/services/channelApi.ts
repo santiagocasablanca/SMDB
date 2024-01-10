@@ -67,7 +67,6 @@ export const callLatestRefresh = async () => {
   const response = await channelApi.get<IChannelResponse>(
     req
   );
-  console.log(response);
 
   return response.data;
 }

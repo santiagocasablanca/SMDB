@@ -12,6 +12,7 @@ import { getChannelsFn, fetchMostSubChannelByMonth } from "../services/channelAp
 import { getVideosFn, getHighlightedVideosFn } from "../services/videoApi.ts";
 import LatestVideosGrowthLine from '../components/graphs/LatestVideosGrowthLine';
 import MonthlyHighlightedCreators from '../components/home/MonthlyHighlightedCreators';
+import ChannelGrowthByMonth from '../components/home/ChannelGrowthByMonth';
 
 
 const { Title, Text } = Typography;
@@ -43,7 +44,7 @@ const HomePage = () => {
       range.push(oldDate.format());
       range.push(now.format());
 
-      await fetchMostSubChannelByMonth()
+      await fetchMostSubChannelByMonth(oldDate.format('YYYY-MM'))
         .then((result) => {
           // console.log(result);
           setChannelsGrowth(result.results);//calculateGrowthStatsForEachChannel(result.results));
@@ -82,41 +83,6 @@ const HomePage = () => {
     fetchData();
   }, []);
 
-  const calculateGrowthStatsForEachChannel = (results) => {
-    const growthStatsMap = {};
-
-    results.forEach((result) => {
-      const { channel_id, fetched_date, subs, views } = result;
-
-      if (!growthStatsMap[channel_id]) {
-        growthStatsMap[channel_id] = {
-          channel_id,
-          initial_subs: subs,
-          initial_views: views,
-          initial_fetched_date: fetched_date,
-          final_subs: subs,
-          final_views: views,
-          final_fetched_date: fetched_date,
-        };
-      } else {
-        growthStatsMap[channel_id].final_subs = subs;
-        growthStatsMap[channel_id].final_views = views;
-        growthStatsMap[channel_id].final_fetched_date = fetched_date;
-      }
-    });
-
-    Object.values(growthStatsMap).forEach((stats) => {
-      stats.subs_increase = stats.final_subs - stats.initial_subs;
-      stats.subs_growth_percentage =
-        (stats.subs_increase * 100) / stats.initial_subs;
-      stats.views_increase = stats.final_views - stats.initial_views;
-      stats.views_growth_percentage =
-        (stats.views_increase * 100) / stats.initial_views;
-    });
-    // console.log(growthStatsMap, Object.values(growthStatsMap));
-    return growthStatsMap; //Object.values(growthStatsMap);
-  };
-
   insertCss(`  
   .spinContent {
     padding: 50px;
@@ -127,6 +93,10 @@ const HomePage = () => {
   .ant-spin-nested-loading >div>.ant-spin .ant-spin-text {
     text-shadow: 0px 0px;
     
+  }
+
+  .ant-picker-dropdown .ant-picker-content {
+    width: auto;
   }
 
 
@@ -192,90 +162,15 @@ const HomePage = () => {
   `
   );
 
-
-
-  const HeaderPanel = ({ title, channels }) => {
-    const [lastUpdated, setLastUpdated] = useState();
-    const [count, setCount] = useState(channels?.length);
-
-    useEffect(() => {
-      // console.log('channelws ', channels)
-      const mostRecent = findMostRecentObject(channels);
-      if (mostRecent) setLastUpdated(mostRecent.updated_at);
-    }, []);
-
-    function findMostRecentObject(arrayOfObjects) {
-      if (!arrayOfObjects || arrayOfObjects.length === 0) {
-        // Handle the case where the input array is empty or null
-        return null;
-      }
-
-      return arrayOfObjects.reduce((mostRecent, currentObject) => {
-        const mostRecentDate = new Date(mostRecent.updated_at);
-        const currentDate = new Date(currentObject.updated_at);
-
-        if (currentDate > mostRecentDate) {
-          return currentObject;
-        }
-
-        return mostRecent;
-      }, arrayOfObjects[0]);
-    }
-
-    return (
-      <Row className="homeHeaderPanel">
-        <Col span="24">
-          <Title level={3}><Space><HomeOutlined /> {title}</Space></Title>
-          <Space style={{ float: 'right', marginTop: '-35px' }}><Popover placement="leftBottom" content={<InfoPopover count={count} last_updated_at={lastUpdated} />}>Info</Popover></Space>
-        </Col>
-        {/* <Col span="3">
-        <Segmented options={['Week', 'Month', 'Year']} value={value} onChange={setValue} />
-        </Col> */}
-      </Row>
-    );
-  };
-
-  const InfoPopover = ({ count, last_updated_at }) => {
-    useEffect(() => {
-    }, []);
-
-    return (
-      <div style={{ color: 'white', width: '300px' }}>
-        <Text>This website contains data last fetched </Text> {parseDateToFromNow(last_updated_at)}
-        <Text> from </Text> {count} <Text> channels</Text>
-      </div>
-    );
-  };
-
-  const [value, setValue] = useState('Week');
-
-  // const onChangeSegmentedValue
-
-  const HighlightedVideos = ({ title, videos, segmentedValue, onChangeSegmentedValue }) => {
-
-    return (
-      <>
-        <Row><Col span={24}><Title style={{ color: 'black' }} level={5}>{title}</Title></Col></Row>
-
-        <Carousel dots={false} style={{ color: variables.richBlack }} autoplay>
-          {videos?.map((video, index) => {
-            return (
-              <VideoPreviewForHighlight _video={video} key={video.video_id}></VideoPreviewForHighlight>
-            )
-
-          })}
-        </Carousel>
-      </>
-    );
-  }
-
-
   return (<>
     {/* <HeaderPanel title="Home" channels={channels}></HeaderPanel> */}
     {isLoaded ?
       (
         <>
           <div className="homeContainer">
+            {/* 
+            <ChannelGrowthByMonth />
+            <br></br> */}
 
             <MonthlyHighlightedCreators top10videos={top10videos} topChannelIds={topChannelIds} channelsGrowth={channelsGrowth} />
             <br></br>
@@ -311,14 +206,16 @@ const HomePage = () => {
               </Col>
             </Row>
             <br></br>
-            
+
           </div>
         </>
       ) : (
         <Row justify="center" style={{ marginTop: '70px' }}>
-          <Spin spining="true" tip="Loading..." size="large" >
-            <div className="spinContent" />
-          </Spin>
+          <div style={{ borderRadius: '50%', overflow: 'hidden' }} >
+            <Spin spining="true" tip="Loading..." size="large" style={{background: '#F3F4F6'}}>
+              <div className="spinContent" style={{ padding: '100px' }} />
+            </Spin>
+          </div>
         </Row>
       )
     }

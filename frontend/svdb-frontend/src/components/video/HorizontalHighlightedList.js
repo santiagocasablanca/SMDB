@@ -1,5 +1,5 @@
 import { EyeOutlined, LikeOutlined, LineChartOutlined, UsergroupAddOutlined } from '@ant-design/icons';
-import { Avatar, Button, Card, Col, Divider, Image, List, Row, Space, Spin, Typography, Popover, Skeleton } from 'antd';
+import { Avatar, Button, Card, Col, Divider, Image, List, Row, Space, Spin, Tooltip, Typography, Popover, Skeleton } from 'antd';
 import insertCss from 'insert-css';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -8,6 +8,8 @@ import { getVideosFn } from "../../services/videoApi.ts";
 // import VideoDrawer from './VideoDrawer';
 import VideoRate from './VideoRate';
 import VideoGrowthLine from '../graphs/VideoGrowthLine';
+import VideoDurationOverlay from './VideoDurationOverlay';
+import VideoOnHoverPreview from './VideoOnHoverPreview';
 
 
 
@@ -18,7 +20,7 @@ const { Title, Text, Link } = Typography;
 const HorizontalHighlightedList = ({ title, filter }) => {
     const navigate = useNavigate();
 
-    const { intToStringBigNumber, parseDate, parseDuration } = useFormatter();
+    const { intToStringBigNumber, parseDate, parseDuration, parseDateToFromNow } = useFormatter();
     const [isLoaded, setIsLoaded] = useState(false);
     const [videos, setVideos] = useState();
 
@@ -91,15 +93,7 @@ const HorizontalHighlightedList = ({ title, filter }) => {
     const VideoCard = ({ video }) => {
         const [channel, setChannel] = useState(video?.channel);
         const [logo, setLogo] = useState(video?.channel?.logo_url);
-        const [open, setOpen] = useState(false);
-
-        const showDrawer = () => {
-            setOpen(true);
-        };
-
-        const childToParent = (childdata) => {
-            setOpen(childdata);
-        }
+        const [isHovered, setIsHovered] = useState(false);
 
 
         useEffect(() => {
@@ -114,10 +108,14 @@ const HorizontalHighlightedList = ({ title, filter }) => {
         }
 
         const handleClickVideo = (id) => {
-            console.log(id);
+            // console.log(id);
             const url = '/video/' + id;
             // not necessary, kind of redudant at the moment. Params are set through useParams and useLocation (state)
             navigate(url, { state: { id: id } });
+        }
+
+        const toggleHover = (state) => {
+            setIsHovered(state);
         }
 
         return (
@@ -139,7 +137,10 @@ const HorizontalHighlightedList = ({ title, filter }) => {
                                     }} />
                                     <Text style={{ color: 'black', cursor: 'pointer' }} strong onClick={goToChannel}>{video.channel.title}</Text>
                                 </div>
-                                <p style={{ color: 'black', fontSize: '10px', float: 'right' }}>{parseDate(video.published_at, "DD MMM YYYY")}</p>
+                                <Tooltip title={parseDate(video?.published_at, "DD MMM YYYY HH:MM")}>
+                                    <span style={{ color: 'black', fontSize: '10px', float: 'right' }}> {parseDateToFromNow(video?.published_at)}</span>
+                                </Tooltip>
+                                {/* <p style={{ color: 'black', fontSize: '10px', float: 'right' }}>{parseDate(video.published_at, "DD MMM YYYY")}</p> */}
                             </div>
                             <div onMouseEnter={(e) => {
                                 e.currentTarget.style.backgroundColor = 'hsl(0, 0%, 90%)';
@@ -150,13 +151,20 @@ const HorizontalHighlightedList = ({ title, filter }) => {
                                     e.currentTarget.style.borderRadius = 'inherit';
                                     // e.currentTarget.style.margin = 'inherit';
                                 }}>
-                                {/* <br></br> */}
-                                {/* <RenderSmoothImage alt={video.video_id} src={video.url}></RenderSmoothImage> */}
-                                <Image onClick={() => handleClickVideo(video.video_id)} style={{ borderRadius: '8px', objectFit: 'cover', cursor: 'pointer' }} 
-                                placeholder={true}
-                                src={video.url} width='316px' height='189px' preview={false} />
 
-                                <Title style={{ color: 'black', width: '310px', marginTop: '10px', marginBottom: '10px' }}
+                                <div style={{ position: 'relative', cursor: 'pointer' }} onMouseEnter={() => toggleHover(true)} onMouseLeave={() => toggleHover(false)}>
+                                    {
+                                        !isHovered ? <>
+                                            <Image onClick={() => handleClickVideo(video.video_id)} style={{ borderRadius: '8px', objectFit: 'cover', cursor: 'pointer' }}
+                                                src={video.url} width='316px' height='189px' preview={false} />
+
+                                            <div style={{ position: 'absolute', bottom: '5px', right: '5px' }}>
+                                                <VideoDurationOverlay duration={video.duration} />
+                                            </div>
+                                        </> : <VideoOnHoverPreview video={video}></VideoOnHoverPreview>
+                                    }
+                                </div>
+                                <Title style={{ color: 'black', width: '310px', marginTop: '10px', marginBottom: '10px', cursor: 'pointer' }}
                                     ellipsis={{ tooltip: video.title }}
                                     onClick={() => handleClickVideo(video.video_id)}
                                     level={5}>{video.title}</Title>
@@ -169,7 +177,7 @@ const HorizontalHighlightedList = ({ title, filter }) => {
                                         <p style={{ fontSize: '13px' }}><Popover title={video.title} content={<VideoGrowthLine _video={video} />}>
                                             <LineChartOutlined style={{ cursor: 'pointer' }} />
                                         </Popover></p>
-                                        <VideoRate _video={video} />
+                                        <VideoRate _video={video} color="black" />
                                     </Space>
                                 </div>
                             </div>

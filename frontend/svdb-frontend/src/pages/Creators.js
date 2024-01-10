@@ -328,7 +328,6 @@ const CreatorPage = () => {
   };
 
   const handleClickCreator = (id) => {
-    console.log(id);
     const url = '/creator/' + id;
     // not necessary, kind of redudant at the moment. Params are set through useParams and useLocation (state)
     navigate(url, { state: { id: id } });
@@ -351,7 +350,7 @@ const CreatorPage = () => {
       // Here, you can call the `associateChannelIdsToCreator` method
       // with the creator and the inserted channel IDs.
       // Replace the console.log statement with your own logic.
-      console.log('Submitted Channel IDs:', values.channelIds);
+      // console.log('Submitted Channel IDs:', values.channelIds);
       const channel_ids = values.channelIds.split(',').map((id) => id.trim());
       associateChannelIdsToCreatorFn(values.apiKey, { creator_id: creator.id, channel_ids: channel_ids })
 

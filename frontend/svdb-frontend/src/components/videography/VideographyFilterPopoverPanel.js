@@ -131,12 +131,10 @@ const VideographyFilterPopoverPanel = ({ _filters, _open, childToParent }) => {
 
   const handleTagsChange = (e) => {
     _filters.tags = e;
-    console.log(e);
     // onChange({ tags: e });
   };
 
   const handleDateRangeChange = (range) => {
-    console.log(range);
     const rangeStr = [];
     range?.forEach((date) => {
       // console.log(date.format());

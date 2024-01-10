@@ -48,8 +48,6 @@ const CastRose = ({ title, filter }) => {
 
                     setData(transformedData);
                     setIsLoaded(true);
-
-                    console.log("finished fetching");
                 });
         }
         fetchData();

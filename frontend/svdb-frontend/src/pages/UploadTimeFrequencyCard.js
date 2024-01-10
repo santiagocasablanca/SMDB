@@ -81,8 +81,6 @@ const UploadTimeFrequencyCard = () => {
       }
     })
 
-    console.log(weekArray);
-
     setFrequencyData(weekArray);
     setIsLoading(false);
     })

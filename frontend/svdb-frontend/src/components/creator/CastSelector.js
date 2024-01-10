@@ -44,7 +44,7 @@ const CastSelector = ({ _selectedCast, onChange }) => {
   };
 
   const handleCastChange = (_cast) => {
-    console.log('handling ')
+    // console.log('handling ')
     setCast([...cast, _cast]); // Create a new array with the updated cast
     setOptions(filterOptions(options, [{ value: _cast.creator }]));
     setShowAddMore(true);
@@ -53,9 +53,9 @@ const CastSelector = ({ _selectedCast, onChange }) => {
   };
 
   const handleClose = (removedTag) => {
-    console.log('removing, ', removedTag)
+    // console.log('removing, ', removedTag)
     const newTags = cast.filter((tag) => tag !== removedTag);
-    console.log(newTags);
+    // console.log(newTags);
     setCast(newTags);
     onChange(newTags);
     const findOriginal = originalOptions.find((option) =>  option.value === removedTag.creator);

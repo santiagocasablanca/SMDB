@@ -10,7 +10,6 @@ const CreatorSelector = ({ _selectedCreators, onChange }) => {
   const [options, setOptions] = useState([]);
 
   useEffect(() => {
-    console.log('selected creators: ', _selectedCreators);
     fetchCreators();
   }, [_selectedCreators]);
 
@@ -35,7 +34,6 @@ const CreatorSelector = ({ _selectedCreators, onChange }) => {
   }
 
   const handleCreatorChange = (selectedCreators) => {
-    console.log(selectedCreators);
     setCreators(selectedCreators);
     onChange(selectedCreators);
   };

@@ -14,7 +14,7 @@ const { Title, Text, Paragraph } = Typography;
  * 
  * THIS IS A MESS. REFACTOR IT TO INCLUDE MORE FACTORS AND TO MAKE THE FORMULA ACTUALLY MAKE SENSE
  */
-const VideoRate = ({ _video, small }) => {
+const VideoRate = ({ _video, small, color }) => {
     const navigate = useNavigate();
 
     const { intToStringBigNumber, parseDate, parseDuration, parseDateToFromNow } = useFormatter();
@@ -221,8 +221,8 @@ const VideoRate = ({ _video, small }) => {
             (
                 <Popover title={title} content={formula} placement="bottomRight">
                     <StarFilled style={{ fontSize: small ? '13px' : '18px', color: '#FDDF01', cursor: 'pointer' }} />
-                    <Text strong style={{ fontSize: small ? '13px' : '15px', cursor: 'pointer' }}>{rating}</Text>
-                    <Text style={{ fontSize: small ? '11px' : '13px', cursor: 'pointer' }}>/10</Text>
+                    <Text strong style={{ marginLeft: '3px', fontSize: small ? '13px' : '15px',color: color ? color : '#1A1C23', cursor: 'pointer' }}>{rating}</Text>
+                    <Text style={{ fontSize: small ? '11px' : '13px', color: color ? color : '#1A1C23', cursor: 'pointer' }}>/10</Text>
                 </Popover>
             ) : (
                 <Spin />

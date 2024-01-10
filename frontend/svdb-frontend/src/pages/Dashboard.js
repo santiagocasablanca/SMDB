@@ -70,7 +70,7 @@ const Dashboard = () => {
         setLikedSeriesData(transformedLikedData);
         setIsLoading(false);
 
-        console.log("finished fetching");
+        // console.log("finished fetching");
       });
 
 

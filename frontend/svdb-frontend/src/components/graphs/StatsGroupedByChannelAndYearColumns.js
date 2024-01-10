@@ -112,8 +112,6 @@ const StatsGroupedByChannelAndYearColumns = ({ title, filter }) => {
 
                     setData(groupedData);
                     setIsLoaded(true);
-
-                    console.log("finished fetching");
                 });
         }
         fetchData();

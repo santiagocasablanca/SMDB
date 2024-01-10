@@ -32,7 +32,6 @@ const VideoPreview = ({ _video }) => {
     }
 
     const handleClickVideo = (id) => {
-        console.log(id);
         const url = '/video/' + id;
         // not necessary, kind of redudant at the moment. Params are set through useParams and useLocation (state)
         navigate(url, { state: { id: id } });

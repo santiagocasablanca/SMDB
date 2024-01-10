@@ -42,7 +42,6 @@ const VideographyOnList = ({ fetchedData, initLoading, isLoading, hasMore, loadM
         !isLoading &&
         hasMore
       ) {
-        console.log('loading handleScroll')
         onLoadMore();
       }
     };
@@ -180,7 +179,6 @@ const VideographyOnList = ({ fetchedData, initLoading, isLoading, hasMore, loadM
   `)
 
   const handleClickVideo = (id) => {
-    console.log(id);
     const url = '/video/' + id;
     // not necessary, kind of redudant at the moment. Params are set through useParams and useLocation (state)
     navigate(url, { state: { id: id } });
@@ -205,22 +203,11 @@ const VideographyOnList = ({ fetchedData, initLoading, isLoading, hasMore, loadM
   );
 
   const goToChannel = (id) => {
-    // console.log('going to channel?');
     const url = '/channel/' + id;
     // not necessary, kind of redudant at the moment. Params are set through useParams and useLocation (state)
     navigate(url, { state: { id: id } });
   };
-
-  const goToCreator = (id) => {
-    console.log('heere: ', id);
-    const url = '/creator/' + id;
-    // not necessary, kind of redudant at the moment. Params are set through useParams and useLocation (state)
-    navigate(url, { state: { id: id } });
-  }
-
-  // className="videos-list"
-  // itemLayout="horizontal"
-
+  
   const IconText = ({ icon, text }) => (
     <Space style={{ color: 'black' }}>
       {React.createElement(icon)}
@@ -354,7 +341,7 @@ const VideographyOnList = ({ fetchedData, initLoading, isLoading, hasMore, loadM
         dataSource={fetchedData}
         renderItem={(item, index) => (
           <List.Item
-            style={{ marginBottom: '10px', padding: '0px', background: variables.coolerGray9, borderRadius: '8px' }}
+            style={{ marginBottom: '10px', padding: '0px', background: variables.coolerGray9, borderRadius: '8px', cursor: 'pointer' }}
             key={item.video_id}
             onMouseEnter={onEnter}
             onMouseLeave={onLeave}
@@ -426,7 +413,7 @@ const VideographyOnList = ({ fetchedData, initLoading, isLoading, hasMore, loadM
                         padding: '5px',
                         borderRadius: '7px'
                       }}>
-                        <VideoRate _video={item} />
+                        <VideoRate _video={item} color="white" />
                       </span>
                       <Divider type="vertical"></Divider>
                       <a style={{

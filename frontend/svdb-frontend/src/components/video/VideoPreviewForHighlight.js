@@ -10,6 +10,7 @@ import variables from '../../sass/antd.module.scss';
 import VideoRate from './VideoRate';
 import LatestVideosGrowthLine from '../graphs/LatestVideosGrowthLine';
 import VideoGrowthLine from '../graphs/VideoGrowthLine';
+import VideoDurationOverlay from './VideoDurationOverlay';
 
 const { Title, Text } = Typography;
 
@@ -126,9 +127,15 @@ const VideoPreviewForHighlight = ({ _video, index }) => {
                     }}>
                     <Row>
                         <Col span={24}>
-                            <div className="highlightedThumbnail">
+                            <div style={{ position: 'relative' }} className="highlightedThumbnail">
+                                
                                 <Image style={{ borderRadius: '8px', objectFit: 'cover', cursor: 'pointer' }} src={_video.url} width='100%' height="100%" preview={false}
                                     onClick={() => handleClickVideo(_video.video_id)} />
+
+                                    <div style={{ position: 'absolute', bottom: '5px', right: '5px' }}>
+                                        <VideoDurationOverlay duration={_video.duration} />
+                                    </div>
+                              
                             </div>
                         </Col>
                     </Row>
@@ -173,7 +180,7 @@ const VideoPreviewForHighlight = ({ _video, index }) => {
                         </Col>
                         <Col span={5}>
                             <div style={{ float: 'right' }}>
-                                <VideoRate _video={_video} />
+                                <VideoRate _video={_video} color="black" />
                             </div>
                         </Col>
                     </Row>

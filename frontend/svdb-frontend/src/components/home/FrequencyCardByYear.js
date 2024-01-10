@@ -46,7 +46,7 @@ const FrequencyCardByYear = ({ _channels, year }) => {
   };
 
   useEffect(() => {
-    console.log(_channels, year);
+    // console.log(_channels, year);
     setSelectedYear(year);
     const temp = [];
     const temp_ids = [];
@@ -65,9 +65,9 @@ const FrequencyCardByYear = ({ _channels, year }) => {
   }, [_channels, refreshKey, year, selectedChannels]);
 
   const asyncFetch = () => {
-    console.log(selectedYear, year);
+    // console.log(selectedYear, year);
     const startDate = dayjs(year);
-    console.log(startDate);
+    // console.log(startDate);
     const endDate = dayjs(year).add(1, 'y'); // Defaults to today
 
     let daysArray = [];
@@ -81,7 +81,7 @@ const FrequencyCardByYear = ({ _channels, year }) => {
         week = 0;
       } else if (month == 12 && week == 1) {
         
-        console.log(month, week, currentDate);
+        // console.log(month, week, currentDate);
         week = 53;
       }
       daysArray.push({

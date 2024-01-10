@@ -104,7 +104,7 @@ const Videography = ({ title, _filters }) => {
       render: (video_id) => (
         (
           <span>
-            <VideoRate _video={getVideoById(video_id)} small={true} />
+            <VideoRate _video={getVideoById(video_id)} small={true} color="white"/>
           </span>)
       ),
     },
@@ -307,7 +307,6 @@ const Videography = ({ title, _filters }) => {
 
     }
     myFilters.search = false;
-    console.log('just for be sure')
     setMyFilters({ ...myFilters, ...newFilters });
   };
 

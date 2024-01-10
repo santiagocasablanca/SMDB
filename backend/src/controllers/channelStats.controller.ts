@@ -4,6 +4,7 @@ const { Sequelize, QueryTypes } = require('sequelize');
 const Op = Sequelize.Op;
 import { db, sequelize } from "../util/db";
 import { ChannelsReqQuery } from "./types";
+import { now } from "sequelize/types/utils";
 const ChannelStats = db.channelStats;
 const Channel = db.channel;
 const Video = db.video;
@@ -60,10 +61,12 @@ export const fetchHottestChannels = async (
   res: Response
 ) => {
   try {
+    const today = new Date();
+    const range = req.query.month ? req.query.month.split('-') : null;
+    const year = range ? range[0] : today.getFullYear();
+    const month = range ? range[1] : today.getMonth();
 
-    // const thirtyDaysAgo = new Date();
-    // thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-    const range = req.query.range ? req.query.range : 30;
+    console.log('you talk aLL THIS WORDS ', req.query, range, year, month);
 
     const hottestChannelsQuery = `
     select _c.id as "creator_id", 
@@ -99,11 +102,16 @@ from creator _c
 		("channel_id", "fetched_at") IN (
 		  SELECT "channel_id", MIN("fetched_at") AS "first_fetched_at"
 		  FROM "channel_stats"
-		  WHERE "fetched_at" BETWEEN NOW() - INTERVAL '${range} days' AND NOW()
+      WHERE 
+        EXTRACT(MONTH FROM "fetched_at") = ${month}   
+        AND EXTRACT(YEAR FROM "fetched_at") = ${year} 
 		  GROUP BY "channel_id"
 		) 
 	) AS first_subs ON _ch."channel_id" = first_subs."channel_id"
-	LEFT JOIN video _v on _v.channel_id = _ch."channel_id" and (_v.duration_parsed > 69 and _v.published_at BETWEEN NOW() - INTERVAL '${range} days' AND NOW())
+  LEFT JOIN video _v on _v.channel_id = _ch."channel_id" and (_v.duration_parsed > 69 and 
+    EXTRACT(MONTH FROM _v.published_at) = ${month}   
+        AND EXTRACT(YEAR FROM _v.published_at) = ${year} 
+    )
 	
 group by _c.id, _ch.channel_id
 order by name asc, _ch.subs desc;

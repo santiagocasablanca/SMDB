@@ -36,7 +36,7 @@ const VerticalVideoList = ({ _videos }) => {
 
         useEffect(() => {
             ref.current = document.getElementById('creatorChannelStatsTable');
-            console.log("height", ref.current.clientHeight);
+            // console.log("height", ref.current.clientHeight);
 
             setIsLoaded(true);
         }, []);

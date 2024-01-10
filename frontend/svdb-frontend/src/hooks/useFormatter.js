@@ -58,6 +58,16 @@ const useFormatter = () => {
     []
   );
 
+  const parseDurationInMinutes = useMemo(
+    () => {
+      return duration => {
+        const parsedDuration = dayjs.duration(duration);
+        return parsedDuration.get('hours') > 0 ? parsedDuration.format('HH:mm:ss') : parsedDuration.format('mm:ss');
+      }
+    },
+    []
+  );
+
   const humanizeDurationFromSeconds = useMemo(
     () => {
       return (durationAsSeconds) => dayjs.duration(durationAsSeconds, 'seconds').humanize();
@@ -108,7 +118,7 @@ const useFormatter = () => {
     []
   )
 
-  return { intToStringBigNumber, parseDateToFromNow, parseDate, parseDuration, humanizeDurationFromSeconds, displayDurationFromSeconds, displayVideoDurationInMinutes, displayVideoDurationFromSecondsWithLegend, displayVideoDurationFromSeconds };
+  return { intToStringBigNumber, parseDateToFromNow, parseDate, parseDuration,parseDurationInMinutes, humanizeDurationFromSeconds, displayDurationFromSeconds, displayVideoDurationInMinutes, displayVideoDurationFromSecondsWithLegend, displayVideoDurationFromSeconds };
 };
 
 export default useFormatter;

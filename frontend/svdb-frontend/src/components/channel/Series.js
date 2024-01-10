@@ -292,7 +292,6 @@ const Series = ({ title, _filters }) => {
 
     }
     myFilters.search = false;
-    console.log('just for be sure')
     setMyFilters({ ...myFilters, ...newFilters });
   };
 

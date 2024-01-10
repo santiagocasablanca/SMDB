@@ -1,4 +1,4 @@
-import { Col, Image, Row, Space, Tabs, Typography } from 'antd';
+import { Col, Image, Row, Space, Tabs, Typography, Spin } from 'antd';
 import insertCss from 'insert-css';
 import React, { useEffect, useState } from 'react';
 import { useParams } from "react-router-dom";
@@ -277,7 +277,13 @@ const CreatorPage = () => {
     <>
       {!isFetched ? (
         // <LoadingAnimation />
-        <p>Loading...</p>
+        <Row justify="center" style={{ marginTop: '70px' }}>
+          <div style={{ borderRadius: '50%', overflow: 'hidden' }} >
+            <Spin spining="true" tip="Loading..." size="large" style={{ background: '#F3F4F6' }}>
+              <div className="spinContent" style={{ padding: '100px' }} />
+            </Spin>
+          </div>
+        </Row>
       ) : (
           <div>
             <div className="banner">
