@@ -8,6 +8,7 @@ export type ChannelsReqQuery = {
   channels?: string,
   title?: string,
   range?: string,
+  month?: string,
   publishedAtRange?: string
 }
 
