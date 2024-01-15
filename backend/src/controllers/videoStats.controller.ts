@@ -17,13 +17,13 @@ export const findAllVideoStatsController = async (
     if (req.query.video_ids) {
       var videosArr = req.query.video_ids.split(',');
 
-      whereClause['video_id'] = { [Op.or]: videosArr };
+      whereClause['video_id'] = { [Op.in]: videosArr };
     }
 
     if (req.query.channels) {
       var channelsArr = req.query.channels.split(',');
 
-      whereClause['channel_id'] = { [Op.or]: channelsArr };
+      whereClause['channel_id'] = { [Op.in]: channelsArr };
     }
 
 
