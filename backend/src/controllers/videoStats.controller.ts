@@ -5,7 +5,7 @@ const Op = Sequelize.Op;
 import { db, sequelize } from "../util/db";
 import { VideosReqQuery } from "./types";
 const VideoStats = db.videoStats;
-
+const VideoStatsView = db.videoStatsView;
 
 export const findAllVideoStatsController = async (
   req: Request<{}, {}, {}, VideosReqQuery>,
@@ -27,14 +27,25 @@ export const findAllVideoStatsController = async (
     }
 
 
-    const videos = await VideoStats.findAll({
+    // const videos = await VideoStats.findAll({
+    //   attributes: [
+    //     'video_id',
+    //     [sequelize.fn("DATE", sequelize.col('fetched_at')), "fetched_date"],
+    //     [sequelize.fn("MAX", sequelize.col('views')), "views"],
+    //     [sequelize.fn("MAX", sequelize.col('likes')), "likes"],
+    //     [sequelize.fn("MAX", sequelize.col('comments')), "comments"],
+    //   ], where: whereClause, group: ['video_id', "fetched_date"], order: [['fetched_date', 'asc']],
+    //   raw: true,
+    // });
+
+    const videos = await VideoStatsView.findAll({
       attributes: [
         'video_id',
-        [sequelize.fn("DATE", sequelize.col('fetched_at')), "fetched_date"],
-        [sequelize.fn("MAX", sequelize.col('views')), "views"],
-        [sequelize.fn("MAX", sequelize.col('likes')), "likes"],
-        [sequelize.fn("MAX", sequelize.col('comments')), "comments"],
-      ], where: whereClause, group: ['video_id', "fetched_date"], order: [['fetched_date', 'asc']],
+        "fetched_date",
+        "views",
+        "likes",
+        "comments",
+      ], where: whereClause, order: [['fetched_date', 'asc']],
       raw: true,
     });
 

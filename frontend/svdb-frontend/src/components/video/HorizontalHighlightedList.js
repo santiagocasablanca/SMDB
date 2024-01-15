@@ -152,7 +152,8 @@ const HorizontalHighlightedList = ({ title, filter }) => {
                                     // e.currentTarget.style.margin = 'inherit';
                                 }}>
 
-                                <div style={{ position: 'relative', cursor: 'pointer' }} onMouseEnter={() => toggleHover(true)} onMouseLeave={() => toggleHover(false)}>
+                                <div style={{ position: 'relative', cursor: 'pointer' }}
+                                    onMouseEnter={() => toggleHover(true)} onMouseLeave={() => toggleHover(false)}>
                                     {
                                         !isHovered ? <>
                                             <Image onClick={() => handleClickVideo(video.video_id)} style={{ borderRadius: '8px', objectFit: 'cover', cursor: 'pointer' }}

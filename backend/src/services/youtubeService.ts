@@ -93,6 +93,15 @@ class YoutubeService {
         return await response.json();
     }
 
+    async fetchLatestVideoDataFromAPI(playlistId: any, nextPageToken: any) {
+        let url = `https://www.googleapis.com/youtube/v3/playlistItems?key=${apiKey}&playlistId=${playlistId}&part=snippet,id&maxResults=50&pageToken=${nextPageToken}`;
+        console.log('calling YOUTUBE API: ', url);
+
+        let response = await fetch(url);
+
+        return await response.json();
+    }
+
 
     async fetchAndCreateVideosFromChannel(channelId: any, playlistId: any) {
 
@@ -263,7 +272,7 @@ class YoutubeService {
         let index = 0;
 
         try {
-            data = await this.fetchVideoDataFromAPI(playlistId, "");
+            data = await this.fetchLatestVideoDataFromAPI(playlistId, "");
             await delay(3000);
 
             let videoIds = data.items.map(item => item.snippet.resourceId.videoId).join(',');
@@ -358,6 +367,7 @@ class YoutubeService {
                 console.log('/n/n finished chanel: ', channel.title);
             }
             console.info('/n/n finished job /n/n');
+            await this.refreshMaterializedView();
 
         } catch (error) {
             console.error('Error fetching YouTube statistics:', error);
@@ -378,6 +388,7 @@ class YoutubeService {
                 console.log('/n/n finished channel: ', channel.title);
             }
             console.info('/n/n finished job  fetchLastestStatisticsForAllChannels /n/n');
+            await this.refreshMaterializedView();
 
         } catch (error) {
             console.error('Error fetching YouTube statistics:', error);
@@ -392,6 +403,15 @@ class YoutubeService {
         await this.fetchAndCreateVideosFromChannel(channel.channel_id, channel.playlist_id); // fetchAndCreateRecentVideosFromChannel(channel.channel_id, channel.playlist_id); //
         return channel;
     }
+
+    async refreshMaterializedView() {
+        try {
+          await sequelize.query('REFRESH MATERIALIZED VIEW public.video_stats_view');
+          console.log('Materialized view refreshed successfully.');
+        } catch (error) {
+          console.error('Error refreshing materialized view:', error.message);
+        }
+      }
 }
 
 module.exports = YoutubeService;

@@ -66,7 +66,7 @@ export const fetchHottestChannels = async (
     const year = range ? range[0] : today.getFullYear();
     const month = range ? range[1] : today.getMonth();
 
-    console.log('you talk aLL THIS WORDS ', req.query, range, year, month);
+    // console.log('you talk aLL THIS WORDS ', req.query, range, year, month);
 
     const hottestChannelsQuery = `
     select _c.id as "creator_id", 
