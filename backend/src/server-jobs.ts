@@ -3,7 +3,7 @@ import { db, sequelize } from "./util/db";
 import { Redis } from 'ioredis';
 const cron = require('node-cron');
 
-const redis = new Redis();
+// const redis = new Redis();
 const YoutubeService = require('./services/youtubeService');
 const VideoMetaService = require('./services/videoMetaService');
 
@@ -12,35 +12,35 @@ const videoMetaService = new VideoMetaService();
 
 
 // Subscribe to the Redis channels
-redis.subscribe('runAllJob', 'runLatestJob', 'runTagJob', 'runGameTagsJob');
+// redis.subscribe('runAllJob', 'runLatestJob', 'runTagJob', 'runGameTagsJob');
 
 // Listen for messages from the channels
-redis.on('message', async (channel, message) => {
-  switch (channel) {
-    case 'runAllJob':
-      console.log('Running fetchStatisticsForAllChannels Job');
-      await youtubeService.fetchStatisticsForAllChannels();
-      break;
+// redis.on('message', async (channel, message) => {
+//   switch (channel) {
+//     case 'runAllJob':
+//       console.log('Running fetchStatisticsForAllChannels Job');
+//       await youtubeService.fetchStatisticsForAllChannels();
+//       break;
 
-    case 'runLatestJob':
-      console.log('Running fetchLatestStatisticsForAllChannels Job');
-      await youtubeService.fetchLatestStatisticsForAllChannels();
-      break;
+//     case 'runLatestJob':
+//       console.log('Running fetchLatestStatisticsForAllChannels Job');
+//       await youtubeService.fetchLatestStatisticsForAllChannels();
+//       break;
 
-    case 'runTagJob':
-      console.log('Running associateTagsToVideos Job');
-      await videoMetaService.associateTagsToVideos();
-      break;
+//     case 'runTagJob':
+//       console.log('Running associateTagsToVideos Job');
+//       await videoMetaService.associateTagsToVideos();
+//       break;
 
-    case 'runGameTagsJob':
-      console.log('Running associateGameTagsToVideos Job');
-      await videoMetaService.associateGameTagsToVideos();
-      break;
+//     case 'runGameTagsJob':
+//       console.log('Running associateGameTagsToVideos Job');
+//       await videoMetaService.associateGameTagsToVideos();
+//       break;
 
-    default:
-      console.warn(`Unknown channel: ${channel}`);
-  }
-});
+//     default:
+//       console.warn(`Unknown channel: ${channel}`);
+//   }
+// });
 
 
 
@@ -69,5 +69,5 @@ db.sequelize
 
 // Handle process exit to disconnect from Redis
 process.on('exit', () => {
-  redis.disconnect();
+  // redis.disconnect();
 });

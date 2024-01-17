@@ -14,7 +14,11 @@ const VideoMetaService = require('./services/videoMetaService');
 import { db, sequelize } from "./util/db";
 
 const app = express();
-const redis = new Redis();
+
+// Retrieve host and port from environment variables or configuration
+const redisHost = process.env.REDIS_HOST || 'svdb-redis';
+const redisPort = process.env.REDIS_PORT || 6379;
+// const redis = new Redis();
 
 app.set('trust proxy', 1);
 app.use(express.json({ limit: "10kb" }));
@@ -67,8 +71,8 @@ app.get("/v1/info", async (req: Request, res: Response) => {
 
 
 app.get("/v1/jobs/all/run", (req: Request, res: Response) => {
-  // youtubeService.fetchStatisticsForAllChannels();
-  redis.publish('runAllJob', 'Run jobs now!');
+  youtubeService.fetchStatisticsForAllChannels();
+  // redis.publish('runAllJob', 'Run jobs now!');
 
   res.status(200).json({
     status: "success",
@@ -77,8 +81,8 @@ app.get("/v1/jobs/all/run", (req: Request, res: Response) => {
 });
 
 app.get("/v1/jobs/latest/run", (req: Request, res: Response) => {
-  // youtubeService.fetchLatestStatisticsForAllChannels();
-  redis.publish('runLatestJob', 'Run jobs now!');
+  youtubeService.fetchLatestStatisticsForAllChannels();
+  // redis.publish('runLatestJob', 'Run jobs now!');
 
   res.status(200).json({
     status: "success",
@@ -87,8 +91,8 @@ app.get("/v1/jobs/latest/run", (req: Request, res: Response) => {
 });
 
 app.get("/v1/jobs/tags/run", (req: Request, res: Response) => {
-  // videoMetaService.associateTagsToVideos();
-  redis.publish('runTagJob', 'Run jobs now!');
+  videoMetaService.associateTagsToVideos();
+  // redis.publish('runTagJob', 'Run jobs now!');
 
 
   res.status(200).json({
@@ -98,8 +102,8 @@ app.get("/v1/jobs/tags/run", (req: Request, res: Response) => {
 });
 
 app.get("/v1/jobs/tags/games/run", (req: Request, res: Response) => {
-  // videoMetaService.associateGameTagsToVideos();
-  redis.publish('runGameTagsJob', 'Run jobs now!');
+  videoMetaService.associateGameTagsToVideos();
+  // redis.publish('runGameTagsJob', 'Run jobs now!');
 
   res.status(200).json({
     status: "success",
