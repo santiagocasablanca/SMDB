@@ -9,7 +9,7 @@
     "build": "tsc",
     "start": "ts-node-dev --respawn --transpile-only --exit-child src/server.ts & ts-node-dev --respawn --transpile-only src/server-jobs.ts",
     "start:prod": "node ./server.js",
-    "start:jobs": "node ./server-jobs.ts"
+    "start:jobs": "node ./server-jobs.js"
   },
   "devDependencies": {
     "@types/cors": "^2.8.13",
