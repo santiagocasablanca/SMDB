@@ -17,7 +17,7 @@ async function parseDuration(durationString) {
     if (!matches) {
         // Return 0 or any other default value if the durationString does not match the format.
         return 0;
-      }
+    }
     const hours = matches[1] ? parseInt(matches[1]) : 0;
     const minutes = matches[2] ? parseInt(matches[2]) : 0;
     const seconds = matches[3] ? parseInt(matches[3]) : 0;
@@ -302,7 +302,7 @@ class YoutubeService {
                         'comments': item.statistics.commentCount,
                         'duration': item.contentDetails.duration,
                         'duration_parsed': parsedDuration,
-                        'url': item.snippet.thumbnails.maxres ?  item.snippet.thumbnails.maxres.url : item.snippet.thumbnails.high.url,
+                        'url': item.snippet.thumbnails.maxres ? item.snippet.thumbnails.maxres.url : item.snippet.thumbnails.high.url,
                         'player': item.player,
                         'published_at': item.snippet.publishedAt,
                         'livestream': item.liveStreamingDetails,
@@ -318,7 +318,7 @@ class YoutubeService {
                         'comments': item.statistics.commentCount,
                         'duration': item.contentDetails.duration,
                         'duration_parsed': parsedDuration,
-                        'url': item.snippet.thumbnails.maxres ?  item.snippet.thumbnails.maxres.url : item.snippet.thumbnails.high.url,
+                        'url': item.snippet.thumbnails.maxres ? item.snippet.thumbnails.maxres.url : item.snippet.thumbnails.high.url,
                         'published_at': item.snippet.publishedAt,
                         'updated_at': new Date(),
                         'livestream': item.liveStreamingDetails,
@@ -341,7 +341,7 @@ class YoutubeService {
             await Channel.update({ 'updated_at': new Date() }, { where: { channel_id: channelId } });
             console.log(index);
             await delay(2000);
-            
+
         } catch (error: any) {
             console.log('Error fetching playlist videos for playlist id: ' + playlistId);
             console.error(error);
@@ -406,12 +406,19 @@ class YoutubeService {
 
     async refreshMaterializedView() {
         try {
-          await sequelize.query('REFRESH MATERIALIZED VIEW public.video_stats_view');
-          console.log('Materialized view refreshed successfully.');
+            const startTime = new Date();
+
+            await sequelize.query('REFRESH MATERIALIZED VIEW CONCURRENTLY public.video_stats_view');
+    
+            const endTime = new Date();
+            const executionTime = endTime.getTime() - startTime.getTime(); // Time difference in milliseconds
+            
+            console.log(`Materialized view refreshed successfully. ${startTime} | ${endTime} | Time taken: ${executionTime}ms`);
+      
         } catch (error) {
-          console.error('Error refreshing materialized view:', error.message);
+            console.error('Error refreshing materialized view:', error.message);
         }
-      }
+    }
 }
 
 module.exports = YoutubeService;

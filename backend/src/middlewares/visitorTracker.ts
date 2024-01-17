@@ -6,6 +6,7 @@ import { Model } from 'sequelize';
 const Visitor = db.visitor;
 
 const visitorTrackerMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+    // console.log(req, req.ip);
     const ipAddress = req.ip; // Get the visitor's IP address
     const userAgent = req.get('User-Agent'); // Get the visitor's user agent
     const timestamp = new Date();

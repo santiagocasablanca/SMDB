@@ -41,10 +41,10 @@ router.route("/gameOneLeaderboard/")
   .get(fetchLeaderboardController)
   .post(addToLeaderboardController);
 
-  router.route("/channelStats/")
+router.route("/channelStats/")
   .get(fetchHottestChannels); //findAllChannelStatsController);
-  // .get(fetchMostSubscribedChannelsByMonth);
-  
+// .get(fetchMostSubscribedChannelsByMonth);
+
 
 router.route("/creators/")
   .get(findAllCreatorsController)
@@ -63,32 +63,32 @@ router
 router
   .route("/videos/highlighted/")
   .get(findHighlightedVideosController);
-  
+
 router
   .route("/videos/gameOne")
   .get(gameOne);
-  
+
 
 router
   .route("/appearences/")
   .get(findAllAppearencesController);
 
-  router
+router
   .route("/guests/")
   .get(findAllVideoGuestsController);
-  // findAllGuestsController
-  // .get(findAllVideoGuestsController);
+// findAllGuestsController
+// .get(findAllVideoGuestsController);
 
 router
   .route("/videos/:id")
   .get(fetchVideoController)
   .patch(apiKeyAuth, updateVideoController);
-  // .delete(deleteVideoController);
+// .delete(deleteVideoController);
 
 router
   .route("/videoStats/")
   .get(findAllVideoStatsController);
-  
+
 
 router
   .route("/fetchAllSeries/")
@@ -131,6 +131,6 @@ router
 router
   .route("/fetchStatsGroupedByDurationRange/")
   .get(fetchStatsGroupedByDurationRange);
-  
+
 
 export default router;

@@ -19,6 +19,9 @@ class InfoService {
             " left join channel_creator cc on cc.creator_id = c.id " +
             " left join channel ch on cc.channel_id = ch.channel_id;";
 
+        // const query = "select count(distinct c.id) as creators, (select count(distinct cc.channel_id) from channel cc) as channels, (select updated_at from video order by updated_at desc limit 1)  as last_updated_at " +
+        //     " from creator c ";
+
 
         return await sequelize.query(query,
             {

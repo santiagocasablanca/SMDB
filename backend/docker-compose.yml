@@ -9,5 +9,18 @@ services:
       - progresDB:/data/postgres
     env_file:
       - ./.env
+
+  redis:
+    image: redis
+    container_name: svdb-redis
+    ports:
+    - '6379:6379'
+    networks:
+      - svdb_network
+  
 volumes:
-  progresDB:
+    progresDB:
+  
+networks:
+  svdb_network:
+    driver: bridge
