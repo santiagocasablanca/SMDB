@@ -1,7 +1,8 @@
-const { Op } = require('sequelize');
+const { Op, QueryTypes } = require('sequelize');
 const { Sequelize } = require('sequelize');
 
 import { db, sequelize } from "../util/db";
+import { sendErrorEmail } from './emailService';
 import { now } from "sequelize/types/utils";
 const Video = db.video;
 const VideoStats = db.videoStats;
@@ -49,57 +50,49 @@ class YoutubeService {
             }
         });
 
-        creators.map((creator) => {
-            console.log('Iterating creators: ', creator.name, creator.custom_url, creator.banner_picture);
-            console.log('channels: ', creator.channels.map(ch => { return ch.custom_url; }))
-            // if(creator.banner_picture === undefined) {
+        for (const creator of creators) {
+            // console.log('Iterating creators: ', creator.name, creator.custom_url, creator.banner_picture);
+            // console.log('channels: ', creator.channels.map(ch => { return ch.custom_url; }))
 
             const channel = creator.channels.find(({ custom_url }) => custom_url === creator.custom_url);
-
-            // const channel = creator.channels.find((it) => {
-            //     console.log('Iterating channels: ', creator.custom_url,it.custom_url, it.banner_url);
-            //     console.log(it.custom_url === creator.custom_url)
-            //     it.custom_url === creator.custom_url
-            // });
 
             console.log('channel found: ', channel?.channel_id, channel?.custom_url, channel?.banner_url);
             if (channel) {
 
-                Creator.update({
+                await Creator.update({
                     banner_picture: channel.banner_url,
                     // profile_picture: channel.logo_url
                 }, { where: { id: creator.id } });
             }
-            // }
-        })
+        }
+    }
+
+    async handleApiRequest(url: any) {
+        try {
+            console.log('calling YOUTUBE API: ', url);
+            const response = await fetch(url);
+            return await response.json();
+        } catch (error) {
+            console.error(`Error fetching data from API (${url}):`, error.message);
+            throw error;
+        }
     }
 
     async fetchChannelDataFromAPI(channelId: any) {
         const url = `https://www.googleapis.com/youtube/v3/channels?part=snippet,contentDetails,statistics,brandingSettings&id=${channelId}&key=${apiKey}`;
-        console.log('calling YOUTUBE API: ', url);
-        let response = await fetch(url);
-
-        return await response.json(); //await
+        return await this.handleApiRequest(url);
     }
 
     // https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=UUDogdKl7t7NHzQ95aEwkdMw&pageToken=EAAaB1BUOkNQb0I&_=1688923054074
 
     async fetchVideoDataFromAPI(playlistId: any, nextPageToken: any) {
         let url = `https://www.googleapis.com/youtube/v3/playlistItems?key=${apiKey}&playlistId=${playlistId}&part=snippet,id&maxResults=50&pageToken=${nextPageToken}`;
-        console.log('calling YOUTUBE API: ', url);
-
-        let response = await fetch(url);
-
-        return await response.json();
+        return await this.handleApiRequest(url);
     }
 
     async fetchLatestVideoDataFromAPI(playlistId: any, nextPageToken: any) {
         let url = `https://www.googleapis.com/youtube/v3/playlistItems?key=${apiKey}&playlistId=${playlistId}&part=snippet,id&maxResults=50&pageToken=${nextPageToken}`;
-        console.log('calling YOUTUBE API: ', url);
-
-        let response = await fetch(url);
-
-        return await response.json();
+        return await this.handleApiRequest(url);
     }
 
 
@@ -114,10 +107,11 @@ class YoutubeService {
         do {
             try {
                 data = await this.fetchVideoDataFromAPI(playlistId, nextPageToken);
-                await delay(3000);
+                await delay(500);
             } catch (error: any) {
                 console.log('Error fetching playlist videos for playlist id: ' + playlistId);
                 console.error(error);
+                throw error;
             }
 
             // console.log(data.nextPageToken, data.prevPageToken, data);
@@ -132,6 +126,7 @@ class YoutubeService {
             } catch (error: any) {
                 console.log('Error fetching videos for: ' + playlistId);
                 console.error(error);
+                throw error;
             }
 
             videoData.items?.forEach(async (item: any) => {
@@ -183,18 +178,27 @@ class YoutubeService {
                         'likes': item.statistics.likeCount,
                         'dislikes': item.statistics.dislikeCount,
                         'comments': item.statistics.commentCount,
-                        'fetched_at': new Date()
+                        'fetched_at': new Date(),
+                        'fetched_date': new Date()
                     })
 
                 } catch (error: any) {
                     console.log('error fetching and saving video: ')
                     console.error(error);
+                    throw error;
                 }
             });
 
-            await Channel.update({ 'updated_at': new Date() }, { where: { channel_id: channelId } });
+            try {
+                await Channel.update({ 'updated_at': new Date() }, { where: { channel_id: channelId } });
+            } catch (error: any) {
+                console.log('error updating channel: ')
+                console.error(error);
+                throw error;
+            }
+
             console.log(index);
-            await delay(4000);
+            await delay(1000);
             nextPageToken = data.nextPageToken;
             console.log(nextPageToken);
 
@@ -273,7 +277,7 @@ class YoutubeService {
 
         try {
             data = await this.fetchLatestVideoDataFromAPI(playlistId, "");
-            await delay(3000);
+            await delay(500);
 
             let videoIds = data.items.map(item => item.snippet.resourceId.videoId).join(',');
             let videoUrl = `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics,contentDetails,player,liveStreamingDetails&id=${videoIds}&key=${apiKey}`;
@@ -332,7 +336,8 @@ class YoutubeService {
                     'likes': item.statistics.likeCount,
                     'dislikes': item.statistics.dislikeCount,
                     'comments': item.statistics.commentCount,
-                    'fetched_at': new Date()
+                    'fetched_at': new Date(),
+                    'fetched_date': new Date()
                 })
 
 
@@ -340,58 +345,62 @@ class YoutubeService {
 
             await Channel.update({ 'updated_at': new Date() }, { where: { channel_id: channelId } });
             console.log(index);
-            await delay(2000);
 
         } catch (error: any) {
             console.log('Error fetching playlist videos for playlist id: ' + playlistId);
             console.error(error);
+            throw error;
         }
         return allVideos;
     }
 
     async fetchStatisticsForAllChannels() {
-        console.log('starting job');
+        console.log('Starting Job :: fetchStatisticsForAllChannels');
         try {
             const channels = await Channel.findAll({ order: [['updated_at', 'ASC']] });
 
-            // await this.fetchAndCreateVideosFromChannel('UCDogdKl7t7NHzQ95aEwkdMw', 'UUDogdKl7t7NHzQ95aEwkdMw'); // sidemen
             for (const channel of channels) {
-                console.log('/n/n starting for chanel: ', channel.title);
-                // console.info('Channel ', channel.channel_id, channel.title, channel.playlist_id, channel.updated_at, channel.created_at);
+                console.log('Starting for channel: ', channel.title);
                 await this.fetchChannelData(channel.channel_id);
 
                 // TODO refactor to update
-                await delay(1000);
                 await this.fetchAndCreateVideosFromChannel(channel.channel_id, channel.playlist_id);
 
-                console.log('/n/n finished chanel: ', channel.title);
+                await delay(1000);
+                console.log('Finished channel: ', channel.title);
             }
-            console.info('/n/n finished job /n/n');
+            console.info('Finished job fetchStatisticsForAllChannels');
             await this.refreshMaterializedView();
 
         } catch (error) {
-            console.error('Error fetching YouTube statistics:', error);
+            console.error('Error fetching All YouTube statistics:', error);
+            // await sendErrorEmail(error, 'fetchStatisticsForAllChannels');
+            process.exit();
         }
     }
 
     async fetchLatestStatisticsForAllChannels() {
-        console.log('starting job : fetchLastestStatisticsForAllChannels');
+        console.log('Starting Job :: fetchLastestStatisticsForAllChannels');
         try {
-            const channels = await Channel.findAll({ order: [['updated_at', 'ASC']] });
+            const range = new Date();
+            range.setMinutes(range.getMinutes() - 30); // not updated on the last 30 minutes 
+            const channels = await Channel.findAll({ where: { updated_at: { [Op.lt]: range } }, order: [['updated_at', 'ASC']] });
             for (const channel of channels) {
-                console.log('/n/n starting for channel: ', channel.title);
+                console.log('Starting for channel: ', channel.title);
                 await this.fetchChannelData(channel.channel_id);
 
-                await delay(1000);
                 await this.fetchAndCreateRecentVideosFromChannel(channel.channel_id, channel.playlist_id);
+                await delay(500);
 
-                console.log('/n/n finished channel: ', channel.title);
+                console.log('Finished channel: ', channel.title);
             }
-            console.info('/n/n finished job  fetchLastestStatisticsForAllChannels /n/n');
+            console.info('Finished job fetchLastestStatisticsForAllChannels');
             await this.refreshMaterializedView();
 
         } catch (error) {
-            console.error('Error fetching YouTube statistics:', error);
+            console.error('Error fetching Latest YouTube statistics:', error);
+            // await sendErrorEmail(error, 'fetchLastestStatisticsForAllChannels');
+            process.exit();
         }
     }
     // 
@@ -399,22 +408,30 @@ class YoutubeService {
     async fetchChannelAndVideoData(channelId: any) {
         await this.fetchChannelData(channelId);
         const channel = await Channel.findOne({ where: { channel_id: channelId } });
-        await delay(1000);
-        await this.fetchAndCreateVideosFromChannel(channel.channel_id, channel.playlist_id); // fetchAndCreateRecentVideosFromChannel(channel.channel_id, channel.playlist_id); //
+        await this.fetchAndCreateVideosFromChannel(channel.channel_id, channel.playlist_id);
         return channel;
     }
 
     async refreshMaterializedView() {
         try {
-            const startTime = new Date();
 
-            await sequelize.query('REFRESH MATERIALIZED VIEW CONCURRENTLY public.video_stats_view');
-    
-            const endTime = new Date();
-            const executionTime = endTime.getTime() - startTime.getTime(); // Time difference in milliseconds
-            
-            console.log(`Materialized view refreshed successfully. ${startTime} | ${endTime} | Time taken: ${executionTime}ms`);
-      
+            const startTime = new Date();
+            console.log(`Materializing video_stats_view... ${startTime} `);
+
+            // REFRESH MATERIALIZED VIEW CONCURRENTLY public.video_stats_view
+            sequelize.query('REFRESH MATERIALIZED VIEW CONCURRENTLY public.video_stats_view', {
+                type: QueryTypes.SELECT,
+                raw: true,
+            }).then(() => {
+                const endTime = new Date();
+                const executionTime = endTime.getTime() - startTime.getTime(); // Time difference in milliseconds
+
+                console.log(`Materialized view refreshed successfully. ${startTime} | ${endTime} | Time taken: ${executionTime}ms`);
+            }).catch(error => {
+                console.error('Error refreshing materialized view:', error.message);
+            });
+
+
         } catch (error) {
             console.error('Error refreshing materialized view:', error.message);
         }

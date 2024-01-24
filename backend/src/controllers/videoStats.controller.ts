@@ -30,7 +30,7 @@ export const findAllVideoStatsController = async (
     // const videos = await VideoStats.findAll({
     //   attributes: [
     //     'video_id',
-    //     [sequelize.fn("DATE", sequelize.col('fetched_at')), "fetched_date"],
+    //     'fetched_date',
     //     [sequelize.fn("MAX", sequelize.col('views')), "views"],
     //     [sequelize.fn("MAX", sequelize.col('likes')), "likes"],
     //     [sequelize.fn("MAX", sequelize.col('comments')), "comments"],

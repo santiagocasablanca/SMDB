@@ -6,25 +6,28 @@ import cors from "cors";
 import noteRouter from "./routes/routes";
 import visitorTrackerMiddleware from './middlewares/visitorTracker'; // Adjust the import
 
-const YoutubeService = require('./services/youtubeService');
+// const YoutubeService = require('./services/youtubeService');
+// const VideoMetaService = require('./services/videoMetaService');
 const InfoService = require('./services/infoService');
 
-const VideoMetaService = require('./services/videoMetaService');
 
 import { db, sequelize } from "./util/db";
 
 const app = express();
 
 // Retrieve host and port from environment variables or configuration
-const redisHost = process.env.REDIS_HOST || 'svdb-redis';
-const redisPort = process.env.REDIS_PORT || 6379;
-// const redis = new Redis();
+const redisHost = process.env.REDIS_HOST || '127.0.0.1';
+const redis = new Redis({
+  port: 6379,
+  host: redisHost
+});
 
 app.set('trust proxy', 1);
 app.use(express.json({ limit: "10kb" }));
 if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
-const youtubeService = new YoutubeService();
-const videoMetaService = new VideoMetaService();
+
+// const youtubeService = new YoutubeService();
+// const videoMetaService = new VideoMetaService();
 const infoService = new InfoService();
 
 
@@ -71,8 +74,8 @@ app.get("/v1/info", async (req: Request, res: Response) => {
 
 
 app.get("/v1/jobs/all/run", (req: Request, res: Response) => {
-  youtubeService.fetchStatisticsForAllChannels();
-  // redis.publish('runAllJob', 'Run jobs now!');
+  // youtubeService.fetchStatisticsForAllChannels();
+  redis.publish('runAllJob', 'Run jobs now!');
 
   res.status(200).json({
     status: "success",
@@ -81,8 +84,8 @@ app.get("/v1/jobs/all/run", (req: Request, res: Response) => {
 });
 
 app.get("/v1/jobs/latest/run", (req: Request, res: Response) => {
-  youtubeService.fetchLatestStatisticsForAllChannels();
-  // redis.publish('runLatestJob', 'Run jobs now!');
+  // youtubeService.fetchLatestStatisticsForAllChannels();
+  redis.publish('runLatestJob', 'Run jobs now!');
 
   res.status(200).json({
     status: "success",
@@ -91,8 +94,8 @@ app.get("/v1/jobs/latest/run", (req: Request, res: Response) => {
 });
 
 app.get("/v1/jobs/tags/run", (req: Request, res: Response) => {
-  videoMetaService.associateTagsToVideos();
-  // redis.publish('runTagJob', 'Run jobs now!');
+  // videoMetaService.associateTagsToVideos();
+  redis.publish('runTagJob', 'Run jobs now!');
 
 
   res.status(200).json({
@@ -102,8 +105,8 @@ app.get("/v1/jobs/tags/run", (req: Request, res: Response) => {
 });
 
 app.get("/v1/jobs/tags/games/run", (req: Request, res: Response) => {
-  videoMetaService.associateGameTagsToVideos();
-  // redis.publish('runGameTagsJob', 'Run jobs now!');
+  // videoMetaService.associateGameTagsToVideos();
+  redis.publish('runGameTagsJob', 'Run jobs now!');
 
   res.status(200).json({
     status: "success",
@@ -133,4 +136,50 @@ db.sequelize
   })
   .catch(err => console.log(err));
 
+  let cleanupPerformed = false;
 
+  // Handle Ctrl+C or SIGINT (Signal Interrupt)
+  process.on('SIGINT', async () => {
+    if (!cleanupPerformed) {
+      console.log('Received SIGINT. Cleaning up and exiting...');
+      
+      // Perform any cleanup operations here
+      await redis.disconnect(); // Disconnect from Redis
+  
+      // Set the flag to true to indicate cleanup is performed
+      cleanupPerformed = true;
+  
+      // Exit the process
+      process.exit();
+    }
+  });
+  
+  // Handle unhandled exceptions
+  process.on('unhandledRejection', async (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+  
+    if (!cleanupPerformed) {
+      // Perform any cleanup operations here
+      await redis.disconnect(); // Disconnect from Redis
+  
+      // Set the flag to true to indicate cleanup is performed
+      cleanupPerformed = true;
+  
+      // Exit the process with an error code
+      process.exit(1);
+    }
+  });
+  
+  // Handle process exit to disconnect from Redis
+  process.on('exit', async () => {
+    if (!cleanupPerformed) {
+      console.log('Exiting. Cleaning up...');
+  
+      // Perform any cleanup operations here
+      await redis.disconnect(); // Disconnect from Redis
+  
+      // Set the flag to true to indicate cleanup is performed
+      cleanupPerformed = true;
+    }
+  });
+  

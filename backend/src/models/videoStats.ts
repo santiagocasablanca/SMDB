@@ -35,6 +35,11 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
       defaultValue: DataTypes.NOW,
       allowNull: false,
     },
+    fetched_date: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+      allowNull: false,
+    },
     created_at: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
@@ -79,6 +84,7 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
         dislikes: videoStats.dislikes,
         comments: videoStats.comments,
         fetched_at: videoStats.fetched_at,
+        fetched_date: videoStats.fetched_at
       });
 
       // Cancel the creation of a new record

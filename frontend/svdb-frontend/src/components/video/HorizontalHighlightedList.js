@@ -152,8 +152,7 @@ const HorizontalHighlightedList = ({ title, filter }) => {
                                     // e.currentTarget.style.margin = 'inherit';
                                 }}>
 
-                                <div style={{ position: 'relative', cursor: 'pointer' }}
-                                    onMouseEnter={() => toggleHover(true)} onMouseLeave={() => toggleHover(false)}>
+                                {/* <div style={{ position: 'relative', cursor: 'pointer' }} onMouseEnter={() => toggleHover(true)} onMouseLeave={() => toggleHover(false)}>
                                     {
                                         !isHovered ? <>
                                             <Image onClick={() => handleClickVideo(video.video_id)} style={{ borderRadius: '8px', objectFit: 'cover', cursor: 'pointer' }}
@@ -164,6 +163,14 @@ const HorizontalHighlightedList = ({ title, filter }) => {
                                             </div>
                                         </> : <VideoOnHoverPreview video={video}></VideoOnHoverPreview>
                                     }
+                                </div> */}
+                                <div style={{ position: 'relative', cursor: 'pointer' }}>
+                                    <Image onClick={() => handleClickVideo(video.video_id)} style={{ borderRadius: '8px', objectFit: 'cover', cursor: 'pointer' }}
+                                        src={video.url} width='316px' height='189px' preview={false} />
+
+                                    <div style={{ position: 'absolute', bottom: '5px', right: '5px' }}>
+                                        <VideoDurationOverlay duration={video.duration} />
+                                    </div>
                                 </div>
                                 <Title style={{ color: 'black', width: '310px', marginTop: '10px', marginBottom: '10px', cursor: 'pointer' }}
                                     ellipsis={{ tooltip: video.title }}
