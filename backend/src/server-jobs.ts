@@ -49,7 +49,7 @@ redis.on('message', async (channel, message) => {
 
 cron.schedule('00 01 * * *', () => {
   console.log('Running fetchStatisticsForAllChannels', new Date());
-  // youtubeService.fetchStatisticsForAllChannels();
+  youtubeService.fetchStatisticsForAllChannels();
 })
 
 cron.schedule('04 16 * * *', () => {
