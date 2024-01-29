@@ -195,6 +195,18 @@ const AboutPage = () => {
 
                   <p>The application also introduces the concepts of <Text code>directed_by</Text>, used to represent the main creator(s) responsible for a given <Text code>video</Text>, and <Text code>cast</Text> (creator_id, role) used for storing the creators that appear in each video.</p>
 
+
+                  <p>In order to optimize the data-fetching process from YouTube, a new container named <Text code>jobs</Text> was introduced. This container is responsible for executing the fetching process and refreshing 
+                    a materialized view named <Text code>video_stats_view</Text>. The materialized view represents a precomputed and stored version of video statistics, ensuring efficient querying and reduced load on the YouTube API.</p>
+                  <p>In addition, a <Text code>Redis Sub/Pub</Text> system was implemented for communication between the <Text code>backend (API)</Text> and the <Text code>jobs</Text> container. 
+                  This allows the backend to send messages to jobs for executing tasks remotely. This communication system enhances the application's scalability and flexibility in handling background jobs without direct dependencies, leading to improved overall performance.</p>
+
+
+                  <p>Moreover, improvements have been made to the fetch algorithm within the <Text code>YoutubeService</Text>. These enhancements aim to optimize the fetching process while adhering to the YouTube API rate limits.
+                  The changes made to the YoutubeService play a crucial role in ensuring that the application efficiently acquires and updates data, delivering an improved user experience
+                   and timely insights into the evolving statistics of the YouTube content creators.</p>
+
+
                   <Divider orientation="left">Technologies Used</Divider>
                   <p><Text code>Node.js</Text>,  <Text code>Express.js</Text>,  <Text code>Docker</Text>,  <Text code>Sequelize</Text>,  <Text code>PostgreSQL</Text>,  <Text code>React</Text>,  <Text code>antd</Text>
                   </p>
@@ -218,9 +230,9 @@ const AboutPage = () => {
                   <br></br>
                   <Text>Database Statistics:</Text>
                   <ul>
-                    <li>47 Creators</li>
-                    <li>75 Channels</li>
-                    <li>Over 68000 Videos</li>
+                    <li>56 Creators</li>
+                    <li>92 Channels</li>
+                    <li>Over 80000 Videos</li>
                   </ul>
                   <br></br>
                   <Text>Special thanks to <Avatar src="https://avatars.githubusercontent.com/u/8502778?v=4" /> <Link href="https://github.com/danilomagalhaes">Danilo Magalhães</Link> for the help on the configuration of the infrastructure!</Text>

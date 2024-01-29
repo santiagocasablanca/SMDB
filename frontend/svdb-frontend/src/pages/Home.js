@@ -5,14 +5,13 @@ import insertCss from 'insert-css';
 import React, { useEffect, useState } from 'react';
 import HorizontalHighlightedList from '../components/video/HorizontalHighlightedList';
 import HorizontalShortsList from '../components/video/HorizontalShortsList';
-import VideoPreviewForHighlight from '../components/video/VideoPreviewForHighlight';
 import variables from '../sass/antd.module.scss';
 import useFormatter from '../hooks/useFormatter';
 import { getChannelsFn, fetchMostSubChannelByMonth } from "../services/channelApi.ts";
 import { getVideosFn, getHighlightedVideosFn } from "../services/videoApi.ts";
 import LatestVideosGrowthLine from '../components/graphs/LatestVideosGrowthLine';
 import MonthlyHighlightedCreators from '../components/home/MonthlyHighlightedCreators';
-import ChannelGrowthByMonth from '../components/home/ChannelGrowthByMonth';
+import AppLoading from '../components/AppLoading';
 
 
 const { Title, Text } = Typography;
@@ -44,7 +43,7 @@ const HomePage = () => {
       range.push(oldDate.format());
       range.push(now.format());
 
-      await fetchMostSubChannelByMonth(oldDate.format('YYYY-MM'))
+      fetchMostSubChannelByMonth(oldDate.format('YYYY-MM'))
         .then((result) => {
           // console.log(result);
           setChannelsGrowth(result.results);//calculateGrowthStatsForEachChannel(result.results));
@@ -54,7 +53,7 @@ const HomePage = () => {
       let _paramsTop10 = new URLSearchParams();
       _paramsTop10.append("sort", "views%desc")
       _paramsTop10.append("publishedAtRange", range)
-      await getHighlightedVideosFn(1, 10, _paramsTop10)
+      getHighlightedVideosFn(1, 10, _paramsTop10)
         .then((result) => {
           // console.log(result);
           setTop10videos(result.videos);
@@ -63,7 +62,7 @@ const HomePage = () => {
         })
 
 
-      await getChannelsFn(1, 1000, null).then((result) => {
+      getChannelsFn(1, 1000, null).then((result) => {
         const _channels = result.results.map(it => {
           return {
             label: it.title,
@@ -75,13 +74,20 @@ const HomePage = () => {
         setFilters({ channels: _channels });
         // setSelectedChannels(_channels.map(it => { return it.channel_id; }))
 
-        setIsLoaded(true);
       });
+
+
+      await delay(550);
+      setIsLoaded(true);
 
 
     }
     fetchData();
   }, []);
+
+  async function delay(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
 
   insertCss(`  
   .spinContent {
@@ -164,6 +170,7 @@ const HomePage = () => {
 
   return (<>
     {/* <HeaderPanel title="Home" channels={channels}></HeaderPanel> */}
+    {/* isLoaded */}
     {isLoaded ?
       (
         <>
@@ -210,13 +217,7 @@ const HomePage = () => {
           </div>
         </>
       ) : (
-        <Row justify="center" style={{ marginTop: '70px' }}>
-          <div style={{ borderRadius: '50%', overflow: 'hidden' }} >
-            <Spin spining="true" tip="Loading..." size="large" style={{background: '#F3F4F6'}}>
-              <div className="spinContent" style={{ padding: '100px' }} />
-            </Spin>
-          </div>
-        </Row>
+        <AppLoading />
       )
     }
   </>);

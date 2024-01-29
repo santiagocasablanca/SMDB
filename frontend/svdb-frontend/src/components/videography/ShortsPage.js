@@ -63,22 +63,30 @@ const ShortsPage = () => {
   const [total, setTotal] = useState();
 
   useEffect(() => {
-    setView('oncards');
-    // console.log('Videography Page ', initLoading, location);
-    if (initLoading) {
-      setInitLoading(false);
+    async function fetchData() {
+      setView('oncards');
+      // console.log('Videography Page ', initLoading, location);
+      if (initLoading) {
+        await delay(150);
 
-      addOrUpdateAttribute(searchParams, 'onlyShorts', true);
-      addOrUpdateAttribute(searchParams, 'excludeShorts', false);
-
-      if (location.state && location.state?.filter) {
-        Object.keys(location.state?.filter).forEach((key) => {
-          addOrUpdateAttribute(searchParams, key, location.state?.filter[key]);
-        })
+        // console.log('location.state ', location.state, location);
+        addOrUpdateAttribute(searchParams, 'onlyShorts', true);
+        addOrUpdateAttribute(searchParams, 'excludeShorts', false);
+        if (location.state && location.state?.filter) {
+          Object.keys(location.state?.filter).forEach((key) => {
+            addOrUpdateAttribute(searchParams, key, location.state?.filter[key]);
+          })
+        }
+        await asyncFetch(1);
+        setInitLoading(false);
       }
-      asyncFetch(1);
     }
+    fetchData();
   }, []);
+
+  async function delay(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
 
   const asyncFetch = async (pageNumber, title = null) => {
     try {

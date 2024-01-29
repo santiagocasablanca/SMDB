@@ -1,0 +1,11 @@
+<svg class="music-bar" viewBox="0 0 20 20">
+  <defs>
+    <rect id="def-rect" 
+          y="18" width="3" height="20" 
+          fill="#284672" />
+  </defs>
+  <use class="bar" xlink:href="#def-rect" x="0" />
+  <use class="bar" xlink:href="#def-rect" x="5" />
+  <use class="bar" xlink:href="#def-rect" x="10" />
+  <use class="bar" xlink:href="#def-rect" x="15" />
+</svg>

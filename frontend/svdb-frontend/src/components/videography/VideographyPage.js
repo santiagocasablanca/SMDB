@@ -63,22 +63,29 @@ const VideographyPage = () => {
   const [fetchedData, setFetchedData] = useState([]);
   const [total, setTotal] = useState();
 
-  
+  async function delay(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
 
   useEffect(() => {
-    setView('oncards');
-    // console.log('Videography Page ', initLoading, location);
-    if (initLoading) {
-      setInitLoading(false);
 
-      // console.log('location.state ', location.state, location);
-      if (location.state && location.state?.filter) {
-        Object.keys(location.state?.filter).forEach((key) => {
-          addOrUpdateAttribute(searchParams, key, location.state?.filter[key]);
-        })
+    async function fetchData() {
+      setView('oncards');
+      // console.log('Videography Page ', initLoading, location);
+      if (initLoading) {
+        await delay(150);
+        
+        // console.log('location.state ', location.state, location);
+        if (location.state && location.state?.filter) {
+          Object.keys(location.state?.filter).forEach((key) => {
+            addOrUpdateAttribute(searchParams, key, location.state?.filter[key]);
+          })
+        }
+        await asyncFetch(1);
+        setInitLoading(false);
       }
-      asyncFetch(1);
     }
+    fetchData();
   }, []);
 
   const asyncFetch = async (pageNumber, title = null) => {
@@ -86,13 +93,13 @@ const VideographyPage = () => {
       if (isLoading || !hasMore) {
         return;
       }
-      
+
       if (title !== null) {
         addOrUpdateAttribute(searchParams, 'title', title);
       }
 
       setIsLoading(true);
-      const result = await getVideosFn( pageNumber, 36, searchParams);
+      const result = await getVideosFn(pageNumber, 24, searchParams);
 
       if (result.videos && result.videos.length > 0) {
         setFetchedData((prevData) => [...prevData, ...result.videos]);
@@ -345,7 +352,7 @@ const VideographyPage = () => {
             <Space.Compact className="compact-version" >
               <Popover content={
                 <div style={{ display: 'block', width: '195px' }}>
-                  <div style={{ float: 'right', marginBottom: '7px'}}>
+                  <div style={{ float: 'right', marginBottom: '7px' }}>
                     <Segmented
                       value={view}
                       onChange={handleViewChange}

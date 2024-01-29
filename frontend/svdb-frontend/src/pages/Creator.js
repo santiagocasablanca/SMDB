@@ -10,6 +10,7 @@ import useFormatter from '../hooks/useFormatter';
 import variables from '../sass/antd.module.scss';
 import { getCreatorFn } from "../services/creatorApi.ts";
 import CreatorGraphsPanel from "../components/creator/CreatorGraphsPanel";
+import { AppLoading } from '../components';
 
 
 
@@ -276,14 +277,7 @@ const CreatorPage = () => {
   return (
     <>
       {!isFetched ? (
-        // <LoadingAnimation />
-        <Row justify="center" style={{ marginTop: '70px' }}>
-          <div style={{ borderRadius: '50%', overflow: 'hidden' }} >
-            <Spin spining="true" tip="Loading..." size="large" style={{ background: '#F3F4F6' }}>
-              <div className="spinContent" style={{ padding: '100px' }} />
-            </Spin>
-          </div>
-        </Row>
+        <AppLoading />
       ) : (
           <div>
             <div className="banner">

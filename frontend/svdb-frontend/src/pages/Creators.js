@@ -8,6 +8,7 @@ import AddCreatorModal from '../components/creator/AddCreatorModal';
 import useFormatter from '../hooks/useFormatter';
 import variables from '../sass/antd.module.scss';
 import { associateChannelIdsToCreatorFn, getCreatorsFn } from "../services/creatorApi.ts";
+import { AppLoading } from '../components';
 
 
 const { Title, Text } = Typography;
@@ -480,7 +481,7 @@ const CreatorPage = () => {
                   </div>
                 </>
               ) :
-                ('')
+                <AppLoading />
               }
 
             </Card>

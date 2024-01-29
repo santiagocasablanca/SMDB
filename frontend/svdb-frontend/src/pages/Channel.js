@@ -9,6 +9,7 @@ import Guests from "../components/channel/Guests";
 import useFormatter from '../hooks/useFormatter';
 import variables from '../sass/antd.module.scss';
 import { getChannelFn } from "../services/channelApi.ts";
+import { AppLoading } from '../components';
 
 
 
@@ -36,14 +37,14 @@ const ChannelPage = () => {
       if (res.result) {
         setChannel(res.result);
         setCreators(res.result.creators);
-        setIsFetched(true);      
+        setIsFetched(true);
       }
     });
   }
 
   const guestsFilters = {
     channels: [id],
-    notInCastMember: creators?.map(it => {return it.id}),
+    notInCastMember: creators?.map(it => { return it.id }),
     onlyShorts: false,
     excludeShorts: true,
     search: true
@@ -260,13 +261,7 @@ const ChannelPage = () => {
   return (
     <>
       {!isFetched ? (
-         <Row justify="center" style={{ marginTop: '70px' }}>
-         <div style={{ borderRadius: '50%', overflow: 'hidden' }} >
-           <Spin spining="true" tip="Loading..." size="large" style={{background: '#F3F4F6'}}>
-             <div className="spinContent" style={{ padding: '100px' }} />
-           </Spin>
-         </div>
-       </Row>
+        <AppLoading />
       ) : (
           <div>
             <div className="banner">

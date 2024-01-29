@@ -67,15 +67,16 @@ const AppLogo = () => {
   }
 
   return (
-    <div className="logo"  onClick={() => handleClick()}>
-      <div className="rectangle">
-        <span className="letters">
+    <div className="logo" onClick={() => handleClick()}>
+      {/* <div className="rectangle"> */}
+        {/* <span className="letters">
           <span className="letter">S</span>
           <span className="letter">V</span>
           <span className="letter">D</span>
           <span className="letter">b</span>
-        </span>
-      </div>
+        </span> */}
+        <img src="/svdb_min_logo.png" alt="logo" height="40px" />
+      {/* </div> */}
     </div>
   )
 }
