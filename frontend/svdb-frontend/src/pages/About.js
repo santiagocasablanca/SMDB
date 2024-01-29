@@ -208,7 +208,7 @@ const AboutPage = () => {
 
 
                   <Divider orientation="left">Technologies Used</Divider>
-                  <p><Text code>Node.js</Text>,  <Text code>Express.js</Text>,  <Text code>Docker</Text>,  <Text code>Sequelize</Text>,  <Text code>PostgreSQL</Text>,  <Text code>React</Text>,  <Text code>antd</Text>
+                  <p><Text code>Node.js</Text>,  <Text code>Express.js</Text>,  <Text code>Docker</Text>, <Text code>Redis</Text>, <Text code>Sequelize</Text>,  <Text code>PostgreSQL</Text>,  <Text code>React</Text>,  <Text code>antd</Text>,  <Text code>GitHub Actions</Text>
                   </p>
                   <Link href="https://github.com/santiagocasablanca/SMDB"><GithubOutlined /> Visit the Project Github</Link>
                   <br></br>

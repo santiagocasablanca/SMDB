@@ -43,23 +43,16 @@ const HomePage = () => {
       range.push(oldDate.format());
       range.push(now.format());
 
-      fetchMostSubChannelByMonth(oldDate.format('YYYY-MM'))
-        .then((result) => {
-          // console.log(result);
-          setChannelsGrowth(result.results);//calculateGrowthStatsForEachChannel(result.results));
-        })
-
-
       let _paramsTop10 = new URLSearchParams();
       _paramsTop10.append("sort", "views%desc")
       _paramsTop10.append("publishedAtRange", range)
-      getHighlightedVideosFn(1, 10, _paramsTop10)
+      await getHighlightedVideosFn(1, 10, _paramsTop10)
         .then((result) => {
           // console.log(result);
           setTop10videos(result.videos);
           // setTop10videoIds(result.videos.map(video => { return video.video_id; }));
           setTopChannelIds(result.videos.map(video => { return video.channel_id; }));
-        })
+        });
 
 
       getChannelsFn(1, 1000, null).then((result) => {
@@ -75,6 +68,12 @@ const HomePage = () => {
         // setSelectedChannels(_channels.map(it => { return it.channel_id; }))
 
       });
+
+      await fetchMostSubChannelByMonth(oldDate.format('YYYY-MM'))
+        .then((result) => {
+          // console.log(result);
+          setChannelsGrowth(result.results);//calculateGrowthStatsForEachChannel(result.results));
+        });
 
 
       await delay(550);
