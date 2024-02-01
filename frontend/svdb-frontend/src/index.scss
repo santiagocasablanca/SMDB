@@ -29,8 +29,15 @@ code {
       padding: 2px;
   }
 
+  .responsive_logo {
+    width: 420px;
+  }
 
 @media (max-width: 600px) {
+  .responsive_logo {
+    width: 220px;
+  }
+
   .titleStatsFormulaContainer {
     width: 320px;
   }

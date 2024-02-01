@@ -1,34 +1,25 @@
 import React, { Component, Suspense } from 'react'
 import { HashRouter, Route, Routes } from 'react-router-dom'
 import { ConfigProvider, theme } from 'antd';
-import { Spin, Row } from 'antd';
+import { Row } from 'antd';
 
 
 import 'antd/dist/reset.css';
 import variables from './sass/antd.module.scss';
-import { TransitionProvider } from './context/TransitionContext';
-import TransitionComponent from './components/AppTransition';
+// import { TransitionProvider } from './context/TransitionContext';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import { useGSAP } from '@gsap/react';
-import BouncyBall from './components/BouncyBall';
+import BouncyLogo from './components/BouncyLogo';
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, useGSAP);
-const ballColors = ['#FF0000', '#282828', '#FF0000', '#282828'];
 
 const loading = (
   <div style={{ marginTop: '100px' }}>
     <Row justify="center">
-      <img src="/svdb_logo_spaced.png" alt="logo" height="100px" />
+      <BouncyLogo uniqueId="bouncy_logo" />
     </Row>
-
-    <Row justify="center" style={{ marginTop: '35px' }}>
-      {ballColors.map((color, index) => (
-        <BouncyBall key={index} color={color} uniqueId={index} />
-      ))}
-    </Row>
-
   </div>
 )
 
@@ -44,6 +35,8 @@ const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'))
 
 
 class App extends Component {
+
+
 
   render() {
     // darkAlgorithm
@@ -98,7 +91,7 @@ class App extends Component {
       >
         <HashRouter>
           <Suspense fallback={loading}>
-            <TransitionProvider>
+            {/* <TransitionProvider> */}
               <Routes>
                 {/* <Route path="/*" name="Home" element={<TransitionComponent><DefaultLayout /></TransitionComponent>} /> */}
                 <Route path="/*" name="Home" element={<DefaultLayout />} />
@@ -106,7 +99,7 @@ class App extends Component {
                 {/* <Route exact path="/login" name="Login Page" element={<Login />} />
                  <Route exact path="/404" name="Page 404" element={<Page404 />} />/*/}
               </Routes>
-            </TransitionProvider>
+            {/* </TransitionProvider> */}
           </Suspense>
         </HashRouter>
       </ConfigProvider>

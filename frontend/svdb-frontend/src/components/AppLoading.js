@@ -7,17 +7,12 @@ import { Row, Spin } from 'antd';
 const AppLoading = () => {
   // const ballColors = [variables.sdmnYellow, variables.sdmnPink, variables.sdmnLightBlue, variables.sdmnDarkBlue, variables.sdmnLightBlue, variables.sdmnYellow, variables.sdmnPink];
 
-  const ballColors = ['#FF0000', '#282828', '#FF0000', '#282828'];
+  
   return (
     <><div style={{ marginTop: '70px' }}>
       <Row justify="center">
-        <img src="/svdb_logo_spaced.png" alt="logo" height="100px" />
+        <img src="/svdb_logo_spaced.png" alt="logo" className="responsive_logo" />
       </Row>
-      {/* <Row justify="center">
-        {ballColors.map((color, index) => (
-          <BouncyBall key={index} color={color} uniqueId={index} />
-        ))}
-      </Row> */}
       <Row justify="center" style={{ marginTop: '35px' }}>
         <div style={{ borderRadius: '50%', overflow: 'hidden' }} >
           <Spin spining="true" tip="Loading..." size="large" style={{ background: '#F3F4F6' }}>

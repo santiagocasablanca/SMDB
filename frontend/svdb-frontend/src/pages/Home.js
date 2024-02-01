@@ -1,5 +1,4 @@
-import { HomeOutlined } from '@ant-design/icons';
-import { Carousel, Col, Row, Space, Spin, Typography, Popover } from 'antd';
+import { Col, Row} from 'antd';
 import dayjs from 'dayjs';
 import insertCss from 'insert-css';
 import React, { useEffect, useState } from 'react';
@@ -8,13 +7,10 @@ import HorizontalShortsList from '../components/video/HorizontalShortsList';
 import variables from '../sass/antd.module.scss';
 import useFormatter from '../hooks/useFormatter';
 import { getChannelsFn, fetchMostSubChannelByMonth } from "../services/channelApi.ts";
-import { getVideosFn, getHighlightedVideosFn } from "../services/videoApi.ts";
+import { getHighlightedVideosFn } from "../services/videoApi.ts";
 import LatestVideosGrowthLine from '../components/graphs/LatestVideosGrowthLine';
 import MonthlyHighlightedCreators from '../components/home/MonthlyHighlightedCreators';
 import AppLoading from '../components/AppLoading';
-
-
-const { Title, Text } = Typography;
 
 const HomePage = () => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -169,7 +165,6 @@ const HomePage = () => {
 
   return (<>
     {/* <HeaderPanel title="Home" channels={channels}></HeaderPanel> */}
-    {/* isLoaded */}
     {isLoaded ?
       (
         <>

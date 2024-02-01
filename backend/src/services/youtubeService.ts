@@ -370,7 +370,7 @@ class YoutubeService {
                 console.log('Finished channel: ', channel.title);
             }
             console.info('Finished job fetchStatisticsForAllChannels');
-            await this.refreshMaterializedView();
+            // await this.refreshMaterializedView();
 
         } catch (error) {
             console.error('Error fetching All YouTube statistics:', error);
@@ -395,7 +395,7 @@ class YoutubeService {
                 console.log('Finished channel: ', channel.title);
             }
             console.info('Finished job fetchLastestStatisticsForAllChannels');
-            await this.refreshMaterializedView();
+            // await this.refreshMaterializedView();
 
         } catch (error) {
             console.error('Error fetching Latest YouTube statistics:', error);
