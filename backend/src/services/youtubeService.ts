@@ -67,15 +67,37 @@ class YoutubeService {
         }
     }
 
-    async handleApiRequest(url: any) {
+    async handleApiRequest(url, maxRetries = 3, currentRetries = 0) {
         try {
             console.log('calling YOUTUBE API: ', url);
             const response = await fetch(url);
             return await response.json();
         } catch (error) {
-            console.error(`Error fetching data from API (${url}):`, error.message);
-            throw error;
+            console.error(`Error fetching data from API (${url}):`, error.status, error.message);
+
+            if (this.shouldRetry(error, maxRetries, currentRetries)) {
+                console.log('Retrying the connection...', maxRetries, currentRetries);
+                await delay(1000);
+                return this.handleApiRequest(url, maxRetries, currentRetries + 1);
+            } else {
+                throw error;
+            }
         }
+    }
+
+    shouldRetry(error, maxRetries, currentRetries) {
+        if (currentRetries < maxRetries) {
+            // Add conditions to check for specific errors that warrant a retry
+            if (error.message.includes('EAI_AGAIN')) {
+                // Example: Retry for DNS lookup errors
+                return true;
+            } else if (error.errors && error.errors[0].reason === 'quotaExceeded') {
+                // If the error is quotaExceeded, do not retry
+                console.error('Quota Exceeded. No retry will be made.');
+                throw error;
+            }
+        }
+        return false;
     }
 
     async fetchChannelDataFromAPI(channelId: any) {
