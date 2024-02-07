@@ -88,8 +88,9 @@ class YoutubeService {
     shouldRetry(error, maxRetries, currentRetries) {
         if (currentRetries < maxRetries) {
             // Add conditions to check for specific errors that warrant a retry
-            if (error.message.includes('EAI_AGAIN')) {
+            if (error.code === 'EAI_AGAIN') {
                 // Example: Retry for DNS lookup errors
+                console.error('DNS resolution failed. Might retry the connection.');
                 return true;
             } else if (error.errors && error.errors[0].reason === 'quotaExceeded') {
                 // If the error is quotaExceeded, do not retry
