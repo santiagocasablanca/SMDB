@@ -6,9 +6,11 @@ export type SearchReqQuery = {
 
 export type ChannelsReqQuery = {
   channels?: string,
+  creators?: string,
   title?: string,
   range?: string,
   month?: string,
+  year?: string,
   publishedAtRange?: string
 }
 
