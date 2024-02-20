@@ -16,6 +16,7 @@ import LocationsMap from '../components/video/LocationsMap';
 import UpdateVideoModal from '../components/video/UpdateVideoModal';
 import { getVideoFn } from "../services/videoApi.ts";
 import TinyLineViews from '../components/graphs/TinyLineViews';
+import AppLoading from '../components/AppLoading';
 
 
 
@@ -433,7 +434,7 @@ const VideoPage = () => {
         <br></br>
 
       </>
-      : <Spin />
+      : <AppLoading />
     }
   </>);
 };

@@ -137,6 +137,89 @@ order by name asc, _ch.subs desc;
 
 };
 
+export const fetchYearlyChannelReport = async (
+  req: Request<{}, {}, {}, ChannelsReqQuery>,
+  res: Response
+) => {
+  try {
+    const today = new Date();
+    const year = req.query.year ? req.query.year : today.getFullYear();
+    const creatorsArr = req.query.creators.split(',');
+
+    const creators = creatorsArr.map(creator => `'${creator}'`).join(',');
+    const channelsArr = req.query.channels.split(',');
+
+    const channels = channelsArr.map(channel => `'${channel}'`).join(',');
+
+
+    const hottestChannelsQuery = `
+    select _c.id as "creator_id", 
+    _c.name,
+    _c.profile_picture,
+    _ch.channel_id,
+    _ch.title,
+    _ch.logo_url,
+		COUNT(_v.video_id) as "videos_published",
+    SUM(_v.views) as "videos_views",
+    SUM(_v.likes) as "videos_likes",
+		_ch.subs,
+		MAX(first_subs."first_subs") as "_first_subs",
+		MAX(_ch."subs" - first_subs.first_subs) AS "total_subs_increase",
+  		MAX(((_ch."subs" - first_subs.first_subs) / first_subs.first_subs) * 100) AS "subs_growth_percentage",
+		_ch.views,
+		MAX(first_subs."first_views") as "_first_views",
+		MAX(_ch."views" - first_subs.first_views) AS "total_views_increase",
+  		MAX(((_ch."views" - first_subs.first_views) / first_subs.first_views) * 100) AS "views_growth_percentage",
+		_ch.updated_at
+from creator _c 
+	inner join channel_creator _cc on _cc.creator_id = _c.id
+  left join channel _ch on _ch.channel_id = _cc.channel_id
+  
+	LEFT JOIN (
+	  SELECT
+		"channel_id",
+		"subs" AS "first_subs",
+    "views" AS "first_views",
+		"fetched_at"
+	  FROM
+		"channel_stats"
+	  WHERE
+		("channel_id", "fetched_at") IN (
+		  SELECT "channel_id", MIN("fetched_at") AS "first_fetched_at"
+		  FROM "channel_stats"
+      WHERE 
+        EXTRACT(YEAR FROM "fetched_at") = ${year} 
+		  GROUP BY "channel_id"
+		) 
+	) AS first_subs ON _ch."channel_id" = first_subs."channel_id"
+  LEFT JOIN video _v on _v.channel_id = _ch."channel_id" and (_v.duration_parsed > 69 and 
+    EXTRACT(YEAR FROM _v.published_at) = ${year} 
+    )
+where _ch.channel_id in (${channels})	and _cc.creator_id in (${creators})
+group by _c.id, _ch.channel_id
+order by name asc, _ch.subs desc;
+    `;
+
+
+    const result = await sequelize.query(hottestChannelsQuery, {
+      // replacements: { range: parseInt(range) },
+      type: Sequelize.QueryTypes.SELECT,
+    });
+
+    // console.log(hottestChannels);
+    res.status(200).json({
+      status: "success",
+      results: result,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      status: "error",
+      message: error.message,
+    });
+  }
+
+};
+
 export const findAllChannelStatsController = async (
   req: Request<{}, {}, {}, ChannelsReqQuery>,
   res: Response

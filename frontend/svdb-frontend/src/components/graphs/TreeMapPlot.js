@@ -179,9 +179,11 @@ const TreeMapPlot = ({ title, filter }) => {
                 </Col>
             </Row>
             <Card size="small"
-                style={{padding: '0px', border: 'none', backgroundColor: 'transparent', color: 'black'}}
-                headStyle={{color: 'black'}}
-                bodyStyle={{paddingRight: '0px', paddingLeft: '0px'}}
+                style={{
+                    head: { color: 'black' },
+                    body: { paddingRight: '0px', paddingLeft: '0px' },
+                    padding: '0px', border: 'none', backgroundColor: 'transparent', color: 'black'
+                }}
                 tabList={tabListNoTitle}
                 activeTabKey={activeTabKey2}
                 onTabChange={onTab2Change}>

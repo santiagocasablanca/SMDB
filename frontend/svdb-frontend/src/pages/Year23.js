@@ -1,6 +1,6 @@
 
 import { EyeOutlined, LikeOutlined, LineChartOutlined, YoutubeOutlined } from '@ant-design/icons';
-import { Avatar, Col, Row, Space, Spin, Typography, List, Divider, Timeline, Tag, Grid, Drawer, Image } from 'antd';
+import { Avatar, Col, Row, Space, Spin, Typography, Tabs, Table, Timeline, Tag, Grid, Drawer, Image, Card, Collapse, Divider } from 'antd';
 import dayjs from 'dayjs';
 import insertCss from 'insert-css';
 import React, { useEffect, useState } from 'react';
@@ -11,10 +11,19 @@ import VideoPreviewForHighlight from '../components/video/VideoPreviewForHighlig
 import variables from '../sass/antd.module.scss';
 import useFormatter from '../hooks/useFormatter';
 import { getChannelsFn, fetchMostSubChannelByMonth } from "../services/channelApi.ts";
+import { getCreatorsFn } from "../services/creatorApi.ts";
 import { getVideosFn, getVideoFn } from "../services/videoApi.ts";
 // import VideoDrawer from './VideoDrawer';
 import VideoRate from '../components/video/VideoRate';
 import VideoGrowthLine from '../components/graphs/VideoGrowthLine';
+import AppLoading from '../components/AppLoading';
+import Year23Timeline from './Year23Timeline';
+import Year23Overview from './Year23Overview';
+import VideographyPage from '../components/videography/VideographyPage';
+import CreatorFilterPage from '../components/videography2023/CreatorFilterPage';
+import ChannelsFilterPage from '../components/videography2023/ChannelsFilterPage';
+import ChannelSelector from '../components/videography2023/ChannelSelector';
+import CreatorGraphsPanel from '../components/videography2023/CreatorGraphsPanel';
 
 const { Title, Text, Paragraph } = Typography;
 const { CheckableTag } = Tag;
@@ -29,638 +38,133 @@ const Year23Page = () => {
   const [selectedVideo, setSelectedVideo] = useState([]);
   const [top100videos, setTop100videos] = useState([]);
   const [channels, setChannels] = useState([]);
+  const [creators, setCreators] = useState([]);
+  const [selectedCreators, setSelectedCreators] = useState([]);
+  const [selectedCreatorsChannels, setSelectedCreatorsChannels] = useState([]);
+  const [selectedChannels, setSelectedChannels] = useState([]);
+
+  const handleSelectedCreatorsChange = (newSelectedCreators) => {
+    setSelectedCreators(newSelectedCreators);
+
+    const channels = newSelectedCreators.reduce((acc, creator) => {
+      creator.channels.forEach((channel) => {
+        const existingChannel = acc.find((c) => c.channel_id === channel.channel_id);
+        if (!existingChannel) {
+          acc.push({
+            channel_id: channel.channel_id,
+            custom_url: channel.custom_url,
+            title: channel.title,
+            subs: channel.subs,
+            videos: channel.videos,
+            views: channel.views,
+            likes: channel.likes,
+            comments: channel.comments,
+            logo_url: channel.logo_url,
+            banner_url: channel.banner_url,
+            channel_created_at: channel.channel_created_at,
+          });
+        }
+      });
+      return acc;
+    }, []);
+    // console.log(newSelectedCreators, channels);
+    setSelectedCreatorsChannels(channels);
+  };
+
+  const handleSelectedChannelsChange = (newSelectedChannels) => {
+    setSelectedChannels(selectedCreatorsChannels.filter((channel) => { return newSelectedChannels.includes(channel.channel_id)}));
+  };
+
 
   const [open, setOpen] = useState(false);
 
-
-  const { intToStringBigNumber, parseDate, parseDuration, parseDateToFromNow, displayVideoDurationInMinutes } = useFormatter();
-
-  const [selectedChannels, setSelectedChannels] = useState([]);
-  const [selectedAllChannels, setSelectedAllChannels] = useState(true)
-  const handleChange = (channel, checked) => {
-    const nextSelectedTags = checked
-      ? [...selectedChannels, channel]
-      : selectedChannels.filter((t) => t !== channel);
-    console.log('You are interested in: ', nextSelectedTags);
-    setSelectedChannels(nextSelectedTags);
-  };
-
-  const handleAllChange = (checked) => {
-    setSelectedAllChannels(checked);
-    const nextSelectedTags = checked
-      ? [channels]
-      : [];
-    console.log('You are interested in: ', nextSelectedTags);
-    setSelectedChannels(nextSelectedTags);
-  };
-
-  useEffect(() => {
-    async function fetchChannels() {
-      await getChannelsFn(1, 1000, null).then((channelsResult) => {
-        setChannels(channelsResult.results);
-        setSelectedChannels(channelsResult.results);
-      });
-    }
-    fetchChannels();
-  }, []);
-
-  useEffect(() => {
-
-    async function fetchVideos() {
-      let now = dayjs();
-      let oldDate = dayjs('2023-01-01');  //.subtract(1, 'year');
-      let range = [];
-      range.push(oldDate.format());
-      range.push(now.format());
-
-      // search videos
-      let _paramsTop = new URLSearchParams();
-      _paramsTop.append("sort", "views%desc")
-      _paramsTop.append("channels", selectedChannels.map(it => {
-        return it.channel_id
-      }))
-      _paramsTop.append("publishedAtRange", range)
-      await getVideosFn(1, 100, _paramsTop)
-        .then((result) => {
-          // console.log(result);
-          const sorted = result.videos?.sort(
-            (a, b) => new Date(a.published_at) - new Date(b.published_at)
-          );
-          setTop100videos(sorted.map(video => {
-            return {
-              dot: (
-                <YoutubeOutlined
-                  style={{
-                    fontSize: '19px',
-                  }}
-                />
-              ),
-              label: parseDate(video.published_at),
-              color: 'red',
-              children: <VideoCard video={video} childToParent={childToParent} />,
-            }
-          }));
-          setIsLoaded(true);
-        })
-    }
-    fetchVideos();
-  }, [selectedChannels]);
-
-  const fetchVideo = async (video_id) => {
-    await getVideoFn(video_id)
-      .then((result) => {
-        console.log(result);
-        setSelectedVideo(result.result);
-        setOpen(true);
-      });
-
-  }
-
-  const childToParent = (childdata) => {
-    fetchVideo(childdata.video_id);
-  }
-
-  const onClose = () => {
-    setOpen(false);
-  };
-
-  const handleClickVideo = (id) => {
-    console.log(id);
-    const url = '/video/' + id;
-    // not necessary, kind of redudant at the moment. Params are set through useParams and useLocation (state)
-    navigate(url, { state: { id: id } });
-  }
-
-  const goToChannel = (id) => {
-    const url = '/channel/' + id;
-    // not necessary, kind of redudant at the moment. Params are set through useParams and useLocation (state)
-    navigate(url, { state: { id: id } });
-  }
-
-  const goToCreator = (id) => {
-    const url = '/creator/' + id;
-    // not necessary, kind of redudant at the moment. Params are set through useParams and useLocation (state)
-    navigate(url, { state: { id: id } });
-  }
-
   insertCss(`  
-  .spinContent {
-    padding: 50px;
-    background: rgba(0, 0, 0, 0.01);
-    border-radius: 4px;
-  }
-  
-  .ant-spin-nested-loading >div>.ant-spin .ant-spin-text {
-    text-shadow: 0px 0px;
-    
-  }
-
-  .ant-timeline .ant-timeline-item-head-custom {
-    background-color: transparent;
-  }
-
-  .respText {
-    font-size: 12px;
-  }
-
-  .scrollmenu {
-    overflow: auto;
-    white-space: nowrap;
-  }
-
-  .scrollmenu div {
-    display: inline-block;
-   
-  }
-
-  .homeHeaderPanel {
-    margin: 20px 100px auto;
-    margin-bottom: 20px;
-    
-    color: `+ variables.sdmnYellow + `;
-  }
-
-  .homeHeaderPanel h3 {
-    color: `+ variables.richBlack + `;
-  }
-  .homeHeaderPanel span {
-    color: `+ variables.richBlack + `;
-    gap: 5px;
-  }
- 
-  .homeHeaderPanel button span {
-    background: `+ variables.richBlack + `;
-    color: `+ variables.sdmnYellow + `;
-    
-  }
-
   .year23Container {
-    margin: 0 100px auto;
+    margin: 0 80px auto;
     margin-top: 25px;
   }
-
-  .ant-carousel .slick-dots-bottom {
-    bottom: 55px !important;
-  }
-
-  .drawerThumbnail {
-    width: 100% !important;
-    height: 400px !important;
-  }
-
-  .outerDiv {
-    margin-right: 10px; 
-    max-width: 100%;
-  }
-
-  .headerDiv {
-    width: 100%;
-    display: flex;
-    justify-content: flex-start;
-    gap: 5px;
-    color: black;
-    margin-bottom: 5px;
-    align-items: baseline;
-  }
-
-
-  .thumbDivBig {
-    width: 100%;
-    height: 349px;
-  }
-
-  .titleDiv {
-    color: black; 
-    width: 520px; 
-    margin-top: 10px;
-    margin-bottom: 5px;
-    cursor: pointer;
-  }
-
 
   @media (max-width: 1400px) {
     .year23Container {
       margin: 0 20px;
       margin-top: 25px;
     }
-
-    .outerDiv {
-      max-width: 100%; 
-    }
-  
-    .headerDiv {
-      width: 100%;
-    }
-  
-    .thumbDivBig {
-      width: 100%;
-      height: 249px;
-    }
-  
-    .titleDiv {
-      color: black; 
-      width: 100%;
-    }
   }
-
 
   @media (max-width: 600px) {
     .year23Container {
       margin: 0 10px;
       margin-top: 25px;
     }
-    .homeHeaderPanel {
-      margin: 10px 30px auto;
-    }
-
-    .respText {
-      font-size: 10px;
-    }
-
-    .respChannelTitle {
-      font-size: 11px;
-    }
-
-    .outerDiv {
-      max-width: 240px;
-    }
-
-    .headerDiv {
-      width: 100%;
-      display: flex;
-      flex-wrap: wrap;
-    }
-
-    .titleDiv {
-      width: 100%;
-      
-    }
-
-    .thumbDivBig {
-      width: 100%;
-      height: 100px;
-    }
-
-    .drawerThumbnail {
-      width: 312px !important;
-      height: 200px !important;
-    }
-
-    .ant-carousel .slick-dots-bottom {
-      bottom: 67px !important;
-    }
   }
   `
   );
 
 
-  const VideoCard = ({ video, childToParent }) => {
-    const [channel, setChannel] = useState(video?.channel);
-    const [logo, setLogo] = useState(video?.channel?.logo_url);
-    const [opacity, setOpacity] = useState('1');
-
-
-    useEffect(() => {
-
-      setChannel(video?.channel);
-      setLogo(video?.channel?.logo_url);
-    }, [video]);
-
-    const goToChannel = () => {
-      const url = '/channel/' + video.channel_id;
-      // not necessary, kind of redudant at the moment. Params are set through useParams and useLocation (state)
-      navigate(url, { state: { id: video.channel_id } });
-    }
-
-    const handleClickVideo = (id) => {
-      console.log(id);
-      childToParent(video);
-      // const url = '/video/' + id;
-      // not necessary, kind of redudant at the moment. Params are set through useParams and useLocation (state)
-      // navigate(url, { state: { id: id } });
-    }
-
-    return (
-      <div style={{ opacity: opacity }} className="outerDiv"
-        onMouseEnter={(e) => {
-          e.currentTarget.style.opacity = '1';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.opacity = opacity;
-        }}>
-        <div style={{ padding: '5px' }}>
-          <div className="headerDiv">
-            <div onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = 'hsl(0, 0%, 90%)';
-              e.currentTarget.style.borderRadius = '8px';
-            }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'inherit';
-                e.currentTarget.style.borderRadius = 'inherit';
-              }}>
-              <Avatar src={logo} onClick={goToChannel} size="small" style={{ marginRight: '5px', cursor: 'pointer' }} />
-              <Text className="respChannelTitle" style={{ color: 'black', cursor: 'pointer' }} strong onClick={goToChannel}>{video.channel.title}</Text>
-            </div>
-            <Text className="respText" style={{ color: 'gray' }}> released</Text>
-          </div>
-          <div>
-            <div className="thumbDivBig">
-              <Image onClick={() => handleClickVideo(video.video_id)} style={{ borderRadius: '8px', objectFit: 'cover', cursor: 'pointer' }}
-                placeholder={true}
-                src={video.url} width="100%" height="100%" preview={false} />
-            </div>
-
-            <Title className="titleDiv" style={{ color: 'black' }}
-              ellipsis={{ tooltip: video.title }}
-              onClick={() => handleClickVideo(video.video_id)}
-              level={5}>{video.title}</Title>
-
-            <div style={{ color: 'black', display: 'inline-flex', gap: '5px', flexWrap: 'wrap', alignItems: 'center' }}>
-              <Text style={{ color: 'gray' }}> {intToStringBigNumber(video.views)} views</Text>
-              <Divider style={{ backgroundColor: 'gray', cursor: 'pointer', fontSize: '12px' }} type="vertical"></Divider>
-              <Text style={{ color: 'gray', fontSize: '12px' }}>{displayVideoDurationInMinutes(video.duration)} min</Text>
-              <div style={{ color: 'white', fontSize: '10px', backgroundColor: 'black', opacity: '0.8', borderRadius: '8px', padding: '3px' }}>
-                <VideoRate _video={video} />
-              </div>
-            </div>
-          </div>
-        </div>
-        <br></br>
-      </div>
-    );
-  };
-
-
-
   return (<>
     {/* <HeaderPanel title="Home" channels={channels}></HeaderPanel> */}
-    {isLoaded ?
+    {true ?
       (
         <>
           <div className="year23Container">
             <Row justify="center">
               <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={18}>
-                <Title style={{ color: 'black', justify: 'center' }} level={2}><YoutubeOutlined style={{ marginRight: '5px' }} /> Top 100 of 2023</Title>
+                <Title style={{ color: 'black', justify: 'center' }} level={2}><YoutubeOutlined style={{ marginRight: '5px' }} />2023</Title>
+                <Collapse
+                  size="small"
+                  open={true}
+                  defaultActiveKey={['1']}
+                  items={[
+                    {
+                      key: '1',
+                      label: 'Filter Creators/Channels',
+                      children: <span>
+                        <Title level={5}>Creators</Title>
+                        <CreatorFilterPage onSelectedCreatorsChange={handleSelectedCreatorsChange} />
+                        <Title level={5}>Channels</Title>
+                        {/* <ChannelsFilterPage onSelectedChannelsChange={handleSelectedChannelsChange} channels={selectedCreatorsChannels} /> */}
+                        <ChannelSelector channels={selectedCreatorsChannels} onChange={handleSelectedChannelsChange} />
+                      </span>,
+                    },
+                  ]}
+                />
 
-                <Space size={[6, 8]} wrap>
-                  <Paragraph
-                    ellipsis={
-                      {
-                        rows: 2,
-                        expandable: true,
-                        symbol: 'more',
-                      }
-                    }
-                  >
-                    The timeline of the Best 100 Videos of 2023.
-
-
-                    <CheckableTag
-                          key='selectAll'
-                          checked={selectedAllChannels}
-                          onChange={(checked) => handleAllChange(checked)}
-                        >
-                          {selectedAllChannels ? 'Deselect All' : 'Select All'}
-                        </CheckableTag>
-                    {channels?.map((channel, index) => {
-                      return (
-                        <CheckableTag
-                          key={channel.channel_id}
-                          checked={selectedChannels.includes(channel)}
-                          onChange={(checked) => handleChange(channel, checked)}
-                        >
-                          {channel.title}
-                        </CheckableTag>
-                        // <Tag
-                        //   key={channel.channel_id}
-                        //   color={variables.richBlack}
-                        //   closable={false}
-                        //   style={{
-                        //     userSelect: 'none',
-                        //     color: 'white'
-                        //   }}>
-                        //   <span>
-                        //     {channel.title}
-                        //   </span>
-                        // </Tag>
-                      )
-                    })
-                    }</Paragraph>
-                </Space>
               </Col>
             </Row>
             <Row justify="center">
-              <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={18}>
-                <Timeline
-                  mode="alternate"
-                  items={top100videos}
-                />
-              </Col>
+              <Tabs
+                style={{ width: '100%' }}
+                defaultActiveKey="1"
+                items={[
+                  {
+                    key: '1',
+                    label: 'Overview',
+                    children: <Year23Overview selectedChannels={selectedChannels} selectedCreators={selectedCreators} />,
+                  },
+                  {
+                    key: '2',
+                    label: 'Timeline',
+                    children: <Year23Timeline selectedChannels={selectedChannels} />,
+                  },
+                  {
+                    key: '3',
+                    label: 'Graphs',
+                    children: <CreatorGraphsPanel title="Graphs" _channels={selectedCreatorsChannels} />,
+                  },
+                  // {
+                  //   key: '3',
+                  //   label: 'Videography',
+                  //   children: <VideographyPage />,
+                  // },
+                ]}
+              />
             </Row>
             <br></br>
           </div>
-          <Drawer title={parseDate(selectedVideo?.published_at, 'DD MMM YYYY')} placement="right" size={myDrawerSize} onClose={onClose} open={open}>
-            <div style={{ marginRight: '10px' }}>
-              <div style={{ padding: '5px' }}>
-                <div style={{ display: 'flex', justifyContent: 'flex-start', gap: '5px', color: 'black', marginBottom: '5px', alignItems: 'baseline' }}>
-                  <div onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = 'hsl(0, 0%, 90%)';
-                    e.currentTarget.style.borderRadius = '8px';
-                  }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = 'inherit';
-                      e.currentTarget.style.borderRadius = 'inherit';
-                    }}>
-                    <Avatar src={selectedVideo?.channel?.logo_url} onClick={() => goToChannel(selectedVideo?.channel.channel_id)} style={{ marginRight: '5px', cursor: 'pointer' }} />
-                    <Text style={{ color: 'white', cursor: 'pointer' }} strong onClick={() => goToChannel(selectedVideo?.channel.channel_id)}>{selectedVideo?.channel?.title}</Text>
-                  </div>
-                  <Text style={{ color: 'gray' }}> released</Text>
-                </div>
 
-                <div>
-                  <Image onClick={() => handleClickVideo(selectedVideo.video_id)} style={{ borderRadius: '8px', objectFit: 'cover', cursor: 'pointer' }}
-                    placeholder={true}
-                    src={selectedVideo.url} className="drawerThumbnail" preview={false} />
-
-                  <Title style={{ color: 'white', marginTop: '10px', marginBottom: '5px', cursor: 'pointer' }}
-                    ellipsis={{ tooltip: selectedVideo?.title }}
-                    onClick={() => handleClickVideo(selectedVideo?.video_id)}
-                    level={5}>{selectedVideo?.title}</Title>
-
-                  <div style={{ color: 'black', display: 'inline-flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
-                    <Text style={{ color: 'gray' }}> {intToStringBigNumber(selectedVideo?.views)} views</Text>
-                    <Divider style={{ backgroundColor: 'gray', cursor: 'pointer', fontSize: '12px' }} type="vertical"></Divider>
-                    <Text style={{ color: 'gray', fontSize: '12px' }}>{displayVideoDurationInMinutes(selectedVideo.duration)} min</Text>
-                    <div style={{ color: 'white', fontSize: '10px', backgroundColor: 'black', opacity: '0.8', borderRadius: '8px', padding: '3px' }}>
-                      <VideoRate _video={selectedVideo} />
-                    </div>
-                  </div>
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  {selectedVideo?.tags ?
-                    <>
-                      <Space>
-                        <Text strong style={{ color: 'white' }}>Tags </Text>
-                        <Space size={[0, 6]} wrap>
-                          {selectedVideo.tags && selectedVideo.tags?.map((tag, index) => {
-                            return (
-                              <Tag
-                                key={tag + 'tags'}
-                                closable={false}
-                                style={{
-                                  userSelect: 'none'
-                                }}>
-                                <span>
-                                  {tag}
-                                </span>
-                              </Tag>
-                            )
-                          })
-                          }
-                        </Space>
-                      </Space>
-                    </>
-                    : null
-                  }
-
-                  {selectedVideo?.serie ?
-                    <>
-                      <Space>
-                        <Text strong style={{ color: 'white' }}>Series </Text>
-                        <Space size={[0, 6]} wrap>
-                          {selectedVideo.serie && [selectedVideo.serie]?.map((tag, index) => {
-                            return (
-                              <Tag
-                                key={tag + 'series'}
-                                color={variables.sdmnPink}
-                                closable={false}
-                                style={{
-                                  userSelect: 'none',
-                                  color: 'black'
-                                }}>
-                                <span>
-                                  {tag}
-                                </span>
-                              </Tag>
-                            )
-                          })
-                          }
-                        </Space>
-                      </Space>
-                    </> : null
-                  }
-                  {selectedVideo?.game ?
-                    <Space>
-                      <Text strong style={{ color: 'white' }}>Game </Text>
-                      <Space size={[0, 6]} wrap>
-                        {selectedVideo.game && [selectedVideo.game]?.map((tag, index) => {
-                          return (
-                            <Tag
-                              key={tag + 'game'}
-                              color={variables.sdmnLightBlue}
-                              closable={false}
-                              style={{
-                                userSelect: 'none',
-                                color: 'black'
-                              }}>
-                              <span>
-                                {tag}
-                              </span>
-                            </Tag>
-                          )
-                        })
-                        }
-                      </Space>
-                    </Space>
-
-                    : null
-                  }
-
-                  <Space>
-                    <Text strong style={{ color: 'white' }}>Directed By </Text>
-                    <Space size={[0, 6]} wrap>
-                      {selectedVideo.directedBy && selectedVideo.directedBy.length > 0 ?
-                        selectedVideo.directedBy.map((item, index) => {
-                          return (
-                            <div style={{ color: 'white' }}>
-                              <div
-                                onMouseEnter={(e) => {
-                                  e.currentTarget.style.backgroundColor = 'hsl(0, 0%, 90%)';
-                                  e.currentTarget.style.borderRadius = '8px';
-                                }}
-                                onMouseLeave={(e) => {
-                                  e.currentTarget.style.backgroundColor = 'inherit';
-                                  e.currentTarget.style.borderRadius = 'inherit';
-                                }}>
-                                <Avatar src={item.profile_picture} size="small" onClick={() => goToCreator(item.id)} style={{
-                                  marginRight: '5px', cursor: 'pointer'
-                                }} />
-                                <Text style={{ color: 'white', marginRight: '5px', cursor: 'pointer' }} strong
-                                  onClick={() => goToCreator(item.id)}>{item.name}</Text>
-
-                              </div>
-                            </div>
-
-                          )
-                        }) : <Text style={{ color: 'white' }}>No Data</Text>
-                      }
-                    </Space>
-                  </Space>
-
-                  {selectedVideo.cast && selectedVideo.cast.length > 0 ?
-                    <List
-                      style={{ marginTop: '-12px' }}
-                      header={<Text strong style={{ color: 'white' }}>Cast</Text>}
-                      size="small"
-                      grid={{
-                        gutter: 16,
-                        xs: 1,
-                        sm: 1,
-                        md: 1,
-                        lg: 2,
-                        xl: 2,
-                        xxl: 2,
-                      }}
-                      // locale={{ emptyText: <Empty text="No data" image={Empty.PRESENTED_IMAGE_SIMPLE} imageStyle={{ padding: '2px', height: '32px' }}></Empty> }}
-                      itemLayout="horizontal"
-                      dataSource={selectedVideo?.cast}
-                      renderItem={(creator, index) => (
-                        <List.Item key={creator.id} onClick={() => goToCreator(creator.id)} className="showPointer" style={{ color: 'black' }}>
-                          <List.Item.Meta onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor = 'hsl(0, 0%, 90%)';
-                            e.currentTarget.style.borderRadius = '8px';
-                          }}
-                            onMouseLeave={(e) => {
-                              e.currentTarget.style.backgroundColor = 'inherit';
-                              e.currentTarget.style.borderRadius = 'inherit';
-                            }}
-                            avatar={<Avatar key={"draweCast" + index} src={creator.profile_picture} size="small" />}
-                            title={<><Text style={{ color: 'white' }}>{creator.name}</Text> <Text italic type="secondary" style={{ color: 'gray' }}> as {creator.video_creator.role}</Text></>}
-
-                          />
-                        </List.Item>
-                      )} >
-                    </List>
-                    :
-                    <>
-                      <Space>
-                        <Text strong style={{ color: 'white' }}>Cast </Text>
-                        <Space size={[0, 6]} wrap><Text style={{ color: 'white' }}>No Data</Text></Space>
-                      </Space>
-                    </>
-                  }
-                </div>
-                <br></br>
-              </div>
-            </div>
-          </Drawer>
         </>
       ) : (
-        <Row justify="center" style={{ marginTop: '70px' }}>
-          <Spin spining="true" tip="Loading..." size="large" >
-            <div className="spinContent" />
-          </Spin>
-        </Row>
+        <AppLoading />
       )
     }
   </>);

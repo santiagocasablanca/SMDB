@@ -22,6 +22,7 @@ const CastScatterPlot = ({ title, filter }) => {
 
             let params = new URLSearchParams();
             params.append("channels", filter.channels);
+            if(filter.publishedAtRange) params.append("publishedAtRange", filter.publishedAtRange);
             findGroupedByCastFn(params)
                 .then((result) => {
 
@@ -143,14 +144,16 @@ const CastScatterPlot = ({ title, filter }) => {
                     <Title style={{ color: "black" }} level={4}>{title}</Title>
                 </Col>
             </Row>
-            <Card style={{padding: '0px', border: 'none', backgroundColor: 'transparent', color: 'black'}}
-                headStyle={{color: 'black'}}
-                bodyStyle={{paddingRight: '0px', paddingLeft: '0px'}} size="small">
+            <Card 
+            style={{ head: { color: 'black' }, 
+                     body: { paddingRight: '0px', paddingLeft: '0px' }, 
+                     padding: '0px', border: 'none', backgroundColor: 'transparent', color: 'black' }}
+                size="small">
                 {isLoaded ? (
                     data.length > 0 ? (
                         <Scatter {...config} />
                     ) : (
-                            <Empty description="No data available"/>
+                            <Empty description="No data available" />
                             // <Text>No data available.</Text>
                         )
                 ) : (

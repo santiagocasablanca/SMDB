@@ -37,6 +37,18 @@ export const fetchMostSubChannelByMonth = async (month) => {
   return response.data;
 }
 
+export const fetchChannelYearReport = async (params) => {
+  
+  const req = `/channelStats/yearReport?${params}`;
+  const response = await channelApi.get<IChannelResponse>(
+    req
+  );
+
+  return response.data;
+}
+
+
+
 // export const getChannelStatsFn = async (channel_id) => {
 //   try {
 //     const cachedData = localStorage.getItem('channelStats');

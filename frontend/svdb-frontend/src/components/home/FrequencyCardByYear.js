@@ -32,7 +32,6 @@ const { Title, Text } = Typography;
 
 const FrequencyCardByYear = ({ _channels, year }) => {
   const { intToStringBigNumber, parseDate, parseDuration, humanizeDurationFromSeconds, displayVideoDurationFromSeconds, displayDurationFromSeconds } = useFormatter();
-  const [selectedYear, setSelectedYear] = useState();
   const [selectedChannels, setSelectedChannels] = useState(_channels.map(item => { return item.channel_id; }));
   const [defaultValue, setDefaultValue] = useState([]);
   const [channels, setChannels] = useState([]);
@@ -47,7 +46,6 @@ const FrequencyCardByYear = ({ _channels, year }) => {
 
   useEffect(() => {
     // console.log(_channels, year);
-    setSelectedYear(year);
     const temp = [];
     const temp_ids = [];
     if (_channels) {
@@ -348,38 +346,6 @@ const FrequencyCardByYear = ({ _channels, year }) => {
     }
   }
   `);
-  // height: 115px;
-  // defaultValue={defaultValue} 
-  const filter = (
-    <Space.Compact block >
-      <Select defaultValue={selectedYear} disabled>
-        <Option value="2023">2023</Option>
-        <Option value="2022">2022</Option>
-        <Option value="2021">2021</Option>
-        <Option value="2020">2020</Option>
-        <Option value="2019">2019</Option>
-        <Option value="2018">2018</Option>
-        <Option value="2017">2017</Option>
-        <Option value="2016">2016</Option>
-        <Option value="2015">2015</Option>
-        <Option value="2014">2014</Option>
-        <Option value="2013">2013</Option>
-        <Option value="2012">2012</Option>
-        <Option value="2011">2011</Option>
-        <Option value="2010">2010</Option>
-        <Option value="2009">2009</Option>
-        <Option value="2008">2008</Option>
-        {/* Add more options as needed */}
-      </Select>
-
-
-      <Select require mode="multiple" allowClear maxTagCount='responsive' style={{ width: "350px", fontSize: '11px' }} value={selectedChannels} options={channels}>
-
-        {/* Add more options as needed */}
-      </Select>
-    </Space.Compact>
-  );
-
 
   return (
     <>

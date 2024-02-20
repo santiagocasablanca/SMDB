@@ -27,7 +27,7 @@ import { findAllCreatorsController, fetchCreatorController, fetchCreatorStatsCon
 import { findAllVideoStatsController } from "../controllers/videoStats.controller";
 import { fetchLeaderboardController, addToLeaderboardController } from "../controllers/gameOne.controller";
 
-import { fetchMostSubscribedChannelsByMonth, findAllChannelStatsController, fetchHottestChannels } from "../controllers/channelStats.controller";
+import { fetchMostSubscribedChannelsByMonth, findAllChannelStatsController, fetchHottestChannels, fetchYearlyChannelReport } from "../controllers/channelStats.controller";
 
 const router = express.Router();
 
@@ -41,6 +41,9 @@ router.route("/gameOneLeaderboard/")
   .get(fetchLeaderboardController)
   .post(addToLeaderboardController);
 
+
+router.route("/channelStats/yearReport")
+  .get(fetchYearlyChannelReport);
 router.route("/channelStats/")
   .get(fetchHottestChannels); //findAllChannelStatsController);
 // .get(fetchMostSubscribedChannelsByMonth);
