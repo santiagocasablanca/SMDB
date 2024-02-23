@@ -17,7 +17,7 @@ import VideoRate from '../components/video/VideoRate';
 import VideoGrowthLine from '../components/graphs/VideoGrowthLine';
 import CreatorStatsPanel from '../components/creator/CreatorStatsPanel';
 
-const { Title, Text, Paragraph } = Typography;
+const { Title, Text, Paragraph, Link } = Typography;
 const { CheckableTag } = Tag;
 const { useBreakpoint } = Grid;
 
@@ -64,7 +64,7 @@ const Year23Overview = ({ selectedCreators, selectedChannels }) => {
                 _first_subs: parseInt(item._first_subs),
                 subs: parseInt(item.subs),
                 total_subs_increase: parseInt(item.total_subs_increase),
-                subs_growth_percentage:  parseFloat(item.subs_growth_percentage),
+                subs_growth_percentage: parseFloat(item.subs_growth_percentage),
                 videos_published: parseInt(item.videos_published),
                 videos_views: parseInt(item.videos_views),
                 views: parseInt(item.views),
@@ -80,7 +80,7 @@ const Year23Overview = ({ selectedCreators, selectedChannels }) => {
               result[creatorId]._first_subs += parseInt(item._first_subs) || 0;
               result[creatorId].subs += parseInt(item.subs) || 0;
               result[creatorId].total_subs_increase += parseInt(item.total_subs_increase) || 0;
-              result[creatorId].subs_growth_percentage +=  parseFloat(item.subs_growth_percentage) || 0;
+              result[creatorId].subs_growth_percentage += parseFloat(item.subs_growth_percentage) || 0;
               result[creatorId].videos_published += parseInt(item.videos_published) || 0;
               result[creatorId].videos_views += parseInt(item.videos_views || 0);
               result[creatorId].views += parseInt(item.views) || 0;
@@ -109,55 +109,65 @@ const Year23Overview = ({ selectedCreators, selectedChannels }) => {
         dataIndex: 'title',
         key: 'title',
         width: 150,
-        render: (text, record) => <span><Avatar src={<img src={record.url} alt={record.url} />} /> {text} </span>,
+        render: (text, record) => <span style={{ cursor: 'pointer' }} onClick={() => goToChannel(record.channel_id)}><Avatar src={<img src={record.logo_url} alt={record.logo_url} />} /> {text} </span>,
       },
       {
         title: 'Initial Subs',
         dataIndex: '_first_subs',
         key: '_first_subs',
         render: (val) => <p>{intToStringBigNumber(val)}</p>,
+        sorter: (a, b) => a._first_subs - b._first_subs,
       },
       {
         title: 'Subs',
         dataIndex: 'subs',
         key: 'subs',
         render: (val) => <p>{intToStringBigNumber(val)}</p>,
+        sorter: (a, b) => a.subs - b.subs,
       },
       {
         title: 'Subs Increase',
         dataIndex: 'total_subs_increase',
         key: 'total_subs_increase',
-        render: (val, record) => <p>{intToStringBigNumber(val)} <Text type="secondary">({(parseFloat(record.subs_growth_percentage)).toFixed(1)}%)</Text></p>,
+        sorter: (a, b) => a.subs_growth_percentage - b.subs_growth_percentage,
+        render: (val, record) => <p style={{ color: record.subs_growth_percentage > 0 ? variables.freq5 : 'red' }}>{intToStringBigNumber(val)} <Text type="secondary">({(parseFloat(record.subs_growth_percentage)).toFixed(1)}%)</Text></p>,
       },
       {
         title: 'Videos',
         dataIndex: 'videos_published',
         key: 'videos_published',
-        render: (val) => <p>{intToStringBigNumber(val)}</p>,
+        defaultSortOrder: 'descend',
+        sorter: (a, b) => a.videos_published - b.videos_published,
+        render: (val, record) => <Link onClick={() => { handleVideosClick(record.channel_id) }} target="_blank">{intToStringBigNumber(val)}</Link>,
+
       },
       {
         title: 'Video Views',
         dataIndex: 'videos_views',
         key: 'videos_views',
+        sorter: (a, b) => a.videos_views - b.videos_views,
         render: (val) => <p>{intToStringBigNumber(val)}</p>,
       },
       {
         title: 'Initial Views',
         dataIndex: '_first_views',
         key: '_first_views',
+        sorter: (a, b) => a._first_views - b._first_views,
         render: (val) => <p>{intToStringBigNumber(val)}</p>,
       },
       {
         title: 'Total Views',
         dataIndex: 'views',
         key: 'views',
+        sorter: (a, b) => a.views - b.views,
         render: (val) => <p>{intToStringBigNumber(val)}</p>,
       },
       {
         title: 'Views Increase',
         dataIndex: 'total_views_increase',
         key: 'total_views_increase',
-        render: (val, record) => <p>{intToStringBigNumber(val)} <Text type="secondary">({(parseFloat(record.views_growth_percentage)).toFixed(1)}%)</Text></p>,
+        sorter: (a, b) => a.views_growth_percentage - b.views_growth_percentage,
+        render: (val, record) => <p style={{ color: record.views_growth_percentage > 0 ? variables.freq5 : 'red' }} >{intToStringBigNumber(val)} <Text type="secondary">({(parseFloat(record.views_growth_percentage)).toFixed(1)}%)</Text></p>,
       },
     ];
 
@@ -186,7 +196,22 @@ const Year23Overview = ({ selectedCreators, selectedChannels }) => {
     navigate(url, { state: { id: id } });
   }
 
-  insertCss(`  
+  const handleVideosClick = (_channels) => {
+    const url = '/videography';
+    // const [paramsRecent, setParamsRecent] = useState({ sort: "published_at%desc" });
+    console.log(_channels);
+    const filter = {
+      channels: _channels,
+      publishedAtRange: [dayjs('2023-01-01').format(), dayjs('2024-01-01').format()],
+      sort: "published_at%asc"
+    };
+    navigate(url, { state: { filter }, replace: true, preventScrollReset: true });
+  }
+
+  insertCss(`
+  .yearly-overview-table p {
+    color: white !important;
+  }
   
   `
   );
@@ -196,56 +221,64 @@ const Year23Overview = ({ selectedCreators, selectedChannels }) => {
       title: 'Creator',
       dataIndex: 'profile_picture',
       key: 'profile_picture',
-      width: '30%',
-      render: (url, record) => <span><Avatar src={<img src={url} alt={url} />} /> {record.name}</span>,
+      width: '25%',
+      render: (url, record) => <span style={{ cursor: 'pointer' }} onClick={() => goToCreator(record.creator_id)}><Avatar src={<img src={url} alt={url} />} /> {record.name}</span>,
     },
     {
       title: 'Initial Subs',
       dataIndex: '_first_subs',
       key: '_first_subs',
       render: (val) => <p>{intToStringBigNumber(val)}</p>,
+      sorter: (a, b) => a._first_subs - b._first_subs,
     },
     {
       title: 'Subs',
       dataIndex: 'subs',
       key: 'subs',
       render: (val) => <p>{intToStringBigNumber(val)}</p>,
+      sorter: (a, b) => a.subs - b.subs,
     },
     {
       title: 'Subs Increase',
       dataIndex: 'total_subs_increase',
       key: 'total_subs_increase',
-      render: (val, record) => <p>{intToStringBigNumber(val)} <Text type="secondary">({(parseFloat(record.subs_growth_percentage)).toFixed(1)}%)</Text></p>,
+      render: (val, record) => <p style={{ color: record.subs_growth_percentage > 0 ? variables.freq5 : 'red' }}>{intToStringBigNumber(val)} <Text type="secondary">({(parseFloat(record.subs_growth_percentage)).toFixed(1)}%)</Text></p>,
+      sorter: (a, b) => a.subs_growth_percentage - b.subs_growth_percentage,
     },
     {
       title: 'Videos',
       dataIndex: 'videos_published',
       key: 'videos_published',
-      render: (val) => <p>{intToStringBigNumber(val)}</p>,
+      render: (val, record) => <Link onClick={() => { handleVideosClick(record.channels.map(channel => channel.channel_id)) }} target="_blank">{intToStringBigNumber(val)}</Link>,
+      sorter: (a, b) => a.videos_published - b.videos_published,
     },
     {
       title: 'Video Views',
       dataIndex: 'videos_views',
       key: 'videos_views',
       render: (val) => <p>{intToStringBigNumber(val)}</p>,
+      sorter: (a, b) => a.videos_views - b.videos_views,
     },
     {
       title: 'Initial Views',
       dataIndex: '_first_views',
       key: '_first_views',
       render: (val) => <p>{intToStringBigNumber(val)}</p>,
+      sorter: (a, b) => a._first_views - b._first_views,
     },
     {
       title: 'Total Views',
       dataIndex: 'views',
       key: 'views',
       render: (val) => <p>{intToStringBigNumber(val)}</p>,
+      sorter: (a, b) => a.views - b.views,
     },
     {
       title: 'Views Increase',
       dataIndex: 'total_views_increase',
       key: 'total_views_increase',
-      render: (val, record) => <p>{intToStringBigNumber(val)} <Text type="secondary">({(parseFloat(record.views_growth_percentage)).toFixed(1)}%)</Text></p>,
+      render: (val, record) => <p style={{ color: record.views_growth_percentage > 0 ? variables.freq5 : 'red' }}>{intToStringBigNumber(val)} <Text type="secondary">({(parseFloat(record.views_growth_percentage)).toFixed(1)}%)</Text></p>,
+      sorter: (a, b) => a.views_growth_percentage - b.views_growth_percentage,
     },
 
   ];
@@ -277,10 +310,10 @@ const Year23Overview = ({ selectedCreators, selectedChannels }) => {
             </Row>
             <Row justify="center">
               <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={18}>
-                <Table size='large'
+                <Table
                   pagination={false}
-                  // className="channel-table"
-                  // style={{width: '100%'}}
+                  className="yearly-overview-table"
+                  // style={{ colorText: 'white' }}
                   width="100%"
                   scroll={{ x: 600 }}
                   columns={columns}
@@ -291,78 +324,6 @@ const Year23Overview = ({ selectedCreators, selectedChannels }) => {
                     expandedRowRender
                   }}
                   size="small"
-                // summary={(pageData) => {
-                //   let totalSubs = 0;
-                //   let totalVideos = 0;
-                //   let totalViews = 0;
-                //   let avgViews = 0;
-                //   let mostViewed = 0;
-                //   let totalLikes = 0;
-                //   let avgLikes = 0;
-                //   let mostLiked = 0;
-                //   let duration = 0;
-                //   let avgDuration = 0;
-                //   let longest = 0;
-                //   // Avg Views	Most Viewed	Total Likes	Avg Likes	Most Liked	Play time	Avg Video Duration	Longest
-                //   let n_channels = pageData.length;
-                //   pageData.forEach(({ subs, videos, views, stats }) => {
-                //     totalSubs += parseInt(subs);
-                //     totalVideos += parseInt(videos);
-                //     totalViews += parseInt(views);
-                //     totalLikes += parseInt(stats?.likes.value);
-                //     duration += parseInt(stats?.duration.value);
-                //     mostViewed = (parseInt(stats?.views.most) > mostViewed ? stats?.views.most : mostViewed);
-                //     mostLiked = (parseInt(stats?.likes.most) > mostLiked ? stats?.likes.most : mostLiked);
-                //     longest = (parseInt(stats?.duration.most) > longest ? stats?.duration.most : longest);
-                //   });
-                //   avgLikes = (totalLikes / totalVideos);
-                //   avgViews = (totalViews / totalVideos);
-                //   avgDuration = (duration / totalVideos);
-                //   return (
-                //     <>
-                //       <Table.Summary.Row>
-                //         <Table.Summary.Cell index={0}></Table.Summary.Cell>
-                //         <Table.Summary.Cell index={1}>Totals</Table.Summary.Cell>
-                //         <Table.Summary.Cell index={2}>
-                //           {intToStringBigNumber(totalSubs)}
-                //         </Table.Summary.Cell>
-                //         <Table.Summary.Cell index={3}>
-                //           {intToStringBigNumber(totalVideos)}
-                //         </Table.Summary.Cell>
-                //         <Table.Summary.Cell index={4}>
-                //           {intToStringBigNumber(totalViews)}
-                //         </Table.Summary.Cell>
-                //         <Table.Summary.Cell index={5}>
-                //           {intToStringBigNumber(avgViews)}
-                //         </Table.Summary.Cell>
-                //         <Table.Summary.Cell index={6}>
-                //           {intToStringBigNumber(mostViewed)}
-                //         </Table.Summary.Cell>
-                //         <Table.Summary.Cell index={7}>
-                //           {intToStringBigNumber(totalLikes)}
-                //         </Table.Summary.Cell>
-                //         <Table.Summary.Cell index={8}>
-                //           {intToStringBigNumber(avgLikes)}
-                //         </Table.Summary.Cell>
-                //         <Table.Summary.Cell index={9}>
-                //           {intToStringBigNumber(mostLiked)}
-                //         </Table.Summary.Cell>
-                //         <Table.Summary.Cell index={10}>
-                //           {displayDurationFromSeconds(duration)}
-                //         </Table.Summary.Cell>
-                //         <Table.Summary.Cell index={11}>
-                //           {displayVideoDurationFromSeconds(avgDuration)}
-                //         </Table.Summary.Cell>
-                //         <Table.Summary.Cell index={12}>
-                //           {displayVideoDurationFromSeconds(longest)}
-                //         </Table.Summary.Cell>
-                //       </Table.Summary.Row>
-
-                //     </>
-                //   );
-
-
-                // }}
                 >
                 </Table>
               </Col>

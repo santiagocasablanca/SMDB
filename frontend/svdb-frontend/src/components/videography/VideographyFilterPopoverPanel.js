@@ -1,5 +1,7 @@
 import { Button, Col, Collapse, Drawer, DatePicker, Form, Input, Row, Select, Space } from 'antd';
 import { React, useEffect, useState } from "react";
+import dayjs from 'dayjs';
+
 import insertCss from 'insert-css';
 import { useLocation } from 'react-router-dom';
 import { getChannelsFn } from '../../services/channelApi.ts';
@@ -31,7 +33,7 @@ const VideographyFilterPopoverPanel = ({ _filters, _open, childToParent }) => {
 
 
   const fetchChannels = () => {
-    if(channels.length > 0) return;
+    if (channels.length > 0) return;
 
     let params = new URLSearchParams();
     // if (_filters.channels)
@@ -55,7 +57,7 @@ const VideographyFilterPopoverPanel = ({ _filters, _open, childToParent }) => {
   }
 
   const fetchSeries = () => {
-    if(series.length > 0) return;
+    if (series.length > 0) return;
     const temp = []
     Object.keys(SeriesEnum).map(key => {
       temp.push({
@@ -67,7 +69,7 @@ const VideographyFilterPopoverPanel = ({ _filters, _open, childToParent }) => {
   }
 
   const fetchTags = () => {
-    if(tags.length > 0) return;
+    if (tags.length > 0) return;
     const temp = []
     Object.keys(TagsEnum).map(key => {
       temp.push({
@@ -80,7 +82,7 @@ const VideographyFilterPopoverPanel = ({ _filters, _open, childToParent }) => {
 
 
   const fetchGames = () => {
-    if(games.length > 0) return;
+    if (games.length > 0) return;
     const temp = []
     Object.keys(GamesEnum).map(key => {
       temp.push({
@@ -138,8 +140,8 @@ const VideographyFilterPopoverPanel = ({ _filters, _open, childToParent }) => {
     const rangeStr = [];
     range?.forEach((date) => {
       // console.log(date.format());
-      if(date)
-      rangeStr.push(date.format())
+      if (date)
+        rangeStr.push(date.format())
     })
 
     _filters.publishedAtRange = rangeStr;
@@ -200,9 +202,9 @@ const VideographyFilterPopoverPanel = ({ _filters, _open, childToParent }) => {
           placement="right"
           bodyClassName="filter-container"
           headerClassName="header-container"
-          bodyStyle={{padding: '0px'}}
+          style={{ body: { padding: '0px' } }}
           height="95%"
-          
+
           onClose={onCancel}
           open={open}
           extra={
@@ -213,13 +215,13 @@ const VideographyFilterPopoverPanel = ({ _filters, _open, childToParent }) => {
           }>
           <div className="filter-container">
             <Form form={form} layout="vertical"
-            initialValues={{
-              ["select-multiple"]: _filters.channels,
-              ["select-series"]: _filters.series,
-              ["publishedAt"]: _filters.publishedAtRange,
-              ["select-tags"]: _filters.tags,
-              ["select-game"]: _filters.games,
-            }}>
+              initialValues={{
+                ["select-multiple"]: _filters.channels,
+                ["select-series"]: _filters.series,
+                ["publishedAt"]: _filters.publishedAtRange?.length > 0 ? [dayjs(_filters.publishedAtRange[0]), dayjs(_filters.publishedAtRange[1])] : [],
+                ["select-tags"]: _filters.tags,
+                ["select-game"]: _filters.games,
+              }}>
 
 
               {/* Title */}
@@ -276,6 +278,7 @@ const VideographyFilterPopoverPanel = ({ _filters, _open, childToParent }) => {
                     label="Published At">
                     <RangePicker
                       value={_filters.publishedAtRange}
+                      
                       style={{ width: '95%' }}
                       format="YYYY-MM-DD"
                       onChange={handleDateRangeChange} />

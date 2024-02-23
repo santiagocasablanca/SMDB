@@ -53,13 +53,13 @@ const VideoPreviewForHighlight = ({ _video, index }) => {
     }
 
     .videoPreviewForHighlight:hover {
-        
         border-radius: 8px;
-      }
+    }
        
-        .videoPreviewForHighlight h5, p {
-            color: black;
-        }
+    .videoPreviewForHighlight h5,
+    .videoPreviewForHighlight p {
+        color: black;
+    }
         .videoPreviewForHighlight span {
             color: black;
         }
@@ -128,14 +128,14 @@ const VideoPreviewForHighlight = ({ _video, index }) => {
                     <Row>
                         <Col span={24}>
                             <div style={{ position: 'relative' }} className="highlightedThumbnail">
-                                
+
                                 <Image style={{ borderRadius: '8px', objectFit: 'cover', cursor: 'pointer' }} src={_video.url} width='100%' height="100%" preview={false}
                                     onClick={() => handleClickVideo(_video.video_id)} />
 
-                                    <div style={{ position: 'absolute', bottom: '5px', right: '5px' }}>
-                                        <VideoDurationOverlay duration={_video.duration} />
-                                    </div>
-                              
+                                <div style={{ position: 'absolute', bottom: '5px', right: '5px' }}>
+                                    <VideoDurationOverlay duration={_video.duration} />
+                                </div>
+
                             </div>
                         </Col>
                     </Row>
