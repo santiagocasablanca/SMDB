@@ -66,7 +66,7 @@ const Year23Overview = ({ selectedCreators, selectedChannels }) => {
                 total_subs_increase: parseInt(item.total_subs_increase),
                 subs_growth_percentage: parseFloat(item.subs_growth_percentage),
                 videos_published: parseInt(item.videos_published),
-                videos_views: parseInt(item.videos_views),
+                videos_views: item.videos_views ? parseInt(item.videos_views) : 0,
                 views: parseInt(item.views),
                 _first_views: parseInt(item._first_views),
                 total_views_increase: parseInt(item.total_views_increase),
@@ -82,7 +82,7 @@ const Year23Overview = ({ selectedCreators, selectedChannels }) => {
               result[creatorId].total_subs_increase += parseInt(item.total_subs_increase) || 0;
               result[creatorId].subs_growth_percentage += parseFloat(item.subs_growth_percentage) || 0;
               result[creatorId].videos_published += parseInt(item.videos_published) || 0;
-              result[creatorId].videos_views += parseInt(item.videos_views || 0);
+              result[creatorId].videos_views += item.videos_views ? parseInt(item.videos_views || 0) : 0;
               result[creatorId].views += parseInt(item.views) || 0;
               result[creatorId]._first_views += parseInt(item._first_views) || 0;
               result[creatorId].total_views_increase += parseInt(item.total_views_increase) || 0;
@@ -93,6 +93,14 @@ const Year23Overview = ({ selectedCreators, selectedChannels }) => {
 
             return result;
           }, {});
+          // Normalize the percentages
+          Object.values(groupedData).forEach((creator) => {
+            const numChannels = creator.channels.length || 1; // Ensure it's at least 1 to avoid division by zero
+            creator.subs_growth_percentage /= numChannels;
+            creator.views_growth_percentage /= numChannels;
+          });
+
+          console.log(Object.values(groupedData))
           setCreators(Object.values(groupedData));
           setChannels(result.results);
           setIsLoaded(true);
@@ -130,7 +138,7 @@ const Year23Overview = ({ selectedCreators, selectedChannels }) => {
         dataIndex: 'total_subs_increase',
         key: 'total_subs_increase',
         sorter: (a, b) => a.subs_growth_percentage - b.subs_growth_percentage,
-        render: (val, record) => <p style={{ color: record.subs_growth_percentage > 0 ? variables.freq5 : 'red' }}>{intToStringBigNumber(val)} <Text type="secondary">({(parseFloat(record.subs_growth_percentage)).toFixed(1)}%)</Text></p>,
+        render: (val, record) => <span style={{ color: record.subs_growth_percentage > 0 ? variables.freq5 : 'red' }}>{intToStringBigNumber(val)} <Text type="secondary">({(parseFloat(record.subs_growth_percentage)).toFixed(1)}%)</Text></span>,
       },
       {
         title: 'Videos',
@@ -167,7 +175,7 @@ const Year23Overview = ({ selectedCreators, selectedChannels }) => {
         dataIndex: 'total_views_increase',
         key: 'total_views_increase',
         sorter: (a, b) => a.views_growth_percentage - b.views_growth_percentage,
-        render: (val, record) => <p style={{ color: record.views_growth_percentage > 0 ? variables.freq5 : 'red' }} >{intToStringBigNumber(val)} <Text type="secondary">({(parseFloat(record.views_growth_percentage)).toFixed(1)}%)</Text></p>,
+        render: (val, record) => <span style={{ color: record.views_growth_percentage > 0 ? variables.freq5 : 'red' }} >{intToStringBigNumber(val)} <Text type="secondary">({(parseFloat(record.views_growth_percentage)).toFixed(1)}%)</Text></span>,
       },
     ];
 
@@ -242,7 +250,8 @@ const Year23Overview = ({ selectedCreators, selectedChannels }) => {
       title: 'Subs Increase',
       dataIndex: 'total_subs_increase',
       key: 'total_subs_increase',
-      render: (val, record) => <p style={{ color: record.subs_growth_percentage > 0 ? variables.freq5 : 'red' }}>{intToStringBigNumber(val)} <Text type="secondary">({(parseFloat(record.subs_growth_percentage)).toFixed(1)}%)</Text></p>,
+      render: (val, record) => <span style={{ color: record.subs_growth_percentage > 0 ? variables.freq5 : 'red' }}>{intToStringBigNumber(val)}  <Text type="secondary">({(parseFloat(record.subs_growth_percentage)).toFixed(1)}%)</Text></span>,
+      //
       sorter: (a, b) => a.subs_growth_percentage - b.subs_growth_percentage,
     },
     {
@@ -277,7 +286,8 @@ const Year23Overview = ({ selectedCreators, selectedChannels }) => {
       title: 'Views Increase',
       dataIndex: 'total_views_increase',
       key: 'total_views_increase',
-      render: (val, record) => <p style={{ color: record.views_growth_percentage > 0 ? variables.freq5 : 'red' }}>{intToStringBigNumber(val)} <Text type="secondary">({(parseFloat(record.views_growth_percentage)).toFixed(1)}%)</Text></p>,
+      render: (val, record) => <span style={{ color: record.views_growth_percentage > 0 ? variables.freq5 : 'red' }}>{intToStringBigNumber(val)} <Text type="secondary">({(parseFloat(record.views_growth_percentage)).toFixed(1)}%)</Text></span>,
+      // 
       sorter: (a, b) => a.views_growth_percentage - b.views_growth_percentage,
     },
 
