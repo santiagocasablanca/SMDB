@@ -110,74 +110,90 @@ export const findAllCreatorsController = async (
       channelClause['channel_id'] = { [Op.in]: channelsArr };
     }
 
+    let creators = [];
     if (req.query.publishedAtRange) {
       let rangeDate = req.query.publishedAtRange.split(',');
       const publishedAtSearchInitial = dayjs(rangeDate[0]).format("YYYY-MM-DD");
       const publishedAtSearchFinal = dayjs(rangeDate[1]).format("YYYY-MM-DD");
       videoClause['published_at'] = { [Sequelize.Op.between]: [publishedAtSearchInitial, publishedAtSearchFinal] };
       videoClause['duration_parsed'] = { [Sequelize.Op.gt]: ['69'] };
+
+      creators = await Creator.findAndCountAll({
+
+        limit, offset: skip, order: [sort], include: [{
+          model: Channel,
+          as: 'channels', attributes: ['channel_id', 'custom_url',
+            'title',
+            'subs',
+            'videos',
+            'views',
+            'likes',
+            'comments',
+            'logo_url',
+            'banner_url',
+            'channel_created_at'],
+          where: channelClause
+        }, {
+          model: Video,
+          as: 'videosDirected', attributes: [
+            'video_id',
+            'title',
+            'duration',
+            'channel_id',
+            'channel_title',
+            'views',
+            'likes',
+            'comments',
+            'url',
+            'player',
+            'livestream',
+            'serie',
+            'published_at',
+          ],
+          where: videoClause,
+          required: false
+        }, {
+          model: Video,
+          through: { attributes: [] },
+          as: 'videosCasted', attributes: [
+            'video_id',
+            'title',
+            'duration',
+            'channel_id',
+            'channel_title',
+            'views',
+            'likes',
+            'comments',
+            'url',
+            'player',
+            'livestream',
+            'serie',
+            'published_at',
+          ],
+          required: false,
+          where: videoClause
+        }]
+      });
+    } else {
+      creators = await Creator.findAndCountAll({
+
+        limit, offset: skip, order: [sort], include: [{
+          model: Channel,
+          as: 'channels', attributes: ['channel_id', 'custom_url',
+            'title',
+            'subs',
+            'videos',
+            'views',
+            'likes',
+            'comments',
+            'logo_url',
+            'banner_url',
+            'channel_created_at'],
+          where: channelClause
+        }]
+      });
     }
-
-
-
-    // TODO implement this query! more views and likes over videos uploaded on range
-    const creators = await Creator.findAndCountAll({
-
-      limit, offset: skip, order: [sort], include: [{
-        model: Channel,
-        as: 'channels', attributes: ['channel_id', 'custom_url',
-          'title',
-          'subs',
-          'videos',
-          'views',
-          'likes',
-          'comments',
-          'logo_url',
-          'banner_url',
-          'channel_created_at'],
-        where: channelClause
-      }, {
-        model: Video,
-        as: 'videosDirected', attributes: [
-          'video_id',
-          'title',
-          'duration',
-          'channel_id',
-          'channel_title',
-          'views',
-          'likes',
-          'comments',
-          'url',
-          'player',
-          'livestream',
-          'serie',
-          'published_at',
-        ],
-        where: videoClause,
-        required: false
-      }, {
-        model: Video,
-        through: { attributes: [] },
-        as: 'videosCasted', attributes: [
-          'video_id',
-          'title',
-          'duration',
-          'channel_id',
-          'channel_title',
-          'views',
-          'likes',
-          'comments',
-          'url',
-          'player',
-          'livestream',
-          'serie',
-          'published_at',
-        ],
-        required: false,
-        where: videoClause
-      }]
-    });
-    creators.rows.map((creator) => {
+    (creators as any).rows.map((creator) => {
       creator.videos = creator.channels.reduce((accumulator, obj) => accumulator + parseInt(obj.videos), 0);
       creator.likes = creator.channels.reduce((accumulator, obj) => accumulator + parseInt(obj.likes), 0);
       creator.subs = creator.channels.reduce((accumulator, obj) => accumulator + parseInt(obj.subs), 0);
@@ -188,8 +204,8 @@ export const findAllCreatorsController = async (
 
     res.status(200).json({
       status: "success",
-      count: creators.count,
-      results: creators.rows,
+      count: (creators as any).count,
+      results: (creators as any).rows,
     });
   } catch (error: any) {
     res.status(500).json({
