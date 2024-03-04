@@ -2,6 +2,7 @@ import { Request, Response, urlencoded } from "express";
 const dayjs = require('dayjs')
 const { Sequelize, QueryTypes } = require('sequelize');
 const Op = Sequelize.Op;
+// import { sql } from '@sequelize/core';
 
 import { db, sequelize } from "../util/db";
 import { ChannelsReqQuery, ChannelsSearchReqQuery, VideosSearchReqQuery, SearchReqQuery } from "./types";
@@ -9,6 +10,8 @@ const VideoService = require('../services/videoService');
 const Video = db.video;
 const Channel = db.channel;
 const Creator = db.creator;
+const VideoCreator = db.videoCreator;
+const Director = db.director;
 
 export const updateVideoController = async (
   req: Request,
@@ -697,7 +700,7 @@ export const findHighlightedVideosController = async (
     //sort 
     let sort = ['views', 'DESC'];
 
-    let excludeShorts =  'true';
+    let excludeShorts = 'true';
 
     let whereClause = {}
 
@@ -868,8 +871,8 @@ export const gameOne = async (req: Request<{}, {}, {}, VideosSearchReqQuery & { 
       ], where: whereClause,
       include: [{
         model: Channel,
-        as: 'channel', attributes: ['channel_id', 
-        // 'custom_url',
+        as: 'channel', attributes: ['channel_id',
+          // 'custom_url',
           // 'title',
           'subs',
           'videos',
@@ -910,11 +913,38 @@ export const findAllVideosController = async (
     let excludeShorts = req.query.excludeShorts !== undefined ? req.query.excludeShorts : 'true';
 
     let whereClause = {}
+    let filterByIds = [];
+    let filterById = false;
+    let directedByClause = {}
+    let castedByClause = {}
+
+    if (req.query.creators) {
+      var creatorsArr = req.query.creators.split(',');
+      const channels = await sequelize.query(
+        'SELECT channel_id FROM channel_creator WHERE creator_id in (:ids) ',
+        {
+          replacements: { ids: creatorsArr },
+          type: QueryTypes.SELECT
+        }
+      );
+      filterByIds = filterByIds.concat(channels.map(t => { return (t as any).channel_id; }));
+
+
+      // whereClause['channel_id'] = { [Op.in]: filterByIds };
+      whereClause['channel_id'] = whereClause['channel_id'] || { [Op.in]: [] };
+      whereClause['channel_id'][Op.in] = whereClause['channel_id'][Op.in].concat(filterByIds);
+    
+      // console.log(whereClause);
+      // whereClause['channel_id'] = { [Op.in]: sequelize.literal(`SELECT channel_id FROM channel_creator cc WHERE cc.channel_id in (`+creatorsAr+`)`) };
+    }
 
     if (req.query.channels) {
       var channelsArr = req.query.channels.split(',');
 
-      whereClause['channel_id'] = { [Op.or]: channelsArr };
+      // whereClause['channel_id'] = { [Op.in]: channelsArr };
+      whereClause['channel_id'] = whereClause['channel_id'] || { [Op.in]: [] };
+      whereClause['channel_id'][Op.in] = whereClause['channel_id'][Op.in].concat(channelsArr);
+    
     }
 
     if (req.query.excludedChannels) {
@@ -923,33 +953,51 @@ export const findAllVideosController = async (
       whereClause['channel_id'] = { [Op.notIn]: channelsArr };
     }
 
-    if (req.query.castMember) {
-      var creatorArr = req.query.castMember.split(',');
+    if (req.query.directedBy) {
+      const directedByArr = req.query.directedBy.split(',');
+      const directed = await sequelize.query(
+        'SELECT video_id FROM director WHERE creator_id in (:ids) ',
+        {
+          replacements: { ids: directedByArr },
+          // bind: directedByArr,
+          type: QueryTypes.SELECT
+        }
+      );
+      filterByIds = filterByIds.concat(directed.map(t => { return (t as any).video_id; }));
+      filterById = true;
+    }
 
-      whereClause['channel_id'] = { [Op.notIn]: channelsArr };
+    if (req.query.cast) {
+      const castArr = req.query.cast.split(',');
+      const casted = await sequelize.query(
+        'SELECT video_id FROM video_creator WHERE creator_id in (:ids)',
+        {
+          // bind: req.query.cast,
+          replacements: { ids: castArr },
+          type: QueryTypes.SELECT
+        }
+      );
+      filterByIds = filterByIds.concat(casted.map(t => { return (t as any).video_id; }));
+      filterById = true;
     }
 
     if (req.query.series) {
       var seriessArr = req.query.series.split(',');
-
       whereClause['serie'] = { [Op.or]: seriessArr };
     }
 
     if (req.query.games) {
       var gamesArr = req.query.games.split(',');
-
       whereClause['game'] = { [Op.or]: gamesArr };
     }
 
     if (req.query.tags) {
       var tagsArr = req.query.tags.split(',');
-
       whereClause['tags'] = { [Op.contains]: tagsArr };
     }
 
     if (req.query.title) {
       const searchTitle = req.query.title.toLowerCase();
-      const lowerTitleCol = Sequelize.fn('lower', Sequelize.col('title'));
       whereClause['video.title'] = Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('video.title')), 'LIKE', '%' + searchTitle + '%');
     }
 
@@ -969,7 +1017,12 @@ export const findAllVideosController = async (
       whereClause['duration_parsed'] = { [Sequelize.Op.gt]: ['69'] };
     }
 
-    // // console.log(whereClause);
+    if (filterById) {
+      console.log(filterByIds);
+      whereClause['video_id'] = { [Op.in]: filterByIds };
+    }
+
+    //  console.log(whereClause);
 
     const videos = await Video.findAndCountAll({
       attributes: ['video_id', 'title',
@@ -1002,18 +1055,52 @@ export const findAllVideosController = async (
           'comments',
           'logo_url',]
       },
-      // {
-      //   model: Creator,
-      //   as: 'directedBy', attributes: ['id', 'custom_url', 'name', 'profile_picture']
-      // },
-      // {
-      //   model: Creator,
-      //   as: 'cast',
-      //   attributes: ['id', 'custom_url', 'name', 'profile_picture'],
-      // }
-    ],
-      limit, offset: skip, order: [sort], subQuery: false,
+        // {
+        //   model: Creator,
+        //   as: 'directedBy', attributes: ['id', 'custom_url', 'name', 'profile_picture'],
+        //   where: directedByClause,
+        //   through: {
+        //     attributes: []
+        //   },
+        //   required: false,
+        //   subQuery: true
+        // },
+        // {
+        //   model: VideoCreator,
+        //   where: castedByClause,
+        //   required: false,
+        //   subQuery: true
+        // }
+      ],
+      limit, offset: skip, order: [sort], distinct: true,
     });
+
+
+    // const videoIds = (videos).rows.map(video => video.get('video_id'));
+    // directedByClause['video_id'] = { [Op.in]: videoIds };
+
+    // const directorsQuery = {
+    //   model: Creator,
+    //   as: 'directedBy',
+    //   attributes: ['id', 'custom_url', 'name', 'profile_picture'],
+    //   where: directedByClause,
+    //   include: [{
+    //     model: Video,
+    //     as: 'videosDirected', attributes: ['video_id']
+    //   }, {
+    //     model: Video,
+    //     through: { attributes: [] },
+    //     as: 'videosCasted', attributes: ['video_id']
+    //   }]
+    // };
+
+    // const meta = Creator.findAll(directorsQuery);
+
+    // console.log(videos);
+    // videos.rows.forEach(video => {
+    //   video.directedBy = directors.filter(dir => dir.videos[0].video_id === videoId);
+    // });
+
 
     res.status(200).json({
       status: "success",
@@ -1049,7 +1136,7 @@ export const findAllAppearencesController = async (
     if (req.query.channels) {
       var channelsArr = req.query.channels.split(',');
 
-      whereClause['channel_id'] = { [Op.or]: channelsArr };
+      whereClause['channel_id'] = { [Op.in]: channelsArr };
     }
 
     if (req.query.excludedChannels) {
@@ -1189,7 +1276,7 @@ export const findAllVideoGuestsController = async (
     if (req.query.channels) {
       var channelsArr = req.query.channels.split(',');
 
-      whereClause['channel_id'] = { [Op.or]: channelsArr };
+      whereClause['channel_id'] = { [Op.in]: channelsArr };
     }
 
     if (req.query.excludedChannels) {

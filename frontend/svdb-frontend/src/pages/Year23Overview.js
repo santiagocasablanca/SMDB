@@ -1,24 +1,15 @@
 
-import { EyeOutlined, LikeOutlined, LineChartOutlined, YoutubeOutlined } from '@ant-design/icons';
+import { YoutubeOutlined } from '@ant-design/icons';
 import { Avatar, Col, Row, Space, Spin, Typography, List, Table, Timeline, Tag, Grid, Drawer, Image } from 'antd';
 import dayjs from 'dayjs';
 import insertCss from 'insert-css';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import HorizontalHighlightedList from '../components/video/HorizontalHighlightedList';
-import HorizontalShortsList from '../components/video/HorizontalShortsList';
-import VideoPreviewForHighlight from '../components/video/VideoPreviewForHighlight';
 import variables from '../sass/antd.module.scss';
 import useFormatter from '../hooks/useFormatter';
 import { getChannelsFn, fetchChannelYearReport } from "../services/channelApi.ts";
-import { getVideosFn, getVideoFn } from "../services/videoApi.ts";
-// import VideoDrawer from './VideoDrawer';
-import VideoRate from '../components/video/VideoRate';
-import VideoGrowthLine from '../components/graphs/VideoGrowthLine';
-import CreatorStatsPanel from '../components/creator/CreatorStatsPanel';
 
 const { Title, Text, Paragraph, Link } = Typography;
-const { CheckableTag } = Tag;
 const { useBreakpoint } = Grid;
 
 const Year23Overview = ({ selectedCreators, selectedChannels }) => {
@@ -43,12 +34,13 @@ const Year23Overview = ({ selectedCreators, selectedChannels }) => {
 
     async function fetchData() {
       if (selectedChannels.length > 0) {
+        const channelIds = selectedChannels.map(item => { return item.channel_id; });
         let _params = new URLSearchParams();
         _params.append("year", "2023")
         _params.append("creators", selectedCreators.map(it => {
           return it.id
         }));
-        _params.append("channels", selectedChannels.map(item => { return item.channel_id; }));
+        _params.append("channels", channelIds);
 
         await fetchChannelYearReport(_params).then((result) => {
 
@@ -98,9 +90,17 @@ const Year23Overview = ({ selectedCreators, selectedChannels }) => {
             const numChannels = creator.channels.length || 1; // Ensure it's at least 1 to avoid division by zero
             creator.subs_growth_percentage /= numChannels;
             creator.views_growth_percentage /= numChannels;
+            const sC = selectedCreators.find((t) => t.id === creator.creator_id);
+
+            
+            creator.videos_directed = sC?.videosDirected || [];
+            creator.videos_casted = sC?.videosCasted || [];
+
+            // creator.videos_directed = sC?.videosDirected.filter(t => channelIds.includes(t.channel_id) ) || [];
+            // creator.videos_casted = sC?.videosCasted.filter(t => channelIds.includes(t.channel_id)) || [];
           });
 
-          console.log(Object.values(groupedData))
+          // console.log(Object.values(groupedData))
           setCreators(Object.values(groupedData));
           setChannels(result.results);
           setIsLoaded(true);
@@ -180,13 +180,13 @@ const Year23Overview = ({ selectedCreators, selectedChannels }) => {
     ];
 
     const rowData = record;
-    console.log(rowData.channels);
+    // console.log(rowData.channels);
 
     return <Table columns={columns} dataSource={rowData.channels} rowKey={(record) => record.channel_id} pagination={false} size="small" />;
   };
 
   const handleClickVideo = (id) => {
-    console.log(id);
+    // console.log(id);
     const url = '/video/' + id;
     // not necessary, kind of redudant at the moment. Params are set through useParams and useLocation (state)
     navigate(url, { state: { id: id } });
@@ -213,7 +213,29 @@ const Year23Overview = ({ selectedCreators, selectedChannels }) => {
       publishedAtRange: [dayjs('2023-01-01').format(), dayjs('2024-01-01').format()],
       sort: "published_at%asc"
     };
-    navigate(url, { state: { filter }, replace: true, preventScrollReset: true });
+    navigate(url, { state: { filter }, preventScrollReset: true });
+  }
+
+  const handleVideosDirectedClick = (_creator_id, _channels) => {
+    const url = '/videography';
+    const filter = {
+      // channels: _channels,
+      directedBy: [_creator_id],
+      publishedAtRange: [dayjs('2023-01-01').format(), dayjs('2024-01-01').format()],
+      sort: "published_at%asc"
+    };
+    navigate(url, { state: { filter }, preventScrollReset: true });
+  }
+
+  const handleVideosCastClick = (_creator_id, _channels) => {
+    const url = '/videography';
+    const filter = {
+      // channels: _channels,
+      cast: [_creator_id],
+      publishedAtRange: [dayjs('2023-01-01').format(), dayjs('2024-01-01').format()],
+      sort: "published_at%asc"
+    };
+    navigate(url, { state: { filter }, preventScrollReset: true });
   }
 
   insertCss(`
@@ -289,6 +311,22 @@ const Year23Overview = ({ selectedCreators, selectedChannels }) => {
       render: (val, record) => <span style={{ color: record.views_growth_percentage > 0 ? variables.freq5 : 'red' }}>{intToStringBigNumber(val)} <Text type="secondary">({(parseFloat(record.views_growth_percentage)).toFixed(1)}%)</Text></span>,
       // 
       sorter: (a, b) => a.views_growth_percentage - b.views_growth_percentage,
+    },
+    {
+      title: 'Videos Directed',
+      dataIndex: 'videos_directed',
+      key: 'videos_directed',
+      render: (val, record) => <Link onClick={() => { handleVideosDirectedClick(record.creator_id, record.channels.map(channel => channel.channel_id)) }} target="_blank">{intToStringBigNumber(val.length)}</Link>,
+      // 
+      sorter: (a, b) => a.videos_directed.length - b.videos_directed.lenght,
+    },
+    {
+      title: 'Videos Casted',
+      dataIndex: 'videos_casted',
+      key: 'videos_casted',
+      render: (val, record) => <Link onClick={() => { handleVideosCastClick(record.creator_id, record.channels.map(channel => channel.channel_id)) }} target="_blank">{intToStringBigNumber(val?.length)}</Link>,
+      // 
+      sorter: (a, b) => a.videos_casted.length - b.videos_casted.lenght,
     },
 
   ];

@@ -123,6 +123,7 @@ const VideographyPage = () => {
   const [open, setOpen] = useState(false);
 
   const showFilter = () => {
+    // console.log(searchParams, searchParams.get('cast'),searchParams.get('cast')?.split(','), searchParams.get('directedBy'), searchParams.get('publishedAtRange')?.split(',') );
     setOpen(true);
   };
 
@@ -389,13 +390,15 @@ const VideographyPage = () => {
           {/* showFilter */}
           <VideographyFilterPopoverPanel _filters={
             {
+              creators: searchParams.get('creators') ? searchParams.get('creators')?.split(',') : [],
               channels: searchParams.get('channels') ? searchParams.get('channels')?.split(',') : [],
+              cast: searchParams.get('cast') ? searchParams.get('cast')?.split(',') : [],
+              directedBy: searchParams.get('directedBy') ? searchParams.get('directedBy')?.split(',') : [],
               publishedAtRange: searchParams.get('publishedAtRange') ? searchParams.get('publishedAtRange')?.split(',') : [],
               locations: searchParams.get('locations') ? searchParams.get('locations')?.split(',') : [],
               series: searchParams.get('series') ? searchParams.get('series')?.split(',') : [],
               games: searchParams.get('games') ? searchParams.get('games')?.split(',') : [],
               tags: searchParams.get('tags') ? searchParams.get('tags')?.split(',') : [],
-              cast: [],
               search: true
             }} _open={open} childToParent={childToParent} />
           {/* <VideographyFilterPanel filters={myFilters} onChange={handleFilterChange} /> */}

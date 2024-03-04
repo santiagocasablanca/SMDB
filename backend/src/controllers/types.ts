@@ -16,6 +16,9 @@ export type ChannelsReqQuery = {
 
 export type VideosReqQuery = {
   channels?: string,
+  creators?: string,
+  directedBy?: string,
+  cast?: string,
   video_ids?: string,
   excludedChannels?: string,
   castMember?: string,
@@ -42,3 +45,4 @@ export type AddCreatorQuery = {
 
 export type ChannelsSearchReqQuery = SearchReqQuery & ChannelsReqQuery;
 export type VideosSearchReqQuery = SearchReqQuery & VideosReqQuery;
+export type CreatorsSearchReqQuery = SearchReqQuery & CreatorsReqQuery;

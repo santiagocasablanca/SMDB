@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getCreatorsFn } from "../../services/creatorApi.ts";
 import variables from '../../sass/antd.module.scss';
-
+import dayjs from 'dayjs';
 
 const CreatorFilterPage = ({ onSelectedCreatorsChange }) => {
     const [creators, setCreators] = useState([]);
@@ -20,7 +20,9 @@ const CreatorFilterPage = ({ onSelectedCreatorsChange }) => {
     // Fetch creator data from your backend
     useEffect(() => {
         async function fetchData() {
-            await getCreatorsFn(1, 100, null).then((res) => {
+            let _params = new URLSearchParams();
+            _params.append("publishedAtRange", [dayjs('2023-01-01').format(), dayjs('2024-01-01').format()]);
+            await getCreatorsFn(1, 100, _params).then((res) => {
                 setCreators(res.results);
                 const filteredResults = res.results.filter(item => sidemenCreatorIds.includes(item.id));
                 // Update selectedCreators state

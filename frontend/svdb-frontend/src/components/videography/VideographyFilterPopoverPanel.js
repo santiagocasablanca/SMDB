@@ -5,6 +5,8 @@ import dayjs from 'dayjs';
 import insertCss from 'insert-css';
 import { useLocation } from 'react-router-dom';
 import { getChannelsFn } from '../../services/channelApi.ts';
+import { getCreatorsFn } from "../../services/creatorApi.ts";
+
 import { TagsEnum, SeriesEnum, GamesEnum } from '../../services/enums.ts';
 
 const VideographyFilterPopoverPanel = ({ _filters, _open, childToParent }) => {
@@ -14,13 +16,16 @@ const VideographyFilterPopoverPanel = ({ _filters, _open, childToParent }) => {
   const [filters, setFilters] = useState();
   const [channels, setChannels] = useState([]);
   const [options, setOptions] = useState([]);
+  const [creators, setCreators] = useState([]);
+  const [creatorOptions, setCreatorOptions] = useState([]);
   const [series, setSeries] = useState([]);
   const [tags, setTags] = useState([]);
   const [games, setGames] = useState([]);
 
   useEffect(() => {
     if (_open) {
-      console.log(_filters);
+      // console.log(_filters);
+      fetchCreators();
       fetchSeries();
       fetchChannels();
       fetchTags();
@@ -53,6 +58,27 @@ const VideographyFilterPopoverPanel = ({ _filters, _open, childToParent }) => {
         setOptions(temp);
 
         result.results ? setChannels(result.results) : setChannels([])
+      })
+  }
+
+  const fetchCreators = () => {
+    if (creators.length > 0) return;
+    let params = new URLSearchParams();
+    params.append("sort", "name%asc");
+
+    getCreatorsFn(1, 10000, params)
+      .then((result) => {
+        const temp = []
+        result.results.forEach((item) => {
+          temp.push({
+            label: item.name,
+            value: item.id,
+          });
+        })
+
+        setCreatorOptions(temp);
+
+        result.results ? setCreators(result.results) : setCreators([])
       })
   }
 
@@ -117,6 +143,20 @@ const VideographyFilterPopoverPanel = ({ _filters, _open, childToParent }) => {
     _filters.channels = e;
     // onChange({ channels: e });
   };
+
+  const handleCreatorChange = (e) => {
+    _filters.creators = e;
+    // onChange({ channels: e });
+  };
+  const handleDirectedByChange = (e) => {
+    _filters.directedBy = e;
+    // onChange({ channels: e });
+  };
+  const handleCastChange = (e) => {
+    _filters.cast = e;
+    // onChange({ channels: e });
+  };
+  
 
   // const handleLocationsChange = (e) => {
   //   onChange({ locations: e });
@@ -217,6 +257,9 @@ const VideographyFilterPopoverPanel = ({ _filters, _open, childToParent }) => {
             <Form form={form} layout="vertical"
               initialValues={{
                 ["select-multiple"]: _filters.channels,
+                ["select-multiple-creators"]: _filters.creators,
+                ["select-multiple-directedBy"]: _filters.directedBy,
+                ["select-multiple-cast"]: _filters.cast,
                 ["select-series"]: _filters.series,
                 ["publishedAt"]: _filters.publishedAtRange?.length > 0 ? [dayjs(_filters.publishedAtRange[0]), dayjs(_filters.publishedAtRange[1])] : [],
                 ["select-tags"]: _filters.tags,
@@ -236,6 +279,63 @@ const VideographyFilterPopoverPanel = ({ _filters, _open, childToParent }) => {
                   </Form.Item>
                 </Col>
               </Row> */}
+
+              {/* Creators  */}
+              <Row align="top">
+                <Col span={24}>
+                  <Form.Item
+                    name="select-multiple-creators"
+                    label="Published by (Creator)">
+                    <Select mode="multiple" style={{ width: '95%' }} placeholder="Please select a creator"
+                      // defaultValue={_filters.channels}
+                      allowClear
+                      filterOption={(input, option) =>
+                        (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                      }
+                      onChange={handleCreatorChange}
+                      options={creatorOptions}>
+                    </Select>
+                  </Form.Item>
+                </Col>
+              </Row>
+
+               {/* Creators  */}
+               <Row align="top">
+                <Col span={24}>
+                  <Form.Item
+                    name="select-multiple-directedBy"
+                    label="Directed by (Creator)">
+                    <Select mode="multiple" style={{ width: '95%' }} placeholder="Please select a creator"
+                      value={_filters.directedBy}
+                      allowClear
+                      filterOption={(input, option) =>
+                        (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                      }
+                      onChange={handleDirectedByChange}
+                      options={creatorOptions}>
+                    </Select>
+                  </Form.Item>
+                </Col>
+              </Row>
+
+               {/* Cast  */}
+               <Row align="top">
+                <Col span={24}>
+                  <Form.Item
+                    name="select-multiple-cast"
+                    label="Cast">
+                    <Select mode="multiple" style={{ width: '95%' }} placeholder="Please select a creator"
+                      value={_filters.cast}
+                      allowClear
+                      filterOption={(input, option) =>
+                        (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                      }
+                      onChange={handleCastChange}
+                      options={creatorOptions}>
+                    </Select>
+                  </Form.Item>
+                </Col>
+              </Row>
 
               {/* Channels  */}
               <Row align="top">

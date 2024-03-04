@@ -8,7 +8,7 @@ const ChannelCreatorService = require('../services/channelCreatorService');
 const CreatorService = require('../services/creatorService');
 
 import { db, sequelize } from "../util/db";
-import { ChannelsSearchReqQuery, SearchReqQuery, AddCreatorQuery } from "./types";
+import { ChannelsSearchReqQuery, CreatorsSearchReqQuery, SearchReqQuery, AddCreatorQuery } from "./types";
 const Creator = db.creator;
 const Channel = db.channel;
 const Video = db.video;
@@ -50,7 +50,24 @@ export const fetchCreatorController = async (
           'serie',
           'published_at',
         ]
-      }]
+      }, {
+        model: Video,
+        as: 'videosCasted', attributes: [
+          'video_id',
+          'title',
+          'duration',
+          'channel_id',
+          'views',
+          'likes',
+          'comments',
+          'url',
+          'player',
+          'livestream',
+          'serie',
+          'published_at',
+        ]
+      }
+      ]
     });
 
     creator.videos = creator.channels.reduce((accumulator, obj) => accumulator + parseInt(obj.videos), 0);
@@ -72,7 +89,7 @@ export const fetchCreatorController = async (
 };
 
 export const findAllCreatorsController = async (
-  req: Request<{}, {}, {}, SearchReqQuery>,
+  req: Request<{}, {}, {}, CreatorsSearchReqQuery>,
   res: Response
 ) => {
   try {
@@ -84,8 +101,28 @@ export const findAllCreatorsController = async (
     //sort 
     let sort = req.query.sort ? req.query.sort.split('%') : ['name', 'ASC'];
 
+    let videoClause = {}
+    let channelClause = {}
+
+    if (req.query.channels) {
+      var channelsArr = req.query.channels.split(',');
+
+      channelClause['channel_id'] = { [Op.in]: channelsArr };
+    }
+
+    if (req.query.publishedAtRange) {
+      let rangeDate = req.query.publishedAtRange.split(',');
+      const publishedAtSearchInitial = dayjs(rangeDate[0]).format("YYYY-MM-DD");
+      const publishedAtSearchFinal = dayjs(rangeDate[1]).format("YYYY-MM-DD");
+      videoClause['published_at'] = { [Sequelize.Op.between]: [publishedAtSearchInitial, publishedAtSearchFinal] };
+      videoClause['duration_parsed'] = { [Sequelize.Op.gt]: ['69'] };
+    }
+
+
+
     // TODO implement this query! more views and likes over videos uploaded on range
     const creators = await Creator.findAndCountAll({
+
       limit, offset: skip, order: [sort], include: [{
         model: Channel,
         as: 'channels', attributes: ['channel_id', 'custom_url',
@@ -97,7 +134,8 @@ export const findAllCreatorsController = async (
           'comments',
           'logo_url',
           'banner_url',
-          'channel_created_at']
+          'channel_created_at'],
+        where: channelClause
       }, {
         model: Video,
         as: 'videosDirected', attributes: [
@@ -105,6 +143,7 @@ export const findAllCreatorsController = async (
           'title',
           'duration',
           'channel_id',
+          'channel_title',
           'views',
           'likes',
           'comments',
@@ -113,7 +152,29 @@ export const findAllCreatorsController = async (
           'livestream',
           'serie',
           'published_at',
-        ]
+        ],
+        where: videoClause,
+        required: false
+      }, {
+        model: Video,
+        through: { attributes: [] },
+        as: 'videosCasted', attributes: [
+          'video_id',
+          'title',
+          'duration',
+          'channel_id',
+          'channel_title',
+          'views',
+          'likes',
+          'comments',
+          'url',
+          'player',
+          'livestream',
+          'serie',
+          'published_at',
+        ],
+        required: false,
+        where: videoClause
       }]
     });
     creators.rows.map((creator) => {
@@ -186,8 +247,8 @@ export const findTopCreatorsController = async (
           'comments',
           'logo_url',
           'banner_url',
-          'channel_created_at'], 
-          where: channelClause
+          'channel_created_at'],
+        where: channelClause
       }]
     });
 
@@ -206,22 +267,22 @@ export const findTopCreatorsController = async (
     //       'banner_url',
     //       'channel_created_at']
     //   }, {
-      //   model: Video,
-      //   as: 'videosDirected', attributes: [
-      //     'video_id',
-      //     'title',
-      //     'duration',
-      //     'channel_id',
-      //     'views',
-      //     'likes',
-      //     'comments',
-      //     'url',
-      //     'player',
-      //     'livestream',
-      //     'serie',
-      //     'published_at',
-      //   ]
-      // }]
+    //   model: Video,
+    //   as: 'videosDirected', attributes: [
+    //     'video_id',
+    //     'title',
+    //     'duration',
+    //     'channel_id',
+    //     'views',
+    //     'likes',
+    //     'comments',
+    //     'url',
+    //     'player',
+    //     'livestream',
+    //     'serie',
+    //     'published_at',
+    //   ]
+    // }]
     // });
 
     res.status(200).json({

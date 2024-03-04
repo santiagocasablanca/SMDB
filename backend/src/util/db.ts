@@ -32,6 +32,7 @@ db.gameOneLeaderboard = require("../models/gameOneLeaderboard")(sequelize, Seque
 db.creator = require("../models/creator")(sequelize, Sequelize, DataTypes);
 db.channel = require("../models/channel")(sequelize, Sequelize, DataTypes);
 db.video = require("../models/video")(sequelize, Sequelize, DataTypes);
+db.videoCreator = require("../models/videoCreator")(sequelize, Sequelize, DataTypes);
 db.videoStats = require("../models/videoStats")(sequelize, Sequelize, DataTypes);
 db.videoStatsView = require("../models/videoStatsView")(sequelize, Sequelize, DataTypes);
 db.channelStats = require("../models/channelStats")(sequelize, Sequelize, DataTypes);
@@ -57,6 +58,13 @@ db.channel.belongsToMany(db.creator, {
 db.creator.belongsToMany(db.video, {
   through: "director", // Name of the join table
   as: 'videosDirected', // Alias to use when accessing the associated videos as director
+  foreignKey: 'creator_id', // Foreign key in the join table referencing the Creator model
+  otherKey: 'video_id', // Foreign key in the join table referencing the Video model
+});
+
+db.creator.belongsToMany(db.video, {
+  through: "video_creator", // Name of the join table
+  as: 'videosCasted', // Alias to use when accessing the associated videos as director
   foreignKey: 'creator_id', // Foreign key in the join table referencing the Creator model
   otherKey: 'video_id', // Foreign key in the join table referencing the Video model
 });
