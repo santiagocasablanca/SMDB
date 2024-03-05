@@ -93,8 +93,8 @@ const Year23Overview = ({ selectedCreators, selectedChannels }) => {
             const sC = selectedCreators.find((t) => t.id === creator.creator_id);
 
             
-            creator.videos_directed = sC?.videosDirected || [];
-            creator.videos_casted = sC?.videosCasted || [];
+            creator.videos_directed = sC?.videosDirected || 0;
+            creator.videos_casted = sC?.videosCasted || 0;
 
             // creator.videos_directed = sC?.videosDirected.filter(t => channelIds.includes(t.channel_id) ) || [];
             // creator.videos_casted = sC?.videosCasted.filter(t => channelIds.includes(t.channel_id)) || [];
@@ -316,7 +316,7 @@ const Year23Overview = ({ selectedCreators, selectedChannels }) => {
       title: 'Videos Directed',
       dataIndex: 'videos_directed',
       key: 'videos_directed',
-      render: (val, record) => <Link onClick={() => { handleVideosDirectedClick(record.creator_id, record.channels.map(channel => channel.channel_id)) }} target="_blank">{intToStringBigNumber(val.length)}</Link>,
+      render: (val, record) => <Link onClick={() => { handleVideosDirectedClick(record.creator_id, record.channels.map(channel => channel.channel_id)) }} target="_blank">{intToStringBigNumber(val)}</Link>,
       // 
       sorter: (a, b) => a.videos_directed.length - b.videos_directed.lenght,
     },
@@ -324,7 +324,7 @@ const Year23Overview = ({ selectedCreators, selectedChannels }) => {
       title: 'Videos Casted',
       dataIndex: 'videos_casted',
       key: 'videos_casted',
-      render: (val, record) => <Link onClick={() => { handleVideosCastClick(record.creator_id, record.channels.map(channel => channel.channel_id)) }} target="_blank">{intToStringBigNumber(val?.length)}</Link>,
+      render: (val, record) => <Link onClick={() => { handleVideosCastClick(record.creator_id, record.channels.map(channel => channel.channel_id)) }} target="_blank">{intToStringBigNumber(val)}</Link>,
       // 
       sorter: (a, b) => a.videos_casted.length - b.videos_casted.lenght,
     },
