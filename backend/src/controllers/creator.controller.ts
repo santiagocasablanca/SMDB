@@ -93,7 +93,7 @@ export const findAllCreatorsController = async (
   res: Response
 ) => {
   try {
-    console.log('creators controller ', req.query, req.params);
+    // console.log('creators controller ', req.query, req.params);
     const page = req.query.page || 1;
     const limit = req.query.limit || 10;
     const skip = (page - 1) * limit;
@@ -101,106 +101,89 @@ export const findAllCreatorsController = async (
     //sort 
     let sort = req.query.sort ? req.query.sort.split('%') : ['name', 'ASC'];
 
-    let videoClause = {}
     let channelClause = {}
 
     if (req.query.channels) {
       var channelsArr = req.query.channels.split(',');
-
       channelClause['channel_id'] = { [Op.in]: channelsArr };
     }
 
-    let creators = [];
-    if (req.query.publishedAtRange) {
-      let rangeDate = req.query.publishedAtRange.split(',');
-      const publishedAtSearchInitial = dayjs(rangeDate[0]).format("YYYY-MM-DD");
-      const publishedAtSearchFinal = dayjs(rangeDate[1]).format("YYYY-MM-DD");
-      videoClause['published_at'] = { [Sequelize.Op.between]: [publishedAtSearchInitial, publishedAtSearchFinal] };
-      videoClause['duration_parsed'] = { [Sequelize.Op.gt]: ['69'] };
+    let creators = await Creator.findAndCountAll({
+      limit, offset: skip, order: [sort], include: [{
+        model: Channel,
+        as: 'channels', attributes: ['channel_id', 'custom_url',
+          'title',
+          'subs',
+          'videos',
+          'views',
+          'likes',
+          'comments',
+          'logo_url',
+          'banner_url',
+          'channel_created_at'],
+        where: channelClause,
+        required: false
+      }]
+    });
 
-      creators = await Creator.findAndCountAll({
-
-        limit, offset: skip, order: [sort], include: [{
-          model: Channel,
-          as: 'channels', attributes: ['channel_id', 'custom_url',
-            'title',
-            'subs',
-            'videos',
-            'views',
-            'likes',
-            'comments',
-            'logo_url',
-            'banner_url',
-            'channel_created_at'],
-          where: channelClause
-        }, {
-          model: Video,
-          as: 'videosDirected', attributes: [
-            'video_id',
-            'title',
-            'duration',
-            'channel_id',
-            'channel_title',
-            'views',
-            'likes',
-            'comments',
-            'url',
-            'player',
-            'livestream',
-            'serie',
-            'published_at',
-          ],
-          where: videoClause,
-          required: false
-        }, {
-          model: Video,
-          through: { attributes: [] },
-          as: 'videosCasted', attributes: [
-            'video_id',
-            'title',
-            'duration',
-            'channel_id',
-            'channel_title',
-            'views',
-            'likes',
-            'comments',
-            'url',
-            'player',
-            'livestream',
-            'serie',
-            'published_at',
-          ],
-          required: false,
-          where: videoClause
-        }]
-      });
-    } else {
-      creators = await Creator.findAndCountAll({
-
-        limit, offset: skip, order: [sort], include: [{
-          model: Channel,
-          as: 'channels', attributes: ['channel_id', 'custom_url',
-            'title',
-            'subs',
-            'videos',
-            'views',
-            'likes',
-            'comments',
-            'logo_url',
-            'banner_url',
-            'channel_created_at'],
-          where: channelClause
-        }]
-      });
-    }
-    (creators as any).rows.map((creator) => {
+    for (const creator of creators.rows) {
       creator.videos = creator.channels.reduce((accumulator, obj) => accumulator + parseInt(obj.videos), 0);
       creator.likes = creator.channels.reduce((accumulator, obj) => accumulator + parseInt(obj.likes), 0);
       creator.subs = creator.channels.reduce((accumulator, obj) => accumulator + parseInt(obj.subs), 0);
       creator.views = creator.channels.reduce((accumulator, obj) => accumulator + parseInt(obj.views), 0);
-    });
 
 
+      if (req.query.publishedAtRange) {
+
+        let rangeDate = req.query.publishedAtRange.split(',');
+        const publishedAtSearchInitial = dayjs(rangeDate[0]).format("YYYY-MM-DD");
+        const publishedAtSearchFinal = dayjs(rangeDate[1]).format("YYYY-MM-DD");
+        const directed = await sequelize.query(
+          `
+          SELECT COUNT(d.video_id) AS directed_count
+          FROM director d
+          INNER JOIN video v ON d.video_id = v.video_id
+          WHERE d.creator_id = :id
+          AND v.published_at BETWEEN :publishedAtSearchInitial AND :publishedAtSearchFinal
+          AND v.duration_parsed > :durationParsed
+          `,
+          {
+            replacements: {
+              id: creator.id,
+              publishedAtSearchInitial: publishedAtSearchInitial,
+              publishedAtSearchFinal: publishedAtSearchFinal,
+              durationParsed: '69', // Assuming duration_parsed is a string in your database
+            },
+            type: QueryTypes.SELECT,
+          }
+        );
+
+        const casted = await sequelize.query(
+          `
+          SELECT COUNT(vc.video_id) AS casted_count
+          FROM video_creator vc
+          INNER JOIN video v ON vc.video_id = v.video_id
+          WHERE vc.creator_id = :id
+          AND v.published_at BETWEEN :publishedAtSearchInitial AND :publishedAtSearchFinal
+          AND v.duration_parsed > :durationParsed
+          `,
+          {
+            replacements: {
+              id: creator.id,
+              publishedAtSearchInitial: publishedAtSearchInitial,
+              publishedAtSearchFinal: publishedAtSearchFinal,
+              durationParsed: '69', // Assuming duration_parsed is a string in your database
+            },
+            type: QueryTypes.SELECT,
+          }
+        );
+
+        const directedCount = (directed[0] as any).directed_count || 0;
+        const castedCount = (casted[0] as any)?.casted_count || 0;
+        creator.setDataValue('videosDirected', directedCount);
+        creator.setDataValue('videosCasted', castedCount);
+      }
+    };
 
     res.status(200).json({
       status: "success",

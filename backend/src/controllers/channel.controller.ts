@@ -17,7 +17,7 @@ export const fetchChannelController = async (
 ) => {
   try {
     const id = req.params['id'];
-    console.log(id);
+    // console.log(id);
     const channel = await Channel.findOne({
       where: { channel_id: id },
       include: [{
@@ -112,7 +112,7 @@ export const findAllGuestsController = async (
   try {
     let channel_Ids;
     if (req.query.channels) {
-      console.log(req.query.channels);
+      // console.log(req.query.channels);
       var channelsArr = req.query.channels.split(',');
 
       channel_Ids = channelsArr
@@ -160,7 +160,7 @@ export const createChannelController = async (
   res: Response
 ) => {
   try {
-    console.log('STARTING');
+    // console.log('STARTING');
     const channel_ids = req.body.channel_ids;
     const creator_id = req.body.creator_id;
 
@@ -169,12 +169,12 @@ export const createChannelController = async (
 
     });
 
-    console.log(channel_ids, creator_id);
+    // console.log(channel_ids, creator_id);
     const youtubeService = new YoutubeService();
     const channelCreatorService = new ChannelCreatorService();
 
     for (const id of channel_ids) {
-      console.log(id);
+      // console.log(id);
       const channel = await youtubeService.fetchChannelAndVideoData(id);
       await channelCreatorService.associateWithCreatorWithChannel(
         id,
@@ -182,7 +182,7 @@ export const createChannelController = async (
       );
     }
 
-    console.log('FINISHED')
+    // console.log('FINISHED')
 
   } catch (error) {
     res.status(500).json({
