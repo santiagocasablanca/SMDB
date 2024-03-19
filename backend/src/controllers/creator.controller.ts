@@ -34,39 +34,40 @@ export const fetchCreatorController = async (
           'logo_url',
           'banner_url',
           'channel_created_at']
-      }, {
-        model: Video,
-        as: 'videosDirected', attributes: [
-          'video_id',
-          'title',
-          'duration',
-          'channel_id',
-          'views',
-          'likes',
-          'comments',
-          'url',
-          'player',
-          'livestream',
-          'serie',
-          'published_at',
-        ]
-      }, {
-        model: Video,
-        as: 'videosCasted', attributes: [
-          'video_id',
-          'title',
-          'duration',
-          'channel_id',
-          'views',
-          'likes',
-          'comments',
-          'url',
-          'player',
-          'livestream',
-          'serie',
-          'published_at',
-        ]
       }
+      // , {
+      //   model: Video,
+      //   as: 'videosDirected', attributes: [
+      //     'video_id',
+      //     'title',
+      //     'duration',
+      //     'channel_id',
+      //     'views',
+      //     'likes',
+      //     'comments',
+      //     'url',
+      //     'player',
+      //     'livestream',
+      //     'serie',
+      //     'published_at',
+      //   ]
+      // }, {
+      //   model: Video,
+      //   as: 'videosCasted', attributes: [
+      //     'video_id',
+      //     'title',
+      //     'duration',
+      //     'channel_id',
+      //     'views',
+      //     'likes',
+      //     'comments',
+      //     'url',
+      //     'player',
+      //     'livestream',
+      //     'serie',
+      //     'published_at',
+      //   ]
+      // }
       ]
     });
 
